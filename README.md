@@ -49,7 +49,8 @@ scripts/ua.py         所有命令的实现（find / fetch / verify / refresh / 
 scripts/adapters/     需要专门处理的站点的取码脚本（只解析，不执行）
 scripts/aliases.json  中英文同义词组
 sources/<id>.md       每个来源的说明：获取方法、使用注意、未解决问题
-sources/<id>.tsv      每个来源的条目清单（9 列，无表头）
+sources/<id>.tsv      每个来源的条目清单，机器维护的字段（15 列，无表头）
+sources/<id>.notes.tsv  人工维护的字段：中文描述、UI 任务、层级、标签、风险（刷新不会覆盖）
 sources/_SPEC.md      来源文件格式规范
 sources/_ADDING.md    新增来源的流程
 ```

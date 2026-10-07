@@ -1,0 +1,51 @@
+border-beam	沿卡片/按钮/输入框边框游走的彩虹光束 border beam glow，AI 输入框、激活卡片高亮；React，<BorderBeam> 包裹元素	ai-ux,form-input	specialized			glow	
+border-beam-md	整圈边框游走光束（默认类型），卡片/面板高亮 animated border	layout-card	specialized			glow	
+border-beam-line	底边游走发光线，提交后等待结果的搜索框/命令框 loading 状态	loading,search-command	specialized			glow	
+border-beam-sm	按钮尺寸的紧凑边框光束 compact beam	button	specialized			glow	
+border-beam-pulse-inner	边框内侧呼吸脉冲光，CTA 按钮高亮 pulse	button,marketing-section	specialized			glow	
+border-beam-pulse-outside	边框向外扩散的脉冲光晕，prompt 输入框高亮 pulse bloom	form-input	specialized			glow	
+border-beam-palettes	边框光束配色：彩虹/灰阶/海洋/日落 palette	other	specialized			glow	
+border-beam-pro-palettes	Pro 配色与时长、光晕、色相等细调，仅 Studio/Pro skill	other	specialized			glow	
+thinking-orbs	AI 思考中点阵 3D 小球 loading 指示器 thinking orb spinner 替代，9 种动画状态，2D canvas 无 WebGL	ai-ux,loading	specialized	webgl,canvas,3d			
+thinking-orbs-working	粒子沿倾斜轨道运动，通用 agent 工作中/工具调用中 loading	ai-ux,loading	specialized				
+thinking-orbs-searching	扫描子午线扫过点阵地球，联网搜索/检索/RAG 中	ai-ux,loading	specialized				
+thinking-orbs-solving	条带四分之一转打乱再复位，代码执行/数学/调试中	ai-ux,loading	specialized				
+thinking-orbs-listening	纬线环上滚动波形，麦克风录音/语音输入中	ai-ux,loading	specialized		scroll		
+thinking-orbs-connecting	星座连线+数据包流动，连接服务/MCP/数据源中	ai-ux,loading	specialized				
+thinking-orbs-weaving	三股线绕球编织，规划/planning/合并结果中	ai-ux,loading	specialized				
+thinking-orbs-composing	起伏多带饰带，写作/生成文本/打字指示器替代	ai-ux,loading	specialized				
+thinking-orbs-breathing	正面圆环缓慢变形呼吸，空闲 Thinking…/推理中	ai-ux,loading	specialized				
+thinking-orbs-shaping	点阵轮廓在圆/三角/方之间变形，设计/构建布局中	ai-ux,loading	specialized				
+thinking-orbs-pro	Orb 的 Pro 细调选项，仅 Studio/Pro skill	ai-ux,loading	specialized				
+liquid-gooey	液态融合 gooey 效果：元素靠近时像黏液合并、像果冻变形且文字保持清晰；SVG filter，<Liquid>/<Liquid.Item>	text-effect,motion-transition	specialized				
+liquid-gooey-morph	元素合并/分裂，加号 FAB 菜单展开成多个按钮 gooey menu	navigation,button	specialized				
+liquid-gooey-move	表面跟随移动元素拖出液滴尾巴，液态 tab 指示器/滑块 thumb	cursor-effect,navigation	specialized		drag		
+liquid-gooey-bend	拖拽时卡片随速度弯曲，可拖拽卡片 drag card	layout-card,motion-transition	specialized		drag		
+liquid-gooey-melt	两张图片熔化互相流入，image melt 过渡	media,motion-transition	specialized				
+liquid-gooey-pro	Gooey 的 Pro 细调，仅 Studio/Pro skill	motion-transition	specialized				
+voice-glow	随说话音量从聊天输入框/手机屏底部升起的彩色光晕 voice visualizer，处理中左右扫动；含 useMicrophone	ai-ux,form-input	specialized			glow	
+voice-glow-default	约 350px 聊天输入框的语音光晕预设	ai-ux,form-input	specialized			glow	
+voice-glow-mobile	手机屏幕底部语音光晕预设，范围更宽更高	media	specialized			glow	
+voice-glow-processing	光晕聚成一束来回扫动，语音转写/回复思考中	ai-ux,media	specialized			glow	
+voice-glow-usemicrophone	麦克风权限与 MediaStream 管理 hook（start/stop/state）	media,micro-interaction	specialized			glow	
+voice-glow-pro	Voice 的 Pro 细调，仅 Studio/Pro skill	form-input,media	specialized			glow	
+bot-avatars	AI agent 动画头像：毛绒/塑料质感 3D 形状带表情，会四处看、跳、工作时蹦跳；canvas 无 WebGL	ai-ux,avatar-user	specialized	webgl,canvas,3d			
+bot-avatars-free-types	8 种免费身体形状 bot 头像，state default/working，size 96/64/32，shading fabric/plastic	avatar-user	specialized				
+bot-avatars-pro-types	另外 10 种身体形状（包内类型已存在，页面/免费 skill 未开放）	avatar-user	specialized				
+bot-avatars-pro-extras	sleeping 睡眠态、配饰、毛发/光照细调、自定义 SVG 轮廓	avatar-user	specialized				
+metal-fx	实时液态金属材质：按钮/图标/文字/徽章，游走光晕、邻近元素反射、光标弯折；WebGL（v2 基于 Paper Shaders）	text-effect,background	specialized	webgl	cursor	glow	
+metal-fx-button	液态金属描边胶囊按钮，卖东西的 CTA（Get Pro/Upgrade）	background,button	specialized	webgl			
+metal-fx-circle	液态金属圆形图标按钮（如发送按钮）	background,button	specialized	webgl			
+metal-fx-text	液态金属文字，大标题 h1 高亮 headline	text-effect,background	specialized	webgl			
+metal-fx-badge	液态金属徽章 New/Pro/Beta badge	background,feedback	specialized	webgl			
+metal-fx-presets	金属配色预设与光标弯折、文字反射 hook	text-effect,background	specialized	webgl	cursor		
+metal-fx-v1	旧版 v1 金属引擎	background	specialized	webgl			
+metal-fx-pro	Metal 的 Pro 细调，仅 Studio/Pro skill	background,feedback	specialized	webgl			
+img-fx	图片生成占位 loader：WebGL 像素马赛克 shader 翻涌后溶解出真实图片，AI 生图/上传/懒加载；需要 three	ai-ux,loading	specialized	webgl,pixel			
+img-fx-pixels-organic	柔和云状像素马赛克生成占位	loading,media	specialized	pixel			
+img-fx-pixels-mechanic	锐利网格对齐像素马赛克生成占位	loading,media	specialized	pixel			
+img-fx-sweep-gradient	对角渐变带扫过+格子闪烁，可替代 skeleton 骨架屏	loading,media	specialized	gradient			
+img-fx-pro	Image 的 Pro 细调，仅 Studio/Pro skill	loading,background	specialized	webgl,pixel			
+libraries-dev-skill	官方免费 agent skill：7 个库的安装、用法、放置规则，含 libraries reveal/review/apply 命令	ai-ux,motion-transition	specialized				
+libraries-pro-skill	Pro skill：Studio 全部参数、配色、cursor gravity、核心几何/shader 定制契约	ai-ux,background	specialized	webgl	cursor		
+studio	全部库的深度可视化调参台 + AI agent 调参，导出 React/RN/SwiftUI 配置	chart,ai-ux	specialized				

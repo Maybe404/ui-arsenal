@@ -16,6 +16,7 @@ $S/find.sh 磁吸 选择               # 搜索：中英文都行，自动展开
 $S/find.sh 背景 --code             # 只要现在就能直接拿到代码或提示词的（免费，排除需登录和仅参考）
 $S/find.sh dashboard --ref         # 只要灵感参考
 $S/find.sh -s reactbits text       # 只搜一个来源；--free 只要免费；--all 含 Pro 和失效；--help 看全部
+$S/find.sh --task loading --layer foundation   # 按统一 UI 任务和层级筛选，可以不带关键词
 $S/fetch.sh bencho:magnet-select   # 拉取：只读，文件落到 $TMPDIR/ui-arsenal/...，打印依赖和安装命令；--help 看全部选项
 $S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
 $S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style，要和项目 components.json 一致；安装命令会给完整 URL
@@ -105,7 +106,7 @@ fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获
 
 ## 维护
 
-- `$S/audit.sh`：检查格式，包括 9 列、枚举值、id 重复、取码规格和 adapter 是否存在。改完 TSV 后必须跑。
+- `$S/audit.sh`：检查格式，包括两份文件的列数和 id 对应、枚举值（访问状态、用法、UI 任务、层级、风险）、别名、取码规格和 adapter 是否存在。改完 TSV 后必须跑。
 - `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式和 login、pro、broken 的拒绝逻辑。
 - `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
 - `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。

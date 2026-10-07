@@ -1,0 +1,47 @@
+ring	圆环缺口旋转的经典 spinner，按钮内联、页面切换通用加载	loading	specialized				
+spokes	辐条式分段 spinner（iOS 菊花样式），轻量不定进度	loading	specialized				
+classic	最常见的经典 spinner，表单与通用场景	loading	specialized				
+dots-ring	圆点排成一圈依次闪烁的环形加载，随父容器缩放	loading	specialized				
+spiral	螺旋路径运动的忙碌态动画（motion）（依赖 motion）	loading	specialized				
+swirling	流体漩涡效果的高动感加载	loading	specialized				
+arc	弧线旋转的不定进度条	loading	specialized				
+dual-arc	双弧线对称旋转的不定进度	loading	specialized				
+fade-arc	带渐变拖尾淡出的弧形 spinner	loading	specialized	gradient	drag		
+concentric-ring	多层同心环嵌套旋转，技术感加载	loading	specialized				
+orbit-ring	元素沿圆环轨道运行的动态加载	loading	specialized				
+satellite-ring	卫星点沿环边缘绕行，适合同步/传播状态	loading	specialized				
+clock-ring	时钟指针式圆环，适合排程、同步、限时等待	loading	specialized				
+quarter-ring	四分之一弧的紧凑 spinner，空间小时用	loading	specialized				
+dash-ring	SVG 虚线描边长度变化的环，适合流式/不定进度	loading	specialized				
+comet-spinner	带亮头和拖尾的彗星旋转，高吞吐/充满活力	loading	specialized		drag		
+pulse	柔和缩放的呼吸圆环，待机/平静等待	loading	specialized				
+ripple	同心圆向外扩散涟漪，雷达感不定进度	loading	specialized				
+pulse-dot	单个呼吸脉冲圆点，聊天/AI 助手生成回复时的提示（类 ChatGPT）	loading	specialized			pulse-dot	
+dots	三点依次闪烁，输入中/typing 指示、编辑器旁	loading	specialized				
+bobbing-dots	上下弹跳同相位的圆点（motion），活泼加载（依赖 motion）	loading	specialized			bounce	
+bouncing-dots	弹性缩放+透明度的圆点，队列/导入等内联反馈	loading	specialized				
+typing	竖向波浪起伏的圆点，像按键输入，聊天/搜索/协同编辑	loading	specialized				
+twin-orbit	两个标记绕圆心对称旋转	loading	specialized				
+pulsating-dots	缩放+透明度律动的圆点（motion）（依赖 motion）	loading	specialized				
+triple-dot-spinner	三点排成小圆旋转，按钮与列表行内用	loading	specialized				
+text-shimmer	文字上的扫光闪烁（shimmer）效果，AI 思考中 Thinking 文案（motion）（依赖 motion）	loading	specialized			gradient-text	
+text-blink	文字闪烁的加载文案	loading	specialized				
+text-dots	状态文字后跟动态省略号 ...	loading	specialized				
+text-shimmer-wave	沿文字逐字波浪式扫光（motion）（依赖 motion）	loading	specialized			gradient-text	
+morphing-infinity	圆形与无穷符号间变形的 SVG 动画（motion）（依赖 motion）	loading	specialized				
+infinity	沿无穷符号路径运动，长时间/持续加载	loading	specialized				
+accordion-loader	Unicode 方块字符在字符轨道上双向伸缩，终端/等宽风格	loading	specialized				
+symmetric-wave	十格轨道上镜像向内外脉动的字符波浪	loading	specialized				
+square-grid	方块拖尾沿正方形外缘环绕的字符动画	loading	specialized		drag		
+square-accordion	方形轨道上在拐角停顿、尾巴收拢的字符动画	loading	specialized				
+conveyor-loop	方块字符单向循环滚动的传送带	loading	specialized		scroll		
+square-snake	四个字形组成的小蛇沿正方形路径移动（无轨道）	loading	specialized				
+infinity-square-snake	字符小蛇沿两个相连方环的无穷路径移动	loading	specialized				
+infinity-track	等宽字符单元+错峰方块遮罩的无穷轨迹	loading	specialized				
+diamond	8-bit 像素菱形，阶梯透明度，复古风等待	loading	specialized	pixel			
+wave	条形波浪，适合音频、同步、进度相关加载	loading	specialized				
+bars	条形活动指示器（音频播放器式），列表/密集布局	loading	specialized				
+analyzing-image	图片分析/计算机视觉风格的扫描占位动画（motion）（依赖 motion）	loading	specialized				
+skeleton	骨架屏占位块（skeleton），内容加载中	loading	specialized				
+terminal	终端/CLI 风格加载，面向开发者	loading	specialized				
+wandering-eyes	一对四处张望的眼睛，俏皮品牌化加载	loading	specialized				

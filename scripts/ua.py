@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """ui-arsenal catalogue tool: find / fetch / verify / refresh / stats / audit.
 
-TSV schema (sources/<id>.tsv, no header, 9 tab-separated columns):
-  source  item_id  name  category  description  fetch_human  access  usage  spec
-access: free | login | pro | broken
-usage:  install | source | prompt | reference
+Data model (per source, no headers, tab-separated):
+  sources/<id>.tsv        machine-managed, written only by an approved refresh/apply (15 columns):
+    source item_id title category official_url fetch_human spec access usage
+    framework deps item_status alias_of last_seen fingerprint
+  sources/<id>.notes.tsv  human-curated, never touched by refresh (8 columns):
+    item_id desc_zh task layer visual_tags interaction_tags risk notes
+access: free | login | pro | broken          usage: install | source | prompt | reference
+item_status: active | needs-review | removed layer: foundation | specialized | reference | icons | design-spec
 spec:   space-separated adapter tokens, each "<adapter>:<arg>":
         registry:<url>  url:<url>  doc:<url>  prompt:<page-url>
         script:<adapter> <arg>  browser:<url>  manual  none
@@ -33,24 +37,52 @@ ACCESS = ('free', 'login', 'pro', 'broken')
 USAGE = ('install', 'source', 'prompt', 'reference')
 USAGE_ZH = {'install': '可安装', 'source': '取源码', 'prompt': '提示词', 'reference': '仅参考'}
 ADAPTER_KINDS = ('registry', 'url', 'doc', 'prompt', 'script', 'browser', 'manual', 'none')
-COLS = ('source', 'id', 'name', 'category', 'desc', 'fetch', 'access', 'usage', 'spec')
+COLS = ('source', 'id', 'name', 'category', 'url', 'fetch', 'spec', 'access', 'usage',
+        'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint')
+NOTE_COLS = ('id', 'desc', 'task', 'layer', 'vtags', 'itags', 'risk', 'notes')
+STATUS = ('active', 'needs-review', 'removed')
+LAYERS = ('foundation', 'specialized', 'reference', 'icons', 'design-spec')
+TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table', 'ai-ux', 'loading', 'text-effect',
+         'background', 'cursor-effect', 'overlay', 'navigation', 'feedback', 'search-command', 'date-time', 'upload',
+         'select', 'toggle-slider', 'form-input', 'button', 'media', 'avatar-user', 'marketing-section',
+         'empty-onboarding', 'layout-card', 'motion-transition', 'micro-interaction', 'fun-3d', 'page-inspiration',
+         'other')
+RISKS = ('gradient-text', 'marquee', 'glow', 'grid-background', 'typewriter', 'bounce', 'glass', 'pulse-dot')
 
 
 # ---------- data ----------
 
-def load_rows(source=None):
+def load_notes(source):
+    notes = {}
+    p = os.path.join(SRC, source + '.notes.tsv')
+    if os.path.exists(p):
+        for line in open(p, encoding='utf-8'):
+            if line.strip():
+                c = line.rstrip('\n').split('\t')
+                notes[c[0]] = dict(zip(NOTE_COLS, c))
+    return notes
+
+
+def load_rows(source=None, include_removed=False):
+    """Machine rows joined with human notes. Removed items are hidden unless asked for."""
     rows = []
     for fn in sorted(os.listdir(SRC)):
-        if not fn.endswith('.tsv') or fn.startswith('_'):
+        if not fn.endswith('.tsv') or fn.startswith('_') or fn.endswith('.notes.tsv'):
             continue
-        if source and fn != source + '.tsv':
+        sid = fn[:-4]
+        if source and sid != source:
             continue
+        notes = load_notes(sid)
         with open(os.path.join(SRC, fn), encoding='utf-8') as f:
             for n, line in enumerate(f, 1):
                 if line.strip():
                     r = dict(zip(COLS, line.rstrip('\n').split('\t')))
+                    r.update({k: v for k, v in notes.get(r['id'], {}).items() if k != 'id'})
+                    for k in NOTE_COLS[1:]:
+                        r.setdefault(k, '')
                     r['_file'], r['_line'] = fn, n
-                    rows.append(r)
+                    if include_removed or r.get('status') != 'removed':
+                        rows.append(r)
     if source and not rows:
         sys.exit('unknown source: %s (see: ua.py stats)' % source)
     return rows
@@ -149,7 +181,9 @@ ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
 
 def relevance(r, cons):
     """Field-weighted match score; returns (score, concepts hit)."""
-    fields = ((3, (r['id'] + ' ' + r['name']).lower()), (2, r['category'].lower()), (1, r['desc'].lower()))
+    primary, _, secondary = r['task'].partition(',')
+    fields = ((3, (r['id'] + ' ' + r['name']).lower()), (2, (r['category'] + ' ' + primary).lower()),
+              (1, ' '.join((r['desc'], secondary, r['vtags'], r['itags'])).lower()))
     s, hit = 0.0, 0
     for orig, alts in cons:
         scores = []
@@ -170,6 +204,8 @@ def tier(r, icon_query):
     if r['source'] == 'lucide' and not icon_query:
         return 0.5
     if r['access'] == 'free':
+        if r['category'].startswith('example'):  # demo variants of a component rank below the components themselves
+            return 3
         return {'install': 4, 'source': 4, 'prompt': 3, 'reference': 1}.get(r['usage'], 1)
     return {'login': 2, 'pro': 0.2, 'broken': 0}.get(r['access'], 0)
 
@@ -189,11 +225,13 @@ FIND_MODES = {
 }
 
 
-def search(terms, src=None, mode='default'):
+def search(terms, src=None, mode='default', task=None, layer=None):
     """Rank catalogue rows for a query. Returns ([(score, row)], note)."""
-    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)]
+    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
+            and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
     groups = load_groups()
-    corpus = [(r['id'] + ' ' + r['name'] + ' ' + r['category'] + ' ' + r['desc']).lower() for r in rows]
+    corpus = [' '.join((r['id'], r['name'], r['category'], r['task'], r['desc'], r['vtags'], r['itags'])).lower()
+              for r in rows]
     cons = [(o, [term_re(a) for a in alts]) for t in terms for o, alts in concepts(t, groups, corpus)]
     icon_query = any(o in ICON_TERMS or ICON_TERMS & {a.pattern for a in alts} for o, alts in cons) or any(
         t.lower() in ICON_TERMS for t in terms)
@@ -211,19 +249,29 @@ def search(terms, src=None, mode='default'):
         if top < len(cons):
             note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
         scored = [x for x in scored if x[0] == top]
-    return [(x[3], x[4]) for x in sorted(scored, key=lambda x: (-x[0], -x[1], -x[2], -x[3]))], note
+    ranked = sorted(scored, key=lambda x: (-x[0], -x[1], -x[2], -x[3]))
+    if cons and ranked and (ranked[0][1] == 0 or ranked[0][0] < len(cons)):
+        note += ('\n低置信度：没有名称或分类级的强相关候选（只有描述沾边或只命中部分词）。'
+                 '先换词或用 --task 再搜；仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
+    return [(x[3], x[4]) for x in ranked], note
 
 
 def cmd_find(args):
-    src, limit, mode, terms = None, 25, 'default', []
+    src, limit, mode, terms, task, layer = None, 25, 'default', [], None, None
     it = iter(args)
     for a in it:
         if a == '-s':
             src = next(it)
+        elif a == '--task':
+            task = next(it)
+        elif a == '--layer':
+            layer = next(it)
         elif a == '--limit':
             limit = int(next(it))
         elif a in ('-h', '--help'):
-            print('usage: find.sh [-s source] [--limit N] [--code|--free|--ref|--all] keyword...')
+            print('usage: find.sh [-s source] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+            print('  --task   UI 任务：' + ' '.join(TASKS))
+            print('  --layer  层级：' + ' '.join(LAYERS))
             for k, (d, _) in FIND_MODES.items():
                 print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
             return 0
@@ -231,9 +279,13 @@ def cmd_find(args):
             mode = a[2:]
         else:
             terms.append(a)
-    scored, note = search(terms, src, mode)
+    if task and task not in TASKS:
+        sys.exit('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
+    if layer and layer not in LAYERS:
+        sys.exit('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
+    scored, note = search(terms, src, mode, task, layer)
     if not scored:
-        print('no match. 试试更短的词、英文词，或加 --all 包含 Pro')
+        print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。')
         return 1
     by_src = {}
     for _, r in scored:
@@ -241,11 +293,14 @@ def cmd_find(args):
     print('%d matches (%s)  filter=%s %s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])), mode, note))
     for s, r in scored[:limit]:
         tag = label(r)
-        print('[%s] %s:%s — %s (%s)' % (tag, r['source'], r['id'], r['name'], r['category']))
+        print('[%s] %s:%s — %s  (%s · %s)%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
+                                               '  ⚠ ' + r['risk'] if r['risk'] else ''))
         print('    %s' % r['desc'][:160])
     if len(scored) > limit:
         print('... %d more (--limit N)' % (len(scored) - limit))
-    print('\n下一步: ua.py fetch <source:id>   （仅参考类条目会给出打开方式）')
+    if any(r['risk'] for _, r in scored[:limit]):
+        print('\n⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
+    print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
     return 0
 
 
@@ -742,43 +797,81 @@ def cmd_audit(args):
         for k in ('id', 'name', 'url', 'kind', 'pro', 'fetch', 'verified'):
             if k not in fm:
                 errs.append('%s.md: missing frontmatter %s' % (s, k))
-        if not os.path.exists(os.path.join(SRC, s + '.tsv')):
-            errs.append('%s: missing tsv' % s)
-    seen = {}
-    for fn in sorted(os.listdir(SRC)):
-        if not fn.endswith('.tsv'):
+        for ext in ('.tsv', '.notes.tsv'):
+            if not os.path.exists(os.path.join(SRC, s + ext)):
+                errs.append('%s: missing %s' % (s, ext))
+    total = 0
+    for s in sources():
+        mp, np_ = os.path.join(SRC, s + '.tsv'), os.path.join(SRC, s + '.notes.tsv')
+        if not (os.path.exists(mp) and os.path.exists(np_)):
             continue
-        s = fn[:-4]
-        for n, line in enumerate(open(os.path.join(SRC, fn), encoding='utf-8'), 1):
+        ids = {}
+        for n, line in enumerate(open(mp, encoding='utf-8'), 1):
             if not line.strip():
                 continue
             c = line.rstrip('\n').split('\t')
-            where = '%s:%d' % (fn, n)
-            if len(c) != 9:
-                errs.append('%s: %d columns (need 9)' % (where, len(c)))
+            where = '%s.tsv:%d' % (s, n)
+            if len(c) != len(COLS):
+                errs.append('%s: %d columns (need %d)' % (where, len(c), len(COLS)))
                 continue
-            if c[0] != s:
-                errs.append('%s: source column %r != %r' % (where, c[0], s))
-            if c[6] not in ACCESS:
-                errs.append('%s: access %r' % (where, c[6]))
-            if c[7] not in USAGE:
-                errs.append('%s: usage %r' % (where, c[7]))
-            key = (s, c[1])
-            if key in seen:
-                errs.append('%s: duplicate id %s (also line %d)' % (where, c[1], seen[key]))
-            seen[key] = n
-            for k, a in parse_spec(c[8]):
+            r = dict(zip(COLS, c))
+            total += 1
+            if r['source'] != s:
+                errs.append('%s: source column %r != %r' % (where, r['source'], s))
+            if r['id'] in ids:
+                errs.append('%s: duplicate id %s (also line %d)' % (where, r['id'], ids[r['id']]))
+            ids[r['id']] = n
+            if r['access'] not in ACCESS:
+                errs.append('%s: access %r' % (where, r['access']))
+            if r['usage'] not in USAGE:
+                errs.append('%s: usage %r' % (where, r['usage']))
+            if r['status'] not in STATUS:
+                errs.append('%s: item_status %r' % (where, r['status']))
+            if r['url'] and not r['url'].startswith('http'):
+                errs.append('%s: official_url %r' % (where, r['url']))
+            for k, a in parse_spec(r['spec']):
                 if k not in ADAPTER_KINDS:
                     errs.append('%s: spec adapter %r' % (where, k))
                 elif k in ('registry', 'url', 'doc', 'prompt', 'browser') and not a.startswith('https://'):
                     errs.append('%s: spec %s needs https url' % (where, k))
                 elif k == 'script' and not adapter_path(a.split()[0])[0]:
                     errs.append('%s: missing adapter %s' % (where, a))
-            if c[6] == 'pro' and c[8] != 'none':
+            if r['access'] == 'pro' and r['spec'] != 'none':
                 errs.append('%s: pro row must have spec none' % where)
+        for n, line in enumerate(open(mp, encoding='utf-8'), 1):
+            c = line.rstrip('\n').split('\t')
+            if len(c) == len(COLS) and c[12] and c[12] not in ids:
+                errs.append('%s.tsv:%d: alias_of %r does not exist' % (s, n, c[12]))
+        seen_notes = set()
+        for n, line in enumerate(open(np_, encoding='utf-8'), 1):
+            if not line.strip():
+                continue
+            c = line.rstrip('\n').split('\t')
+            where = '%s.notes.tsv:%d' % (s, n)
+            if len(c) != len(NOTE_COLS):
+                errs.append('%s: %d columns (need %d)' % (where, len(c), len(NOTE_COLS)))
+                continue
+            r = dict(zip(NOTE_COLS, c))
+            if r['id'] not in ids:
+                errs.append('%s: note for unknown id %s' % (where, r['id']))
+            if r['id'] in seen_notes:
+                errs.append('%s: duplicate note id %s' % (where, r['id']))
+            seen_notes.add(r['id'])
+            if not r['desc']:
+                errs.append('%s: empty desc_zh' % where)
+            for t in filter(None, r['task'].split(',')):
+                if t not in TASKS:
+                    errs.append('%s: task %r' % (where, t))
+            if r['layer'] not in LAYERS:
+                errs.append('%s: layer %r' % (where, r['layer']))
+            for t in filter(None, r['risk'].split(',')):
+                if t not in RISKS:
+                    errs.append('%s: risk %r' % (where, t))
+        for missing in sorted(set(ids) - seen_notes)[:5]:
+            errs.append('%s: id %s has no notes row' % (s, missing))
     for e in errs[:200]:
         print(e)
-    print('%d rows checked, %d problems' % (len(seen), len(errs)))
+    print('%d rows checked, %d problems' % (total, len(errs)))
     return 1 if errs else 0
 
 
@@ -801,6 +894,8 @@ def cmd_searchtest(args):
             ok = bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top)
         elif 'topk_all_id' in c:
             ok = bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top)
+        elif 'topk_all_task_primary' in c:
+            ok = bool(top) and all(r['task'].split(',')[0] == c['topk_all_task_primary'] for r in top)
         elif 'topk_no_usage' in c:
             ok = bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top)
         else:

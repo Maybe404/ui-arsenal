@@ -1,0 +1,215 @@
+asset-swap	加密货币兑换 swap 卡片，点箭头翻转买卖方向，点币种弹出 coin picker 选择器，DeFi/钱包 UI	select,layout-card	specialized		press		
+heat-word	灰点阵 hover 热力图效果，光标附近的点膨胀融合，按下切换形状/文字，四套配色，Canvas 背景装饰	text-effect,background	specialized	canvas	hover,press,cursor		
+image-compare	前后对比图片滑块 before/after，拖动分割线透视两张图，甩动后惯性滑到边缘	toggle-slider,media	specialized		drag		
+like	点赞按钮动画，心形弹出并迸发粒子环，计数像里程表 odometer 滚动进位	text-effect,background	specialized		press,scroll		
+signature	手写签名板 signature pad，笔速越快墨迹越细，停顿提示 Signed，Clear 按笔画倒放清除	form-input,micro-interaction	specialized		drag		
+voice-note	按住录音的语音消息 voice note，实时波形，左滑丢弃，松手得到可拖动进度的播放条	loading,media	specialized		press,drag		
+eye-tracker	跟随光标转动的眼睛 eyes follow cursor，软立方体上两只眼睛带透视倾斜，趣味吉祥物/空状态	cursor-effect,empty-onboarding	specialized		hover,cursor		
+dynamic-island	iOS 灵动岛 Dynamic Island 胶囊，点击用同一弹簧展开为计时器/来电/音乐实时活动，再收回	micro-interaction	specialized		press		
+time-scrubber	时间选择刻度尺 time picker scrubber，拖动刻度数字滚动，甩动惯性滑行并吸附到步长	text-effect,date-time	specialized		drag,scroll		
+upload-dropzone	拖拽上传 drag and drop file upload，文件被吸入后显示进度条和勾，超大文件被拒绝并抖动	loading,upload	specialized		drag		
+particles	交互粒子 particles 形状，点阵被指针推散后弹回，按下产生冲击波并聚合成下一个形状，hero 装饰	background,marketing-section	specialized		hover,press		
+label-input	浮动标签输入框 floating label input，聚焦时 placeholder 上浮到描边缺口，字母小跳动画	form-input,motion-transition	specialized				
+one-time-code	OTP 验证码输入框，六格实为单一 input，支持粘贴/自动填充/退格，输错整行抖动	form-input	specialized				
+generate	AI 生图加载态 image generation loader，先大色块后细节逐步显现，玻璃磨砂层渐清	ai-ux,loading	specialized		press	glass	
+step-player	步骤进度指示器 step progress，当前点拉伸为进度条填充，再缓动到下一个点，类似 stories 分页	loading,navigation	specialized		press		
+todo-tower	物理待办清单 physics todo list，任务像砖块堆叠，勾掉或抽出一张其余受重力掉落	micro-interaction	specialized		press		
+image-accordion	图片手风琴画廊 image accordion，hover 的图展开，邻居按衰减让位，整排向指针倾斜	media,layout-card	specialized		hover		
+glass-bubble	液态玻璃折射效果 liquid glass refraction，拖动玻璃球扭曲下方图片，SVG/Canvas 透镜	media,micro-interaction	specialized	canvas,glass	drag	glass	
+action-node	自动化流程节点卡片 automation node card，类似 n8n/Zapier 工作流步骤，控件折叠在角落	layout-card,micro-interaction	specialized		hover		
+magnet-select	磁吸标签选择 magnetic chip select，按下的选项膨胀，其余选项被径向推开，标签/兴趣多选	select,micro-interaction	specialized		press		
+slide-confirm	滑动确认按钮 slide to confirm，手柄跟手推过轨道，越过阈值后自动完成，支付/危险操作确认	button,micro-interaction	specialized		drag,swipe		
+picker	指派人选择器 assignee picker，下拉列表选人后头像在胶囊里堆叠 avatar stack	select,avatar-user	specialized				
+checklist	动画清单 animated checklist，勾选时方框填充、对勾描边、文字划线	text-effect,motion-transition	specialized		press		
+carousel	3D 卡片轮播 card carousel，转盘式卡片静止漂移、指针下倾斜、可滑动旋转	media,layout-card	specialized	3d	swipe		
+palette	配色生成器 color palette generator，3-5 个协调色块，按钮生成新一组配色	button,micro-interaction	specialized		press		
+aspect	裁剪比例切换 aspect ratio crop selector，分段控件切换 4:3/1:1/3:4，保持面积不变	select	specialized				
+tilt	3D 倾斜卡片 tilt card hover，照片卡在指针下下沉而非上浮，带按压阴影和边缘高光	layout-card,micro-interaction	specialized	3d	hover		
+sound	音乐播放器小组件 now playing，迷你播放条展开成完整播放器再折回，单一数值驱动尺寸圆角	micro-interaction	specialized		press,sound		
+drag-ball	可拖拽的 squishy ball 软球，抓取时膨胀、按住时挤压，liquid-gooey 粘滞效果	micro-interaction	specialized		drag		
+seek	展开式搜索框 expanding search bar，放大镜图标移动到位同时展开为输入框	search-command,form-input	specialized		press		
+pull	下拉刷新 pull to refresh，卡片随手拉伸，越线后提交并带回弹刷新余额，移动端列表	layout-card,micro-interaction	specialized		drag	bounce	
+escape	逃跑按钮 runaway button，按钮躲避光标然后放弃，彩蛋/趣味交互	cursor-effect,button	specialized		hover,cursor		
+slosh	液体填充滑块 liquid fill slider，填充有质量，快速拖动时液体晃荡越过手柄	toggle-slider	specialized		drag		
+liq-create	粘滞 gooey 创建菜单，胶囊按下后像液体一样展开成菜单，metaball 效果	navigation,micro-interaction	specialized		press		
+liq-arrange	拖拽排序列表 drag to reorder，相邻行像液体 metaball 融合，SVG gooey filter	micro-interaction	specialized		drag		
+toolbar	浮动画布工具栏 floating canvas toolbar，形状工具记住上次选择，类似 Figma/白板工具条	select,motion-transition	specialized	canvas			
+radial	径向菜单 radial menu，按中心按钮工具以半圆扇形展开	navigation,button	specialized		press		
+stepper	数字步进器 number stepper，点击加一，按住拖动快速扫值，兼顾精确和速度	micro-interaction	specialized		press,drag		
+confirm	行内删除确认 inline delete confirmation，删除按钮变成自身的确认按钮，之后提供撤销 undo	button,micro-interaction	specialized		press		
+toasts	通知我按钮 notify me，铃铛阻尼摆动，按钮保持按下态并替换文案，宽度平滑过渡	feedback,button	specialized		press		
+icon-bar	动画标签栏 animated tab bar，选中胶囊前沿先行、拉伸跨越两格后尾部追上并回弹	navigation,select	specialized			bounce	
+dock	macOS 放大 Dock 栏 magnifying dock，图标按与光标距离衰减放大	cursor-effect,navigation	specialized		hover,cursor		
+progress	刻度滑块 tick slider，沿刻度刮擦设置值，拖动时显示数值和变化量	loading,toggle-slider	specialized		hover,drag		
+humidity	圆形刻度旋钮 circular dial slider，拖动环形刻度设值，点亮带波浪推进，湿度/温度控制	toggle-slider,micro-interaction	specialized		drag		
+command	命令栏 command bar，按钮与输入框液态融合展开，完成后滑回，cmd+k 搜索	search-command,form-input	specialized				
+roster	多选人员列表 multi-select list，选中行抬起，有选择后底部按钮从中间长出	select,button	specialized				
+sleep	圆形范围滑块 circular range slider，双手柄环形刻度设区间，睡眠时长/时间段	date-time,toggle-slider	specialized		drag		
+liq-toggle	液态开关 liquid toggle switch，滑动时水滴拉伸变形，gooey metaball 效果	toggle-slider,micro-interaction	specialized		press,swipe		
+ascii-wake	ASCII 字符尾迹 hover 效果，光标经过处字符升温并向指针倾斜后冷却，未在站点上架（parked）	text-effect,cursor-effect	specialized	pixel	hover,cursor		
+browser-tabs	浏览器标签页条 browser tabs，拖拽排序与选中填充动画，未在站点上架（parked）	navigation,motion-transition	specialized		drag		
+card-stack	扇形卡片堆 card stack，hover 时卡片绕底部支点展开成扇形，未在站点上架（parked）	layout-card,micro-interaction	specialized		hover		
+emoji-reactions	表情回应条 emoji reactions，hover 的表情放大弹出，点击落入计数，未在站点上架（parked）	micro-interaction	specialized		hover,press		
+foggy-glass	起雾玻璃擦拭效果 foggy glass，指针擦出清晰区域后慢慢重新起雾，Canvas，未在站点上架（parked）	micro-interaction	specialized	canvas,glass	hover	glass	
+fold	折叠屏框架 folding frame，拖动铰链折叠并扭曲背后画面，未在站点上架（parked）	layout-card,micro-interaction	specialized		drag		
+hold-delete	长按删除按钮 hold to delete，按住进度填充、松手回退，临近完成垃圾桶抖动，未在站点上架（parked）	loading,button	specialized		press		
+mb-compare	海报前后对比 before/after 拖动分割线，甩动惯性滑到边，未在站点上架（parked）	micro-interaction	specialized		drag		
+mb-deck	海报卡堆 poster deck，从抓取点倾斜，甩出后飞走并回到底部，类 Tinder swipe，未在站点上架（parked）	micro-interaction	specialized		swipe		
+mb-holo	全息镭射卡 holo card，随指针倾斜、眩光滑过、彩虹光泽，未在站点上架（parked）	layout-card,micro-interaction	specialized		hover		
+mb-spot	聚光灯海报 spotlight，黑暗中指针像手电筒照亮，按住全亮，未在站点上架（parked）	micro-interaction	specialized		hover	glow	
+rolling-counter	滚动数字计数器 rolling counter，逐列滚动落定带模糊拖影，未在站点上架（parked）	text-effect,micro-interaction	specialized		drag,scroll		
+scratch-card	刮刮卡 scratch card，Canvas 擦除涂层，刮够比例后整片揭开，未在站点上架（parked）	layout-card,micro-interaction	specialized	canvas	drag		
+swipe-row	列表行左右滑动操作 swipe row，越过阈值提交并回弹，移动端邮件/消息列表，未在站点上架（parked）	micro-interaction	specialized		swipe	bounce	
+tag-input	标签输入框 tag input，chip 加入/移除时 layout 动画推挤与换行，未在站点上架（parked）	select,form-input	specialized				
+category:sounds	Sounds UI 音效库：82 个合成音效（点击、通知、反馈、导航、系统等），页面可试听并下载 WAV，无代码	navigation,feedback	reference		press,sound		
+find:sucodeee-code-verify	胶囊形六位验证码输入框，每位数字落入格子后整行收拢成 Verifying 胶囊，验证通过变绿。验证码输入 OTP 加载状态（by @sucodee，灵感视频，无源码）	loading,form-input	reference				
+find:joshpuckett-graphical-theme	Graphical 站点的主题试玩区，标题名词与图标轮换，在主题面板选颜色会给旁边所有示例卡片重新上色。主题切换 theme picker 配色（by @Josh Puckett & Adam Michela，灵感视频，无源码）	select,layout-card	reference				
+find:lauracsc-team-silhouettes	用描边人形排成一排的团队页，指向名字或人形时该人填充为黑色、相邻的变灰。团队介绍 team page hover 高亮（by @Laura*，灵感视频，无源码）	motion-transition,micro-interaction	reference		hover		
+find:davidtheophine-ranges-reorder	七只股票的自选列表，切换时间区间时头部数字滚动到新值，列表按涨跌幅自动重排。股票列表 数字滚动 排序动画 watchlist（by @David Theophine，灵感视频，无源码）	text-effect,date-time	reference		scroll		
+find:vanjek-pixel-select	以各种 vibe 命名的下拉菜单，打开和关闭时菜单碎成一片当前选中颜色的像素。下拉选择 select 像素动效 dropdown（by @George，灵感视频，无源码）	navigation,select	reference	pixel			
+find:vansh1029-lit-keyboard	黑底细线等距视角键盘，按下的键亮起橙色，录制按钮可保存按键序列回放。键盘 isometric 按键高亮 录制回放（by @Vansh，灵感视频，无源码）	button,micro-interaction	reference		press,keyboard		
+find:kylethacker-view-picker	毛玻璃弹层列出四个视图并带勾选，取消勾选后其卡片变为虚线框，对应按钮从下方工具栏滑出。视图选择 popover 工具栏 复选（by @Kyle Thacker，灵感视频，无源码）	overlay,select	reference	glass	press	glass	
+find:azlenelza-resize-frame	带方形手柄的虚线选框，拖动角点时宽高以蓝色徽标跟随显示，也可在徽标里输入数值改尺寸。尺寸调整 resize handle 选框（by @Azlen，灵感视频，无源码）	cursor-effect,feedback	reference		drag		
+find:adriankuleszo-dashboard-cards	两张仪表盘卡片先空着出现，随后数字到位、热力图长出、渠道条形图展开到各自占比。仪表盘 dashboard 入场动画 骨架屏（by @Adrian，灵感视频，无源码）	loading,layout-card	reference				
+find:disarto_max-model-router	四个模型的路由面板，在 Cost、Balanced、Quality 间切换时数据包沿分叉线改道，占比和价格随之变化。模型路由 分段控件 数据流动画（by @Maxim Kuznetsov，灵感视频，无源码）	pricing,select	reference				
+find:wheresryan22-isometric-wireframes	黑底细线等距插画组，像说明书图示般标注编号，柜子抽屉、唱机、台灯都会响应指针打开、转动或亮起。等距线框 isometric 插画交互（by @R，灵感视频，无源码）	overlay,motion-transition	reference	illustration	press		
+find:peterdev934-todo-motion	分组待办列表带状态标签，勾选任务后划线并滑出 To-do，下方行补位，Completed 计数加一。待办清单 todo 勾选动画 列表补位（by @peter，灵感视频，无源码）	motion-transition,micro-interaction	reference		press		
+find:ggsimm-broken-select	暗色下拉选择框，箭头先随菜单展开翻转，再点一次就弯折、弹开飞出，留下没有箭头的选择框。下拉菜单 select 箭头动画 彩蛋（by @gsimone，灵感视频，无源码）	navigation,select	reference	dark	press	bounce	
+find:rndr-realm-chart-wager	可在图表内下注的价格卡，沿折线拖动价格跟随圆点，切区间重绘曲线，再升起看涨看跌与金额表单，开仓转为加载和对勾。价格图表 scrub 下注表单（by @Rndr Realm，灵感视频，无源码）	pricing,chart	reference		press,drag		
+find:yashachaarya-cardboard-tear	装满彩色小角色的纸箱，撕掉封条后角色倾泻而出堆在四周，倒空后纸箱自动合上可再来，配有音效。拆箱动画 物理掉落 彩蛋（by @Yash，灵感视频，无源码）	layout-card,motion-transition	reference		drag,sound		
+find:alx-mindset-light-editor	折叠屏两屏的灯光编辑器，上屏是暗厨房，下屏是等距小模型，拖动台灯移动上屏光照，旋钮调亮度。灯光编辑 折叠屏 旋钮 isometric（by @Alex Liashenko，灵感视频，无源码）	layout-card,micro-interaction	reference		drag		
+find:samfcheng-lanyard-badge	个人站的名片做成挂在挂绳上的工牌，压在巨大衬线名字上，抓住可摇摆扭转，松手回正下垂。工牌 lanyard 物理拖拽 个人主页（by @Sam Cheng，灵感视频，无源码）	feedback,micro-interaction	reference		drag	bounce	
+find:victornunez-dots	公告页顶部的毛绒小角色不断变身：戴眼镜领结的黄色、戴贝雷帽的蓝云、戴墨镜的粉心、绿青蛙，每次柔和弹出。角色变形 吉祥物 公告页（by @Victor E. Nunez，灵感视频，无源码）	motion-transition	reference				
+find:kippe-progress-squeeze	全屏进度条，暂停时线条在末端挤成一团波浪线，同时屏幕变成橙色。进度条 progress 暂停状态 挤压动画（by @Petar Cirkovic，灵感视频，无源码）	loading,motion-transition	reference		press	bounce	
+find:tantan-bubble-assistants	一串挂在绳上的玻璃泡泡，每个装着一个 AI 助手图标，用光标推动时互相碰撞旋转。玻璃泡泡 物理碰撞 AI 助手 图标（by @Tân Tân Nguyễn，灵感视频，无源码）	ai-ux,cursor-effect	reference		hover,cursor	glass	
+find:kazarov-reasoning-slider	从 Off 到 Max 的推理强度滑块，向 Max 拖动时滑钮后拉出一条发光绿色轨迹。滑块 slider 推理强度 发光拖尾（by @Dima Kazarov，灵感视频，无源码）	ai-ux,toggle-slider	reference		drag	glow	
+find:wabi-invite-tickets	邀请页上的两张票券卡，毛玻璃那张滑过渐变那张，重叠处玻璃染上对方颜色。票券卡片 毛玻璃 glassmorphism 邀请（by @Wabi，灵感视频，无源码）	layout-card,motion-transition	reference	gradient,glass		glass	
+find:jerry-avatar-circle	实时生成的社区圈，头像不断涌入挤在一起，周围蓝色色块伸缩包住每张新脸，最后中央出现大头像。头像墙 avatar 社区 堆叠动画（by @Jerry，灵感视频，无源码）	avatar-user,motion-transition	reference			bounce	
+find:azlen-cat-space	处在品种、体重、腿、花纹、颜色、毛长等坐标轴中心的猫，沿某根轴拖动就按该属性改变猫的样子。参数空间 拖拽轴 生成式 cat（by @Azlen，灵感视频，无源码）	motion-transition,micro-interaction	reference		drag		
+find:isaiah-aspect-picker	宽高比选择器，每个选项按自身比例绘制 1:1、4:3、16:9、9:16，指向时上方预览框变形并更新宽高。宽高比 aspect ratio 选择器（by @Isaiah，灵感视频，无源码）	select,motion-transition	reference				
+find:bespalov-refero-pro	Refero 付款后的欢迎页，彩虹描边大字 PRO 流动变色，整个是约 3 KB 的 SVG 动画，无脚本无视频。升级成功页 SVG 动画 Pro 订阅（by @Mike Bespalov，灵感视频，无源码）	media,motion-transition	reference				
+find:heyzsolt-spin-button	写着 Get design 的白色胶囊按钮，末端一个实心 3D 小标志绕自身轴持续旋转、反射光线。按钮 button 3D 图标 旋转（by @Zsolt Kálmán，灵感视频，无源码）	button,motion-transition	reference	3d	hover		
+find:angelo-framed-layout	设计工具的框式布局：侧边细栏、窗口内画框承载作品、顶部留出搜索区，图层面板从侧栏滑出，文件搜索从上方落下。应用布局 侧边栏 layout（by @Angelo Libero，灵感视频，无源码）	navigation,search-command	reference				
+find:dossi-mood-wheel	像轮盘般弯曲排列的情绪词列，旁边是柔和变化的光球，滚动词语时光球颜色跟随中间那个。情绪选择 滚轮 picker 渐变光球（by @Lorenzo Dossi，灵感视频，无源码）	cursor-effect,select	reference	gradient	scroll		
+find:murat-island-wos	系统设计中的灵动岛，左侧显示应用徽标，随活动变化分裂成两块又合一，需要确认时发光。灵动岛 Dynamic Island 状态切换（by @Murat，灵感视频，无源码）	feedback,motion-transition	reference			glow,bounce	
+find:hsn-agent-orb	代表 agent 各状态的光球：待机、思考、构建、生成、等待、错误各有质感，下方分段控件切换并标注状态名。Agent 状态 orb 分段控件（by @Alhasan Husni，灵感视频，无源码）	ai-ux,select	reference				
+find:adi-access-request	暗色 toast 显示多人申请访问并叠放头像，点箭头原地展开为含 Approve 和 Reject 的完整列表，再收回，用 Figma 制作。通知 toast 权限申请（by @Adi，灵感视频，无源码）	feedback,avatar-user	reference	dark	press		
+find:okazz-p5-ring	p5.js 草图：黑点网格中一圈色彩从中心爆开扫向边缘，经过的点变成彩色碎纸屑后再恢复黑色。p5.js 生成艺术 波纹 confetti（by @Okazz，灵感视频，无源码）	motion-transition	reference				
+find:beyza-trash-literal	字面意义的移到废纸篓：手写纸揉成一团、抛物线扔进垃圾桶，垃圾桶显示 Deleted。删除动画 trash 揉纸 反馈（by @Beyza，灵感视频，无源码）	motion-transition,micro-interaction	reference		press		
+find:kris-island-agent	灵动岛展开成宽暗色面板显示工作中的 agent，点阵马在星空下的像素山丘上奔跑，收回成胶囊显示名字 Shadowfax。灵动岛 Agent 点阵动画（by @Kris Puckett，灵感视频，无源码）	ai-ux,motion-transition	reference	pixel,dark			
+find:oguz-swap-assets	暗色兑换界面逐步组装：标题书写进场，From 与 To 卡片依次升起、兑换按钮落在中间，最后出现滑点详情和粉色 Convert 按钮。Swap 兑换 入场动画（by @Oğuz Bülbül，灵感视频，无源码）	button,layout-card	reference	dark			
+find:cursor-dot-loaders	暗色任务列表里的迷你加载器，每个是三乘三网格上的几颗点在格位间跳动，每个运行中的任务有自己的图案。加载动画 loader 点阵（by @Cursor，灵感视频，无源码）	loading,cursor-effect	reference	dark	cursor		
+find:louis-tape-rack	透视排列的一排磁带，依次从架上抬出，上方面板显示曲目名和其采样来源艺人。磁带 卡片选择 音乐 透视（by @Louis，灵感视频，无源码）	select,layout-card	reference				
+find:raul-tool-folders	悬停文件夹时其中工具从上沿探出，打开后四个图标在上方扇形展开，其他文件夹淡出。文件夹 folder hover 扇形展开（by @Raul，灵感视频，无源码）	motion-transition,micro-interaction	reference		hover		
+find:adi-music-widget	带小屏播放音乐视频的播放器，下方三个粗按钮，切歌时画面切到下一首并显示歌词。音乐播放器 widget 小组件（by @Adi，灵感视频，无源码）	button,media	reference		press		
+find:kevin-effort-slider	分档滑块，拖动滑钮时上方标签跟随，从 Medium 到 High 再到 Extra High，含亮色与暗色。滑块 slider 分档 推理强度（by @Kevin，灵感视频，无源码）	ai-ux,cursor-effect	reference	dark	drag		
+find:martin-money-pull	从一个头像拖向另一个，二者间拉出液态团块、变细断开带着金额落下，双方余额随之变化。转账 拖拽 gooey 液态（by @Martin Strba，灵感视频，无源码）	avatar-user,motion-transition	reference		drag		
+find:jaimin-message-sheet	会话列表缩成变暗卡片后退，新消息面板从下方升起，列出可以发消息的所有人。底部弹层 sheet 新消息 层叠（by @jaimin，灵感视频，无源码）	overlay,layout-card	reference				
+find:flo-chat-tray	灰色托盘从消息输入框后滑出，应用在下方、项目在上方，里面的标签从灰色请求变为红色警告。输入框 托盘 chat 抽屉（by @Flo，灵感视频，无源码）	ai-ux,overlay	reference				
+find:paul-spinner-reel	浅色方块里轮播各种加载器，每个播放足够时长再切下一个：合并的点、呼吸的条、像素圆环。加载动画 spinner loader 合集（by @Paul Faivret，灵感视频，无源码）	loading,media	reference	pixel			
+find:oguz-work-stack	一列浏览器窗口除正对的那个外都折叠起来，持续滚动时下一屏从下方升起展平，再从顶部折走。作品集 堆叠滚动 3D 折叠（by @Oğuz Bülbül，灵感视频，无源码）	layout-card,motion-transition	reference	3d	scroll		
+find:rooh-wheel-carousel	鼓面上的一排卡片，甩动时每张朝运动方向侧转并随速度拖影，越快越难看清，减速后逐张回正。轮播 carousel 3D 滚筒 运动模糊（by @Sandeep，灵感视频，无源码）	media,layout-card	reference	3d	drag,swipe	bounce	
+find:luc-sky-pad	折叠屏下半是点阵，拖动发光圆盘经过时点会凸起，上方文字随之改名，上半山景同步重新打光。触控板 拖拽 折叠屏 光照（by @Luc Chaissac，灵感视频，无源码）	text-effect,layout-card	reference		drag	glow	
+find:alok-sent-card	输入一种货币金额下方实时换算，按发送后卡片本身变成确认页，数字滑入到位。转账 汇率换算 确认态 卡片变形（by @Alok，灵感视频，无源码）	form-input,layout-card	reference		press		
+find:studiyo-welcome-orb	近到看不清的欢迎页，铺满屏的浅色形状后退成中央小球，过冲后晃动停下，两个点还在摆过。欢迎页 弹性动画 onboarding（by @Studiyo，灵感视频，无源码）	empty-onboarding,motion-transition	reference			bounce	
+find:amir-cloth-shader	材质编辑器里悬挂的布料，随旁边面板变化重新打光：彩虹色、背光、近乎透明，褶皱每次光影不同。布料 shader 材质编辑 3D（by @AmirMušić，灵感视频，无源码）	background,micro-interaction	reference	webgl,3d	drag		
+find:marshall-case-portal	贴满贴纸的硬壳箱，有行李牌、路线码、圆盘编号，按下后箱盖沿铰链掀开，加入邀请就在盖子内侧。开箱 3D 邀请 揭示（by @Marshall Gould，灵感视频，无源码）	motion-transition,micro-interaction	reference	3d	press		
+find:davidhaz-radius-scrub	拖动而非输入的数值，随指针移动数字滚动，上方小徽标显示相对起点的变化量。数值拖拽 scrub input 增量（by @David Haz，灵感视频，无源码）	text-effect,feedback	reference		drag,scroll		
+find:davidhaz-paper-crumple	一张手写纸团成球又展开，留下折痕，用 three.js 构建，可换成任意图片。揉纸 three.js 纸张 动画（by @David Haz，灵感视频，无源码）	media,motion-transition	reference	webgl			
+find:movin-invoice-unfold	设置列表里的 Get Invoice 行，按下后折叠纸条爬出并向上展开成完整收据，含明细、折扣和圈出的总额。收据 发票 展开 折纸（by @MovinDesign，灵感视频，无源码）	media,layout-card	reference		press		
+find:fabian-warmth-slider	灯光面板中色温滑块本身填充冷暖渐变，Kelvin 数值随手指在轨道上移动，亮度拉到零时整行褪色显示 Off。滑块 色温 slider 智能家居（by @Fabian Albert，灵感视频，无源码）	toggle-slider,motion-transition	reference	gradient	drag		
+find:adi-brick-stack	自我组装的等待状态，细线四凸点积木一层层增减，下方文字循环显示组装想法、建立连接等。加载状态 loader 积木 等待（by @Adi，灵感视频，无源码）	loading,text-effect	reference				
+find:davidhaz-tear-stub	画廊门票一半照片一半入场券，沿齿孔撕开，存根靠最后几颗齿晃开后完全脱落。撕票 门票 ticket 物理动画（by @David Haz，灵感视频，无源码）	media,motion-transition	reference				
+find:shlok-drop-row	自动滚动的账户列表，从底部过期的那行不直接消失，而是脱离窗口用虚线挂在下方。列表 移除动画 滚动（by @Shlok Negi，灵感视频，无源码）	motion-transition	reference		scroll	marquee	
+find:zsolt-invert-cards	三张暗色卡片各画着所度量的事物，指向一张时它整体反色成纸白，其他两张保持暗色。卡片 hover 反色 数据卡（by @Zsolt Kacso，灵感视频，无源码）	layout-card,micro-interaction	reference	dark	hover		
+find:cornelius-drop-it	悬浮在桌面上的小发送面板，可输入、拖入图片、选队列，按 Drop it 后面板折成方块并在发送时打勾。发送面板 composer 折叠 上传（by @Seb Cornelius，灵感视频，无源码）	ai-ux,upload	reference		press,drag		
+find:swami-done-sinks	每个胶囊宽度贴合文字的任务列表，勾选后划线并沉到未完成项下方。待办 todo 胶囊 排序动画（by @Swami，灵感视频，无源码）	text-effect,select	reference				
+find:jamie-row-borders	工资表行悬停时上下细线消失，悬停高亮呈一整块而非被框住的条带。表格 table hover 边框（by @Jamie Merrill，灵感视频，无源码）	table,select	reference		hover		
+find:ab-agent-widget	以一张脸住在主屏的 agent，等待时眨眼、完成时变绿，点开显示正在运行的 agent 列表。Agent 小组件 widget 状态表情（by @AB，灵感视频，无源码）	ai-ux,motion-transition	reference				
+find:bryce-agent-blob	悬浮显示 agent 运行任务数的胶囊，拖过桌面时像液体在指针后拉伸，再展开成任务列表。液态胶囊 gooey Agent 任务（by @Bryce，灵感视频，无源码）	ai-ux,micro-interaction	reference		drag	bounce	
+find:gustavo-infinite-faq	产品 FAQ 最后一行是输入框，输入自己的问题后答案带链接出现在已有问答旁。FAQ 问答 AI 搜索 手风琴（by @Gustavo，灵感视频，无源码）	ai-ux,search-command	reference				
+find:shohan-aivo-heart	同一张心率卡的三种尺寸纵向排列：显示数字的胶囊、更宽的行、带当日范围轨道的卡片。心率 健康 widget 尺寸变体（by @Md Shohanur Rahman，灵感视频，无源码）	layout-card,motion-transition	reference				
+find:oguz-turning-coat	商店网格里的夹克是物体而非照片，拖动时它脱离格子转身，袖子摆动露出背面。商品展示 3D 拖拽旋转 电商（by @Oğuz Yağız Kara，灵感视频，无源码）	micro-interaction,fun-3d	reference	3d	drag		
+find:daryl-swinging-stub	统计访问次数的打印票根，跟随指针倾斜并越过后回摆，像有重量的物体那样停下。票根 访客计数 物理摆动（by @Daryl Patigas，灵感视频，无源码）	cursor-effect,micro-interaction	reference		hover	bounce	
+find:jeet-preempt-queue	后台任务逐个执行，插入紧急任务后它跳到最前，被打断的任务标记位置后续接着执行。任务队列 queue 优先级 抢占（by @Jeet，灵感视频，无源码）	micro-interaction	reference		press		
+find:vishal-elastic-stepper	加减号之间的数字胶囊，按住一侧数字朝那边滑动并拉伸胶囊，松手弹回。数字步进器 stepper 弹性 计数（by @Vishal Paliwal，灵感视频，无源码）	micro-interaction	reference		press,swipe	bounce	
+find:moiz-glass-paint	以油画为底的引导页，两块宽玻璃圆盘飘过，经过处树和篱笆弯折错位，文案位于玻璃上。玻璃折射 onboarding 液态玻璃（by @Moiz Arshi，灵感视频，无源码）	empty-onboarding	reference	glass		glass	
+find:grokbot-voice-bar	悬在聊天上方的语音条，有色块、随听到声音波动的线和红色结束键，识别内容作为消息出现在后面。语音输入 voice 波形（by @Grok Bot，灵感视频，无源码）	ai-ux,form-input	reference				
+find:petar-menu-mark	打开浏览器菜单时角落三个点聚合成旁边的标志，关闭时再散开。菜单图标 morph 三点 Logo（by @Petar Cirkovic，灵感视频，无源码）	navigation,motion-transition	reference		press		
+find:cz-pill-cards	点小胶囊后它长成对应的卡片，标签模糊淡出，卡片内容在内部逐渐清晰。胶囊展开 morph 卡片 共享元素（by @cz，灵感视频，无源码）	layout-card,motion-transition	reference		press		
+find:jamie-rail-flyout	指向窄侧栏图标时菜单从旁滑出，沿侧栏下移菜单原地切换，选中页面后收起。侧边栏 飞出菜单 flyout 导航（by @Jamie Merrill，灵感视频，无源码）	navigation,motion-transition	reference		hover		
+find:adi-capsule-toggle	玻璃胶囊里的小球，点击后跑到另一端，途中拉伸、落定时变色。开关 toggle 胶囊 弹性（by @Adi，灵感视频，无源码）	toggle-slider,micro-interaction	reference		press	bounce,glass	
+find:adi-tool-grid	标题逐词模糊进场，应用图标围绕中央指纹弹入网格并轮流脉动。图标网格 入场动画 集成 icon grid（by @Adi，灵感视频，无源码）	layout-card,motion-transition	reference				
+find:sam-event-fan	多个事件占同一时段，抓起这堆时在光标下扇形展开，标签跟随显示将放下的时间。日历 拖拽 calendar 事件（by @sam，灵感视频，无源码）	cursor-effect,date-time	reference		drag,cursor		
+find:zafar-upload-chips	聊天附件以标签出现在输入框上方，上传时各自填充出缩略图，指向时出现删除叉。文件上传 附件 chip 进度（by @Zafar Ismatullaev，灵感视频，无源码）	ai-ux,loading	reference				
+find:armond-photo-swap	三张照片和 Mosaic、Feature、Row 分段控件，切换时每张图移动到新位置并变形而非淡入淡出，点击一张会放大铺满屏幕。布局切换 共享元素 图库（by @Armond Schneider，灵感视频，无源码）	media,layout-card	reference		press		
+find:minsang-metal-orbs	黄昏沙漠上一冷一热两颗液态金属球，Joint、Separated、Rotating 控制其运动，靠近时表面相互牵引并融为一体。液态金属 3D metaball（by @Minsang Choi，灵感视频，无源码）	motion-transition,micro-interaction	reference	3d	press		
+find:charles-heart-burst	暗色圆盘中的爱心，每次点击都迸发不同排列的粒子，紧密或宽缓，永不重复。点赞 like 粒子 爆炸（by @Charles Patterson，灵感视频，无源码）	background,button	reference	dark	press		
+find:danny-dock-menu	五个图标的 dock，经过时显示名称，按最后一个时整行变成菜单面板，Notebooks 和 Settings 可再进入带 Back 的子列表。Dock 菜单 morph 多级（by @Danny Williams，灵感视频，无源码）	navigation,motion-transition	reference		press		
+find:aditya-split-discs	六个彩色圆盘各以不同方式切分，碎块循环分开又合拢，间隙打开时每块圆角化。圆形切分 loading 几何动画（by @Aditya Induraj，灵感视频，无源码）	loading,motion-transition	reference				
+find:hakim-sagging-field	What’s weighing on you 下的输入框，文字有重量，越写越下垂弯成 S 形，最后几个字滑落掉下。输入框 物理 文字 彩蛋（by @Hakim El Hattab，灵感视频，无源码）	text-effect,form-input	reference			bounce	
+find:moiz-dismiss-toasts	角落逐个到来的通知，新的把上一个折成后方细条，每个都有关闭键，关掉后堆栈上移补位。通知 toast 堆叠 关闭（by @Moiz Arshi，灵感视频，无源码）	feedback,motion-transition	reference		press		
+find:apple-icloud-tint	iCloud 先是纯蓝云朵，Photos、Files、Mail 和头像从边缘弹出，云朵表面吸收它们的颜色。iCloud 图标动画 着色（by @Apple，灵感视频，无源码）	media,avatar-user	reference				
+find:loong-fold-open	折叠手机在空间中旋转着展开成平板再合上，屏幕小组件重新排布到新空间而非直接放大。折叠屏 响应式 布局 3D（by @Bigloong，灵感视频，无源码）	layout-card,motion-transition	reference	3d			
+find:sergy-card-flip	面朝下扇形排开的扑克牌，指向一张时它从手牌中升起原地翻面，其余保持不动。卡片翻转 flip 扑克 hover（by @Sergy，灵感视频，无源码）	layout-card,motion-transition	reference		hover		
+find:fred-shader-wall	散落的照片墙上拖过一条色带，色带下的内容分离成 RGB 并弯曲，移开后复原。shader 色散 RGB 照片墙（by @Fred，灵感视频，无源码）	background,media	reference	webgl	drag,scroll		
+find:jamie-pin-reorder	置顶页面的侧栏，拖动排序时被抓起行抬升为浅色底，经过的行变灰让位并在后方合拢。拖拽排序 reorder 侧边栏（by @Jamie Merrill，灵感视频，无源码）	navigation,micro-interaction	reference		drag		
+find:tantan-photo-swipe	相册切换时标题、日期、缩略图栏淡出让位，新照片落定时变清晰，停稳后说明文字才回来。相册 图片浏览 沉浸 过渡（by @Tan Tan，灵感视频，无源码）	text-effect,date-time	reference		swipe		
+find:benny-bending-rail	失控滑块，把滑钮拉出轨道时整条轨道弯成 V 形朝向手，虚线弧连向保留数值的残影，松手后变直。滑块 slider 弹性 物理（by @Benny Schudel，灵感视频，无源码）	toggle-slider,micro-interaction	reference		drag	bounce	
+find:apple-timer-ruler	iOS 27 灵动岛的计时器，从胶囊展开成刻度尺，指针前的刻度燃成橙色并两侧递减渐隐。灵动岛 计时器 刻度尺 timer（by @Apple，灵感视频，无源码）	motion-transition	reference				
+find:julian-photo-bow	白底散落的商品图网格，滚动时每张按滚动速度弯曲，快速甩动边缘鼓起，放缓后恢复矩形。滚动速度 图片变形 scroll shader（by @Julian Fella，灵感视频，无源码）	background,media	reference	webgl	scroll		
+find:adi-leaning-pills	渐变背景上两个胶囊，远远就朝指针倾斜，近的那个倾得更多，间距随之开合。胶囊 磁吸 hover 跟随指针（by @Adi，灵感视频，无源码）	background,cursor-effect	reference	gradient	hover		
+find:swami-matrix-orb	点阵组成的语音助手，每个状态重绘网格：待机均匀淡点、聆听向内聚拢、思考中心密实边缘淡出。语音助手 点阵 状态 orb（by @Swami，灵感视频，无源码）	ai-ux,media	reference		press		
+find:kopp-ascii-cursor	暗色首屏，指针拖出 ASCII 字符尾迹，光标下密、沿路径变稀，文案下的胶囊可切换尾迹样式。ASCII 光标尾迹 hero cursor（by @Kopp，灵感视频，无源码）	text-effect,cursor-effect	reference	pixel,dark	hover,drag,cursor		
+find:mrunal-sticky-mark	作品集名字旁的印章用细丝连着指针，移开时它拉伸变细，直到细到挂不住。磁吸 sticky 光标 gooey（by @Mrunal Dhaygude，灵感视频，无源码）	cursor-effect,micro-interaction	reference		hover,cursor		
+find:chewei-columns	分栏网站中间有拖动手柄，拖动时所有栏同时调整宽度，吸附到合适宽度，超出末端略有弹性。分栏 resize 布局 吸附（by @Che Wei Lee，灵感视频，无源码）	layout-card,micro-interaction	reference		drag	bounce	
+find:rolando-sound-cards	桌面窗口里的唱片卡，拿起一张放到行中别处排序，卡片还在空中时其余就合拢补位。拖拽排序 唱片 卡片 reorder（by @Rolando，灵感视频，无源码）	layout-card,micro-interaction	reference		drag,sound		
+find:raul-photo-grid	照片网格，点击一张后它前移覆盖其他，其余变暗后退，直到放回原位。图片网格 lightbox 放大（by @Raul，灵感视频，无源码）	chart,media	reference		press		
+find:mrunal-chrome-ball	风景照包在滚筒上随之弯曲，旁边小铬球作为控件，甩动后滚筒按力度持续转动。图库 滚筒 惯性 甩动（by @Mrunal Dhaygude，灵感视频，无源码）	media,micro-interaction	reference		swipe		
+find:mal-trim-schedule	排班卡下列出活动，指向一行时右侧时间让位给两个操作，删除后卡片收缩到所需高度。排班 列表操作 hover 高度动画（by @M A L，灵感视频，无源码）	date-time,layout-card	reference		hover		
+find:gsimone-angry-sliders	渲染设置面板的滑钮不肯待在轨道上，抓住就沿抛物线飞出拖着虚线轨迹并显示数值，再落回槽里。滑块 彩蛋 物理 slider（by @gsimone，灵感视频，无源码）	toggle-slider,micro-interaction	reference		drag	bounce	
+find:eduard-fan-deck	代码实现的色卡扇，闭合块侧倒后色卡逐张散开成半圆，色阶依次递进，再合拢立起。色卡 扇形展开 颜色选择（by @Eduard，灵感视频，无源码）	select,motion-transition	reference		press		
+find:arek-taffy-dial	转盘上四个按钮，当前按钮的选中环流向下一个而非跳过去，拉出细丝再缩回圆形。gooey 选中指示 拨盘（by @Arek，灵感视频，无源码）	button,motion-transition	reference		hover		
+find:caleb-badge-sleeve	用指针逐笔签名的引导卡片，签完停住后塑料套像会议胸牌般滑下套住。签名 onboarding 胸牌 手写（by @Caleb Wu，灵感视频，无源码）	auth,feedback	reference		drag		
+find:caleb-day-streak	连续打卡计数器加一天时，数字滚动、周历滑一格，火焰炸成余烬再重新聚合。连续打卡 streak 数字滚动（by @Caleb Wu，灵感视频，无源码）	text-effect,motion-transition	reference		press,scroll		
+find:flo-action-node	画布节点的按钮挂在右上角外，悬停一个时粉色光沿卡片边缘流动，按另一个时展开成侧边高工具栏。画布节点 工具栏 hover 描边（by @Flo，灵感视频，无源码）	button,layout-card	reference		hover		
+find:jakub-step-stack	引导步骤画成一叠倾斜纸张，当前步骤前移并填充内容，其余变白留在后方。引导流程 onboarding 步骤 堆叠（by @Jakub Krehel，灵感视频，无源码）	empty-onboarding,motion-transition	reference				
+find:jakub-hold-next	剧集结束时需按住而非点按的按钮，按住时图标周围画出圆环，一松手就弹回。长按 hold to confirm 进度环（by @Jakub Krehel，灵感视频，无源码）	loading,button	reference		press		
+find:kevin-agent-pill	播报 agent 行为的黑色胶囊，上行已完成步骤、下行当前步骤，小像素网格在工作时重排。Agent 状态 胶囊 进度（by @Kevin Grajeda，灵感视频，无源码）	ai-ux,loading	reference	pixel			
+find:abhijeet-code-shimmer	六位验证码输入框，错误时闪红并清空，正确时一道光扫过数字逐个弹跳。验证码 OTP 错误状态 shimmer（by @Abhijeet Singh，灵感视频，无源码）	form-input	reference			bounce	
+find:renzo-nav-pill	随打开内容变尺寸的玻璃导航栏，点图标长出标签，搜索把整栏拉成输入框，通知从底部落下面板。导航栏 液态玻璃 morph（by @Renzo Bianchi，灵感视频，无源码）	navigation,feedback	reference		press	glass	
+find:adrian-clearing-pile	逐张清理卡片的每日摘要，清到最后一张时全屏显示 Boom! You’re up to date。卡片堆 滑动清理 空状态（by @Adrian，灵感视频，无源码）	date-time,empty-onboarding	reference		swipe		
+find:swami-moving-pill	红色高亮胶囊在导航项间滑动，落定时各项宽度随之调整。导航 tab 指示器 滑动高亮（by @Swami，灵感视频，无源码）	navigation,motion-transition	reference		press,swipe		
+find:jeet-date-range	选两天或点 Weekend 等预设，填充区和两个滑钮一起滑到新区间，每个预设有自己的颜色。日期范围 date range 预设（by @Jeet，灵感视频，无源码）	date-time,toggle-slider	reference		press		
+find:chan-glass-controls	玻璃质感控件，开关滑钮经过时填充鼓起，滑块轨道在手柄处弯曲，背景被折射而非模糊。液态玻璃 开关 滑块 glass（by @Chan Karunamuni，灵感视频，无源码）	background,toggle-slider	reference	glass		glass	
+find:adi-revision-folder	打开 Client Revision 文件夹，七条客户反馈如 Make it pop 在上方扇形展开。文件夹 扇形展开 卡片 彩蛋（by @Adi，灵感视频，无源码）	layout-card,motion-transition	reference		hover		
+find:adi-document-wallet	从中间打开的证件夹，两侧翻盖外翻，口袋里的印章升到正面。钱包 证件 展开 折叠动画（by @Adi，灵感视频，无源码）	layout-card,motion-transition	reference		hover		
+find:jesper-folding-photos	像折叠屏一样打开的照片卡，封面是当前图，两半展开成宽框显示下一张。照片卡 折叠 展开 相册（by @JesperLandberg，灵感视频，无源码）	media,layout-card	reference				
+find:paulius-component-anatomy	等距视角拆解的组件，每个基元在独立平面上并有引线标注，Explode 与 Assemble 控制拆合。组件解剖 爆炸图 isometric（by @Paulius，灵感视频，无源码）	motion-transition,micro-interaction	reference		press		
+find:marvin-component-layers	音乐播放器倾斜进入 3D，剥离成卡片、线框、间距网格和布局块，再叠回原样。组件分层 3D 爆炸图 设计系统（by @Marvin Schwaibold，灵感视频，无源码）	layout-card,motion-transition	reference	3d	press		
+find:mamuso-jobs-shelf	简历做成侧视书架上的一排盒子，抽出一个后转向正面显示地点和年份。简历 书架 3D 履历（by @Manuel Muñoz Solera，灵感视频，无源码）	motion-transition,fun-3d	reference	3d			
+find:paulius-rippling-sheet	线框平面滚过一道波浪后归平，下方计数显示波高，无着色全靠网格线表现。线框 波浪 wireframe 3D（by @Paulius，灵感视频，无源码）	overlay,motion-transition	reference	3d			
+find:george-voice-orb	一个光球四种状态：待机细环、聆听柔光、思考暗球、说话翻涌，同一物体不同材质。语音助手 orb 状态 voice（by @George，灵感视频，无源码）	ai-ux,media	reference		press		
+find:raul-shader-stamps	一排带动态图案的邮票，指向一张时它放大填满画框，名称和日期出现在纸面上。邮票 shader hover 放大（by @Raul，灵感视频，无源码）	background,date-time	reference	webgl	hover		
+find:leon-layout-switch	List、cards、pack 三种布局切换，封面图移动并缩放到新位置。布局切换 共享元素 视图切换（by @Previous Leon，灵感视频，无源码）	toggle-slider,layout-card	reference		press		
+find:gabriel-share-dropdown	点击头像堆叠后分享面板从中落下，打开时背后页面变模糊。分享 下拉 dropdown 头像组（by @Gabriel，灵感视频，无源码）	select,avatar-user	reference		press		
+find:malik-bills-day	指针沿一周划过时每天变成深色胶囊，当日到期账单滑入下方，彩点标记有账单的日子。账单 周历 日历 hover（by @M A L，灵感视频，无源码）	date-time,motion-transition	reference		hover		
+find:prosku-asset-ribbon	沿屏幕侧边、在倾斜平面上向上排布的一条素材带，只有中段正对用户。素材带 透视 3D 滚动（by @prosku.a，灵感视频，无源码）	motion-transition,fun-3d	reference	3d	scroll		
+find:nils-crumple-bin	删除文件要把它揉成团扔进垃圾桶，扔偏了会提示并把纸团还给你。删除 揉纸 扔垃圾 小游戏（by @Nils，灵感视频，无源码）	motion-transition,micro-interaction	reference		drag		
+find:colton-lens-scroll	老机器卡片列在透镜后滚过，接近顶部底部时弯曲，只有中间那张足够平整可读。透镜 折射 滚动 shader（by @ColtonTollett，灵感视频，无源码）	background,layout-card	reference	webgl	scroll		
+find:janum-glass-lens	在手机屏幕上拖动的玻璃圆块，弯曲下方文字并在边缘产生色散。玻璃透镜 折射 拖拽 液态玻璃（by @Janum Trivedi，灵感视频，无源码）	text-effect,micro-interaction	reference	glass	drag	glass	
+find:florian-action-plan	悬停文件夹时打开，里面的页面抬头是你的名字，移开后合上。文件夹 hover 个性化 打开动画（by @Florian，灵感视频，无源码）	motion-transition,micro-interaction	reference		hover		
+find:ryan-curved-tabs	沿右侧弧线排列的浏览器标签，标题侧向沿弧排布，选中一个后在顶部展平。标签页 tabs 弧形 浏览器（by @Ryan Stephen，灵感视频，无源码）	navigation,micro-interaction	reference		press		
+find:pranav-copy-id	按复制后 ID 输入框本身变成确认，值离开、Copied! 带对勾出现，框尺寸不变。复制 copy 反馈 确认态（by @Pranav Patel，灵感视频，无源码）	form-input,motion-transition	reference		press		
+find:seb-sidebar-collapse	侧栏收起成图标栏再展开，标签、标题和搜索框一同收放。侧边栏 sidebar 折叠 collapse（by @Sebastiano Guerriero，灵感视频，无源码）	navigation,search-command	reference		press		
+find:seb-hover-borders	悬停行时隐藏相邻两条细线让高亮呈整块，开关可对比常规做法。表格 hover 边框 列表行（by @Sebastiano Guerriero，灵感视频，无源码）	table,toggle-slider	reference		hover		
+find:pranav-sub-menu	打开一个分区会关闭其他已打开的，只保留一个分支，彩色竖条标记、短折线连接子项。侧边栏 子菜单 手风琴 树形（by @Pranav Patel，灵感视频，无源码）	navigation,layout-card	reference		press		
+find:cj-issue-rows	添加 issue 时在列表中插入可编辑行而非弹窗，输入提交后下一空行已就位。行内编辑 inline 列表 任务（by @CJ，灵感视频，无源码）	overlay,form-input	reference				
+find:alex-money-stack	一叠付款回执逐张翻看，顶部卡片倾斜离开，其余卡片边缘保持可见。卡片堆 stack 付款 滑动（by @alex，灵感视频，无源码）	layout-card,motion-transition	reference		swipe		
+find:gabriel-image-drum	照片包在旋转滚筒上，不裁剪不缩放，转向背面的靠透视压缩。滚筒 图库 3D carousel（by @Gabriel，灵感视频，无源码）	media,motion-transition	reference	3d			
+find:alex-x-toasts	X 在 iOS 上的通知 toast，新通知以完整尺寸落下，把已有的折成后方细条。通知 toast 堆叠 iOS（by @alex，灵感视频，无源码）	feedback,motion-transition	reference				
+find:tcosta-day-cell	悬停周历某天时单元格长成卡片，上方显示相对日期、下方事件数，下方列表跟随。日历 周视图 hover 展开（by @T. Costa，灵感视频，无源码）	cursor-effect,date-time	reference		hover		
+find:rauno-notif-stack	只有最前面的通知展开，其余是藏在其上沿下的细条，前进时当前折下、下一张展开。通知 堆叠 stack toast（by @rauno，灵感视频，无源码）	feedback,motion-transition	reference				
+find:joy-tool-bar	标签栏末端的加号展开成编辑工具网格，自身变成关闭按钮。标签栏 tab bar 展开 工具栏（by @JOY，灵感视频，无源码）	navigation,button	reference		press		
+find:tcosta-poof	关闭卡片时它翻滚飞出，下一张升到原位，其余堆叠在下方可见。卡片堆 dismiss 滑动删除 stack（by @T. Costa，灵感视频，无源码）	layout-card,motion-transition	reference		press,swipe		
+find:shawn-floating-menu	工具栏在所按按钮周围展开成十字形选项，就在光标所在处。浮动菜单 径向菜单 radial 工具栏（by @shawn.，灵感视频，无源码）	cursor-effect,navigation	reference		press,cursor		

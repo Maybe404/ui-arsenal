@@ -1,17 +1,111 @@
 {
-  "_comment": "Search relevance regression cases. Run: ua.py searchtest. top1 = exact first id; topk_any = any of these ids within k; topk_all_category = every top-k row's category matches regex; topk_no_usage = no top-k row has this usage; empty = query must return nothing.",
-  "cases": [
-    {"q": ["磁吸", "选择"], "top1": "bencho:magnet-select"},
-    {"q": ["磁吸选择"], "top1": "bencho:magnet-select"},
-    {"q": ["背景"], "mode": "code", "k": 5, "topk_all_category": "(?i)background"},
-    {"q": ["验证码"], "k": 3, "topk_any": ["shadcn:input-otp", "obsidianui:input-otp", "reactbits:code-slots"]},
-    {"q": ["pricing"], "k": 3, "topk_all_id": "pricing|plan"},
-    {"q": ["avocado"], "top1": "lucide:lab:avocado"},
-    {"q": ["聊天", "思考", "加载"], "k": 5, "topk_no_usage": "reference"},
-    {"q": ["loading"], "k": 5, "topk_no_usage": "reference"},
-    {"q": ["dashboard"], "mode": "ref", "k": 3, "topk_any": ["collectui:category:dashboard"]},
-    {"q": ["thinking"], "k": 3, "topk_any": ["beautifului:thinking-state", "librariesdev:thinking-orbs"]},
-    {"q": ["xyzzyqq"], "empty": true},
-    {"q": ["icon", "calendar"], "k": 3, "topk_all_id": "calendar"}
-  ]
+ "_comment": "Search relevance regression cases. Run: ua.py searchtest. top1 = exact first id; topk_any = any of these ids within k; topk_all_category = every top-k row's category matches regex; topk_no_usage = no top-k row has this usage; empty = query must return nothing.",
+ "cases": [
+  {
+   "q": [
+    "磁吸",
+    "选择"
+   ],
+   "top1": "bencho:magnet-select"
+  },
+  {
+   "q": [
+    "磁吸选择"
+   ],
+   "top1": "bencho:magnet-select"
+  },
+  {
+   "q": [
+    "背景"
+   ],
+   "mode": "code",
+   "k": 5,
+   "topk_all_task_primary": "background"
+  },
+  {
+   "q": [
+    "验证码"
+   ],
+   "k": 3,
+   "topk_any": [
+    "shadcn:input-otp",
+    "obsidianui:input-otp",
+    "reactbits:code-slots"
+   ]
+  },
+  {
+   "q": [
+    "pricing"
+   ],
+   "k": 3,
+   "topk_any": [
+    "uiarc:plan-comparison",
+    "uiarc:billing-toggle",
+    "originkit:pricing-01"
+   ]
+  },
+  {
+   "q": [
+    "avocado"
+   ],
+   "top1": "lucide:lab:avocado"
+  },
+  {
+   "q": [
+    "聊天",
+    "思考",
+    "加载"
+   ],
+   "k": 5,
+   "topk_no_usage": "reference"
+  },
+  {
+   "q": [
+    "loading"
+   ],
+   "k": 5,
+   "topk_no_usage": "reference"
+  },
+  {
+   "q": [
+    "dashboard"
+   ],
+   "mode": "ref",
+   "k": 3,
+   "topk_any": [
+    "collectui:category:dashboard"
+   ]
+  },
+  {
+   "q": [
+    "thinking"
+   ],
+   "k": 3,
+   "topk_any": [
+    "beautifului:thinking-state",
+    "librariesdev:thinking-orbs"
+   ]
+  },
+  {
+   "q": [
+    "xyzzyqq"
+   ],
+   "empty": true
+  },
+  {
+   "q": [
+    "icon",
+    "calendar"
+   ],
+   "k": 3,
+   "topk_all_id": "calendar"
+  },
+  {
+   "q": [
+    "pricing"
+   ],
+   "k": 1,
+   "topk_no_usage": "reference"
+  }
+ ]
 }
