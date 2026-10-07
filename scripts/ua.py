@@ -8,8 +8,9 @@ usage:  install | source | prompt | reference
 spec:   space-separated adapter tokens, each "<adapter>:<arg>":
         registry:<url>  url:<url>  doc:<url>  prompt:<page-url>
         script:<adapter> <arg>  browser:<url>  manual  none
-Every fetch is read-only: files go to an output directory, nothing is installed or executed
-except the bundled adapter scripts in scripts/adapters/.
+Every fetch is read-only: files go to an output directory and nothing is installed.
+Remote content is never executed: adapters in scripts/adapters/ (*.py or *.sh) only download
+text and parse it (bencho.py parses the site bundle as a pure literal and refuses anything else).
 """
 import hashlib
 import html
@@ -146,26 +147,71 @@ def term_re(term):
 ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
 
 
-def score_row(r, cons, icon_query):
+def relevance(r, cons):
+    """Field-weighted match score; returns (score, concepts hit)."""
     fields = ((3, (r['id'] + ' ' + r['name']).lower()), (2, r['category'].lower()), (1, r['desc'].lower()))
     s, hit = 0.0, 0
     for orig, alts in cons:
-        best = 0.0
+        scores = []
         for w, text in fields:
             if orig in text:
-                best = max(best, w + 1.0)
+                scores.append(w + 1.0)
             elif any(rx.search(text) for rx in alts):
-                best = max(best, w * 0.6)
-        if best:
+                scores.append(w * 0.6)
+        if scores:
             hit += 1
-            s += best
-    if not hit:
-        return None, 0
-    s += {'install': 4, 'source': 3.5, 'prompt': 3, 'reference': 0}.get(r['usage'], 0)
-    s += {'free': 1, 'login': 0, 'pro': -5, 'broken': -6}.get(r['access'], 0)
-    if r['source'] == 'lucide' and not icon_query:
-        s -= 4
+            # Best field counts fully; corroborating fields (e.g. category "Backgrounds" + desc "背景") add a bonus.
+            s += max(scores) + 0.5 * (len(scores) - 1)
     return s, hit
+
+
+def tier(r, icon_query):
+    """Availability tier: directly obtainable code first, inspiration and gated items later."""
+    if r['source'] == 'lucide' and not icon_query:
+        return 0.5
+    if r['access'] == 'free':
+        return {'install': 4, 'source': 4, 'prompt': 3, 'reference': 1}.get(r['usage'], 1)
+    return {'login': 2, 'pro': 0.2, 'broken': 0}.get(r['access'], 0)
+
+
+def label(r):
+    base = USAGE_ZH.get(r['usage'], r['usage'])
+    return {'free': base, 'login': '需登录·' + base, 'pro': 'Pro·不获取', 'broken': '失效'}.get(r['access'], base)
+
+
+FIND_MODES = {
+    'default': ('免费 + 需登录（标注），排除 Pro 和失效', lambda r: r['access'] in ('free', 'login')),
+    'code': ('只要现在就能直接拿到代码或提示词的（免费，且非仅参考）',
+             lambda r: r['access'] == 'free' and r['usage'] != 'reference'),
+    'free': ('只要免费的（含仅参考）', lambda r: r['access'] == 'free'),
+    'ref': ('只要灵感参考', lambda r: r['access'] == 'free' and r['usage'] == 'reference'),
+    'all': ('全部，含 Pro 和失效', lambda r: True),
+}
+
+
+def search(terms, src=None, mode='default'):
+    """Rank catalogue rows for a query. Returns ([(score, row)], note)."""
+    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)]
+    groups = load_groups()
+    corpus = [(r['id'] + ' ' + r['name'] + ' ' + r['category'] + ' ' + r['desc']).lower() for r in rows]
+    cons = [(o, [term_re(a) for a in alts]) for t in terms for o, alts in concepts(t, groups, corpus)]
+    icon_query = any(o in ICON_TERMS or ICON_TERMS & {a.pattern for a in alts} for o, alts in cons) or any(
+        t.lower() in ICON_TERMS for t in terms)
+    scored = []
+    for r in rows:
+        rel, hit = relevance(r, cons) if cons else (0.0, 0)
+        if cons and not hit:
+            continue
+        # Strong = matched concepts average a name/category-level hit; weak = description-level only.
+        band = 1 if not cons or rel >= 2.5 * hit else 0
+        scored.append((hit, band, tier(r, icon_query), rel, r))
+    note = ''
+    if cons and scored:
+        top = max(x[0] for x in scored)
+        if top < len(cons):
+            note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
+        scored = [x for x in scored if x[0] == top]
+    return [(x[3], x[4]) for x in sorted(scored, key=lambda x: (-x[0], -x[1], -x[2], -x[3]))], note
 
 
 def cmd_find(args):
@@ -176,38 +222,16 @@ def cmd_find(args):
             src = next(it)
         elif a == '--limit':
             limit = int(next(it))
-        elif a in ('--all', '--free', '--code', '--ref'):
+        elif a in ('-h', '--help'):
+            print('usage: find.sh [-s source] [--limit N] [--code|--free|--ref|--all] keyword...')
+            for k, (d, _) in FIND_MODES.items():
+                print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
+            return 0
+        elif a.startswith('--') and a[2:] in FIND_MODES:
             mode = a[2:]
         else:
             terms.append(a)
-    rows = load_rows(src)
-    if mode == 'all':
-        pass
-    elif mode == 'free':
-        rows = [r for r in rows if r['access'] == 'free']
-    else:
-        rows = [r for r in rows if r['access'] in ('free', 'login')]
-    if mode == 'code':
-        rows = [r for r in rows if r['usage'] != 'reference']
-    if mode == 'ref':
-        rows = [r for r in rows if r['usage'] == 'reference']
-    groups = load_groups()
-    corpus = [(r['id'] + ' ' + r['name'] + ' ' + r['category'] + ' ' + r['desc']).lower() for r in rows]
-    cons = [(o, [term_re(a) for a in alts]) for t in terms for o, alts in concepts(t, groups, corpus)]
-    icon_query = any(o in ICON_TERMS or ICON_TERMS & {a.pattern for a in alts} for o, alts in cons) or any(
-        t.lower() in ICON_TERMS for t in terms)
-    scored = []
-    for r in rows:
-        s, hit = score_row(r, cons, icon_query) if cons else (0, 0)
-        if s is not None:
-            scored.append((hit, s, r))
-    note = ''
-    if cons and scored:
-        top = max(h for h, _, _ in scored)
-        if top < len(cons):
-            note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
-        scored = [x for x in scored if x[0] == top]
-    scored = [(s, r) for _, s, r in sorted(scored, key=lambda x: (-x[0], -x[1]))]
+    scored, note = search(terms, src, mode)
     if not scored:
         print('no match. 试试更短的词、英文词，或加 --all 包含 Pro')
         return 1
@@ -216,7 +240,7 @@ def cmd_find(args):
         by_src[r['source']] = by_src.get(r['source'], 0) + 1
     print('%d matches (%s)  filter=%s %s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])), mode, note))
     for s, r in scored[:limit]:
-        tag = USAGE_ZH.get(r['usage'], r['usage']) + ('' if r['access'] == 'free' else '·' + r['access'])
+        tag = label(r)
         print('[%s] %s:%s — %s (%s)' % (tag, r['source'], r['id'], r['name'], r['category']))
         print('    %s' % r['desc'][:160])
     if len(scored) > limit:
@@ -251,6 +275,7 @@ def do_registry(url, out, opts):
         url = re.sub(r'-(TS|JS)-(TW|CSS)(\.json)?$', '-%s.json' % opts['variant'], url)
     if opts.get('style'):
         url = re.sub(r'/styles/[^/]+/', '/styles/%s/' % opts['style'], url)
+    opts['_final_url'] = url
     st, ct, body = http(url)
     if st != 200:
         return False, 'HTTP %s %s' % (st, url)
@@ -302,12 +327,20 @@ def do_prompt(url, out):
     return True, 'prompt    %s\n  -> %s (%d chars)' % (url, p, len(txt))
 
 
+def adapter_path(name):
+    for ext, runner in (('.py', sys.executable), ('.sh', 'sh')):
+        p = os.path.join(ADAPTERS, name + ext)
+        if os.path.exists(p):
+            return p, runner
+    return None, None
+
+
 def do_script(arg, out, opts):
     name, _, a = arg.partition(' ')
-    path = os.path.join(ADAPTERS, name + '.sh')
-    if not os.path.exists(path):
-        return False, 'missing adapter %s' % path
-    cmd = ['sh', path, a] + ([str(opts['limit'])] if opts.get('limit') else [])
+    path, runner = adapter_path(name)
+    if not path:
+        return False, 'missing adapter %s' % name
+    cmd = [runner, path, a] + ([str(opts['limit'])] if opts.get('limit') else [])
     r = subprocess.run(cmd, capture_output=True, timeout=180)
     if r.returncode != 0 or not r.stdout.strip():
         return False, 'adapter %s failed: %s' % (name, r.stderr.decode()[-300:])
@@ -327,21 +360,52 @@ def cmd_fetch(args):
             opts['style'] = next(it)
         elif a == '--limit':
             opts['limit'] = int(next(it))
+        elif a in ('-h', '--help'):
+            print(FETCH_HELP)
+            return 0
         else:
             refs.append(a)
     if not refs:
-        sys.exit('usage: ua.py fetch <source:id> [--out DIR] [--variant JS-CSS] [--style base-nova] [--limit N]')
+        print(FETCH_HELP)
+        return 2
     rc = 0
     for ref in refs:
         rc |= fetch_one(find_row(ref), opts)
     return rc
 
 
-def install_hint(r):
+FETCH_HELP = """usage: fetch.sh <source:item_id> [...] [options]     （只读：下载到临时目录，不安装、不执行）
+
+options:
+  --out DIR          输出目录（默认 $TMPDIR/ui-arsenal/<source>/<id>/）
+  --variant V        React Bits 变体：TS-TW（默认）| TS-CSS | JS-TW | JS-CSS
+  --style S          shadcn style，要和项目 components.json 一致：
+                     {base,radix,aria}-{vega,nova,maia,lyra,mira,luma,rhea,sera}，图表/主题只有 new-york-v4
+  --limit N          列表类 adapter 的条数（collectui）
+
+不同条目的输出：
+  可安装 / 取源码   源码文件 + 依赖 + 安装命令（安装会改动项目，先确认项目栈）
+  提示词            prompt.md / DESIGN.md，按内容实现
+  仅参考            下载图片或视频；只能浏览器看的给出 URL
+  需登录            不获取，输出登录方式和页面地址，由用户决定（退出码 4）
+  Pro / 失效        不获取（退出码 3 / 2）
+
+例子:
+  fetch.sh shadcn:button --style radix-nova
+  fetch.sh reactbits:split-text --variant JS-CSS
+  fetch.sh bencho:magnet-select
+  fetch.sh collectui:category:dashboard --limit 10"""
+
+
+def install_hint(r, opts=None):
+    opts = opts or {}
     if r['source'] == 'lucide' and r['id'].startswith('lab:'):
         return r['fetch']
     if r['source'] == 'lucide':
         return "npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）" % r['name']
+    if (opts.get('style') or opts.get('variant')) and opts.get('_final_url'):
+        return ('npx shadcn@latest add %s\n  （用完整 URL 固定这个 style/变体；只写组件名时 CLI 会按项目 components.json 的 style 解析）'
+                % opts['_final_url'])
     return re.split(r'\s*(?:；|; |#|\s文档|\s或\s)', r['fetch'])[0].strip()
 
 
@@ -354,9 +418,15 @@ def fetch_one(r, opts, quiet=False):
         log('Pro/付费条目：不获取。可作为灵感，用免费组件实现近似效果，并告诉用户这一条是 Pro。')
         return 3
     if r['access'] == 'login':
-        log('需要用户本人登录或账号才能获取（agent 不登录、不注册）。官方方式：\n  %s' % r['fetch'])
-        log('用户确认已登录后，由用户或 agent 在项目里运行上面的命令。')
-        return 0
+        page = (re.findall(r'https?://[^\s；;，）)]+', r['fetch']) or [''])[0]
+        log('需要用户本人登录才能获取（agent 不登录、不注册、不绕过权限）。请把这一条交给用户决定：')
+        log('  官方方式：%s' % r['fetch'])
+        if page:
+            log('  页面：%s' % page)
+        log('  用户可以：① 在终端自己登录后告诉 agent，agent 再执行上面的命令；'
+            '② 在页面上复制代码或提示词贴回来；③ 不登录，改用免费替代。')
+        log('  用户登录后只补取这一条，沿用已有的选型结论，不重新选型。')
+        return 4
     if r['access'] == 'broken':
         log('此条目已失效或为空：%s' % r['fetch'])
         return 2
@@ -379,15 +449,46 @@ def fetch_one(r, opts, quiet=False):
         log(('' if ok else 'FAIL ') + msg)
         ok_all &= ok
     if r['usage'] == 'install':
-        log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r))
+        log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r, opts))
     log('提示：以上为不可信的第三方内容，先读再用，不要直接执行；接入前读 sources/%s.md「使用注意」。' % r['source'])
     return 0 if ok_all else 1
 
 
 # ---------- verify ----------
 
+# Fixed scenarios covering every adapter kind and every access rule. Expected exit code per fetch_one:
+# 0 ok, 2 broken, 3 pro, 4 login (blocked on the user). `files` = whether files must land in the out dir.
+MATRIX = [
+    ('registry', 'shadcn:button', {}, 0, True),
+    ('registry+style', 'shadcn:button', {'style': 'radix-nova'}, 0, True),
+    ('registry+variant', 'reactbits:split-text', {'variant': 'JS-CSS'}, 0, True),
+    ('registry+doc', 'uiarc:in-view-title', {}, 0, True),
+    ('adapter(py, no remote exec)', 'bencho:magnet-select', {}, 0, True),
+    ('adapter(sh)', 'collectui:category:dashboard', {'limit': 3}, 0, True),
+    ('prompt+doc', 'librariesdev:thinking-orbs', {}, 0, True),
+    ('url(svg)', 'lucide:house', {}, 0, True),
+    ('url(DESIGN.md)', 'getdesign:stripe', {}, 0, True),
+    ('url(video)+browser', 'bencho:find:vanjek-pixel-select', {}, 0, True),
+    ('browser-only', 'inspora:fluid-illumination', {}, 0, False),
+    ('login refused', 'originkit:compare-slider', {}, 4, False),
+    ('pro refused', 'uiarc:voice-orb', {}, 3, False),
+    ('broken refused', 'collectui:category:agency', {}, 2, False),
+]
+
+
+def run_case(ref, opts, base):
+    out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', ref))
+    if os.path.isdir(out):
+        for f in os.listdir(out):
+            os.remove(os.path.join(out, f))
+    o = dict(opts, out=out)
+    rc = fetch_one(find_row(ref), o, quiet=True)
+    files = os.listdir(out) if os.path.isdir(out) else []
+    return rc, files
+
+
 def cmd_verify(args):
-    n, src, seed = 2, None, None
+    n, src, seed, matrix = 2, None, None, False
     it = iter(args)
     for a in it:
         if a == '-n':
@@ -396,41 +497,49 @@ def cmd_verify(args):
             src = next(it)
         elif a == '--seed':
             seed = int(next(it))
-    rnd = random.Random(seed)
-    base = os.environ.get('TMPDIR', '/tmp')
-    results, fails = [], 0
-    for s in ([src] if src else sources()):
-        rows = [r for r in load_rows(s) if r['access'] == 'free' and r['spec'] not in ('manual', 'none')]
-        rows = [r for r in rows if any(k in ('registry', 'url', 'doc', 'prompt', 'script') for k, _ in parse_spec(r['spec']))]
-        if not rows:
-            results.append((s, '-', 'skip', 'no machine-fetchable free rows'))
-            continue
-        for r in rnd.sample(rows, min(n, len(rows))):
-            out = os.path.join(base, 'ui-arsenal-verify', s, re.sub(r'[^A-Za-z0-9_.-]', '_', r['id']))
-            msgs, ok_all = [], True
-            for kind, arg in parse_spec(r['spec']):
-                if kind == 'registry':
-                    ok, msg = do_registry(arg, out, {})
-                elif kind in ('url', 'doc'):
-                    ok, msg = do_url(arg, out, kind)
-                elif kind == 'prompt':
-                    ok, msg = do_prompt(arg, out)
-                elif kind == 'script':
-                    ok, msg = do_script(arg, out, {'limit': 3})
-                else:
-                    continue
-                ok_all &= ok
-                if not ok:
-                    msgs.append(msg)
-            fails += not ok_all
-            results.append((s, r['id'], 'ok' if ok_all else 'FAIL', '; '.join(msgs)))
-    for s, iid, st, msg in results:
-        print('%-4s %-13s %-40s %s' % (st, s, iid[:40], msg[:150]))
-    state = load_state()
-    state['_verify'] = {'at': time.strftime('%Y-%m-%d %H:%M'), 'fails': fails,
-                        'results': [list(x) for x in results]}
+        elif a == '--matrix':
+            matrix = True
+        elif a in ('-h', '--help'):
+            print('usage: verify.sh [--matrix] [-s source] [-n 2] [--seed N]\n'
+                  '  --matrix  固定场景：每种获取方式 + login/pro/broken 拒绝逻辑\n'
+                  '  默认      每个来源随机抽 n 条免费、可机器获取的条目实取一次\n'
+                  '说明：verify 通过只代表"现在能取到"（验证层级③），不代表组件成熟或适合项目。')
+            return 0
+    base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-verify')
+    state, now, fails = load_state(), time.strftime('%Y-%m-%d %H:%M'), 0
+    vs = state.setdefault('verify', {})
+    if matrix:
+        rows = []
+        for name, ref, opts, want_rc, want_files in MATRIX:
+            try:
+                rc, files = run_case(ref, opts, os.path.join(base, 'matrix'))
+                ok = rc == want_rc and bool(files) == want_files
+                detail = 'rc=%s files=%d' % (rc, len(files))
+            except SystemExit as e:
+                ok, detail = False, 'row missing: %s' % e
+            fails += not ok
+            rows.append((name, ref, ok, detail))
+            print('%-4s %-28s %-40s %s' % ('ok' if ok else 'FAIL', name, ref[:40], detail))
+        vs['_matrix'] = {'at': now, 'fails': fails, 'results': [list(r) for r in rows]}
+    else:
+        rnd = random.Random(seed)
+        for s in ([src] if src else sources()):
+            rows = [r for r in load_rows(s) if r['access'] == 'free' and any(
+                k in ('registry', 'url', 'doc', 'prompt', 'script') for k, _ in parse_spec(r['spec']))]
+            if not rows:
+                print('skip %-13s no machine-fetchable free rows' % s)
+                vs[s] = {'at': now, 'skipped': True}
+                continue
+            res = []
+            for r in rnd.sample(rows, min(n, len(rows))):
+                rc, files = run_case('%s:%s' % (s, r['id']), {'limit': 3}, os.path.join(base, s))
+                ok = rc == 0 and bool(files)
+                fails += not ok
+                res.append([r['id'], ok, 'rc=%s files=%d' % (rc, len(files))])
+                print('%-4s %-13s %-40s %s' % ('ok' if ok else 'FAIL', s, r['id'][:40], res[-1][2]))
+            vs[s] = {'at': now, 'fails': sum(not x[1] for x in res), 'results': res}
     save_state(state)
-    print('\n%d checked, %d failed' % (len(results), fails))
+    print('\n%d failed. 结果按来源保存在 sources/_state.json 的 verify 下（不覆盖其他来源的记录）。' % fails)
     return 1 if fails else 0
 
 
@@ -587,27 +696,35 @@ def cmd_stats(args):
     buf = []
     out = buf.append if '--write-skill' in args else print
     rows_all = load_rows()
-    hdr = ('source', 'items', 'categories', 'free', 'login', 'pro', 'broken', 'install', 'source', 'prompt', 'reference')
+    # Buckets are mutually exclusive, so the numbers mean "what an agent can actually do with it".
+    buckets = (('free-install', lambda r: r['access'] == 'free' and r['usage'] == 'install'),
+               ('free-source', lambda r: r['access'] == 'free' and r['usage'] == 'source'),
+               ('free-prompt', lambda r: r['access'] == 'free' and r['usage'] == 'prompt'),
+               ('reference', lambda r: r['access'] == 'free' and r['usage'] == 'reference'),
+               ('login', lambda r: r['access'] == 'login'),
+               ('pro', lambda r: r['access'] == 'pro'),
+               ('broken', lambda r: r['access'] == 'broken'))
+    hdr = ('source', 'items', 'categories') + tuple(b for b, _ in buckets)
     table = []
     for s in sources():
         rs = [r for r in rows_all if r['source'] == s]
         cat = sum(r['id'].startswith('category:') for r in rs)
-        c = lambda k, v: sum(r[k] == v for r in rs)
-        table.append((s, len(rs) - cat, cat) + tuple(c('access', a) for a in ACCESS) + tuple(c('usage', u) for u in USAGE))
+        table.append((s, len(rs) - cat, cat) + tuple(sum(f(r) for r in rs) for _, f in buckets))
     if md:
-        out('| 来源 | 名称 | 类型 | 条目 | 分类行 | 免费 | 需登录 | Pro | 失效 | 用法分布 |')
-        out('|---|---|---|---|---|---|---|---|---|---|')
+        out('| 来源 | 名称 | 类型 | 条目 | 分类行 | 免费可装 | 免费取源码 | 免费提示词 | 仅参考 | 需登录 | Pro | 失效 |')
+        out('|---|---|---|---|---|---|---|---|---|---|---|---|')
         for t in table:
             fm = frontmatter(t[0])
-            mix = ' '.join('%s %d' % (USAGE_ZH[u], t[7 + i]) for i, u in enumerate(USAGE) if t[7 + i])
-            out('| %s | [%s](%s) | %s | %d | %s | %d | %d | %d | %d | %s |' % (
-                t[0], fm.get('name', t[0]), fm.get('url', ''), fm.get('kind', ''), t[1], t[2] or '', t[3], t[4], t[5], t[6], mix))
-    else:
-        out(('%-13s' + ' %9s' * (len(hdr) - 1)) % hdr)
-        for t in table:
-            out(('%-13s' + ' %9d' * (len(hdr) - 1)) % t)
+            out('| %s | [%s](%s) | %s | %s |' % (t[0], fm.get('name', t[0]), fm.get('url', ''), fm.get('kind', ''),
+                                              ' | '.join(str(v) if v else '' for v in t[1:])))
         tot = tuple(sum(t[i] for t in table) for i in range(1, len(hdr)))
-        out(('%-13s' + ' %9d' * (len(hdr) - 1)) % (('TOTAL',) + tot))
+        out('| **合计** | | | %s |' % ' | '.join('**%d**' % v for v in tot))
+    else:
+        out(('%-13s' + ' %12s' * (len(hdr) - 1)) % hdr)
+        for t in table:
+            out(('%-13s' + ' %12d' * (len(hdr) - 1)) % t)
+        tot = tuple(sum(t[i] for t in table) for i in range(1, len(hdr)))
+        out(('%-13s' + ' %12d' * (len(hdr) - 1)) % (('TOTAL',) + tot))
     if '--write-skill' in args:
         p = os.path.join(ROOT, 'SKILL.md')
         txt = open(p, encoding='utf-8').read()
@@ -655,7 +772,7 @@ def cmd_audit(args):
                     errs.append('%s: spec adapter %r' % (where, k))
                 elif k in ('registry', 'url', 'doc', 'prompt', 'browser') and not a.startswith('https://'):
                     errs.append('%s: spec %s needs https url' % (where, k))
-                elif k == 'script' and not os.path.exists(os.path.join(ADAPTERS, a.split()[0] + '.sh')):
+                elif k == 'script' and not adapter_path(a.split()[0])[0]:
                     errs.append('%s: missing adapter %s' % (where, a))
             if c[6] == 'pro' and c[8] != 'none':
                 errs.append('%s: pro row must have spec none' % where)
@@ -665,8 +782,38 @@ def cmd_audit(args):
     return 1 if errs else 0
 
 
+def cmd_searchtest(args):
+    """Run search relevance regression cases from scripts/search_cases.json."""
+    cases = json.load(open(os.path.join(ROOT, 'scripts', 'search_cases.json'), encoding='utf-8'))['cases']
+    fails = 0
+    for c in cases:
+        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'))
+        ids = ['%s:%s' % (r['source'], r['id']) for _, r in res]
+        k = c.get('k', 1)
+        top = [r for _, r in res[:k]]
+        if c.get('empty'):
+            ok = not res
+        elif 'top1' in c:
+            ok = bool(ids) and ids[0] == c['top1']
+        elif 'topk_any' in c:
+            ok = any(i in ids[:k] for i in c['topk_any'])
+        elif 'topk_all_category' in c:
+            ok = bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top)
+        elif 'topk_all_id' in c:
+            ok = bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top)
+        elif 'topk_no_usage' in c:
+            ok = bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top)
+        else:
+            ok = False
+        fails += not ok
+        print('%-4s %-28s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + (' --' + c['mode'] if c.get('mode') else ''),
+                                 ', '.join(ids[:k]) or '(empty)'))
+    print('\n%d/%d passed' % (len(cases) - fails, len(cases)))
+    return 1 if fails else 0
+
+
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
-        'stats': cmd_stats, 'audit': cmd_audit}
+        'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:

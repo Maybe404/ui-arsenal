@@ -12,15 +12,17 @@ description: 用户收藏的 UI 组件库、动效库、灵感库和图标库的
 ## 命令
 
 ```bash
-$S/find.sh 磁吸 选择               # 搜索：中英文都行，自动展开同义词；全部命中的排前面
-$S/find.sh 背景 --code             # 只要能拿到代码或提示词的（排除仅参考的灵感）
+$S/find.sh 磁吸 选择               # 搜索：中英文都行，自动展开同义词；全部命中的排前面，同档里能直接拿到代码的排前面
+$S/find.sh 背景 --code             # 只要现在就能直接拿到代码或提示词的（免费，排除需登录和仅参考）
 $S/find.sh dashboard --ref         # 只要灵感参考
-$S/find.sh -s reactbits text       # 只搜一个来源；--all 包含 Pro；--free 排除需登录的
-$S/fetch.sh bencho:magnet-select   # 拉取：只读，文件落到 $TMPDIR/ui-arsenal/...，同时打印依赖和安装命令
-$S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 的变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
-$S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style，要和项目 components.json 一致
-$S/stats.sh                        # 各来源条目数、访问状态、用法分布
+$S/find.sh -s reactbits text       # 只搜一个来源；--free 只要免费；--all 含 Pro 和失效；--help 看全部
+$S/fetch.sh bencho:magnet-select   # 拉取：只读，文件落到 $TMPDIR/ui-arsenal/...，打印依赖和安装命令；--help 看全部选项
+$S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
+$S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style，要和项目 components.json 一致；安装命令会给完整 URL
+$S/stats.sh                        # 各来源条目数，按"免费可装 / 免费取源码 / 提示词 / 仅参考 / 需登录 / Pro / 失效"分开统计
 ```
+
+fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获取），4 需要用户登录（交给用户决定）。
 
 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，例如 `find.sh icon calendar` 或 `find.sh avocado`。
 
@@ -79,23 +81,24 @@ $S/stats.sh                        # 各来源条目数、访问状态、用法�
 由 `$S/stats.sh --md` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
 <!-- STATS:BEGIN -->
-| 来源 | 名称 | 类型 | 条目 | 分类行 | 免费 | 需登录 | Pro | 失效 | 用法分布 |
-|---|---|---|---|---|---|---|---|---|---|
-| beautifului | [Beautiful UI](https://www.beautifului.dev/) | component-library | 28 |  | 28 | 0 | 0 | 0 | 可安装 27 取源码 1 |
-| bencho | [Bencho](https://bencho.dev/) | blocks | 214 | 1 | 215 | 0 | 0 | 0 | 取源码 63 仅参考 152 |
-| collectui | [Collect UI](https://collectui.com/) | inspiration | 0 | 220 | 170 | 0 | 0 | 50 | 仅参考 220 |
-| designspells | [Design Spells](https://designspells.com/) | inspiration | 340 |  | 340 | 0 | 0 | 0 | 仅参考 340 |
-| getdesign | [getdesign.md](https://getdesign.md) | prompt-library | 692 | 3 | 644 | 0 | 50 | 1 | 提示词 76 仅参考 619 |
-| inspora | [Inspora](https://www.inspora.design/) | inspiration | 287 |  | 287 | 0 | 0 | 0 | 仅参考 287 |
-| jakubantalik | [Jakub Antalik（个人站）](https://jakubantalik.com) | portfolio | 74 |  | 63 | 0 | 11 | 0 | 可安装 14 取源码 34 仅参考 26 |
-| librariesdev | [Libraries.dev](https://libraries.dev) | effects | 51 |  | 41 | 0 | 10 | 0 | 可安装 51 |
-| loadingui | [loading-ui](https://www.loading-ui.com/) | component-library | 47 |  | 47 | 0 | 0 | 0 | 可安装 47 |
-| lucide | [Lucide](https://lucide.dev) | icons | 2249 |  | 2223 | 0 | 0 | 26 | 可安装 2249 |
-| obsidianui | [ObsidianUI](https://www.obsidianui.dev/) | component-library | 75 |  | 75 | 0 | 0 | 0 | 可安装 75 |
-| originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  | 0 | 383 | 291 | 0 | 可安装 674 |
-| reactbits | [React Bits](https://reactbits.dev/) | effects | 398 | 60 | 215 | 0 | 243 | 0 | 可安装 458 |
-| shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 565 | 0 | 0 | 0 | 可安装 246 取源码 319 |
-| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 243 |  | 131 | 0 | 112 | 0 | 可安装 243 |
+| 来源 | 名称 | 类型 | 条目 | 分类行 | 免费可装 | 免费取源码 | 免费提示词 | 仅参考 | 需登录 | Pro | 失效 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| beautifului | [Beautiful UI](https://www.beautifului.dev/) | component-library | 28 |  | 27 | 1 |  |  |  |  |  |
+| bencho | [Bencho](https://bencho.dev/) | blocks | 214 | 1 |  | 63 |  | 152 |  |  |  |
+| collectui | [Collect UI](https://collectui.com/) | inspiration |  | 220 |  |  |  | 170 |  |  | 50 |
+| designspells | [Design Spells](https://designspells.com/) | inspiration | 340 |  |  |  |  | 340 |  |  |  |
+| getdesign | [getdesign.md](https://getdesign.md) | prompt-library | 692 | 3 |  |  | 76 | 568 |  | 50 | 1 |
+| inspora | [Inspora](https://www.inspora.design/) | inspiration | 287 |  |  |  |  | 287 |  |  |  |
+| jakubantalik | [Jakub Antalik（个人站）](https://jakubantalik.com) | portfolio | 74 |  | 3 | 34 |  | 26 |  | 11 |  |
+| librariesdev | [Libraries.dev](https://libraries.dev) | effects | 51 |  | 41 |  |  |  |  | 10 |  |
+| loadingui | [loading-ui](https://www.loading-ui.com/) | component-library | 47 |  | 47 |  |  |  |  |  |  |
+| lucide | [Lucide](https://lucide.dev) | icons | 2249 |  | 2223 |  |  |  |  |  | 26 |
+| obsidianui | [ObsidianUI](https://www.obsidianui.dev/) | component-library | 75 |  | 75 |  |  |  |  |  |  |
+| originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
+| reactbits | [React Bits](https://reactbits.dev/) | effects | 398 | 60 | 215 |  |  |  |  | 243 |  |
+| shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
+| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 243 |  | 131 |  |  |  |  | 112 |  |
+| **合计** | | | **5937** | **284** | **3008** | **417** | **76** | **1543** | **383** | **717** | **77** |
 <!-- STATS:END -->
 
 各来源的获取方法、使用注意和未解决的问题，见 `sources/<id>.md`。
@@ -103,6 +106,9 @@ $S/stats.sh                        # 各来源条目数、访问状态、用法�
 ## 维护
 
 - `$S/audit.sh`：检查格式，包括 9 列、枚举值、id 重复、取码规格和 adapter 是否存在。改完 TSV 后必须跑。
-- `$S/verify.sh [-n 2] [-s id]`：每个来源抽样实际取一次，确认获取方法还有效，结果记入 `sources/_state.json`。
+- `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式和 login、pro、broken 的拒绝逻辑。
+- `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
+- `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
 - `$S/refresh.sh [id...]`：和线上清单对比，报告新增或下线的条目，**不改 TSV**。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
+- adapter（`scripts/adapters/`）只下载文本并解析，**不执行任何远程代码**。
 - 加新网站：按 `sources/_ADDING.md` 操作。
