@@ -9,7 +9,7 @@
    - 挑一个真实条目实测获取。
    - 列全部条目，Pro 条目也列。
 3. **写文件**：`sources/<id>.md`（frontmatter 必填）、`sources/<id>.tsv`（机器字段 15 列）和 `sources/<id>.notes.tsv`（人工字段 8 列，中文描述、UI 任务、层级、标签、风险），格式见 `_SPEC.md`。站点需要专门处理才能取代码时，写 `scripts/adapters/<id>.py`（或 `.sh`），要求：只读，结果输出到 stdout；**只下载文本并解析，不执行任何远程代码**（不用 `node import`、`eval`，也不运行下载来的脚本）；解析不了时报错退出。spec 写成 `script:<id> <item>`。
-4. **接入 refresh（可选）**：站点有公开的清单接口时，在 `scripts/ua.py` 的 `REFRESH` 里加一个函数，返回线上清单、本地清单和 hash；没有接口的，在 `NO_REFRESH` 里写明原因。
+4. **接入 refresh（可选）**：站点有公开的清单接口时，在 `scripts/ua.py` 的 `REFRESH` 里加一个函数，返回 `(remote, key_of, index_sha, new_row)`：`remote` 是 `{key: 元数据}`（依赖、文件、类型、付费标记等，用来算指纹）；`key_of(row)` 把本地条目映射到同一个 key，不参与比对的返回 None；`new_row(key, meta)` 生成新条目的机器字段。没有接口的，在 `NO_REFRESH` 里写明原因。
 5. **校验**：
    - `scripts/audit.sh` 0 问题；
    - `scripts/verify.sh -s <id>` 全部 ok；

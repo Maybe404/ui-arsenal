@@ -110,6 +110,9 @@ fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获
 - `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式和 login、pro、broken 的拒绝逻辑。
 - `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
 - `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
-- `$S/refresh.sh [id...]`：和线上清单对比，报告新增或下线的条目，**不改 TSV**。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
+- **更新流程（自动报告，人工批准）**：
+  1. `$S/refresh.sh [id...]`：拉取线上清单，和本地比对，写入 `sources/_pending/<日期>/<id>.json`，**不改正式数据**。能发现新增、消失、依赖或付费标记变化（靠元数据指纹）。清单返回 0 条或报错时，只记录错误，不会当成"全部下线"。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
+  2. `$S/diff.sh [id...]`：查看待审变更。新条目要在待审文件里补上 `desc_zh`、`task`、`layer` 才能写入。
+  3. `$S/apply.sh <id>`：把审过的变更写进 `sources/<id>.tsv`，只写机器字段，不碰人工维护的 `.notes.tsv`。消失的条目先标 needs-review，30 天后仍然消失才标 removed，都不删除。然后跑 `audit.sh` 并 git commit，回滚用 git revert。
 - adapter（`scripts/adapters/`）只下载文本并解析，**不执行任何远程代码**。
 - 加新网站：按 `sources/_ADDING.md` 操作。

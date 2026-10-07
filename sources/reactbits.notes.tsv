@@ -456,3 +456,4 @@ pro-kit-agency-homepage	[Pro] 代理公司首页区块组合配方	ai-ux	special
 pro-kit-product-launch	[Pro] 产品发布页区块组合配方	ai-ux	specialized				
 pro-kit-saas-homepage	[Pro] SaaS 首页区块组合配方	ai-ux	specialized				
 pro-kit-agent-skill	[Pro] 教 agent 正确安装使用 React Bits Pro 的 skill	ai-ux	specialized				
+crystalized-ball	玻璃水晶球，边缘有噼啪电光，球内发光尘埃随光标旋转、点击时摇晃、挂载时点亮，单色可调 (WebGL)；依赖 ogl	fun-3d,cursor-effect	specialized	webgl,glass	cursor,press	glow,glass	

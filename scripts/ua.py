@@ -598,7 +598,18 @@ def cmd_verify(args):
     return 1 if fails else 0
 
 
-# ---------- refresh ----------
+# ---------- refresh / diff / apply ----------
+#
+# refresh  pulls each source's public index and writes a proposal to sources/_pending/<date>/<source>.json.
+#          It never touches the catalogue.
+# diff     prints the latest proposals.
+# apply    writes approved machine fields into sources/<id>.tsv (and notes rows for new items that already
+#          have a Chinese description in the proposal). Run audit afterwards and commit with git; git revert
+#          is the rollback.
+
+PENDING = os.path.join(SRC, '_pending')
+REMOVE_AFTER_DAYS = 30  # an item missing in two refreshes at least this far apart is proposed as removed
+
 
 def load_state():
     return json.load(open(STATE, encoding='utf-8')) if os.path.exists(STATE) else {}
@@ -609,98 +620,174 @@ def save_state(s):
         json.dump(s, f, ensure_ascii=False, indent=1)
 
 
-def names_of(url, key='items', field='name'):
+def fp(meta):
+    """Short fingerprint of the metadata an index exposes (deps, files, type, tier, tags...)."""
+    return hashlib.sha1(json.dumps(meta, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:10] if meta else ''
+
+
+def get_json(url):
     st, ct, body = http(url, tries=3)
     if st != 200:
         raise RuntimeError('HTTP %s %s' % (st, url))
-    d = json.loads(body)
-    return {x[field] for x in d[key]}, sha(body)
+    return json.loads(body), body
 
 
-def reg_local(s, strip=None, must=None):
-    out = set()
-    for r in load_rows(s):
-        for k, a in parse_spec(r['spec']):
-            if k == 'registry' and (not must or must in a):
-                n = os.path.basename(a)[:-5] if a.endswith('.json') else os.path.basename(a)
-                out.add(re.sub(strip, '', n) if strip else n)
-    return out
+def reg_meta(item):
+    return {'type': item.get('type', ''), 'deps': sorted(item.get('dependencies') or []),
+            'rdeps': sorted(item.get('registryDependencies') or []),
+            'files': sorted(f.get('path', '') for f in item.get('files') or [])}
 
 
-def ids_local(s, access=None):
-    return {r['id'] for r in load_rows(s) if not r['id'].startswith('category:') and (not access or r['access'] in access)}
+def spec_key(r, strip=None, must=None):
+    for k, a in parse_spec(r['spec']):
+        if k == 'registry' and (not must or must in a):
+            n = os.path.basename(a)
+            n = n[:-5] if n.endswith('.json') else n
+            return re.sub(strip, '', n) if strip else n
+    return None
 
 
+def kebab(name):
+    return re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', name).lower()
+
+
+# Each refresher returns (remote: {key: meta}, key_of(row) -> key|None, index_sha, new_row(key, meta) -> dict).
 def r_shadcn():
-    names, h = set(), []
+    remote, h = {}, []
     for st in ('base-nova', 'radix-nova', 'aria-nova', 'new-york-v4'):
-        n, x = names_of('https://ui.shadcn.com/r/styles/%s/registry.json' % st)
-        names |= n
-        h.append(x)
-    return names - {'index', 'style'}, reg_local('shadcn', must='/styles/'), sha(''.join(h).encode())
+        d, body = get_json('https://ui.shadcn.com/r/styles/%s/registry.json' % st)
+        h.append(sha(body))
+        for it in d['items']:
+            if it['name'] in ('index', 'style'):
+                continue
+            m = remote.setdefault(it['name'], {'styles': [], **reg_meta(it)})
+            m['styles'].append(st)
+    new = lambda k, m: {'spec': 'registry:https://ui.shadcn.com/r/styles/%s/%s.json' % (
+        'base-nova' if 'base-nova' in m['styles'] else m['styles'][0], k),
+        'fetch': 'npx shadcn@latest add %s' % k, 'url': 'https://ui.shadcn.com/docs/components/' + k,
+        'framework': 'react', 'category': m['type']}
+    return remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new
 
 
-def r_simple(source, url, strip=None, ignore=()):
+def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
     def f():
-        n, h = names_of(url)
-        n -= set(ignore)
-        if strip:
-            n = {re.sub(strip, '', x) for x in n}
-        return n, reg_local(source, strip), h
+        d, body = get_json(base + '/r/registry.json')
+        remote = {}
+        for it in d['items']:
+            if it['name'] in ignore:
+                continue
+            k = re.sub(strip, '', it['name']) if strip else it['name']
+            if strip and not it['name'].endswith('-TS-TW'):
+                remote.setdefault(k, {})
+                continue
+            remote[k] = reg_meta(it)
+        def new(k, m):
+            name = k + ('-TS-TW' if strip else '')
+            return {'spec': 'registry:%s/r/%s.json' % (base, name),
+                    'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s/r/%s.json' % (base, name),
+                    'url': (url_tpl % k) if url_tpl else base, 'framework': 'react', 'category': m.get('type', '')}
+        return remote, lambda r: spec_key(r, strip), sha(body), new
     return f
+
+
+def r_uiarc():
+    d, body = get_json('https://uiarc.dev/r/catalog.json')
+    items = next(v for v in d.values() if isinstance(v, list))
+    remote = {it['name']: {'tier': it.get('tier', ''), 'category': it.get('category', ''),
+                           'deps': sorted(it.get('dependencies') or [])} for it in items}
+    def new(k, m):
+        pro = m['tier'] != 'free'
+        return {'spec': 'none' if pro else 'registry:https://uiarc.dev/r/%s.json' % k,
+                'fetch': 'https://uiarc.dev/components/%s/markdown' % k if pro else 'npx shadcn@latest add https://uiarc.dev/r/%s.json' % k,
+                'url': 'https://uiarc.dev/components/' + k, 'framework': 'react', 'category': m['category'],
+                'access': 'pro' if pro else 'free'}
+    # foundation, agent skill and templates are not part of the component catalog
+    key = lambda r: None if r['category'] in ('Templates', 'Skill', 'Foundation') else r['id']
+    return remote, key, sha(body), new
 
 
 def r_lucide():
     st, ct, body = http('https://unpkg.com/lucide-static@latest/tags.json', tries=3)
     if st != 200:
         raise RuntimeError('HTTP %s' % st)
-    remote = set(json.loads(body))
+    remote = {k: {'tags': sorted(v)} for k, v in json.loads(body).items()}
     st2, _, meta = http('https://unpkg.com/@lucide/lab@latest/?meta', tries=3)
     if st2 == 200:
         def walk(n):
             for f in n.get('files', []):
                 yield from (walk(f) if f.get('type') == 'directory' else [f['path']])
-        remote |= {'lab:' + os.path.basename(f)[:-3] for f in walk(json.loads(meta))
-                   if f.startswith('/dist/esm/icons/') and f.endswith('.js')}
-    local = {r['id'] for r in load_rows('lucide') if r['access'] == 'free'}
-    return remote, local, sha(body + meta)
+        for f in walk(json.loads(meta)):
+            if f.startswith('/dist/esm/icons/') and f.endswith('.js'):
+                remote['lab:' + os.path.basename(f)[:-3]] = {}
+    def new(k, m):
+        lab = k.startswith('lab:')
+        n = k[4:] if lab else k
+        return {'spec': ('url:https://unpkg.com/@lucide/lab@latest/dist/esm/icons/%s.js' if lab else
+                         'url:https://unpkg.com/lucide-static@latest/icons/%s.svg') % n,
+                'fetch': 'npm i @lucide/lab' if lab else 'https://unpkg.com/lucide-static@latest/icons/%s.svg' % n,
+                'url': 'https://lucide.dev/icons/' + (('lab/' + n) if lab else n), 'framework': 'multi',
+                'category': 'lab' if lab else 'icon'}
+    return remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new
 
 
 def r_originkit():
-    n, h = names_of('https://mcp.originkit.dev/v1/registry', key='components')
-    return n, {r['id'] for r in load_rows('originkit') if r['category'] != 'template'}, h
+    d, body = get_json('https://mcp.originkit.dev/v1/registry')
+    remote = {c['name']: {'category': c.get('category', ''), 'kind': c.get('kind', ''),
+                          'deps': sorted(c.get('dependencies') or []),
+                          'rdeps': sorted(c.get('registryDependencies') or [])} for c in d['components']}
+    new = lambda k, m: {'spec': 'manual', 'fetch': 'npx originkit add %s（需 originkit login）；页面 https://www.originkit.dev/components/%s' % (k, k),
+                        'url': 'https://www.originkit.dev/components/' + k, 'framework': 'react',
+                        'category': m['category'], 'access': 'login'}
+    return remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new
 
 
 def r_bencho():
     st, ct, body = http('https://bencho.dev/llms.txt', tries=3)
     if st != 200:
         raise RuntimeError('HTTP %s' % st)
-    ids = set(re.findall(r'bencho\.dev/blocks/([a-z0-9-]+)', body.decode()))
+    remote = {k: {} for k in re.findall(r'bencho\.dev/blocks/([a-z0-9-]+)', body.decode())}
     st2, _, sm = http('https://bencho.dev/sitemap.xml', tries=3)
     if st2 == 200:
-        ids |= {'find:' + x for x in re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode())}
+        remote.update({'find:' + x: {} for x in re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode())})
         body += sm
     parked = {r['id'] for r in load_rows('bencho') if '未在站点上架' in r['desc'] or 'parked' in r['desc']}
-    return ids, ids_local('bencho') - parked, sha(body)
+    def new(k, m):
+        if k.startswith('find:'):
+            return {'spec': 'browser:https://bencho.dev/finds/' + k[5:], 'fetch': 'https://bencho.dev/finds/' + k[5:],
+                    'url': 'https://bencho.dev/finds/' + k[5:], 'usage': 'reference', 'category': 'finds'}
+        return {'spec': 'script:bencho ' + k, 'fetch': 'scripts/fetch.sh bencho:' + k,
+                'url': 'https://bencho.dev/blocks/' + k, 'framework': 'react', 'usage': 'source'}
+    key = lambda r: None if r['id'] in parked or r['id'].startswith('category:') else r['id']
+    return remote, key, sha(body), new
 
 
 def r_getdesign():
     st, ct, body = http('https://getdesign.md/sitemap.xml', tries=3)
     if st != 200:
         raise RuntimeError('HTTP %s' % st)
-    free = set(re.findall(r'https://getdesign\.md/([^/<]+)/design-md<', body.decode()))
-    catalog = {'site:' + x for x in re.findall(r'https://getdesign\.md/design-md/([^/<]+)<', body.decode())}
-    local = {r['id'] for r in load_rows('getdesign') if r['usage'] == 'prompt' or r['id'].startswith('site:')}
-    return free | catalog, local, sha(body)
+    txt = body.decode()
+    remote = {x: {} for x in re.findall(r'https://getdesign\.md/([^/<]+)/design-md<', txt)}
+    remote.update({'site:' + x: {} for x in re.findall(r'https://getdesign\.md/design-md/([^/<]+)<', txt)})
+    def new(k, m):
+        if k.startswith('site:'):
+            n = k[5:]
+            return {'spec': 'browser:https://getdesign.md/design-md/' + n, 'fetch': 'https://getdesign.md/design-md/' + n,
+                    'url': 'https://getdesign.md/design-md/' + n, 'usage': 'reference', 'category': 'catalog'}
+        return {'spec': 'url:https://getdesign.md/design-md/%s/DESIGN.md' % k,
+                'fetch': 'curl -s https://getdesign.md/design-md/%s/DESIGN.md -o DESIGN.md' % k,
+                'url': 'https://getdesign.md/%s/design-md' % k, 'usage': 'prompt', 'category': 'design-md'}
+    key = lambda r: r['id'] if r['usage'] == 'prompt' or r['id'].startswith('site:') else None
+    return remote, key, sha(body), new
 
 
 REFRESH = {
     'shadcn': r_shadcn,
-    'reactbits': r_simple('reactbits', 'https://reactbits.dev/r/registry.json', strip=r'-(JS|TS)-(CSS|TW)$'),
-    'uiarc': r_simple('uiarc', 'https://uiarc.dev/r/registry.json'),
-    'obsidianui': r_simple('obsidianui', 'https://www.obsidianui.dev/r/registry.json'),
-    'beautifului': r_simple('beautifului', 'https://www.beautifului.dev/r/registry.json'),
-    'loadingui': r_simple('loadingui', 'https://loading-ui.com/r/registry.json', ignore=('index', 'style', 'utils')),
+    'reactbits': r_registry('https://reactbits.dev', 'npx shadcn@latest add @react-bits/%s', strip=r'-(JS|TS)-(CSS|TW)$'),
+    'uiarc': r_uiarc,
+    'obsidianui': r_registry('https://www.obsidianui.dev', url_tpl='https://www.obsidianui.dev/docs/%s'),
+    'beautifului': r_registry('https://www.beautifului.dev', url_tpl='https://www.beautifului.dev/#%s'),
+    'loadingui': r_registry('https://loading-ui.com', 'npx shadcn@latest add @loading-ui/%s',
+                            ignore=('index', 'style', 'utils'), url_tpl='https://loading-ui.com/docs/components/%s'),
     'lucide': r_lucide,
     'originkit': r_originkit,
     'bencho': r_bencho,
@@ -715,33 +802,180 @@ NO_REFRESH = {
 }
 
 
+def days_between(a, b):
+    try:
+        return abs((time.mktime(time.strptime(a, '%Y-%m-%d')) - time.mktime(time.strptime(b, '%Y-%m-%d'))) / 86400)
+    except ValueError:
+        return 0
+
+
 def cmd_refresh(args):
-    targets = [a for a in args if not a.startswith('-')] or sorted(set(sources()))
-    state, rc = load_state(), 0
+    if '-h' in args or '--help' in args:
+        print('usage: refresh.sh [source...]   拉取线上清单，生成 sources/_pending/<日期>/<source>.json 待审变更，不改正式数据')
+        return 0
+    targets = [a for a in args if not a.startswith('-')] or sources()
+    today = time.strftime('%Y-%m-%d')
+    outdir = os.path.join(PENDING, today)
+    os.makedirs(outdir, exist_ok=True)
+    rc = 0
     for s in targets:
         if s not in REFRESH:
-            print('%-13s skip  %s' % (s, NO_REFRESH.get(s, 'no refresh adapter')))
+            print('%-13s skip   %s' % (s, NO_REFRESH.get(s, 'no refresh adapter')))
             continue
+        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok'}
         try:
-            remote, local, h = REFRESH[s]()
+            remote, key_of, h, new_row = REFRESH[s]()
+            if not remote:
+                raise RuntimeError('index returned 0 items (parser broken or site changed)')
         except Exception as e:
-            print('%-13s ERROR %s' % (s, e))
+            prop.update(status='error', error=str(e)[:300])
+            json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            print('%-13s ERROR  %s  → 不产生任何条目变更（不会当作全部下线）' % (s, prop['error']))
             rc = 1
             continue
-        prev = state.get(s, {})
-        added, removed = sorted(remote - local), sorted(local - remote)
-        changed = prev.get('sha256') not in (None, h)
-        state[s] = {'checked_at': time.strftime('%Y-%m-%d %H:%M'), 'sha256': h, 'remote': len(remote),
-                    'local': len(local), 'added': added, 'removed': removed}
-        print('%-13s remote %4d  local %4d  new %3d  gone %3d%s' % (
-            s, len(remote), len(local), len(added), len(removed), '  (index changed since last refresh)' if changed else ''))
-        if added:
-            print('    new:  ' + ' '.join(added[:30]) + (' ...' if len(added) > 30 else ''))
-        if removed:
-            print('    gone: ' + ' '.join(removed[:30]) + (' ...' if len(removed) > 30 else ''))
-    save_state(state)
-    print('\nrefresh 只报告差异，不改 TSV。新条目要补中文描述后按 _ADDING.md 写入。')
+        local = {}
+        for r in load_rows(s, include_removed=True):
+            k = key_of(r)
+            if k:
+                local[k] = r
+        seen, init, changed, missing, added = [], [], [], [], []
+        for k, r in local.items():
+            if k in remote:
+                seen.append(r['id'])
+                newfp, m = fp(remote[k]), remote[k]
+                deps = ' '.join(m.get('deps', []))
+                acc = {'pro': 'pro', 'free': 'free'}.get(m.get('tier', ''), None)
+                if not r['fingerprint']:
+                    init.append({'id': r['id'], 'fingerprint': newfp, 'deps': deps})
+                elif r['fingerprint'] != newfp or (acc and acc != r['access']):
+                    changed.append({'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
+                                    'access': [r['access'], acc or r['access']]})
+            elif r['status'] != 'removed':
+                stale = r['status'] == 'needs-review' and days_between(r['last_seen'], today) >= REMOVE_AFTER_DAYS
+                missing.append({'id': r['id'], 'status': r['status'], 'last_seen': r['last_seen'],
+                                'proposal': 'removed' if stale else 'needs-review'})
+        for k in sorted(set(remote) - set(local)):
+            row = new_row(k, remote[k])
+            added.append(dict(row, key=k, id=kebab(k) if s == 'reactbits' else k, title=k,
+                              fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps', [])),
+                              desc_zh='', task='', layer=''))
+        prev = load_state().get('refresh', {}).get(s, {})
+        prop.update(index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
+                    remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
+                    missing=missing, added=added)
+        json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        st = load_state()
+        st.setdefault('refresh', {})[s] = {'at': prop['generated_at'], 'index_sha': h}
+        save_state(st)
+        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d' % (
+            s, len(remote), len(local), len(init), len(changed), len(missing), len(added)))
+    print('\n待审变更已写入 %s/（不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。' % outdir)
     return rc
+
+
+def latest_pending(s):
+    if not os.path.isdir(PENDING):
+        return None
+    for d in sorted(os.listdir(PENDING), reverse=True):
+        p = os.path.join(PENDING, d, s + '.json')
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def cmd_diff(args):
+    targets = [a for a in args if not a.startswith('-')] or sources()
+    for s in targets:
+        p = latest_pending(s)
+        if not p:
+            continue
+        d = json.load(open(p, encoding='utf-8'))
+        if d['status'] != 'ok':
+            print('## %s  ERROR %s' % (s, d.get('error')))
+            continue
+        print('## %s  (%s)  init %d  changed %d  missing %d  new %d' % (
+            s, d['generated_at'], len(d['init']), len(d['changed']), len(d['missing']), len(d['added'])))
+        for c in d['changed'][:20]:
+            print('  changed  %-36s deps %r → %r  access %s → %s' % (c['id'], c['deps'][0], c['deps'][1], *c['access']))
+        for m in d['missing'][:20]:
+            print('  missing  %-36s %s → %s (last seen %s)' % (m['id'], m['status'], m['proposal'], m['last_seen']))
+        for a in d['added'][:20]:
+            print('  new      %-36s %s%s' % (a['id'], a.get('category', ''), '' if a['desc_zh'] else '  （待补 desc_zh/task/layer 才能写入）'))
+        more = sum(max(0, len(d[k]) - 20) for k in ('changed', 'missing', 'added'))
+        if more:
+            print('  ... %d more, see %s' % (more, p))
+    return 0
+
+
+def cmd_apply(args):
+    if not args or args[0] in ('-h', '--help'):
+        print('usage: apply.sh <source> [--file pending.json]   把已审的待审变更写入 sources/<source>.tsv（只写机器字段）')
+        return 0
+    s = args[0]
+    p = args[args.index('--file') + 1] if '--file' in args else latest_pending(s)
+    if not p:
+        sys.exit('no pending proposal for %s; run refresh.sh %s first' % (s, s))
+    d = json.load(open(p, encoding='utf-8'))
+    if d['status'] != 'ok':
+        sys.exit('proposal is an error report, nothing to apply: %s' % d.get('error'))
+    today = d['generated_at'][:10]
+    mp, np_ = os.path.join(SRC, s + '.tsv'), os.path.join(SRC, s + '.notes.tsv')
+    rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in open(mp, encoding='utf-8') if l.strip()]
+    by_id = {r['id']: r for r in rows}
+    n = {'seen': 0, 'init': 0, 'changed': 0, 'missing': 0, 'added': 0, 'skipped_new': 0}
+    for i in d['seen']:
+        r = by_id.get(i)
+        if r:
+            r['last_seen'] = today
+            if r['status'] == 'needs-review' and not any(c['id'] == i for c in d['changed']):
+                r['status'] = 'active'
+            n['seen'] += 1
+    for c in d['init']:
+        if c['id'] in by_id:
+            by_id[c['id']]['fingerprint'] = c['fingerprint']
+            if c['deps']:
+                by_id[c['id']]['deps'] = c['deps']
+            n['init'] += 1
+    for c in d['changed']:
+        r = by_id.get(c['id'])
+        if r:
+            r['fingerprint'], r['deps'], r['access'] = c['fingerprint'][1], c['deps'][1] or r['deps'], c['access'][1]
+            if r['access'] == 'pro':
+                r['spec'] = 'none'
+            r['status'] = 'needs-review'
+            n['changed'] += 1
+    for m in d['missing']:
+        r = by_id.get(m['id'])
+        if r:
+            r['status'] = m['proposal']
+            n['missing'] += 1
+    new_notes = []
+    for a in d['added']:
+        if not (a.get('desc_zh') and a.get('task') and a.get('layer')):
+            n['skipped_new'] += 1
+            continue
+        if a['id'] in by_id:
+            continue
+        row = {k: '' for k in COLS}
+        row.update(source=s, id=a['id'], name=a['title'], category=a.get('category', ''), url=a.get('url', ''),
+                   fetch=a.get('fetch', ''), spec=a.get('spec', 'manual'), access=a.get('access', 'free'),
+                   usage=a.get('usage', 'install'), framework=a.get('framework', ''), deps=a.get('deps', ''),
+                   status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''))
+        rows.append(row)
+        by_id[row['id']] = row
+        new_notes.append('\t'.join([a['id'], a['desc_zh'], a['task'], a['layer'], a.get('visual_tags', ''),
+                                    a.get('interaction_tags', ''), a.get('risk', ''), '']))
+        n['added'] += 1
+    with open(mp, 'w', encoding='utf-8') as f:
+        f.write('\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n')
+    if new_notes:
+        with open(np_, 'a', encoding='utf-8') as f:
+            f.write('\n'.join(new_notes) + '\n')
+    print('applied %s: %s' % (os.path.relpath(p, ROOT), ', '.join('%s %d' % kv for kv in n.items())))
+    if n['skipped_new']:
+        print('有 %d 个新条目缺 desc_zh/task/layer，没有写入：在 %s 里补全后再 apply。' % (n['skipped_new'], p))
+    print('下一步：audit.sh，确认无误后 git commit（回滚用 git revert）。')
+    return 0
 
 
 # ---------- stats / audit ----------
@@ -908,7 +1142,8 @@ def cmd_searchtest(args):
 
 
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
-        'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest}
+        'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
+        'diff': cmd_diff, 'apply': cmd_apply}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:
