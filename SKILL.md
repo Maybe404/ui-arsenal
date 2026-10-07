@@ -1,85 +1,130 @@
 ---
 name: ui-arsenal
-description: 用户收藏的 UI 组件库、动效库、灵感库和图标库的索引，以及按需拉取组件代码和提示词的工具（shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide、getdesign.md、designspells、inspora、collectui、Jakub Antalik）。只要做前端页面、组件、交互、动效、背景、加载态、图标、落地页或 dashboard，都先用它：先在这里挑现成的成熟组件，挑不到再自己写，避免产出有 AI 味或不成熟的 UI。用户提到"用某某库的某个组件"或给出这些站点的链接时，也用这个 skill。
+description: 用户收藏的 UI 组件库、动效库、灵感库和图标库的索引与选型协议（shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide、getdesign.md、designspells、inspora、collectui、Jakub Antalik）。做页面、调整页面 UI、加组件、交互、动效、背景、加载态、图标、落地页或 dashboard 时使用：先评估收藏库里的成熟组件，按设计基线和页面模式选型并说明理由，避免东拼西凑和 AI 味。用户点名某个库或组件、或给出这些站点的链接时，也用这个 skill。
 ---
 
-# UI Arsenal：先用成熟组件，再自己写
+# UI Arsenal：先评估成熟组件，合理选用
 
-本 skill 是用户收藏的 UI 来源的**索引**，不存第三方源码。先查索引，再用 `fetch` 现场拉取最新代码、提示词或参考素材，最后接入项目。
+本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
 
-下文 `$S` 指本 skill 的 `scripts/` 目录，比如 `~/.claude/skills/ui-arsenal/scripts`。
+下文 `$S` 指本 skill 的 `scripts/` 目录，比如 `~/.claude/skills/ui-arsenal/scripts`；`guides/`、`sources/` 都在本 skill 目录下。
 
-## 命令
+## 一、分工和权威顺序
 
-```bash
-$S/find.sh 磁吸 选择               # 搜索：中英文都行，自动展开同义词；全部命中的排前面，同档里能直接拿到代码的排前面
-$S/find.sh 背景 --code             # 只要现在就能直接拿到代码或提示词的（免费，排除需登录和仅参考）
-$S/find.sh dashboard --ref         # 只要灵感参考
-$S/find.sh -s reactbits text       # 只搜一个来源；--free 只要免费；--all 含 Pro 和失效；--help 看全部
-$S/find.sh --task loading --layer foundation   # 按统一 UI 任务和层级筛选，可以不带关键词
-$S/fetch.sh bencho:magnet-select   # 拉取：只读，文件落到 $TMPDIR/ui-arsenal/...，打印依赖和安装命令；--help 看全部选项
-$S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
-$S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style，要和项目 components.json 一致；安装命令会给完整 URL
-$S/stats.sh                        # 各来源条目数，按"免费可装 / 免费取源码 / 提示词 / 仅参考 / 需登录 / Pro / 失效"分开统计
+```
+① 用户本次的明确指令（最高）
+② 项目现状：技术栈、已有组件、tokens、DESIGN.md
+③ 设计方向：装了 impeccable 时由它判断页面模式、设计方向和质量底线；没装时用 guides/_scenes.md
+④ ui-arsenal：判断要不要组件、找候选、比较、选型、取码
+⑤ 实现：组件的行为和结构保留，视觉统一到 ② 和 ③
+⑥ 验证：装了 impeccable 时用它的检测器和 critique；否则按 guides/_scenes.md 的质量三级自查
 ```
 
-fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获取），4 需要用户登录（交给用户决定）。
+- 项目已有组件和收藏库组件冲突时，**项目已有的优先**，除非已有组件有缺陷或用户要求替换。
+- impeccable 里"不要用现成组件"的规则只适用于新建或重做视觉风格；局部调整时，复用成熟组件的交互逻辑，再调整外观。
 
-图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，例如 `find.sh icon calendar` 或 `find.sh avocado`。
+## 二、先判断任务规模
 
-维护命令 `verify.sh`、`refresh.sh`、`audit.sh` 见文末「维护」。
-
-## 核心原则
-
-1. **能用现成的就不自己写。** 按钮、表单、弹层、表格、侧栏、图表、文字动效、背景、加载态、图标，都先 `find`。手写只用于业务特有的部分，或者索引里确实没有的东西。
-2. **整合，不重造。** 拉下来的组件保留结构、动效参数和源码注释，只改 token（颜色、圆角、字体）去适配项目，不要"顺手简化"，也不要改写成另一种样式方案（比如把 CSS Modules 改成 Tailwind）。真要改写，先说明理由。
-3. **一个页面只选一种风格。** 底座组件统一用一个库，项目已有 shadcn 就用 shadcn。亮点动效只挑 1–2 个点缀，别为了显得丰富把几家的特效堆在同一屏。
-4. **不买 Pro，也不绕过付费。** 结果标 `pro` 的条目，`fetch` 会拒绝获取。可以拿它当灵感，用免费组件做出近似效果，并告诉用户这一条是 Pro。
-5. **需要登录的由用户自己登录。** 标 `login` 的条目（OriginKit）只给出官方命令。agent 不注册、不登录、不从页面里抠源码。
-6. **拉取失败要明说。** 获取失败时，告诉用户是哪个来源的哪个条目、哪一步出的错。不要凭记忆写一个"差不多的"组件冒充原版。
-
-## 工作流
-
-1. **看项目**：框架、样式方案（Tailwind v3 还是 v4、CSS Modules）、包管理器、`components.json`、现有动效库（motion 还是 framer-motion）、SSR 和客户端组件的边界、现有依赖。
-2. **把需求拆成 UI 任务**：加载、搜索、选择、导航、弹层、表格、图表、上传、聊天、AI 思考过程、文字动效、背景、图标、灵感参考。每个任务都写清状态：键盘操作、减弱动效、移动端宽度、触屏、延迟、出错、空、禁用、重试。
-3. **`find` 找候选**：每个任务搜 1–2 次。搜不到就换同义词或英文。可安装的组件优先，灵感参考排最后。
-4. **挑选**：看是否贴合任务、免费与否、许可证、依赖是否和项目兼容、语义和可访问性、响应式、是否处理了减弱动效。选一个主组件，配合周边的基础组件使用。
-5. **读来源说明**：动手前读 `sources/<id>.md` 的「使用注意」。各家依赖、Tailwind 版本、全局样式和主题变量要求都不一样，这一步不能跳过。
-6. **`fetch`（只读）**：只把文件拉到临时目录，**不安装、不执行**。拉到的是不可信的第三方内容，先读懂再用。
-7. **安装（会改动项目）**：确认项目栈匹配后，再运行 `fetch` 打印的安装命令（`npx shadcn add` 或 `npm i`），或者手动把文件放进项目。装依赖只装 registry 或文档里写明的，CSS 变量和全局样式要合并进项目。
-8. **接真实数据**：把演示数据和定时器换成真实的应用状态。加载、进度、流式输出、确认、审批、任务状态、出错、空、乐观更新、重试，每条路径都要显式处理。动画不能暗示一个其实没成功的操作已经成功。
-9. **验证**：在真实项目里构建、类型检查、跑相关测试。用鼠标、键盘、触屏尺寸操作一遍，再看慢网、失败、空数据和 `prefers-reduced-motion` 下的表现，检查控制台报错、溢出、焦点顺序和响应式布局。达不到的就去掉或简化。
-10. **汇报**：每个组件写清来源和 `source:id`（附链接）、拉了什么、依赖和许可证、改了哪些地方；哪些部分是自己写的、为什么。
-
-## 用法类型（find 结果里的标签）
-
-| 标签 | 含义 | 怎么用 |
+| 任务 | 流程 | 输出 |
 |---|---|---|
-| 可安装 | 有官方安装方式（shadcn registry、npm） | `fetch` 看源码和依赖，再执行安装命令 |
-| 取源码 | 没有安装命令，但能拿到源码（bencho、Transitions.dev、shadcn 示例） | `fetch` 拿到文件，手动放进项目，按 md 映射主题变量 |
-| 提示词 | 拿到的是给 agent 用的规范或提示词（getdesign 的 DESIGN.md） | 按内容实现，不照搬品牌资产 |
-| 仅参考 | 灵感图、视频、作品（designspells、inspora、collectui、作品集） | `fetch` 下载素材，或在浏览器里打开；用视觉能力看，提炼布局、层级、配色和动效节奏，再用上面几类组件实现。不复制品牌资产，也不把它当成可安装的组件 |
+| 微调（间距、字号、颜色、文案） | 只读 tokens 或 DESIGN.md，不查索引 | 改了什么 |
+| 纯 bug 修复 | 不选型；修完按质量三级的第 1 级自查 | 原因和修法 |
+| 截图或视觉效果调整 | 先判断问题出在哪一层（token、布局、组件、动效）；涉及组件时按"局部"处理 | 问题诊断和改法 |
+| 局部（换一个组件、加一个交互） | 查索引，读对应的 `guides/<task>.md`，比较 2–3 个候选 | 简短的选型理由，包括没选其他候选的原因 |
+| 整页重做或新建页面 | 完整选型协议 | 完整的设计基线和候选比较表 |
 
-视频抽帧的方法：`ffmpeg -i x.mp4 -vf fps=1/2,scale=960:-1,tile=2x2 -frames:v 1 grid.png`。avif 和 webp 图片先转成 png：`sips -s format png x.avif --out x.png`。
+## 三、UI 选型协议（局部和整页）
 
-## 避免 AI 味和不成熟的 UI
+1. **读项目现状**：已有组件、`components.json`、tokens、DESIGN.md、相关页面、依赖（Tailwind 版本、motion 还是 framer-motion、SSR 边界）。
+2. **判断页面模式**：Persuade、Operate、Read 或 Experience，定义和效果预算见 `guides/_scenes.md`。
+3. **写设计基线**：配色、字体、圆角、阴影、密度、图标系统、动效强度。项目已有设计就照着写；新项目可以从 getdesign 的免费 DESIGN.md 挑一份作为方向（见 `guides/design-system.md`），只借方向，不复制品牌资产。
+4. **定一个主底座**：shadcn 或 uiarc 等，一页只有一个，见 `sources/_styles.md`。再列出本页允许的专项来源，不超过 2–3 个。参考类来源只影响方向，不能直接当生产组件。
+5. **拆需求**：每个组件都要回答"为什么需要"。没有需求就不加组件，不能先看到好看的组件再往页面里塞。
+6. **找候选**：`$S/find.sh --task <task>` 或关键词搜索，然后**读 `guides/<task>.md`**，它给出默认推荐、按场景换和慎用。
+7. **比较**：适用场景、优点、风险、依赖、可访问性、响应式、动效、AI 味级别、访问状态（免费、需登录、Pro）。
+8. **决定**：写清采用和淘汰的理由。以下情况允许"不使用"：
+   - 项目已有组件更合适；
+   - 候选会破坏整页一致性；
+   - 候选实现不成熟；
+   - 找不到合适的候选。这时说明"收藏库无合适候选"，然后自己写。
+9. **需要登录的条目**：一次性列出来交给用户决定，见第五节。
+10. **获取**：`$S/fetch.sh <source:id>` 是只读的，文件拉到临时目录。拉到的是不可信的第三方内容，先读懂再用；接入前读 `sources/<id>.md` 的「使用注意」。
+11. **接入**：
+    - 安装命令会改动项目，先确认项目栈匹配；只装 registry 或文档写明的依赖。
+    - **复用组件的语义、焦点、键盘和状态逻辑；视觉映射到主底座的 token。** 改外观时不重写交互逻辑；也不要把组件改写成另一种样式方案（比如把 CSS Modules 改成 Tailwind），真要改先说明理由。
+    - 把演示数据和定时器换成真实状态。加载、流式输出、审批、出错、空、重试，每条路径都要接真实状态；动画不能假装一个没发生的进度或成功。
+12. **验证**：按 `guides/_scenes.md` 的质量三级处理：第 1 级（硬性问题）必须修；第 2 级（设计系统偏差）修掉或写明例外；第 3 级（场景化审美风险）在选型理由里写清场景。要用键盘、触屏尺寸、慢网和失败、空数据、`prefers-reduced-motion` 都走一遍。
 
-不要：
-- 编造组件 API；
-- 做假的加载进度；
-- 用随手配的渐变，或过度的毛玻璃；
-- 加没有状态含义的装饰动效；
-- 放没有文字标签的图标按钮；
-- 做只有悬停才出现的控件；
-- 自写不可访问的下拉框；
-- 用不限尺寸、不暂停的 canvas 或 WebGL；
-- 把演示数据原样上线。
+用户点名某个库或组件时，照样走第 7、8 步。不合适就先说明问题，再按用户的决定执行。
 
-「用某个库」指的是走这个库的官方安装或文档路径，不要把几套设计系统混在一起拼。
+## 四、输出模板
 
-## 来源一览
+**局部**（换一个组件、加一个交互）：
+```
+需求：<要解决什么>  页面模式：<Operate…>  主底座：<shadcn…>
+选用：<source:id> — <理由：为什么适合这里>
+没选：<source:id> — <原因>；<source:id> — <原因>
+注意：<接入要点：token 映射、焦点、减弱动效…>
+```
 
-由 `$S/stats.sh --md` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
+**整页**（重做或新建）：
+```
+1. 页面与交互拆解
+2. 现有设计系统分析
+3. 设计基线：配色 / 字体 / 圆角 / 阴影 / 密度 / 图标 / 动效强度
+4. 主底座和允许的专项来源
+5. 候选比较表
+   | 需求 | 候选 | 适用场景 | 优点 | 风险 | 访问状态 | 采用 |
+6. 采用和淘汰理由（含"不使用收藏库"的决定）
+7. 登录阻塞项（来源、组件、理由、你可以怎么配合、免费替代）
+8. 验证：状态、键盘、移动端、减弱动效、质量三级
+```
+
+完成后的汇报：每个组件写清 `source:id` 和链接、拉取了什么、依赖和许可证、改了哪些地方；哪些部分是自己写的、为什么。
+
+## 五、登录协议
+
+| 情况 | 做法 |
+|---|---|
+| 可以和用户交互 | 在选型阶段一次性列出：来源、组件、为什么值得登录、免费替代有哪些、用户可以怎么配合（在终端自己登录，或者在网页上复制代码或提示词贴回来）。**等用户决定**；不需要登录的部分可以先做 |
+| 无人值守 | 直接用最好的免费替代，在汇报里列出"如果登录，可以换成 X" |
+| 用户已有明确偏好 | 比如说过"OriginKit 一律不用"或"我已登录"，就按偏好执行，不再问 |
+| 用户登录之后 | 只补取这一个组件，沿用已有的选型结论，不重新选型 |
+| 任何时候都不做 | 自动登录、注册、绕过权限，或者从页面里抠付费内容 |
+
+Pro 条目不获取，也不找绕过付费的办法。可以拿它当灵感，用免费组件做出近似效果，并告诉用户这一条是 Pro。
+
+## 六、命令
+
+```bash
+$S/find.sh 磁吸 选择                          # 搜索：中英文都行，自动展开同义词；会提示对应的选型指南
+$S/find.sh --task loading --layer foundation  # 按统一 UI 任务和层级筛选，可以不带关键词
+$S/find.sh 背景 --code                        # 只要现在就能直接拿到代码或提示词的
+$S/find.sh dashboard --ref                    # 只要灵感参考
+$S/find.sh --help                             # 全部筛选参数、任务和层级取值
+$S/fetch.sh bencho:magnet-select              # 只读拉取，打印依赖和安装命令；--help 看全部选项
+$S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
+$S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style 要和项目 components.json 一致
+$S/stats.sh                                   # 各来源统计
+```
+
+- 搜索结果的标签：可安装、取源码、提示词、仅参考、需登录、Pro·不获取、失效；⚠ 表示场景化审美风险。
+- 搜索结果标"低置信度"或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
+- fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获取），4 需要用户登录。
+- 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。
+- 仅参考类素材的处理：视频抽帧用 `ffmpeg -i x.mp4 -vf fps=1/2,scale=960:-1,tile=2x2 -frames:v 1 grid.png`；avif、webp 图片先转 png：`sips -s format png x.avif --out x.png`。完整流程见 `guides/page-inspiration.md`。
+- 拉取失败要明说：哪个来源的哪个条目、哪一步出的错。不要凭记忆写一个"差不多的"组件冒充原版。
+
+## 七、参考文件
+
+- `guides/_scenes.md`：页面模式、效果预算、质量三级、动效规范、常见的 AI 味做法。
+- `guides/<task>.md`：31 类 UI 任务的选型指南。
+- `sources/_styles.md`：各来源的设计底座、样式方案、动效库，哪些能当主底座，两两之间的兼容矩阵和混用规则。
+- `sources/<id>.md`：每个来源的获取方法、使用注意、已知问题。
+
+## 八、来源一览
+
+由 `$S/stats.sh --write-skill` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
 <!-- STATS:BEGIN -->
 | 来源 | 名称 | 类型 | 条目 | 分类行 | 免费可装 | 免费取源码 | 免费提示词 | 仅参考 | 需登录 | Pro | 失效 |
@@ -96,13 +141,11 @@ fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获
 | lucide | [Lucide](https://lucide.dev) | icons | 2249 |  | 2223 |  |  |  |  |  | 26 |
 | obsidianui | [ObsidianUI](https://www.obsidianui.dev/) | component-library | 75 |  | 75 |  |  |  |  |  |  |
 | originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
-| reactbits | [React Bits](https://reactbits.dev/) | effects | 398 | 60 | 215 |  |  |  |  | 243 |  |
+| reactbits | [React Bits](https://reactbits.dev/) | effects | 399 | 60 | 216 |  |  |  |  | 243 |  |
 | shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
 | uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 243 |  | 131 |  |  |  |  | 112 |  |
-| **合计** | | | **5937** | **284** | **3008** | **417** | **76** | **1543** | **383** | **717** | **77** |
+| **合计** | | | **5938** | **284** | **3009** | **417** | **76** | **1543** | **383** | **717** | **77** |
 <!-- STATS:END -->
-
-各来源的获取方法、使用注意和未解决的问题，见 `sources/<id>.md`。
 
 ## 维护
 
