@@ -1,9 +1,9 @@
-transitions-dev-skill	transitions.dev 的 agent skill 32 个免费 CSS 过渡参考+_root.css 动效 token	ai-ux,motion-transition	specialized				
+transitions-dev-skill	transitions.dev 的 agent skill 32 个免费 CSS 过渡参考+_root.css 动效 token	motion-transition	specialized				
 transitions-polish-skill	动效打磨 skill 按 duration/distance/scale/blur/easing token 审查现有动画	motion-transition	specialized				
 transitions-data-json	全部 43 个 transition 的机器可读清单 免费项含 CSS 与 React 源码	motion-transition	specialized				
 transition:card-resize	卡片宽高尺寸变化平滑过渡 纯 CSS	layout-card,motion-transition	specialized				
 transition:number-pop-in	数字翻转弹入 带模糊与错峰 stagger	motion-transition	specialized				
-transition:notification-badge	通知徽章斜向滑入+弹簧 pop	feedback,motion-transition	specialized				
+transition:notification-badge	通知徽章斜向滑入+弹簧 pop	feedback,motion-transition	specialized			bounce	
 transition:text-states-swap	状态文字切换 模糊淡入淡出	text-effect,motion-transition	specialized				
 transition:confetti-burst	物理彩纸从按钮爆开并落回按钮 庆祝动效（Pro）	button,motion-transition	specialized				
 transition:menu-dropdown	下拉菜单按触发点原点展开/收起 origin-aware	navigation,select	specialized				
@@ -14,27 +14,27 @@ transition:page-side-by-side	页面前进/后退横向滑动切换 wizard	empty-
 transition:card-stack-hover	卡片堆悬停时弹簧扇形展开（Pro）	overlay,layout-card	specialized		hover		
 transition:icon-swap	图标切换 缩放+模糊	motion-transition	specialized				
 transition:success-check	成功对勾 淡入旋转模糊 路径描绘	motion-transition	specialized				
-transition:avatar-group-hover	头像组悬停 被悬停项弹起 邻居按距离衰减跟随	cursor-effect,avatar-user	specialized		hover		
+transition:avatar-group-hover	头像组悬停 被悬停项弹起 邻居按距离衰减跟随	cursor-effect,avatar-user	specialized		hover	bounce	
 transition:error-state-shake	输入框校验错误抖动 自动恢复	form-input,motion-transition	specialized				
 transition:organic-shimmer	波浪形骨架屏流光 边缘辉光（Pro）	loading,motion-transition	specialized				
 transition:input-clear-with-dissolve	清空输入时按词消散 dissolve	form-input,motion-transition	specialized				
 transition:skeleton-loader-and-reveal	骨架屏脉冲后交叉淡入真实内容	loading,motion-transition	specialized				
 transition:texts-reveal	两行文字错峰上升入场	text-effect,motion-transition	specialized				
-transition:tabs-sliding	tabs 胶囊指示器跟随滑动	cursor-effect,navigation	specialized		swipe		
+transition:tabs-sliding	tabs 胶囊指示器跟随滑动	navigation,toggle-slider	specialized				
 transition:drag-drop-with-physics	带物理倾斜的拖放 放置区 morph 成图片（Pro）	media,motion-transition	specialized		drag		
 transition:image-open-tilt	iPadOS 式图片打开 3D 倾斜与弯曲（Pro）	media,motion-transition	specialized	3d			
-transition:shimmer-text	文字遮罩渐变扫光 shimmer	text-effect,motion-transition	specialized	gradient		gradient-text	
+transition:shimmer-text	文字遮罩渐变扫光 shimmer	text-effect,motion-transition	specialized	gradient			
 transition:tooltip-open-close	tooltip 延迟出现 位移 瞬间消失	overlay,motion-transition	specialized				
 transition:3d-tilt	卡片 3D 指针倾斜+光泽 glare	layout-card,motion-transition	specialized	3d			
 transition:dropdown-menu-morph	按钮 morph 成菜单面板 加号菜单	navigation,select	specialized				
 transition:accordion	手风琴 grid-rows 高度过渡+箭头变形	layout-card,motion-transition	specialized				
 transition:toast-open-close	toast 上升淡入+模糊+缩放	feedback,motion-transition	specialized				
-transition:like-button	点赞心形填充+粒子爆发	background,button	specialized				
+transition:like-button	点赞心形填充+粒子爆发	button,micro-interaction	specialized				
 transition:learn-more-hover	"了解更多"链接悬停箭头位移展开	motion-transition,micro-interaction	specialized		hover		
 transition:checkbox-check	复选框对勾描边绘制	toggle-slider,motion-transition	specialized				
 transition:spinner-to-check-morph	加载 spinner 弹成对勾成功（Pro）	loading,motion-transition	specialized				
 transition:spinning-counter	数字老虎机滚轮式滚动到目标值	text-effect,motion-transition	specialized		scroll		
-transition:toggle	开关滑块双弹跳	toggle-slider,motion-transition	specialized			bounce	
+transition:toggle	开关滑块轻微过冲（1px）	toggle-slider,motion-transition	specialized			bounce	
 transition:pro-gradient-text	渐变色流动环绕文字 动态渐变字（Pro）	text-effect,motion-transition	specialized	gradient		gradient-text	
 transition:delete-with-smoky-dissolve	删除时图片碎裂成烟雾下落（Pro）	media,motion-transition	specialized				
 transition:thinking-states	AI 思考状态行流光后切换下一条	ai-ux,motion-transition	specialized				
@@ -44,8 +44,8 @@ transition:matrix-dot-loader	16 点矩阵脉冲 loader 四种图案	loading,moti
 transition:banner-stacking	横幅像 toast 一样三层堆叠	feedback,motion-transition	specialized				
 transition:image-generation-placeholder	AI 生图占位 点阵噪声苏醒后显影成图（Pro）	ai-ux,media	specialized				
 transition:get-pro-button	Get Pro 胶囊按钮边缘渐变辉光（Pro）	button,motion-transition	specialized	gradient			
-transitions-refine	注入时间轴+Refine 面板到运行中的应用 让 agent 按动效 token 调整过渡	ai-ux,date-time	specialized				
-transitions-agent	扫描代码库中缺失/卡顿/不一致的过渡 给动效评分 可作 GitHub Action 在 PR 上评分与修复	ai-ux,motion-transition	specialized				
+transitions-refine	注入时间轴+Refine 面板到运行中的应用 让 agent 按动效 token 调整过渡	motion-transition	specialized				
+transitions-agent	扫描代码库中缺失/卡顿/不一致的过渡 给动效评分 可作 GitHub Action 在 PR 上评分与修复	motion-transition	specialized				
 article-motion-examples	文章 动效时长/缩放/位移的正反例 开合不对称 缩放起点 0.97 等	motion-transition	reference				
 site:customizer	个人站右侧外观定制面板 字体/文字色/圆角滑块/logo 大小/背景样式 手机端 bottom sheet 可下滑关闭 重置时弹跳+交叉模糊	text-effect,background	reference			bounce	
 site:water-mode	页面雨滴/水珠覆盖层 随指针移动 桌面 28-44 颗 手机 10-15 颗	page-inspiration	reference				
@@ -60,13 +60,13 @@ work:deposit-steps	存款弹窗两步进度 步骤圈加载→对勾 状态文�
 work:qr-chain-select	加密货币充值 选择 token 与链 下拉列表勾选 二维码随链切换动画 复制地址	select,motion-transition	reference				
 work:connect-wallet	连接钱包弹窗 点阵光环中心图标 转圈等待→连接成功绿色光晕扩散	overlay,select	reference			glow	
 work:swap-pending	0x 风格兑换表单 Review order 后卡片 morph 成倒计时圆环 Transaction pending	select,form-input	reference				
-work:frameio-ipad	Frame.io iPad 应用 登录→项目网格 深色主题 Dribbble shot	auth,select	reference				
-work:thinking-orbs-phone	手机实拍 点阵 orb Connecting 然后缩成灵动岛式 Thinking 胶囊 → thinking-orbs	ai-ux,select	reference				
+work:frameio-ipad	Frame.io iPad 应用 登录→项目网格 深色主题 Dribbble shot	auth	reference				
+work:thinking-orbs-phone	手机实拍 点阵 orb Connecting 然后缩成灵动岛式 Thinking 胶囊 → thinking-orbs	ai-ux	reference				
 work:transitions-showcase	transitions.dev 展示 头像组 点赞计数 tabs 下拉 分享菜单 Publish→对勾 等组合演示	navigation,select	reference				
-work:notification-states	存款通知卡三态 失败→处理中→完成 图标角标切换 卡片堆叠缩小	feedback,select	reference				
-work:install-button	深色 Installing 胶囊按钮 边框紫蓝光束流动 → border-beam	select,button	reference				
+work:notification-states	存款通知卡三态 失败→处理中→完成 图标角标切换 卡片堆叠缩小	feedback	reference				
+work:install-button	深色 Installing 胶囊按钮 边框紫蓝光束流动 → border-beam	button	reference				
 work:ide-navigation	easemate IDE 侧边栏 图标导航切换 Search/Extensions/Explorer 面板内容过渡	navigation,search-command	reference				
-work:tx-toast	交易 toast pending 流光→成功 对勾+Trade detail 按钮 宽高 morph	feedback,select	reference				
+work:tx-toast	交易 toast pending 流光→成功 对勾+Trade detail 按钮 宽高 morph	feedback	reference				
 work:wallet-menus	0x 钱包菜单/交易状态 toast/网络列表/导航菜单 静态稿	navigation,feedback	reference				
 work:tx-result-cards	交易结果卡片 成功/待定/失败/高价格影响 顶部柔和彩色光晕	pricing,select	reference			glow	
 work:ide-explorer	深色 IDE 文件树+代码编辑器 静态稿	select	reference				

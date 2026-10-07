@@ -1,30 +1,30 @@
 accordion	手风琴折叠面板 Accordion，FAQ	layout-card	foundation				
 alert	提示条 Alert，信息/警告/错误消息横幅	feedback	foundation				
-alert-dialog	确认对话框 AlertDialog，危险操作二次确认	ai-ux,overlay	foundation				
+alert-dialog	确认对话框 AlertDialog，危险操作二次确认	overlay	foundation				
 aspect-ratio	固定宽高比容器 AspectRatio，图片/视频	media	foundation				
 avatar	头像 Avatar，头像组 avatar group	avatar-user	foundation				
 badge	徽标 Badge，状态标签 tag	feedback	foundation				
-breadcrumb	面包屑导航 Breadcrumb	navigation,layout-card	foundation				
+breadcrumb	面包屑导航 Breadcrumb	navigation	foundation				
 button	按钮 Button，多种 variant/size，icon 按钮	form-input,button	foundation				
 button-group	按钮组 ButtonGroup，分段按钮、split button、与输入框拼接	form-input,button	foundation				
 calendar	日历 Calendar，日期选择，基于 react-day-picker，支持范围/多月/伊斯兰历	date-time,select	foundation				
 card	卡片容器 Card	layout-card	foundation				
 carousel	轮播 Carousel，基于 Embla	media	foundation				
-chart	图表基础组件 Chart（Recharts 封装 ChartContainer/Tooltip/Legend）	chart,overlay	foundation				
+chart	图表基础组件 Chart（Recharts 封装 ChartContainer/Tooltip/Legend）	chart	foundation				
 checkbox	复选框 Checkbox	toggle-slider,form-input	foundation				
 collapsible	可折叠容器 Collapsible，展开/收起	layout-card	foundation				
 combobox	可搜索下拉 Combobox，自动补全 autocomplete、多选 chips	search-command,select	foundation				
 command	命令面板 Command（cmdk），⌘K 搜索、快捷操作	search-command	foundation				
 context-menu	右键菜单 ContextMenu	overlay,navigation	foundation				
-dialog	模态对话框 Dialog modal	ai-ux,overlay	foundation				
-drawer	移动端抽屉 Drawer，基于 Vaul，底部弹出	overlay	foundation				
+dialog	模态对话框 Dialog modal	overlay	foundation				
+drawer	移动端抽屉 Drawer，基于 Base UI Drawer，支持档位和多方向滑动（Radix 版用 Vaul）	overlay	foundation				
 dropdown-menu	下拉菜单 DropdownMenu，带勾选/单选/子菜单	navigation,select	foundation				
 empty	空状态 Empty，无数据/404/空列表占位	empty-onboarding	foundation				
 field	表单字段容器 Field：label、描述、错误信息、fieldset 组合，表单布局	form-input,layout-card	foundation				
 form	旧版 Form（react-hook-form 封装），新项目推荐 Field	form-input	foundation				
-hover-card	悬停卡片 HoverCard，鼠标悬停预览用户/链接	cursor-effect,overlay	foundation		hover,cursor		
-input	文本输入框 Input	text-effect,form-input	foundation				
-input-group	输入框组 InputGroup，前后缀 addon、图标、按钮、内嵌 spinner	loading,form-input	foundation				
+hover-card	悬停卡片 HoverCard，鼠标悬停预览用户/链接	overlay	foundation		hover,cursor		
+input	文本输入框 Input	form-input	foundation				
+input-group	输入框组 InputGroup，前后缀 addon、图标、按钮、内嵌 spinner	form-input	foundation				
 input-otp	一次性验证码输入 InputOTP，OTP/短信验证码	form-input	foundation				
 item	通用列表项 Item，列表/菜单/设置项行，带图标头像操作	navigation,avatar-user	foundation				
 label	表单标签 Label	form-input	foundation				
@@ -34,36 +34,36 @@ pagination	分页 Pagination	navigation	foundation
 popover	气泡弹层 Popover	overlay	foundation				
 progress	进度条 Progress	loading	foundation				
 radio-group	单选组 RadioGroup	toggle-slider,form-input	foundation				
-resizable	可拖拽调整大小的面板 Resizable panels，分栏布局	layout-card,micro-interaction	foundation		drag		
-scroll-area	自定义滚动条区域 ScrollArea	layout-card,motion-transition	foundation		scroll		
+resizable	可拖拽调整大小的面板 Resizable panels，分栏布局	layout-card	foundation		drag		
+scroll-area	自定义滚动条区域 ScrollArea	layout-card	foundation		scroll		
 select	下拉选择 Select	select,form-input	foundation				
 separator	分隔线 Separator	layout-card	foundation				
 sheet	侧滑面板 Sheet（上下左右滑出的 drawer）	overlay	foundation				
 sidebar	应用侧边栏 Sidebar，可折叠为图标、inset/floating，后台布局	navigation,layout-card	foundation				
 skeleton	骨架屏 Skeleton，加载占位	loading	foundation				
-slider	滑块 Slider，范围选择 range	select,toggle-slider	foundation				
+slider	滑块 Slider，范围选择 range	toggle-slider,form-input	foundation				
 sonner	Toast 通知 Sonner（sonner 库），radix/aria 推荐用它	feedback	foundation				
 spinner	加载转圈 Spinner，loading 指示器	loading	foundation				
 switch	开关 Switch toggle	toggle-slider,form-input	foundation				
 table	基础表格 Table（数据表格见 data-table 示例）	table	foundation				
 tabs	标签页 Tabs	navigation,layout-card	foundation				
-textarea	多行文本输入 Textarea	text-effect,form-input	foundation				
+textarea	多行文本输入 Textarea	form-input	foundation				
 toast	Toast 通知（Base UI 原生，仅 base），支持 action、promise、堆叠、滑动关闭	feedback	foundation		swipe		
 toggle	切换按钮 Toggle（按下/弹起）	toggle-slider,button	foundation		press		
 toggle-group	切换按钮组 ToggleGroup，工具栏格式按钮	toggle-slider,button	foundation				
-tooltip	文字提示 Tooltip	text-effect,overlay	foundation				
+tooltip	文字提示 Tooltip	overlay	foundation				
 kbd	键盘按键显示 Kbd，快捷键提示	other	foundation		keyboard		
 native-select	原生 select 样式化 NativeSelect	select,form-input	foundation				
-direction	文字方向 Provider Direction，RTL 支持	text-effect	foundation				
+direction	文字方向 Provider Direction，RTL 支持	other	foundation				
 attachment	附件展示 Attachment，文件/图片、上传状态、元数据	ai-ux,upload	foundation				
 bubble	聊天气泡 Bubble，variants、对齐、reactions	ai-ux	foundation				
-message-scroller	聊天滚动容器 MessageScroller，AI 对话流式回复锚定、历史加载、跳转消息	ai-ux,loading	foundation		scroll		
+message-scroller	聊天滚动容器 MessageScroller，AI 对话流式回复锚定、历史加载、跳转消息	ai-ux	foundation		scroll		
 questionnaire	多步问卷 Questionnaire，单选/多选/自由输入/跳过，AI human-in-the-loop 追问	ai-ux,toggle-slider	foundation				
 marker	对话中的状态标记 Marker，系统提示、分隔行、标签行	ai-ux	foundation				
-message	聊天消息行 Message，头像、对齐、header/footer，AI chat	ai-ux,navigation	foundation				
-dashboard-01	后台仪表盘整页：侧边栏 + 指标卡 + 交互面积图 + 可拖拽数据表 data table（A dashboard with sidebar, charts and data table.）	chart,table	foundation		drag		
-sidebar-01	侧边栏：按分组的简单导航（A simple sidebar with navigation grouped by section.）	navigation,marketing-section	foundation				
-sidebar-02	侧边栏：可折叠分组（A sidebar with collapsible sections.）	navigation,marketing-section	foundation				
+message	聊天消息行 Message，头像、对齐、header/footer，AI chat	ai-ux	foundation				
+dashboard-01	后台仪表盘整页：侧边栏 + 指标卡 + 交互面积图 + 可拖拽数据表 data table（A dashboard with sidebar, charts and data table.）	template,chart	foundation		drag		
+sidebar-01	侧边栏：按分组的简单导航（A simple sidebar with navigation grouped by section.）	navigation	foundation				
+sidebar-02	侧边栏：可折叠分组（A sidebar with collapsible sections.）	navigation	foundation				
 sidebar-03	侧边栏：带子菜单（A sidebar with submenus.）	navigation	foundation				
 sidebar-04	浮动 floating 侧边栏带子菜单（A floating sidebar with submenus.）	navigation	foundation				
 sidebar-05	侧边栏：可折叠子菜单（A sidebar with collapsible submenus.）	navigation,layout-card	foundation				
@@ -74,93 +74,93 @@ sidebar-09	多级嵌套可折叠侧边栏（邮件客户端式）（Collapsible 
 sidebar-10	放在 popover 里的侧边栏（A sidebar in a popover.）	overlay,navigation	foundation				
 sidebar-11	带可折叠文件树 file tree 的侧边栏（A sidebar with a collapsible file tree.）	navigation,layout-card	foundation				
 sidebar-12	带日历的侧边栏（A sidebar with a calendar.）	navigation,date-time	foundation				
-sidebar-13	放在对话框 dialog 里的侧边栏（设置面板）（A sidebar in a dialog.）	ai-ux,overlay	foundation				
+sidebar-13	放在对话框 dialog 里的侧边栏（设置面板）（A sidebar in a dialog.）	navigation,overlay	foundation				
 sidebar-14	右侧侧边栏（A sidebar on the right.）	navigation	foundation				
 sidebar-15	左右双侧边栏（A left and right sidebar.）	navigation	foundation				
 sidebar-16	带吸顶站点 header 的侧边栏（A sidebar with a sticky site header.）	navigation	foundation				
 login-01	登录表单：简单卡片（A simple login form.）	auth,form-input	foundation				
 login-02	登录页：两栏 + 封面图（A two column login page with a cover image.）	auth,media	foundation				
-login-03	登录页：灰色背景居中（A login page with a muted background color.）	auth,background	foundation				
+login-03	登录页：灰色背景居中（A login page with a muted background color.）	auth	foundation				
 login-04	登录页：表单 + 配图卡片（A login page with form and image.）	auth,form-input	foundation				
 login-05	登录页：仅邮箱登录 magic link（A simple email-only login page.）	auth	foundation				
 signup-01	注册表单：简单卡片（A simple signup form.）	auth,form-input	foundation				
 signup-02	注册页：两栏 + 封面图（A two column signup page with a cover image.）	auth,media	foundation				
-signup-03	注册页：灰色背景（A signup page with a muted background color.）	auth,background	foundation				
+signup-03	注册页：灰色背景（A signup page with a muted background color.）	auth	foundation				
 signup-04	注册页：表单 + 配图（A signup page with form and image.）	auth,form-input	foundation				
 signup-05	注册表单：带第三方社交登录按钮（A simple signup form with social providers.）	auth,form-input	foundation				
 preview	shadcn/create 预设预览用的组件拼盘页面（展示整套风格）	other	foundation				
 preview-02	shadcn/create 预设预览用的组件拼盘页面（展示整套风格）	other	foundation				
 preview-03	shadcn/create 预设预览用的组件拼盘页面（展示整套风格）	other	foundation				
-chart-area-axes	面积图：带坐标轴（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-default	面积图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-gradient	面积图：渐变填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation	gradient			
-chart-area-icons	面积图：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-interactive	面积图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,date-time	foundation				
-chart-area-legend	面积图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-linear	面积图：直线插值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-stacked-expand	面积图：百分比堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-stacked	面积图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-area-step	面积图：阶梯（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-active	柱状图：高亮选中项（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-default	柱状图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-horizontal	柱状图：横向（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-interactive	柱状图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,date-time	foundation				
-chart-bar-label-custom	柱状图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-label	柱状图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-mixed	柱状图：混合颜色（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-multiple	柱状图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-negative	柱状图：含负值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-bar-stacked	柱状图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-default	折线图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-dots-colors	折线图：彩色数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-dots-custom	折线图：自定义数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-dots	折线图：带数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-interactive	折线图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,date-time	foundation				
-chart-line-label-custom	折线图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-label	折线图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-linear	折线图：直线插值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-multiple	折线图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-line-step	折线图：阶梯（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-donut-active	饼图/环形图：环形高亮扇区（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-donut-text	饼图/环形图：环形中心文字（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,text-effect	foundation				
-chart-pie-donut	饼图/环形图：环形（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-interactive	饼图/环形图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,date-time	foundation				
-chart-pie-label-custom	饼图/环形图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-label-list	饼图/环形图：标签列表（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-label	饼图/环形图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-legend	饼图/环形图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-separator-none	饼图/环形图：无分隔线（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-simple	饼图/环形图：简单（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-pie-stacked	饼图/环形图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-default	雷达图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-dots	雷达图：带数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-circle-fill	雷达图：圆形网格填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-circle-no-lines	雷达图：圆形网格无径线（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-circle	雷达图：圆形网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-custom	雷达图：自定义网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-fill	雷达图：网格填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-grid-none	雷达图：无网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-icons	雷达图：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-label-custom	雷达图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-legend	雷达图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-lines-only	雷达图：仅线条（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-multiple	雷达图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radar-radius	雷达图：带半径轴（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,layout-card	foundation				
-chart-radial-grid	径向/环形进度图：网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-radial-label	径向/环形进度图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-radial-shape	径向/环形进度图：形状（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-radial-simple	径向/环形进度图：简单（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-radial-stacked	径向/环形进度图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-radial-text	径向/环形进度图：中心文字（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,loading	foundation				
-chart-tooltip-default	图表 tooltip 样式：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-indicator-line	图表 tooltip 样式：线形指示器（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-indicator-none	图表 tooltip 样式：无指示器（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-label-none	图表 tooltip 样式：无标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-label-custom	图表 tooltip 样式：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-label-formatter	图表 tooltip 样式：标签格式化（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-formatter	图表 tooltip 样式：数值格式化（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-icons	图表 tooltip 样式：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
-chart-tooltip-advanced	图表 tooltip 样式：高级自定义（Recharts + Card，可复制图表 dashboard 数据可视化）	chart,overlay	foundation				
+chart-area-axes	面积图：带坐标轴（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-default	面积图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-gradient	面积图：渐变填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation	gradient			
+chart-area-icons	面积图：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-interactive	面积图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-legend	面积图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-linear	面积图：直线插值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-stacked-expand	面积图：百分比堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-stacked	面积图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-area-step	面积图：阶梯（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-active	柱状图：高亮选中项（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-default	柱状图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-horizontal	柱状图：横向（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-interactive	柱状图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-label-custom	柱状图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-label	柱状图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-mixed	柱状图：混合颜色（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-multiple	柱状图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-negative	柱状图：含负值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-bar-stacked	柱状图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-default	折线图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-dots-colors	折线图：彩色数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-dots-custom	折线图：自定义数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-dots	折线图：带数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-interactive	折线图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-label-custom	折线图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-label	折线图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-linear	折线图：直线插值（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-multiple	折线图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-line-step	折线图：阶梯（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-donut-active	饼图/环形图：环形高亮扇区（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-donut-text	饼图/环形图：环形中心文字（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-donut	饼图/环形图：环形（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-interactive	饼图/环形图：交互（可切换时间范围/指标）（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-label-custom	饼图/环形图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-label-list	饼图/环形图：标签列表（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-label	饼图/环形图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-legend	饼图/环形图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-separator-none	饼图/环形图：无分隔线（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-simple	饼图/环形图：简单（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-pie-stacked	饼图/环形图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-default	雷达图：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-dots	雷达图：带数据点（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-circle-fill	雷达图：圆形网格填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-circle-no-lines	雷达图：圆形网格无径线（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-circle	雷达图：圆形网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-custom	雷达图：自定义网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-fill	雷达图：网格填充（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-grid-none	雷达图：无网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-icons	雷达图：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-label-custom	雷达图：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-legend	雷达图：带图例（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-lines-only	雷达图：仅线条（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-multiple	雷达图：多系列（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radar-radius	雷达图：带半径轴（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-grid	径向/环形进度图：网格（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-label	径向/环形进度图：带数值标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-shape	径向/环形进度图：形状（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-simple	径向/环形进度图：简单（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-stacked	径向/环形进度图：堆叠（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-radial-text	径向/环形进度图：中心文字（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-default	图表 tooltip 样式：默认（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-indicator-line	图表 tooltip 样式：线形指示器（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-indicator-none	图表 tooltip 样式：无指示器（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-label-none	图表 tooltip 样式：无标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-label-custom	图表 tooltip 样式：自定义标签（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-label-formatter	图表 tooltip 样式：标签格式化（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-formatter	图表 tooltip 样式：数值格式化（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-icons	图表 tooltip 样式：带图标（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
+chart-tooltip-advanced	图表 tooltip 样式：高级自定义（Recharts + Card，可复制图表 dashboard 数据可视化）	chart	foundation				
 theme-neutral	主题 CSS 变量 neutral（亮/暗两套 cssVars，配色 theming）	design-system	foundation				
 theme-stone	主题 CSS 变量 stone（亮/暗两套 cssVars，配色 theming）	design-system	foundation				
 theme-zinc	主题 CSS 变量 zinc（亮/暗两套 cssVars，配色 theming）	design-system	foundation				
@@ -176,7 +176,7 @@ base-color-taupe	基础色 taupe：inlineColors + cssVars（light/dark）主题 
 base-color-gray	基础色 gray：inlineColors + cssVars（light/dark）主题 token，init/migrate base-color 使用	design-system	foundation	dark			
 base-color-slate	基础色 slate：inlineColors + cssVars（light/dark）主题 token，init/migrate base-color 使用	design-system	foundation	dark			
 tailwind-colors	Tailwind 全色板（hex/rgb/hsl/oklch），/colors 页面数据，配色取色	design-system	foundation				
-themes-css	预置主题 CSS 合集（themes 页面用的变量集合）	design-system	foundation				
+themes-css	预置主题 CSS 合集（themes 页面用的变量集合）	design-system	foundation				旧版 HSL 三元组格式（Tailwind v3 时代），新项目只作参考，不要直接导入
 presets	24 个 base×style 预设（vega/nova/maia/lyra/mira/luma/rhea/sera × base/radix/aria），字体/图标库/圆角/菜单色组合	design-system	foundation				
 font-geist	正文字体 geist（registry:font，配置 next/font 或 @fontsource 与 CSS 变量）	design-system	foundation				
 font-inter	正文字体 inter（registry:font，配置 next/font 或 @fontsource 与 CSS 变量）	design-system	foundation				
@@ -231,7 +231,7 @@ font-heading-playfair-display	标题字体 playfair-display（registry:font，�
 font-heading-eb-garamond	标题字体 eb-garamond（registry:font，配置 next/font 或 @fontsource 与 CSS 变量）	design-system	foundation				
 font-heading-instrument-serif	标题字体 instrument-serif（registry:font，配置 next/font 或 @fontsource 与 CSS 变量）	design-system	foundation				
 utils	cn 工具函数（现为 re-export cn 包，className 合并 tailwind-merge）	other	foundation				
-use-mobile	移动端断点检测 hook useIsMobile（sidebar 依赖）	navigation	foundation				
+use-mobile	移动端断点检测 hook useIsMobile（sidebar 依赖）	other	foundation				
 typeset	Markdown/HTML 排版 CSS（prose 替代），博客/文档/流式聊天，三参数 size/leading/flow	ai-ux	foundation				
 shimmer	文字闪光 shimmer 动效工具类（loading 文本效果），随 shadcn 包的 tailwind.css 提供	loading,text-effect	foundation				
 scroll-fade	滚动容器边缘渐隐 scroll fade 工具类	motion-transition	foundation		scroll		
@@ -242,7 +242,7 @@ helpers-tanstack-ai	TanStack AI useChat 的假会话 connection（AG-UI 事件�
 data-table	数据表格指南：TanStack Table + Table，排序/筛选/分页/列显隐/行选择	table,navigation	foundation				
 date-picker	日期选择器组合：Popover + Calendar，单日/范围/预设	overlay,date-time	foundation				
 typography	排版样式示例 h1-h4/p/blockquote/list/inline code	other	foundation				
-icons-map	跨图标库映射表（lucide/tabler/hugeicons/phosphor 等），migrate icons 用	table	foundation				
+icons-map	跨图标库映射表（lucide/tabler/hugeicons/phosphor 等），migrate icons 用	icon	foundation				
 templates	init 用的项目模板 tar.gz（next/vite/start/react-router/astro，单仓/monorepo）	template	foundation				
 accordion-demo	accordion 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
 alert-demo	alert 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
@@ -420,15 +420,15 @@ resizable-handle	resizable-handle 用法示例代码（demo/变体），可直�
 scroll-area-demo	scroll-area 用法示例代码（demo/变体），可直接复制做参考	layout-card,motion-transition	foundation		scroll		
 scroll-area-horizontal-demo	scroll-area-horizontal 用法示例代码（demo/变体），可直接复制做参考	layout-card,motion-transition	foundation		scroll		
 select-demo	select 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-select-scrollable	select-scrollable 用法示例代码（demo/变体），可直接复制做参考	select,motion-transition	foundation		scroll		
+select-scrollable	select-scrollable 用法示例代码（demo/变体），可直接复制做参考	select	foundation		scroll		
 separator-demo	separator 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
 sheet-demo	sheet 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
 sheet-side	sheet-side 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
 skeleton-demo	skeleton 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
 skeleton-card	skeleton-card 用法示例代码（demo/变体），可直接复制做参考	loading,layout-card	foundation				
 slider-demo	slider 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-sonner-demo	sonner 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-sonner-types	sonner-types 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
+sonner-demo	sonner 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
+sonner-types	sonner-types 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
 spinner-demo	spinner 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
 spinner-basic	spinner-basic 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
 spinner-button	spinner-button 用法示例代码（demo/变体），可直接复制做参考	loading,button	foundation				
@@ -477,15 +477,15 @@ typography-small	typography-small 用法示例代码（demo/变体），可直�
 typography-table	typography-table 用法示例代码（demo/变体），可直接复制做参考	table	foundation				
 mode-toggle	mode-toggle 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
 chart-bar-demo	chart-bar 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-grid	chart-bar-grid 用法示例代码（demo/变体），可直接复制做参考	chart,layout-card	foundation				
+chart-bar-demo-grid	chart-bar-grid 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
 chart-bar-demo-axis	chart-bar-axis 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-tooltip	chart-bar-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart,overlay	foundation				
+chart-bar-demo-tooltip	chart-bar-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
 chart-bar-demo-legend	chart-bar-legend 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-tooltip-demo	chart-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart,overlay	foundation				
+chart-tooltip-demo	chart-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
 calendar-hijri	calendar-hijri 用法示例代码（demo/变体），可直接复制做参考	date-time	foundation				
 sidebar-demo	sidebar 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
 sidebar-header	sidebar-header 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-footer	sidebar-footer 用法示例代码（demo/变体），可直接复制做参考	navigation,marketing-section	foundation				
+sidebar-footer	sidebar-footer 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
 sidebar-group	sidebar-group 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
 sidebar-group-collapsible	sidebar-group-collapsible 用法示例代码（demo/变体），可直接复制做参考	navigation,layout-card	foundation				
 sidebar-group-action	sidebar-group-action 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
@@ -544,7 +544,7 @@ sidebar-inset-example	sidebar-inset 用法示例代码（demo/变体），可直
 sidebar-floating-example	sidebar-floating 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
 skeleton-example	skeleton 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	loading	foundation				
 slider-example	slider 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-sonner-example	sonner 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
+sonner-example	sonner 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	feedback	foundation				
 spinner-example	spinner 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	loading	foundation				
 switch-example	switch 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
 table-example	table 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	table	foundation				

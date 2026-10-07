@@ -47,7 +47,7 @@ boxcarousel	在 Framer 中沿 3D 立方体四个面轮换图片和视频，支�
 accretion-disc-03	WebGL 黑洞，点云绕螺旋纹吸积盘和遮挡背景的不透明核心球运行，带两道极向喷流，适合 hero 背景。	background,marketing-section	specialized	webgl			
 rubber-spheres	WebGL 橡胶球池，亮面球体向锚点聚拢、碰撞并被指针驱散，每个球可带图片或挤出 SVG logo，适合互动 hero，依赖 three	media,marketing-section	specialized	webgl			
 voxel-sphere	WebGL 球体由数千个实例化立方体组成，以波动方式胀缩，每块绕自身轴翻滚，拖拽时 orbit，适合 hero 3D 视觉，依赖 three	marketing-section,micro-interaction	specialized	webgl,3d	drag		
-sync-scroll	无限跑马灯 marquee 文字，方向和速度与访客 scroll 输入同步，适合 scroll 联动区块。	text-effect,form-input	specialized		scroll	marquee	
+sync-scroll	无限跑马灯 marquee 文字，方向和速度与访客 scroll 输入同步，适合 scroll 联动区块。	text-effect	specialized		scroll	marquee	
 dry-brush-reveal	WebGL hover 效果，用斜向笔刷扫过把第二张图画到第一张上，鬃毛状缝隙透出原图，适合图片切换。	media,motion-transition	specialized	webgl	hover		
 cosmic-bg	全屏 WebGL 星云，由 domain-warped 噪声构成，画在透明 canvas 上让暗处透出自身背景，适合 hero 背景。	background,marketing-section	specialized	webgl,canvas			
 fluid-ribbons	WebGL2 fragment shader，两族扇形发光细丝扫过 domain-warped 放大噪声场，单个全屏三角形绘制，适合 hero 背景。	background,marketing-section	specialized	webgl		glow	
@@ -135,7 +135,7 @@ paper-quilling	WebGL 背景，对漂移噪声场的等高线做 sphere-tracing �
 helix-shaft	WebGL 光隧道，灯丝沿竖井螺旋下降，画成单个点云，深度、角度和行进脉冲全在 shader 中计算，适合 hero 背景，依赖 three	background,marketing-section	specialized	webgl			
 particle-tether	Canvas 球体约 150 个点沿经线滑向密集赤道环，停留后再铺回球面，无缝循环，适合粒子装饰。	loading,background	specialized	canvas			
 motion-orbit	WebGL 循环，球体沿反向转动的开放半管跑完一圈，过冲后每周期回稳，适合 loader 或 hero 装饰。	loading,marketing-section	specialized	webgl			
-particle-simulation	WebGL 点云用最多两百万个点重建上传照片，每个点向外迸发，仅在 cursor 经过时闪烁，适合图片 hero。	cursor-effect,upload	specialized	webgl	cursor		
+particle-simulation	WebGL 点云用最多两百万个点重建上传照片，每个点向外迸发，仅在 cursor 经过时闪烁，适合图片 hero。	cursor-effect,background	specialized	webgl	cursor		
 glyph-tumbler	可玩 Rubik 魔方，各面带跨瓦片切开的超大字母，先打乱再倒放还原字形，然后继续翻滚，适合 hero 3D 标题，依赖 framer-motion motion	marketing-section,motion-transition	specialized	3d			
 neon-border	发光霓虹线沿框架边缘追逐，带真实分层 bloom 并精确贴合每个转角，适合卡片或按钮边框。	button,layout-card	specialized			glow	
 ink-plume	WebGL fragment shader 渲染在暗场中上升的烟柱，由三张漂移噪声片构成，指针可将其推开，适合 hero 背景。	background,marketing-section	specialized	webgl			
@@ -151,7 +151,7 @@ ticker-delta	由单根扫掠 WebGL 管道构成的 Penrose 三角形，三条循
 particle-drift-03	WebGL 漂移点场，近邻间画渐隐连线，点亮指针附近粒子并把每个系到 cursor 上，适合粒子背景。	background,cursor-effect	specialized	webgl	cursor		
 liquid-metal	WebGL 背景，把调色板作为环境贴图反射到起伏高度场上，包裹深色椭圆空洞，适合 hero 背景。	background,marketing-section	specialized	webgl			
 letter-flue	光线投射方形隧道，四壁带同一段文字，无尽穿行，字母带运动模糊、缓慢翻滚并随指针导向，适合 hero 标题，依赖 framer-motion motion three	text-effect,background	specialized	webgl			
-prism-film	WebGL 背景，80 层折叠的发光丝绸，以随时间旋转的色散收尾，并在指针下扩大闪耀，适合 hero 背景。	background,date-time	specialized	webgl		glow	
+prism-film	WebGL 背景，80 层折叠的发光丝绸，以随时间旋转的色散收尾，并在指针下扩大闪耀，适合 hero 背景。	background	specialized	webgl		glow	
 label-slide-button	hover 按钮，标签滚出到堆叠的副本，同时图标徽章沿设定角度滑走静止字形并滑入 hover 字形，适合 CTA 按钮，依赖 framer-motion motion	button,marketing-section	specialized		hover		
 cursor-ring-field-02	WebGL 胶囊点阵背景，柔和光环跟随 cursor 移动，照亮并推开经过的点后回弹，适合做 hero 背景。	background,cursor-effect	specialized	webgl	cursor	grid-background,bounce	
 light-shaft-text	WebGL 文字标，由固定的竖线梳状笔画构成，每条按自己的噪声时钟发光，部分延伸出字外成静止光条，适合 hero 标题。	text-effect,marketing-section	specialized	webgl		glow	
@@ -183,7 +183,7 @@ flip-cube	循环播放的 WebGL 动画，27 个方块堆成立方体，三层依
 vector-wordmark-04	WebGL 文字标识在跟随 cursor 的圆盘内栅格化为方格，叠加网格线、十字准星和单元读数，适合做技术风 hero 标题。	text-effect,cursor-effect	specialized	webgl	cursor		
 paper-ridge	全幅 Three.js 平面经脊状分形噪声位移并用屏幕空间导数平面着色，褶皱呈硬边折痕原地起伏，适合做纸质感背景，依赖 three	background,motion-transition	specialized	webgl			
 spiral-glass-hollow	raymarched WebGL2 玻璃螺旋，内部挤出你的文字，绕竖轴旋转并带折射、色散和内部反弹，适合做 3D 文字展示。	text-effect,fun-3d	specialized	webgl,3d,glass		glass	
-smooth-scroll-slider	横向图片滑轨，支持滚轮、触控板或拖拽，每张幻灯片接近中心前放大至 2.5 倍，经过后缩小变暗，适合做 scroll 图库。	toggle-slider,media	specialized		drag,scroll		
+smooth-scroll-slider	横向图片滑轨，支持滚轮、触控板或拖拽，每张幻灯片接近中心前放大至 2.5 倍，经过后缩小变暗，适合做 scroll 图库。	media	specialized		drag,scroll		
 particle-dome	Canvas 球体由约 150 个按深度排序的点组成，一条亮色大圆带无缝循环摆动轴线，可拖拽并带 flick 惯性，适合做 loader。	loading,micro-interaction	specialized	canvas	drag		
 scroll-text-highlight	段落文字随访客 scroll 经过时逐词或逐字亮起高亮，适合做滚动叙事文案区块，依赖 gsap	text-effect,motion-transition	specialized		scroll		
 scroll-wave-field-04	WebGL 点阵场，数千个圆盘分布在镜像的双层正弦曲面上，向场内相机流动并随 cursor 隆起，适合做 scroll 背景，依赖 motion	background,cursor-effect	specialized	webgl	scroll,cursor		
@@ -226,9 +226,9 @@ light-cables-04	WebGL 发光电缆束呈马蹄形悬挂，光脉冲沿每股线�
 slice-blade	Canvas 小游戏，标题的位图字母弧线飞起，沿指针拖过的精确直线被切开，含连击、炸弹和自动演示，适合做互动彩蛋。	fun-3d	specialized	canvas	drag		
 metal-rosette	WebGL 加号形，七个倒角铬立方体循环展开、停住、收回，同时在固定影棚环境下旋转，适合做 logo 或装饰动画。	motion-transition	specialized	webgl			
 cursor-ring-field-04	WebGL 散布胶囊场，一个柔和光环跟随指针，照亮经过的点并把它们推开再回落，适合做 cursor 交互背景。	background,cursor-effect	specialized	webgl	cursor		
-dimensional-field	四个暗玻璃球漂浮在噪声扭曲的 WebGL 场上，从背后的场取得体色，并随指针视差移动，适合做 hero 背景。	background,form-input	specialized	webgl		glass	
+dimensional-field	四个暗玻璃球漂浮在噪声扭曲的 WebGL 场上，从背后的场取得体色，并随指针视差移动，适合做 hero 背景。	background	specialized	webgl		glass	
 toonfireball	卡通渲染 cel-shaded 火球动画，带发光火焰拖尾、bloom 和可拖拽交互控制，适合做游戏风格展示。	motion-transition,micro-interaction	specialized		drag	glow	
-ripple-field	Canvas 粒子场，每个微粒被移动吸引子按 sin(d·k)/d 拉动，堆叠在交替壳层上画出同心环，适合做波纹背景。	background,form-input	specialized	canvas			
+ripple-field	Canvas 粒子场，每个微粒被移动吸引子按 sin(d·k)/d 拉动，堆叠在交替壳层上画出同心环，适合做波纹背景。	background	specialized	canvas			
 emojiburst	点击按钮发射一束自定义 emoji，在重力下自由飞散，每次按压带弹性抖动，适合做互动 button。	button,micro-interaction	specialized		press		
 dash-cursor	像素方块 cursor 冲刺追随指针，留下渐隐拖尾，可吸附到不可见网格，适合做复古风自定义 cursor。	cursor-effect	specialized	pixel	drag,cursor		
 scan-effect	WebGL2 照片特效，用深度图让图案光带从最近表面扫向最远，带指针视差和 bloom，适合做图片 hero。	media,marketing-section	specialized	webgl			
@@ -350,7 +350,7 @@ energy-stream	WebGL 沙漏形发光粒子（最多 30 万点）穿过窄腰与�
 ascii-tunnel	WebGL ASCII 字符走廊向消失点后退，cursor 经过处被点亮，适合复古科技感背景，依赖 three	text-effect,background	specialized	webgl,pixel	cursor		
 brush-reveal	文字平时若隐若现，cursor 缓慢划过的位置像画笔一样显出完整色彩，适合 hover 文字特效。	text-effect,cursor-effect	specialized		hover,cursor		
 appear-text	重复文字行组成交错网格，缩放、擦除后聚焦显出中间单词并循环，适合 hero 标题动画，依赖 framer-motion	text-effect,marketing-section	specialized				
-cell-field	Canvas 点阵中每个点取最近漂移种子的颜色，两种子等距的边界处变暗，Voronoi 风格，适合背景。	background,form-input	specialized	canvas			
+cell-field	Canvas 点阵中每个点取最近漂移种子的颜色，两种子等距的边界处变暗，Voronoi 风格，适合背景。	background	specialized	canvas			
 interactive-droplets	WebGL raymarch 距离场在 cursor 后留下水滴并融合成油膜，指针静止时自行漂移，适合液态 shader 背景，依赖 three	background,cursor-effect	specialized	webgl	cursor		
 ascii-sphere	WebGL 球体由你输入的字符绘成，沿倾斜轴旋转，跟随指针的灯光决定亮面，适合 hero 展示，依赖 three	text-effect,cursor-effect	specialized	webgl,pixel			
 hammer-strike	循环播放的 WebGL 场景，倒角 3D 锤子砸向铁砧，铁砧受击挤压并余震晃动，适合趣味 loader 或展示。	loading,fun-3d	specialized	webgl,3d			
@@ -372,7 +372,7 @@ pulsating-border	WebGL shader 边框，彩色光斑沿框边漂移，canvas 置�
 data-pixel-arc	全屏 WebGL 定尺寸方形像素场，不透明度由弧形强度带驱动，cursor 探针会加热附近单元，适合数据感背景。	background,cursor-effect	specialized	webgl,pixel	cursor		
 flat-text	WebGL 文字平面，字形为细分网格的 alpha 蒙版，在指针处以三次缓动隆起并受固定光照，hover 立体文字，依赖 three	text-effect,micro-interaction	specialized	webgl,3d	hover		
 glitch-text	故障扭曲的文字或图片 reveal，可调抖动与切片撕裂强度，hover 或 scroll 时触发。	text-effect,media	specialized		hover,scroll		
-botanical-text	three.js 文字，每个字形像素渲染成半透明花朵或叶片精灵，输入时重新比对保持已有花朵，适合 hero 标题，依赖 three	text-effect,form-input	specialized	webgl,pixel			
+botanical-text	three.js 文字，每个字形像素渲染成半透明花朵或叶片精灵，输入时重新比对保持已有花朵，适合 hero 标题，依赖 three	text-effect	specialized	webgl,pixel			
 electricborder	带噪声驱动的噼啪电弧动画轮廓，为任意框体包裹发光边框，Canvas 实现。	motion-transition	specialized	canvas		glow	
 ribbon-trails	丝滑的弹簧绳索轨迹追随 cursor，颜色循环并在交叉处发光，适合 cursor trail 效果。	cursor-effect	specialized		cursor	glow	
 mandala-bloom	WebGL 曼陀罗由同心环带的 SDF 图案构成，各自裁剪于独立单元内互不重叠，缓慢旋转，适合 hero 背景，依赖 three	background,marketing-section	specialized	webgl			
@@ -380,9 +380,9 @@ text-dither	WebGL2 文字块静止时清晰，hover 时沿正弦波扭曲，并�
 satin-flow	WebGL 背景叠加三层域扭曲分形噪声形成绸缎般折叠色带，三色着色，可选 cursor 隆起与背景模糊。	background,cursor-effect	specialized	webgl	cursor		
 flickertext	为文字和图片添加可定制的闪烁与描边效果，进入视口或 hover 时触发。	text-effect,media	specialized		hover		
 sonar-bloom	WebGL 场景，六圈重叠波环从画面下方源点扩散、变宽渐隐，cursor 下方诞生新环，适合声呐涟漪背景。	background,cursor-effect	specialized	webgl	cursor		
-dot-cursor	弹簧平滑的 custom cursor 圆点，悬停按钮时变形为圆环，悬停链接时吸附为下划线。	cursor-effect,button	specialized		hover,cursor		
+dot-cursor	弹簧平滑的 custom cursor 圆点，悬停按钮时变形为圆环，悬停链接时吸附为下划线。	cursor-effect	specialized		hover,cursor		
 shattered-glass	光线追踪玻璃球由 32 片五边形与六边形壳片组成，指针下的金属球将其推开后各片弹回原位，WebGL 折射。	other	specialized	webgl,glass		glass	
-flow-field	全屏 WebGL 背景，域扭曲噪声单向漂移，可渲染为绸缎色带、速度拖尾或卷曲涂抹，适合 hero shader。	background,form-input	specialized	webgl	drag		
+flow-field	全屏 WebGL 背景，域扭曲噪声单向漂移，可渲染为绸缎色带、速度拖尾或卷曲涂抹，适合 hero shader。	background	specialized	webgl	drag		
 prism-burst	WebGL 光爆，射线在偏移角度与半径上采样三次，红蓝分离出棱镜色散边缘，适合 hero 光效。	background,marketing-section	specialized	webgl			
 frosted-type-band	WebGL 重复文字环置于 backdrop-filter 板上，下方内容被模糊并裁剪成带状轮廓透出，磨砂玻璃 marquee。	text-effect,background	specialized	webgl		marquee,glass	
 nacre-spine	2D Canvas 沿三叶结绘制数百个半透明圆盘并前后排序，色带跟随 cursor 沿线移动，珍珠母贝质感。	cursor-effect	specialized	canvas	cursor		
@@ -422,7 +422,7 @@ morphing-rings	WebGL 同心粒子环圆盘透视倾斜，空心中心在圆、�
 text-emerge	单词从无到有缩放并模糊淡入，从你指定的点向外错开出现，柔和的电影感文字 reveal，基于 GSAP，依赖 gsap	text-effect,motion-transition	specialized				
 cosmic-orb	玻璃球内封存活的银河，含漂移星云、闪烁星星和边缘色差镜头光晕，WebGL shader 展示。	background	specialized	webgl		glow,glass	
 moving-gradient-button	药丸形按钮，边框为旋转 conic-gradient 描边，hover 时绽放为整体 glow，适合 CTA 按钮，依赖 framer-motion	button,marketing-section	specialized	gradient	hover	glow	
-multi-effect-cursor	Canvas cursor 轨迹，含星座、丝带、彗星、气泡四种可切换样式，按真实时间同步，任意刷新率下一致。	cursor-effect,date-time	specialized	canvas	cursor		
+multi-effect-cursor	Canvas cursor 轨迹，含星座、丝带、彗星、气泡四种可切换样式，按真实时间同步，任意刷新率下一致。	cursor-effect	specialized	canvas	cursor		
 topology-field	WebGL 球面均匀节点连向近邻，每个点以自己的正弦脉动，整个图转动并随深度雾渐隐，适合网络图 hero。	form-input,marketing-section	specialized	webgl			
 cursor-image-trail	hover 触发的图片轨迹跟随 cursor，带弹性模糊淡出过渡，适合作品集 hover 效果，依赖 framer-motion	cursor-effect,media	specialized		hover,cursor		
 paper-image	WebGL 图片贴在布料般的薄片上，指针处起伏并在空闲时轻摆，Lift 模式可掀起底边，适合 hover 图片，依赖 three	media,micro-interaction	specialized	webgl	hover		
@@ -459,10 +459,10 @@ arrow-cross	四个挤出的 3D 箭头指向中心立方体，各自绕轴自转�
 repetition-hover	在单个卡片中堆叠同一图片的多个副本，hover 时沿所选轴依次塌缩，底图同时回缩，适合图片 hover 效果，依赖 framer-motion motion	media,layout-card	specialized		hover		
 dynamic-weight	按每个字母与 cursor 的距离在两种字重间变形，实时 variable-font hover 效果，适合标题，依赖 framer-motion	cursor-effect,micro-interaction	specialized		hover,cursor		
 mosaic-flip	3D 立方体网格把一张图铺在各面，点击后所有立方体从中心错开翻转半圈显出下一张图，适合图片切换。	media,fun-3d	specialized	3d	press		
-formula-stream	全屏 Canvas 数学公式沿微弯车道以四层景深漂移，在指针处分开并变色，适合学术科技背景。	background,form-input	specialized	canvas			
+formula-stream	全屏 Canvas 数学公式沿微弯车道以四层景深漂移，在指针处分开并变色，适合学术科技背景。	background	specialized	canvas			
 elemental-water	WebGL2 水面运行真实阻尼波模拟，指针拖出的水滴扩散、触边反弹并像真实涟漪般干涉，适合水波背景。	background	specialized	webgl	drag		
 particle-wobble	Canvas 约 150 个深度排序圆点的球，外壳随两路反向噪声波起伏，trackball 拖拽后保持惯性旋转。	loading,micro-interaction	specialized	canvas	drag		
-imagegallery	图片从中心持续向外飞出或螺旋流动，密度、缓动和时间可配置，适合图片 gallery 动画。	date-time,media	specialized				
+imagegallery	图片从中心持续向外飞出或螺旋流动，密度、缓动和时间可配置，适合图片 gallery 动画。	media	specialized				
 pixel-trail	方格网格在指针下瞬间全亮并在身后淡出，标题以 difference 混合使轨迹反转文字颜色，适合 hover pixel 效果。	text-effect,cursor-effect	specialized	pixel	hover,cursor		
 spotlight-frames	横向手风琴式竖条，每条裁切自图片中心，hover 或点击展开成全宽，其余滑开，带跟踪选择框，适合 gallery，依赖 framer-motion motion	select,media	specialized		hover,press	glow	
 deparkanoid	Canvas 可玩的 880×600 打砖块游戏，102 块砖排成像素字标，指针或键盘控制挡板，每砖 50 分。	fun-3d	specialized	canvas,pixel	keyboard		
@@ -580,7 +580,7 @@ image-magnifier	玻璃放大镜跟随 cursor，在 Canvas 上直接放大下方�
 metallic-dodecahedron	three.js 正十二面体被切成逐面网格，点击时沿法线推出并扭转打开，可自转和拖拽的 matcap 3D 交互，依赖 three	micro-interaction,fun-3d	specialized	webgl,3d	press,drag		
 cloud-sky-02	全幅 WebGL 天空，积云群分两层 parallax 漂移，在低垂太阳圆盘前形成剪影并照亮云底和边缘的 shader 背景。	background,motion-transition	specialized	webgl			
 metal-lap-joint	WebGL 循环动画，三根并排铬色棒旋转到垂直轴、锁成实心三臂十字、停留后再散开的 3D loader。	loading,motion-transition	specialized	webgl,3d			
-link-preview	hover 链接时浮出所链接页面的缩略图，并随 cursor 移动倾斜跟随的预览效果，依赖 framer-motion	cursor-effect,button	specialized		hover,cursor		
+link-preview	hover 链接时浮出所链接页面的缩略图，并随 cursor 移动倾斜跟随的预览效果，依赖 framer-motion	cursor-effect	specialized		hover,cursor		
 toonfireball-03	WebGL 卡通彗星雨，每颗是带旋涡的球体加涟漪火焰锥和蒸汽，以各自深度、尺度和速度坠落并带 bloom 的背景。	background,motion-transition	specialized	webgl			
 wire-terrain-03	WebGL 程序化山丘飞越，以等高线绘制并每五条加粗索引线，带雾和条纹太阳的 topographic 线框背景。	background,motion-transition	specialized	webgl			
 ascii-radar	漂移的 ASCII 字符矩阵，在每次点击处向外脉冲扩散雷达环的背景效果。	chart,text-effect	specialized	pixel	press		
@@ -596,16 +596,16 @@ hero-05	Hero 区块，next.js 与 tailwind 实现的落地页首屏，含标题�
 pricing-02	定价区块，展示多档套餐方案，适合放在落地页价格部分。	pricing,marketing-section	specialized				
 hero-21	落地页 hero 区块，含标题、副文案与 CTA 的首屏 banner 布局。	marketing-section,layout-card	specialized				
 hero-13	来自 diip3sh sections 的 section-20 的 hero 区块，next.js 与 tailwind 实现的落地页首屏。	marketing-section	specialized				
-hero-24	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	navigation,marketing-section	specialized				
+hero-24	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	marketing-section	specialized				
 hero-29	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	navigation,marketing-section	specialized				
 hero-44	深色渐变风格的 AI agents hero 区块，适合 AI 产品落地页首屏。	ai-ux,marketing-section	specialized	gradient			
 features-02	features 区块，含可拖拽旋转的交互 globe 和全球业务指标 stats，适合展示全球覆盖与数据。	marketing-section,micro-interaction	specialized		drag		
 pricing-03	定价区块，含月付年付 billing toggle、多档套餐和 enterprise 方案，来自 diip3sh sections 的 section-8。	pricing,toggle-slider	specialized				
 hero-16	来自 diip3sh sections 的 section-22 的 hero 区块，带人像网格 gallery 叠层，适合创意落地页首屏。	media,marketing-section	specialized				
-hero-42	AI copilot SaaS 的 hero 区块，带产品 mockup 和 carousel，适合软件产品首屏。	ai-ux,media	specialized				
+hero-42	AI copilot SaaS 的 hero 区块，带产品 mockup 和 carousel，适合软件产品首屏。	marketing-section,ai-ux	specialized				
 hero-10	落地页 hero 区块，含标题、header 与 CTA 的首屏布局。	navigation,marketing-section	specialized				
 hero-03	next.js 落地页 hero 区块，含标题与 CTA 的首屏布局。	marketing-section,layout-card	specialized				
-footer-01	页脚区块，带手机 mockup、应用商店下载按钮和 social 链接，适合 app 下载型页脚。	button,marketing-section	specialized				
+footer-01	页脚区块，带手机 mockup、应用商店下载按钮和 social 链接，适合 app 下载型页脚。	marketing-section	specialized				
 hero-31	落地页 hero 区块，above the fold 首屏，含标题与 CTA 布局。	marketing-section,layout-card	specialized				
 hero-33	落地页 hero 区块，含标题与 call to action 按钮的首屏布局。	button,marketing-section	specialized				
 hero-15	来自 diip3sh sections 的 section-28 的 hero 区块，含标题与 CTA 的落地页首屏。	marketing-section	specialized				
@@ -623,7 +623,7 @@ hero-39	产品 hero 区块，含 logo header、品牌 tagline 和 scroll CTA，�
 hero-27	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	navigation,marketing-section	specialized				
 hero-40	设计工作室 agency 风格的 hero 区块，大标题加 CTA 链接，适合创意机构首屏。	marketing-section	specialized				
 hero-41	开发者平台 SaaS 的 hero 区块，含部署主题和 trust badges 信任徽章，适合开发工具首屏。	feedback,marketing-section	specialized				
-hero-07	waitlist hero 区块，带邮箱收集表单，适合产品发布前的预约注册首屏，依赖 motion	auth,form-input	specialized				
+hero-07	waitlist hero 区块，带邮箱收集表单，适合产品发布前的预约注册首屏，依赖 motion	marketing-section,form-input	specialized				
 pricing-01	定价区块，展示套餐档位与价格，适合放在落地页价格部分。	pricing,marketing-section	specialized				
 hero-14	动画 hero 区块，带浮动标签和渐变光束，适合落地页炫酷首屏，依赖 motion	marketing-section,motion-transition	specialized	gradient			
 cta-01	CTA 区块，用于落地页引导转化的 call to action，适合放在页面末尾。	marketing-section,empty-onboarding	specialized				
@@ -639,10 +639,10 @@ hero-47	agency 风格 hero 区块，粗体大字排版、极简创意，适合�
 hero-25	next.js 与 tailwind 实现的落地页 hero 区块，含标题与 CTA。	marketing-section	specialized				
 hero-35	落地页 hero banner 区块，含标题与 CTA 的首屏布局。	marketing-section,layout-card	specialized				
 hero-12	来自 diip3sh sections 的 section-19 的 hero 区块，含 call to action 的落地页首屏。	marketing-section	specialized				
-features-01	features 区块，用竖向 interactive tabs 切换展示产品功能，适合功能 showcase。	navigation,marketing-section	specialized				
+features-01	features 区块，用竖向 interactive tabs 切换展示产品功能，适合功能 showcase。	marketing-section,navigation	specialized				
 hero-34	落地页 hero 区块，含标题与 CTA 的首屏 banner 布局。	marketing-section,layout-card	specialized				
 hero-18	全屏 hero 区块，next.js 落地页首屏，含标题与 CTA。	marketing-section	specialized				
-hero-17	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	navigation,marketing-section	specialized				
+hero-17	落地页 hero 区块，含标题与 CTA 的首屏 header banner 布局。	marketing-section	specialized				
 hero-32	落地页 hero 区块，above the fold 首屏，含标题与 CTA 布局。	marketing-section,layout-card	specialized				
 hero-36	落地页 hero 区块，above the fold 首屏，含标题与 CTA 布局。	marketing-section,layout-card	specialized				
 hero-23	落地页 hero 区块，含标题与 call to action 按钮的首屏布局。	button,marketing-section	specialized				

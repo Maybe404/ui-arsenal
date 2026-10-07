@@ -172,7 +172,7 @@ between-vertical-start	图标 between-vertical-start；分类: layout, design, t
 biceps-flexed	图标 biceps-flexed；分类: emoji；tags: arm, muscle, strong, working out, athletic, toned, muscular, forelimb, curled	icon	icons				
 bike	图标 bike；分类: transportation；tags: bicycle, transport, trip	icon	icons				
 binary	图标 binary；分类: text, development；tags: code, digits, computer, zero, one, boolean	icon	icons				
-binoculars	图标 binoculars；分类: navigation, nature, photography, science, travel, development；tags: field glasses, lorgnette, pince-nez, observation, sightseeing, nature, wildlife, birdwatching, scouting, surveillance, search, discovery, monitoring, lookout, viewpoint, travel, tourism, research	icon	icons	glass		glass	
+binoculars	图标 binoculars；分类: navigation, nature, photography, science, travel, development；tags: field glasses, lorgnette, pince-nez, observation, sightseeing, nature, wildlife, birdwatching, scouting, surveillance, search, discovery, monitoring, lookout, viewpoint, travel, tourism, research	icon	icons	glass			
 biohazard	图标 biohazard；分类: science；tags: fallout, waste, biology, chemistry, chemical, element	icon	icons				
 bird	图标 bird；分类: animals；tags: peace, freedom, wing, avian, tweet	icon	icons				
 birdhouse	图标 birdhouse；分类: nature, animals, navigation, home；tags: birdhouse, bird, garden, home, house, woodwork	icon	icons				
@@ -226,7 +226,7 @@ boom-box	图标 boom-box；分类: devices, multimedia, social；tags: radio, sp
 bot	图标 bot；分类: development, social；tags: robot, ai, chat, assistant	icon	icons				
 bot-message-square	图标 bot-message-square；分类: development, social；tags: robot, ai, chat, assistant	icon	icons				
 bot-off	图标 bot-off；分类: development, social；tags: robot, ai, chat, assistant	icon	icons				
-bottle-wine	图标 bottle-wine；分类: food-beverage；tags: alcohol, drink, glass, goblet, chalice, vineyard, winery, red, white, rose, dry, sparkling, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass		glass	
+bottle-wine	图标 bottle-wine；分类: food-beverage；tags: alcohol, drink, glass, goblet, chalice, vineyard, winery, red, white, rose, dry, sparkling, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass			
 bow-arrow	图标 bow-arrow；分类: gaming, tools；tags: archer, archery, game, war, weapon	icon	icons				
 box	图标 box；分类: shapes, gaming, development, math；tags: cube, package, container, storage, geometry, 3d, isometric	icon	icons	3d			
 boxes	图标 boxes；分类: shapes, gaming, development；tags: cubes, packages, parts, group, units, collection, cluster, geometry	icon	icons				
@@ -494,7 +494,7 @@ compass	图标 compass；分类: navigation, travel；tags: direction, north, ea
 component	图标 component；分类: design, development；tags: design, element, group, module, part, symbol	icon	icons				
 computer	图标 computer；分类: devices, development, gaming；tags: pc, chassis, codespaces	icon	icons				
 concierge-bell	图标 concierge-bell；分类: travel；tags: reception, bell, porter	icon	icons				
-cone	图标 cone；分类: shapes, math；tags: conical, triangle, triangular, geometry, filter, funnel, hopper, spotlight, searchlight	icon	icons			glow	
+cone	图标 cone；分类: shapes, math；tags: conical, triangle, triangular, geometry, filter, funnel, hopper, spotlight, searchlight	icon	icons				
 construction	图标 construction；分类: development；tags: roadwork, maintenance, blockade, barricade	icon	icons				
 contact	图标 contact；分类: account, connectivity, communication, social；tags: user, person, family, friend, acquaintance, listing, networking	icon	icons				
 contact-round	图标 contact-round；分类: account, connectivity, communication, social；tags: user, person, family, friend, acquaintance, listing, networking	icon	icons				
@@ -703,7 +703,7 @@ flag	图标 flag；分类: account, social；tags: report, marker, notification,
 flag-off	图标 flag-off；分类: account, social；tags: unflag, unmark, report, marker, notification, warning, milestone, goal, notice, signal, attention, banner	icon	icons				
 flag-triangle-left	图标 flag-triangle-left；分类: development, navigation；tags: report, timeline, marker, pin	icon	icons				
 flag-triangle-right	图标 flag-triangle-right；分类: development, navigation；tags: report, timeline, marker, pin	icon	icons				
-flame	图标 flame；分类: weather, social, gaming；tags: heat, burn, light, glow, ignite, passion, ember, fire, lit, burning, spark, embers, smoke, firefighter, fireman, department, brigade, station, emergency	icon	icons			glow	
+flame	图标 flame；分类: weather, social, gaming；tags: heat, burn, light, glow, ignite, passion, ember, fire, lit, burning, spark, embers, smoke, firefighter, fireman, department, brigade, station, emergency	icon	icons				
 flame-kindling	图标 flame-kindling；分类: nature, social, gaming；tags: campfire, camping, wilderness, outdoors, lit, warmth, wood, twigs, sticks	icon	icons				
 flashlight	图标 flashlight；分类: photography, devices；tags: torch, light, beam, emergency, safety, tool, bright	icon	icons				
 flashlight-off	图标 flashlight-off；分类: photography, devices；tags: torch, light, beam, emergency, safety, tool, bright	icon	icons				
@@ -793,8 +793,8 @@ git-pull-request-closed	图标 git-pull-request-closed；分类: development；t
 git-pull-request-create	图标 git-pull-request-create；分类: development；tags: code, version control, open, plus, add, +	icon	icons				
 git-pull-request-create-arrow	图标 git-pull-request-create-arrow；分类: development, arrows；tags: code, version control, open, plus, add, +	icon	icons				
 git-pull-request-draft	图标 git-pull-request-draft；分类: development；tags: code, version control, open, draft, dashed	icon	icons				
-glass-water	图标 glass-water；分类: food-beverage；tags: beverage, drink, glass, water	icon	icons	glass		glass	
-glasses	图标 glasses；分类: accessibility；tags: glasses, spectacles	icon	icons	glass		glass	
+glass-water	图标 glass-water；分类: food-beverage；tags: beverage, drink, glass, water	icon	icons	glass			
+glasses	图标 glasses；分类: accessibility；tags: glasses, spectacles	icon	icons	glass			
 globe	图标 globe；分类: navigation；tags: world, browser, language, translate	icon	icons				
 globe-check	图标 globe-check；分类: navigation；tags: world, browser, language, translate, internet, web, check, verified, success, valid, available, online, status	icon	icons				
 globe-code	图标 globe-code；分类: navigation, development；tags: website, internet, globe, connection, network, digital, access, global, link, world, browser, language, translate	icon	icons				
@@ -834,7 +834,7 @@ hard-drive-download	图标 hard-drive-download；分类: development, devices, a
 hard-drive-upload	图标 hard-drive-upload；分类: development, devices, arrows, files；tags: computer, server, memory, data, ssd, disk, hard disk, save	icon	icons				
 hard-hat	图标 hard-hat；分类: tools；tags: helmet, construction, safety	icon	icons				
 hash	图标 hash；分类: text, social；tags: hashtag, number, pound	icon	icons				
-hat-glasses	图标 hat-glasses；分类: social, account, security；tags: incognito, disguise, costume, masked, anonymous, anonymity, privacy, private browsing, stealth, hidden, undercover, cloak, invisible, ghost, spy, agent, detective, identity, cap, fedora, spectacles, shades, sunglasses, eyewear	icon	icons	glass		glass	
+hat-glasses	图标 hat-glasses；分类: social, account, security；tags: incognito, disguise, costume, masked, anonymous, anonymity, privacy, private browsing, stealth, hidden, undercover, cloak, invisible, ghost, spy, agent, detective, identity, cap, fedora, spectacles, shades, sunglasses, eyewear	icon	icons	glass			
 haze	图标 haze；分类: weather；tags: mist, fog	icon	icons				
 hd	图标 hd；分类: devices, multimedia；tags: tv, resolution, video, high definition, 720p, 1080p	icon	icons				
 hdmi-port	图标 hdmi-port；分类: devices, multimedia, gaming；tags: socket, plug, slot, controller, connector, interface, console, signal, audio, video, visual, av, data, input, output	icon	icons				
@@ -864,8 +864,8 @@ hop	图标 hop；分类: food-beverage；tags: beer, brewery, drink	icon	icons
 hop-off	图标 hop-off；分类: food-beverage；tags: beer, brewery, drink, hop free, allergy, intolerance, diet	icon	icons				
 hospital	图标 hospital；分类: medical, buildings, navigation, travel；tags: infirmary, sanatorium, healthcare, doctor, hospice, clinic, emergency room, ward, building, medical, vet	icon	icons				
 hotel	图标 hotel；分类: buildings, navigation, travel；tags: building, hostel, motel, inn	icon	icons				
-hourglass	图标 hourglass；分类: time, gaming；tags: timer, time, sandglass	icon	icons	glass		glass	
-hourglass-cog	图标 hourglass-cog；分类: time, tools；tags: timer, time, sandglass, duration, settings, gear, cog, edit, configuration, countdown, timeout, expiration	icon	icons	glass		glass	
+hourglass	图标 hourglass；分类: time, gaming；tags: timer, time, sandglass	icon	icons	glass			
+hourglass-cog	图标 hourglass-cog；分类: time, tools；tags: timer, time, sandglass, duration, settings, gear, cog, edit, configuration, countdown, timeout, expiration	icon	icons	glass			
 house	图标 house；分类: buildings, home, navigation；tags: home, living, building, residence, architecture	icon	icons				
 house-cog	图标 house-cog；分类: buildings, home；tags: home, building, residence, settings, gear, configuration, property, automation	icon	icons				
 house-heart	图标 house-heart；分类: home, buildings, medical；tags: home sweet home, abode, building, residence, healthy living, lifestyle	icon	icons				
@@ -943,8 +943,8 @@ layout-template	图标 layout-template；分类: layout；tags: window, webpage,
 leaf	图标 leaf；分类: nature, sustainability, seasons；tags: sustainability, nature, energy, plant, autumn	icon	icons				
 leafy-green	图标 leafy-green；分类: food-beverage, emoji, sustainability；tags: salad, lettuce, vegetable, chard, cabbage, bok choy	icon	icons				
 lectern	图标 lectern；分类: communication, multimedia；tags: pulpit, podium, stand	icon	icons				
-lens-concave	图标 lens-concave；分类: science, tools, shapes；tags: concave, lens, optics, light, magnification, curved, focus, refraction, science, physics, eyeglass, telescope, microscope	icon	icons	glass		glass	
-lens-convex	图标 lens-convex；分类: science, tools, shapes；tags: convex, lens, optics, magnification, focus, light, refraction, physics, eyeglass, telescope, microscope, curved, science	icon	icons	glass		glass	
+lens-concave	图标 lens-concave；分类: science, tools, shapes；tags: concave, lens, optics, light, magnification, curved, focus, refraction, science, physics, eyeglass, telescope, microscope	icon	icons	glass			
+lens-convex	图标 lens-convex；分类: science, tools, shapes；tags: convex, lens, optics, magnification, focus, light, refraction, physics, eyeglass, telescope, microscope, curved, science	icon	icons	glass			
 letters	图标 letters；分类: text；tags: abc, alphabet, alphabetical, text, characters, language, typography, literacy, spelling	icon	icons				
 library	图标 library；分类: text, photography, multimedia, navigation, development；tags: books, reading, written, authors, stories, fiction, novels, information, knowledge, education, high school, university, college, academy, learning, study, research, collection, vinyl, records, albums, music, package	icon	icons				
 library-big	图标 library-big；分类: text, photography, multimedia, navigation, development；tags: books, reading, written, authors, stories, fiction, novels, information, knowledge, education, high school, university, college, academy, learning, study, research, collection, vinyl, records, albums, music, package	icon	icons				
@@ -1035,7 +1035,7 @@ map-pinned	图标 map-pinned；分类: navigation, travel, account；tags: locat
 map-plus	图标 map-plus；分类: navigation；tags: location, navigation, travel, new, add, create	icon	icons				
 mars	图标 mars；分类: medical；tags: gender, sex, male, masculine, man, boy	icon	icons				
 mars-stroke	图标 mars-stroke；分类: medical；tags: gender, androgyne, transgender	icon	icons				
-martini	图标 martini；分类: food-beverage；tags: cocktail, alcohol, beverage, bar, drink, glass, spirit, party, celebration, mixer	icon	icons	glass		glass	
+martini	图标 martini；分类: food-beverage；tags: cocktail, alcohol, beverage, bar, drink, glass, spirit, party, celebration, mixer	icon	icons	glass			
 maximize	图标 maximize；分类: layout, design；tags: fullscreen, expand, dashed	icon	icons				
 maximize-2	图标 maximize-2；分类: arrows, layout, design；tags: fullscreen, arrows, expand	icon	icons				
 medal	图标 medal；分类: sports, gaming；tags: prize, sports, winner, trophy, award, achievement	icon	icons				
@@ -1092,8 +1092,8 @@ milk-off	图标 milk-off；分类: food-beverage；tags: lactose free, bottle, b
 minimize	图标 minimize；分类: layout, design；tags: exit fullscreen, close, shrink	icon	icons				
 minimize-2	图标 minimize-2；分类: arrows, layout, design；tags: exit fullscreen, arrows, close, shrink	icon	icons				
 minus	图标 minus；分类: math, development, text, tools；tags: subtract, remove, decrease, decrement, reduce, negative, calculate, line, divider, separator, horizontal rule, hr, html, markup, markdown, ---, toolbar, operator, code, coding, minimum, downgrade	icon	icons				
-mirror-rectangular	图标 mirror-rectangular；分类: science, home, tools；tags: reflection, optics, glass, surface, image, physics, science, bathroom, decor, cosmetic, shiny, periscope, vanity	icon	icons	glass		glass	
-mirror-round	图标 mirror-round；分类: science, home, tools；tags: reflection, optics, glass, surface, image, physics, science, bathroom, vanity, makeup, decor, cosmetic, shiny, periscope	icon	icons	glass		glass	
+mirror-rectangular	图标 mirror-rectangular；分类: science, home, tools；tags: reflection, optics, glass, surface, image, physics, science, bathroom, decor, cosmetic, shiny, periscope, vanity	icon	icons	glass			
+mirror-round	图标 mirror-round；分类: science, home, tools；tags: reflection, optics, glass, surface, image, physics, science, bathroom, vanity, makeup, decor, cosmetic, shiny, periscope	icon	icons	glass			
 monitor	图标 monitor；分类: connectivity, devices；tags: tv, computer, desktop, screen, display, external display, screen sharing, virtual machine, vm	icon	icons				
 monitor-check	图标 monitor-check；分类: connectivity, devices；tags: tv, computer, screen, display, desktop, external display, screen sharing, connected, success, verified, running, active, virtual machine, vm	icon	icons				
 monitor-cloud	图标 monitor-cloud；分类: connectivity, devices, development；tags: tv, computer, screen, display, desktop, external display, virtual machine, virtual desktop, vm, vdi, computing, remote work, monitoring, infrastructure, software as a service, saas, workstation, environment	icon	icons				
@@ -1155,7 +1155,7 @@ network	图标 network；分类: development；tags: tree	icon	icons
 newspaper	图标 newspaper；分类: multimedia, communication；tags: news, feed, home, magazine, article, headline	icon	icons				
 nfc	图标 nfc；分类: communication, finance, devices；tags: contactless, payment, near-field communication	icon	icons				
 non-binary	图标 non-binary；分类: medical；tags: gender, nonbinary, enby	icon	icons				
-notebook	图标 notebook；分类: text, communication, social, design；tags: notepad, notes, stationery, sketchbook, moleskine, closure, strap, band, elastic, organizer, organiser, planner, diary, journal, writing, written, writer, reading, high school, university, college, academy, student, study, homework, research	icon	icons			bounce	
+notebook	图标 notebook；分类: text, communication, social, design；tags: notepad, notes, stationery, sketchbook, moleskine, closure, strap, band, elastic, organizer, organiser, planner, diary, journal, writing, written, writer, reading, high school, university, college, academy, student, study, homework, research	icon	icons				
 notebook-dot	图标 notebook-dot；分类: communication；tags: document, file, journal, page, paper, record, entry, notebook, notification, unread, note	icon	icons				
 notebook-pen	图标 notebook-pen；分类: text, social；tags: pencil, notepad, notes, noted, stationery, sketchbook, organizer, organiser, planner, diary, journal, writing, write, written, reading, high school, university, college, academy, student, study, research, homework, eraser, rubber	icon	icons				
 notebook-tabs	图标 notebook-tabs；分类: account, communication, social；tags: notepad, notes, people, family, friends, acquaintances, contacts, details, addresses, phone numbers, directory, listing, networking, alphabetical, a-z, organizer, organiser, planner, diary, stationery	icon	icons				
@@ -1349,7 +1349,7 @@ rotate-ccw-key	图标 rotate-ccw-key；分类: security, account；tags: passwor
 rotate-ccw-square	图标 rotate-ccw-square；分类: layout, design, photography, tools, arrows；tags: left, counter-clockwise, rotate, image, 90, 45, degrees, °	icon	icons				
 rotate-cw	图标 rotate-cw；分类: arrows, design, photography；tags: arrow, right, clockwise, refresh, reload, rerun, redo	icon	icons				
 rotate-cw-clock	图标 rotate-cw-clock；分类: arrows, time；tags: modify, edit, refresh, sync, renew, revision, settings, adjust, upgrade, time, timeline, version, time machine, backup, clockwise, arrow, reload, rerun, synchronize, circular, cycle, update	icon	icons				
-rotate-cw-fading-clock	图标 rotate-cw-fading-clock；分类: time；tags: clock, waiting, schedule, hourglass, loading, pause, pending, time, watch	icon	icons	glass		glass	
+rotate-cw-fading-clock	图标 rotate-cw-fading-clock；分类: time；tags: clock, waiting, schedule, hourglass, loading, pause, pending, time, watch	icon	icons	glass			
 rotate-cw-square	图标 rotate-cw-square；分类: layout, design, photography, tools, arrows；tags: right, clockwise, rotate, image, 90, 45, degrees, °	icon	icons				
 route	图标 route；分类: navigation；tags: path, journey, planner, points, stops, stations	icon	icons				
 route-off	图标 route-off；分类: navigation；tags: path, journey, planner, points, stops, stations, reset, clear, cancelled, closed, blocked	icon	icons				
@@ -1396,12 +1396,12 @@ screen-share	图标 screen-share；分类: connectivity, devices, communication�
 screen-share-off	图标 screen-share-off；分类: connectivity, devices, communication；tags: desktop, disconnect, monitor	icon	icons				
 scroll	图标 scroll；分类: gaming, development, text；tags: paper, log, scripture, document, notes, parchment, list, long, script, story, code, coding	icon	icons		scroll		
 scroll-text	图标 scroll-text；分类: gaming, development, text；tags: paper, log, scripture, document, notes, parchment, list, long, script, story, code, coding	icon	icons		scroll		
-search	图标 search；分类: text, social；tags: find, scan, magnifier, magnifying glass, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
-search-alert	图标 search-alert；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, warning, alert, error, anomaly, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
-search-check	图标 search-check；分类: text, social；tags: find, scan, magnifier, magnifying glass, found, correct, complete, tick, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
-search-code	图标 search-code；分类: text, social, development；tags: find, scan, magnifier, magnifying glass, grep, chevrons, <>, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
-search-slash	图标 search-slash；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, clear, cancel, abort, /, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
-search-x	图标 search-x；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, clear, cancel, abort, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass		glass	
+search	图标 search；分类: text, social；tags: find, scan, magnifier, magnifying glass, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
+search-alert	图标 search-alert；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, warning, alert, error, anomaly, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
+search-check	图标 search-check；分类: text, social；tags: find, scan, magnifier, magnifying glass, found, correct, complete, tick, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
+search-code	图标 search-code；分类: text, social, development；tags: find, scan, magnifier, magnifying glass, grep, chevrons, <>, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
+search-slash	图标 search-slash；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, clear, cancel, abort, /, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
+search-x	图标 search-x；分类: text, social；tags: find, scan, magnifier, magnifying glass, stop, clear, cancel, abort, lens, locate, explore, discover, enlarge, zoom	icon	icons	glass			
 section	图标 section；分类: text；tags: mark, typography, punctuation, legal, type, text, prose, symbol	icon	icons				
 send	图标 send；分类: mail, communication, connectivity；tags: email, message, mail, paper airplane, paper aeroplane, submit	icon	icons				
 send-horizontal	图标 send-horizontal；分类: mail, communication, connectivity；tags: email, message, mail, paper airplane, paper aeroplane, submit	icon	icons				
@@ -1493,7 +1493,7 @@ spline-pointer	图标 spline-pointer；分类: arrows, cursors, design, tools；
 split	图标 split；分类: development, arrows；tags: break, disband, divide, separate, branch, disunite	icon	icons				
 spool	图标 spool；分类: communication, tools, social；tags: bobbin, spindle, yarn, thread, string, sewing, needlework	icon	icons				
 sport-shoe	图标 sport-shoe；分类: sports；tags: footwear, sports, running, athletic, shoe, sneaker, training, exercise, fitness	icon	icons				
-spotlight	图标 spotlight；分类: devices, photography, multimedia, communication；tags: winner, soapbox, stage, entertainment, drama, podium, actor, actress, singer, light, beam, play, theatre, show, focus, concert, performance, lens, leaderboard, followspot, best, highlight	icon	icons			glow	
+spotlight	图标 spotlight；分类: devices, photography, multimedia, communication；tags: winner, soapbox, stage, entertainment, drama, podium, actor, actress, singer, light, beam, play, theatre, show, focus, concert, performance, lens, leaderboard, followspot, best, highlight	icon	icons				
 spray-can	图标 spray-can；分类: design, tools；tags: paint, color, graffiti, decoration, aerosol, deodorant, shaving foam, air freshener	icon	icons				
 sprout	图标 sprout；分类: nature, gaming, sustainability；tags: eco, green, growth, leaf, nature, plant, seed, spring, sustainability	icon	icons				
 square	图标 square；分类: shapes, multimedia；tags: stop, playback, music, audio, video, rectangle, aspect ratio, 1:1, shape	icon	icons				
@@ -1525,16 +1525,16 @@ square-chevron-left	图标 square-chevron-left；分类: arrows, navigation；ta
 square-chevron-right	图标 square-chevron-right；分类: arrows, navigation, development；tags: forward, next, more than, greater, menu, panel, code, coding, command line, terminal, prompt, shell, console, >	icon	icons				
 square-chevron-up	图标 square-chevron-up；分类: arrows, navigation, math；tags: caret, keyboard, button, mac, control, ctrl, superscript, exponential, power, ahead, menu, panel, ^	icon	icons		keyboard		
 square-code	图标 square-code；分类: text, development；tags: gist, source, programming, html, xml, coding	icon	icons				
-square-dashed	图标 square-dashed；分类: text, design；tags: selection, square, rectangular, marquee, tool, dashed, box	icon	icons			marquee	
+square-dashed	图标 square-dashed；分类: text, design；tags: selection, square, rectangular, marquee, tool, dashed, box	icon	icons				
 square-dashed-bottom	图标 square-dashed-bottom；分类: development, files；tags: rectangle, aspect ratio, 1:1, shape, snippet, code, coding	icon	icons				
 square-dashed-bottom-code	图标 square-dashed-bottom-code；分类: development, files；tags: rectangle, aspect ratio, 1:1, shape, snippet, code, coding	icon	icons				
 square-dashed-kanban	图标 square-dashed-kanban；分类: charts, development, design；tags: projects, manage, overview, board, tickets, issues, roadmap, plan, intentions, productivity, work, agile, draft, template, boilerplate, code, coding	icon	icons				
 square-dashed-mouse-pointer	图标 square-dashed-mouse-pointer；分类: arrows, cursors, development, tools；tags: inspector, element, mouse, click, pointer, box, browser, selector, target, dom, node	icon	icons		cursor		
-square-dashed-plus	图标 square-dashed-plus；分类: design, layout, shapes；tags: selection, select, add, new, placeholder, marquee, box, dashed, plus, insert, frame, empty	icon	icons			marquee	
+square-dashed-plus	图标 square-dashed-plus；分类: design, layout, shapes；tags: selection, select, add, new, placeholder, marquee, box, dashed, plus, insert, frame, empty	icon	icons				
 square-dashed-text	图标 square-dashed-text；分类: text, cursors；tags: find, search, selection, dashed	icon	icons		cursor		
-square-dashed-top-solid	图标 square-dashed-top-solid；分类: design, development, layout；tags: square, border, width, layout, style, design, rectangular, marquee, dashed, box, rectangle, aspect ratio, 1:1	icon	icons			marquee	
-square-dashed-x	图标 square-dashed-x；分类: design, development, layout；tags: deselect, unselect, delete, select, selection, border, width, layout, style, design, rectangular, marquee, box, rectangle, aspect ratio, 1:1	icon	icons			marquee	
-square-dashed-x-corner	图标 square-dashed-x-corner；分类: design, development, layout；tags: deselect, unselect, delete, select, selection, border, width, layout, style, design, rectangular, marquee, box, rectangle, aspect ratio, 1:1	icon	icons			marquee	
+square-dashed-top-solid	图标 square-dashed-top-solid；分类: design, development, layout；tags: square, border, width, layout, style, design, rectangular, marquee, dashed, box, rectangle, aspect ratio, 1:1	icon	icons				
+square-dashed-x	图标 square-dashed-x；分类: design, development, layout；tags: deselect, unselect, delete, select, selection, border, width, layout, style, design, rectangular, marquee, box, rectangle, aspect ratio, 1:1	icon	icons				
+square-dashed-x-corner	图标 square-dashed-x-corner；分类: design, development, layout；tags: deselect, unselect, delete, select, selection, border, width, layout, style, design, rectangular, marquee, box, rectangle, aspect ratio, 1:1	icon	icons				
 square-dimensions	图标 square-dimensions；分类: design, layout；tags: ratio, size, width, height, resize, scale, frame, proportions, aspect, bounds, measurements, canvas	icon	icons	canvas			
 square-divide	图标 square-divide；分类: math；tags: calculate, math, ÷, /	icon	icons				
 square-dot	图标 square-dot；分类: development；tags: git, diff, modified, .	icon	icons				
@@ -1662,7 +1662,7 @@ text-cursor	图标 text-cursor；分类: text, cursors；tags: select, caret, ty
 text-cursor-input	图标 text-cursor-input；分类: text, layout；tags: select	icon	icons		cursor		
 text-initial	图标 text-initial；分类: text；tags: drop cap, text, format, typography, letter, font size	icon	icons				
 text-quote	图标 text-quote；分类: text；tags: blockquote, quotation, indent, reply, response	icon	icons				
-text-search	图标 text-search；分类: text；tags: find, data, copy, txt, pdf, document, scan, magnifier, magnifying glass, lens	icon	icons	glass		glass	
+text-search	图标 text-search；分类: text；tags: find, data, copy, txt, pdf, document, scan, magnifier, magnifying glass, lens	icon	icons	glass			
 text-wrap	图标 text-wrap；分类: text, arrows；tags: words, lines, break, paragraph	icon	icons				
 theater	图标 theater；分类: buildings, social；tags: theater, theatre, entertainment, podium, stage, musical	icon	icons				
 thermometer	图标 thermometer；分类: weather；tags: temperature, celsius, fahrenheit, weather	icon	icons				
@@ -1767,9 +1767,9 @@ user-round-key	图标 user-round-key；分类: account；tags: passkey, password
 user-round-minus	图标 user-round-minus；分类: account；tags: delete, remove, unfollow, unsubscribe	icon	icons				
 user-round-pen	图标 user-round-pen；分类: account；tags: person, account, contact, profile, edit, change	icon	icons				
 user-round-plus	图标 user-round-plus；分类: account；tags: new, add, create, follow, subscribe	icon	icons				
-user-round-search	图标 user-round-search；分类: account, social；tags: person, account, contact, find, scan, magnifier, magnifying glass, lens	icon	icons	glass		glass	
+user-round-search	图标 user-round-search；分类: account, social；tags: person, account, contact, find, scan, magnifier, magnifying glass, lens	icon	icons	glass			
 user-round-x	图标 user-round-x；分类: account；tags: delete, remove, unfollow, unsubscribe, unavailable	icon	icons				
-user-search	图标 user-search；分类: account, social；tags: person, account, contact, find, scan, magnifier, magnifying glass, lens	icon	icons	glass		glass	
+user-search	图标 user-search；分类: account, social；tags: person, account, contact, find, scan, magnifier, magnifying glass, lens	icon	icons	glass			
 user-shield	图标 user-shield；分类: account, security, development, people；tags: user, shield, admin, protected, guard, profile, security, privacy, permissions, role	icon	icons				
 user-star	图标 user-star；分类: account；tags: person, account, favorite, contact, like, review, rating, admin	icon	icons				
 user-x	图标 user-x；分类: account；tags: delete, remove, unfollow, unsubscribe, unavailable	icon	icons				
@@ -1796,7 +1796,7 @@ view	图标 view；分类: design, photography；tags: eye, look	icon	icons
 virus	图标 virus；分类: medical, science, security；tags: pathogen, infection, disease, illness, contagion, outbreak, pandemic, epidemic, covid, coronavirus, germ, microbe, microorganism, biology, medical, healthcare, malware, cybersecurity, threat	icon	icons				
 virus-off	图标 virus-off；分类: medical, science, security；tags: pathogen, infection, disease, illness, contagion, outbreak, pandemic, epidemic, covid, coronavirus, germ, microbe, microorganism, biology, medical, healthcare, malware, cybersecurity, threat, antivirus, blocked, removed, clean, safe, prevention, quarantine	icon	icons				
 voicemail	图标 voicemail；分类: connectivity, devices, social；tags: phone, cassette, tape, reel, recording, audio	icon	icons				
-volleyball	图标 volleyball；分类: sports, gaming, travel；tags: beach, sand, net, holiday, vacation, summer, soccer, football, futbol, kick, pitch, goal, score, bounce, leather, wool, yarn, knitting, sewing, thread, embroidery, textile	icon	icons			bounce	
+volleyball	图标 volleyball；分类: sports, gaming, travel；tags: beach, sand, net, holiday, vacation, summer, soccer, football, futbol, kick, pitch, goal, score, bounce, leather, wool, yarn, knitting, sewing, thread, embroidery, textile	icon	icons				
 volume	图标 volume；分类: connectivity, communication, multimedia；tags: music, sound, mute, speaker	icon	icons		sound		
 volume-1	图标 volume-1；分类: connectivity, communication, multimedia；tags: music, sound, speaker	icon	icons		sound		
 volume-2	图标 volume-2；分类: connectivity, communication, multimedia；tags: music, sound, speaker	icon	icons		sound		
@@ -1817,7 +1817,7 @@ waves-arrow-up	图标 waves-arrow-up；分类: weather, sustainability；tags: w
 waves-horizontal	图标 waves-horizontal；分类: weather, navigation, multimedia, sustainability；tags: water, sea, sound, hertz, wavelength, vibrate, ocean, swimming, frequency	icon	icons		sound		
 waves-ladder	图标 waves-ladder；分类: sports, home；tags: swimming, water, pool, lifeguard, ocean, 🌊, 🏊‍♂️, 🏊‍♀️, 🏊, 🥽	icon	icons				
 waves-vertical	图标 waves-vertical；分类: weather, sustainability；tags: steam, warmth, temperature, burn, hot, boiling, heat, smoke, vapor, smell, aroma, sauna	icon	icons				
-waypoints	图标 waypoints；分类: security, account, navigation, development, social；tags: indirection, vpn, virtual private network, proxy, connections, bounce, reroute, path, journey, planner, stops, stations, shared, spread, viral	icon	icons			bounce	
+waypoints	图标 waypoints；分类: security, account, navigation, development, social；tags: indirection, vpn, virtual private network, proxy, connections, bounce, reroute, path, journey, planner, stops, stations, shared, spread, viral	icon	icons				
 webcam	图标 webcam；分类: connectivity, devices, communication；tags: camera, security	icon	icons				
 webcam-off	图标 webcam-off；分类: connectivity, devices, communication；tags: camera, security	icon	icons				
 webhook	图标 webhook；分类: development, social, account；tags: push api, interface, callback	icon	icons				
@@ -1839,8 +1839,8 @@ wifi-zero	图标 wifi-zero；分类: connectivity, devices；tags: connection, s
 wind	图标 wind；分类: weather, sustainability；tags: weather, air, blow	icon	icons				
 wind-arrow-down	图标 wind-arrow-down；分类: weather, sustainability；tags: weather, air, pressure, blow	icon	icons		press		
 wind-arrow-up	图标 wind-arrow-up；分类: weather, sustainability, arrows, navigation；tags: weather, air, pressure, blow, gust, windy, sort, increase	icon	icons		press		
-wine	图标 wine；分类: food-beverage；tags: alcohol, beverage, bar, drink, glass, sommelier, vineyard, winery	icon	icons	glass		glass	
-wine-off	图标 wine-off；分类: food-beverage；tags: alcohol, beverage, drink, glass, alcohol free, abstinence, abstaining, teetotalism, allergy, intolerance	icon	icons	glass		glass	
+wine	图标 wine；分类: food-beverage；tags: alcohol, beverage, bar, drink, glass, sommelier, vineyard, winery	icon	icons	glass			
+wine-off	图标 wine-off；分类: food-beverage；tags: alcohol, beverage, drink, glass, alcohol free, abstinence, abstaining, teetotalism, allergy, intolerance	icon	icons	glass			
 workflow	图标 workflow；分类: development；tags: action, continuous integration, ci, automation, devops, network, node, connection	icon	icons				
 worm	图标 worm；分类: animals, security；tags: invertebrate, grub, larva, snake, crawl, wiggle, slither, pest control, computer virus, malware	icon	icons				
 wrench	图标 wrench；分类: account, development, tools；tags: account, settings, spanner, diy, toolbox, build, construction	icon	icons				
@@ -1862,8 +1862,8 @@ zodiac-sagittarius	图标 zodiac-sagittarius；分类: social, emoji；tags: arc
 zodiac-scorpio	图标 zodiac-scorpio；分类: social, emoji；tags: scorpion, stinger, intensity, water, transformation, astrology, star sign, horoscope, constellation, celestial	icon	icons				
 zodiac-taurus	图标 zodiac-taurus；分类: social, emoji；tags: bull, strength, stability, earth, endurance, astrology, star sign, horoscope, constellation, celestial	icon	icons				
 zodiac-virgo	图标 zodiac-virgo；分类: social, emoji；tags: virgin, maiden, harvest, precision, earth, analysis, astrology, star sign, horoscope, constellation, celestial	icon	icons				
-zoom-in	图标 zoom-in；分类: accessibility, layout, design, text, photography；tags: magnifying glass, plus	icon	icons	glass		glass	
-zoom-out	图标 zoom-out；分类: accessibility, layout, design, text, photography；tags: magnifying glass, plus	icon	icons	glass		glass	
+zoom-in	图标 zoom-in；分类: accessibility, layout, design, text, photography；tags: magnifying glass, plus	icon	icons	glass			
+zoom-out	图标 zoom-out；分类: accessibility, layout, design, text, photography；tags: magnifying glass, plus	icon	icons	glass			
 lab:ampersand-square	Lucide Lab 实验图标 ampersand-square；分类: text, design, development；tags: and, typography, operator, join, concatenate, code, coding, &	icon	icons				
 lab:apple-core	Lucide Lab 实验图标 apple-core；分类: food-beverage；tags: fruit, juice, smoothie, sweet, snack, meal, lunch, ingredient, cooking, cookery, kitchen, cuisine, eating, healthy, nutrition, diet, bite, bitten, consumed, litter, trash, rubbish	icon	icons				
 lab:arrows-up-down-square	Lucide Lab 实验图标 arrows-up-down-square；分类: buildings, travel, arrows, shapes；tags: elevator, lift, floors, levels, hotel, accommodation, expand, unfold, vertical, toolbar, button	icon	icons				
@@ -1877,10 +1877,10 @@ lab:bag-hand	Lucide Lab 实验图标 bag-hand；分类: shopping, money；tags: 
 lab:barbecue	Lucide Lab 实验图标 barbecue；分类: food-beverage；tags: barbeque, bbq, grilled, smoke, dinner, meal, meat, cookery, cooking, charcoal, heat, hot, fire	icon	icons				
 lab:barber-pole	Lucide Lab 实验图标 barber-pole；分类: maps, medical, people, social；tags: hairdresser, grooming, cut, shave, shop, salon, service, signage, stripes, spin, spiral, helix, twist, twirl, rotate	icon	icons				
 lab:barn	Lucide Lab 实验图标 barn；分类: buildings, animals, maps；tags: stable, cattle, horses, farm, ranch, hay, alfalfa, door	icon	icons				
-lab:baseball	Lucide Lab 实验图标 baseball；分类: sports, gaming；tags: home run, pitcher, bat, innings, rounders, bounce	icon	icons			bounce	
+lab:baseball	Lucide Lab 实验图标 baseball；分类: sports, gaming；tags: home run, pitcher, bat, innings, rounders, bounce	icon	icons				
 lab:baseline-square	Lucide Lab 实验图标 baseline-square；分类: text, tools, design, development；tags: color, colour, toolbar, formatting, plain text, rich text, rtf, typography, fonts, font book, collection, slab serif, writing, writer, prose, content, markdown, markup	icon	icons				
-lab:basketball	Lucide Lab 实验图标 basketball；分类: sports, gaming；tags: bounce, hoop, netball, court, dribble, slam dunk, alley-oop, team, score, nba	icon	icons			bounce	
-lab:bat-ball	Lucide Lab 实验图标 bat-ball；分类: sports, gaming；tags: table tennis, ping-pong, whiff-whaff, paddle, racquet, racket, net, bounce, score	icon	icons			bounce	
+lab:basketball	Lucide Lab 实验图标 basketball；分类: sports, gaming；tags: bounce, hoop, netball, court, dribble, slam dunk, alley-oop, team, score, nba	icon	icons				
+lab:bat-ball	Lucide Lab 实验图标 bat-ball；分类: sports, gaming；tags: table tennis, ping-pong, whiff-whaff, paddle, racquet, racket, net, bounce, score	icon	icons				
 lab:bath-bubble	Lucide Lab 实验图标 bath-bubble；分类: home, travel；tags: amenities, services, bathroom, towel, relax, luxury	icon	icons				
 lab:beach-ball	Lucide Lab 实验图标 beach-ball；分类: travel, sports, gaming；tags: inflatable, summer holiday, seaside, toys, kids, children, play, football, soccer	icon	icons				
 lab:bear-face	Lucide Lab 实验图标 bear-face；分类: animals；tags: cub, cuddle, children, kids, toys, teddy, nursery, picnic, outdoors, wilderness, forest, national park, open season, hunting, grizzly, warning, danger, strength, mammal, 🐻, 🧸	icon	icons				
@@ -1894,7 +1894,7 @@ lab:bell-concierge	Lucide Lab 实验图标 bell-concierge；分类: travel, noti
 lab:belt	Lucide Lab 实验图标 belt；分类: shopping, social, food-beverage；tags: buckle, strap, fasten, fasting, waistline, weight loss, diet, calories, store, clothing, clothes, accessories, apparel, attire, outfit, fashion, leather	icon	icons				
 lab:bold-square	Lucide Lab 实验图标 bold-square；分类: text, tools, design, development；tags: emphasis, emphasize, strong, toolbar, formatting, styling, plain text, rich text, rtf, typography, font, sans serif, writing, writer, prose, content, markdown, markup	icon	icons				
 lab:bottle-baby	Lucide Lab 实验图标 bottle-baby；分类: people, home, shopping；tags: newborn, children, infant, kids, toddler, mother, mum, family, milk	icon	icons				
-lab:bottle-champagne	Lucide Lab 实验图标 bottle-champagne；分类: food-beverage, social；tags: alcohol, drink, glass, bubbly, sparkling, fizzy, bar, party, special occasion, celebration, victory, champion, luxury, nightclub, nightlife, sommelier, restaurant	icon	icons	glass		glass	
+lab:bottle-champagne	Lucide Lab 实验图标 bottle-champagne；分类: food-beverage, social；tags: alcohol, drink, glass, bubbly, sparkling, fizzy, bar, party, special occasion, celebration, victory, champion, luxury, nightclub, nightlife, sommelier, restaurant	icon	icons	glass			
 lab:bottle-dispenser	Lucide Lab 实验图标 bottle-dispenser；分类: home, travel；tags: toiletries, bathroom, amenities, shower gel, bubble bath, shampoo, conditioner, hand soap, sanitizer, sanitiser, clean, wash	icon	icons				
 lab:bottle-perfume	Lucide Lab 实验图标 bottle-perfume；分类: social, travel；tags: parfum, aftershave, aroma, fragrance, smell, scent, special, present, gift, accessories, container, duty free	icon	icons				
 lab:bottle-plastic	Lucide Lab 实验图标 bottle-plastic；分类: food-beverage；tags: drink, water, liquid, litres, pints, container, shampoo	icon	icons				
@@ -1944,7 +1944,7 @@ lab:chevrons-left-right-square	Lucide Lab 实验图标 chevrons-left-right-squar
 lab:chevrons-up-down-square	Lucide Lab 实验图标 chevrons-up-down-square；分类: buildings, travel, arrows, shapes；tags: elevator, lift, floors, levels, hotel, accommodation, expand, unfold, vertical, toolbar, button	icon	icons				
 lab:cloth	Lucide Lab 实验图标 cloth；分类: home, shopping, furniture；tags: thread, sewing, stitch, embroidery, waeve, woven, fabric, material, textile, upholstery, cleaning	icon	icons				
 lab:coat-hanger	Lucide Lab 实验图标 coat-hanger；分类: home, furniture, travel, maps；tags: clothes, clothing, apparel, attire, wardrobe, dry cleaning, amenities	icon	icons				
-lab:cocktail	Lucide Lab 实验图标 cocktail；分类: food-beverage, social；tags: martini, alcohol, spirits, drink, glass, straw, citrus, orange, lemon, lime, bar, lounge, party, nightclub, nightlife	icon	icons	glass		glass	
+lab:cocktail	Lucide Lab 实验图标 cocktail；分类: food-beverage, social；tags: martini, alcohol, spirits, drink, glass, straw, citrus, orange, lemon, lime, bar, lounge, party, nightclub, nightlife	icon	icons	glass			
 lab:coconut	Lucide Lab 实验图标 coconut；分类: food-beverage, travel；tags: segments, milk, smoothie, cocktail, piña colada, tropical, beach bar, holiday, vacation, sweet, creamy, snack, ingredient, cooking, cookery, kitchen, cuisine, eating, healthy, nutrition, diet	icon	icons				
 lab:coffee-bean	Lucide Lab 实验图标 coffee-bean；分类: food-beverage；tags: roast, ground, blend, arabica, filter, instant, cafetiere, hot, drink, barista, fair trade	icon	icons				
 lab:coffeemaker	Lucide Lab 实验图标 coffeemaker；分类: food-beverage, devices；tags: machine, amenities, electronics, appliances, roast, ground, blend, arabica, filter, instant, cafetiere, hot, drink, barista, fair trade	icon	icons				
@@ -1959,8 +1959,8 @@ lab:copy-type	Lucide Lab 实验图标 copy-type；分类: text, tools, design；
 lab:cow-head	Lucide Lab 实验图标 cow-head；分类: animals, food-beverage；tags: milk, dairy, drink, diet, unpasturised, lactose, livestock, cattle, calf, bovine, farmyard, hoofs, hooved, mammal, 🐮, 🐄	icon	icons				
 lab:cow-udder-droplets	Lucide Lab 实验图标 cow-udder-droplets；分类: animals, food-beverage；tags: milk, dairy, drink, diet, unpasturised, lactose, livestock, cattle, calf, bovine, farmyard, hoofs, hooved, mammal, 🐄, 🐮	icon	icons				
 lab:crab	Lucide Lab 实验图标 crab；分类: animals；tags: crustacean, shell, pinch, snap, crawl, sideways, ocean, marine life, seabed, seaside, summer holiday, beach, sand, water, bucket, fishing, catch, lobster, zodiac, astrology, star sign, cancer, horoscope	icon	icons				
-lab:cricket-ball	Lucide Lab 实验图标 cricket-ball；分类: sports, gaming；tags: bowler, batsman, batting, fielder, runs, wicket, innings, overs, score, umpire, spin, catch, bounce, ashes, summer	icon	icons			bounce	
-lab:cricket-wicket	Lucide Lab 实验图标 cricket-wicket；分类: sports, gaming；tags: bowler, ball, batsman, batting, fielder, runs, innings, overs, out, duck, score, umpire, spin, catch, bounce, ashes, summer	icon	icons			bounce	
+lab:cricket-ball	Lucide Lab 实验图标 cricket-ball；分类: sports, gaming；tags: bowler, batsman, batting, fielder, runs, wicket, innings, overs, score, umpire, spin, catch, bounce, ashes, summer	icon	icons				
+lab:cricket-wicket	Lucide Lab 实验图标 cricket-wicket；分类: sports, gaming；tags: bowler, ball, batsman, batting, fielder, runs, innings, overs, out, duck, score, umpire, spin, catch, bounce, ashes, summer	icon	icons				
 lab:cross-square	Lucide Lab 实验图标 cross-square；分类: medical, gaming；tags: healthcare, first aid kit, paramedic, medkit, medikit, medpack, medicine, pharmacy, pharmaceutical, add, cross, box	icon	icons				
 lab:crosshair-2-dot	Lucide Lab 实验图标 crosshair-2-dot；分类: gaming, cursors；tags: aim, target, scope, sight, reticule	icon	icons		cursor		
 lab:crosshair-2	Lucide Lab 实验图标 crosshair-2；分类: gaming, cursors；tags: aim, target, scope, sight, reticule	icon	icons		cursor		
@@ -1972,7 +1972,7 @@ lab:cup-to-go	Lucide Lab 实验图标 cup-to-go；分类: food-beverage；tags: 
 lab:currency-square	Lucide Lab 实验图标 currency-square；分类: currency, money；tags: finance, financial, markets, exchange, trader, trading, transaction, payment, symbol, scarab, toolbar, button, ¤	icon	icons				
 lab:desk-lamp	Lucide Lab 实验图标 desk-lamp；分类: furniture, home；tags: office, workstation, table, drawers, household, lighting, ambience, ambiance	icon	icons				
 lab:diaper	Lucide Lab 实验图标 diaper；分类: people, home, shopping；tags: nappy, absorbent, potty, newborn, childproof, children, infant, kids, toddler, mother, mum, family	icon	icons				
-lab:dishwasher	Lucide Lab 实验图标 dishwasher；分类: home, devices, travel；tags: kitchen, appliances, amenities, electric, cleaning, cycle, plates, glasses, cutlery, utensils	icon	icons	glass		glass	
+lab:dishwasher	Lucide Lab 实验图标 dishwasher；分类: home, devices, travel；tags: kitchen, appliances, amenities, electric, cleaning, cycle, plates, glasses, cutlery, utensils	icon	icons	glass			
 lab:dollar-sign-circle	Lucide Lab 实验图标 dollar-sign-circle；分类: currency, money, shapes；tags: monetization, marketing, finance, financial, markets, exchange, trader, trading, transaction, payment, coin, usd, $；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:dollar-sign-square	Lucide Lab 实验图标 dollar-sign-square；分类: currency, money, shapes；tags: monetization, marketing, finance, financial, markets, exchange, trader, trading, transaction, payment, usd, $, toolbar, button	icon	icons				
 lab:doorbell-intercom	Lucide Lab 实验图标 doorbell-intercom；分类: buildings, home, travel, security；tags: buzzer, speaker, call, service, summon, hospitality, hotel, accommodation, elevator, lift, ring, ding, sound, access, gate	icon	icons		sound		
@@ -2006,8 +2006,8 @@ lab:flower-rose	Lucide Lab 实验图标 flower-rose；分类: nature, seasons, s
 lab:flower-stem	Lucide Lab 实验图标 flower-stem；分类: nature, seasons, sustainability, home, gaming；tags: petals, plant, leaves, spring, bloom, blossom, gardening, botanical, flora, florist, bouquet, bunch, gift, special occasion；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:flower-tulip	Lucide Lab 实验图标 flower-tulip；分类: nature, seasons, sustainability, home, gaming；tags: petals, plant, stem, leaves, spring, bloom, blossom, gardening, botanical, flora, florist, bouquet, bunch, gift, romantic, special occasion	icon	icons				
 lab:football-goal	Lucide Lab 实验图标 football-goal；分类: sports, gaming；tags: american, gridiron, posts, field, score, touchdown, pitch, team	icon	icons				
-lab:football-helmet	Lucide Lab 实验图标 football-helmet；分类: sports, gaming；tags: american, gridiron, touchdown, kick, pitch, team, cricket, protective equipment, protection, padding, headgear, goal, score, bounce	icon	icons			bounce	
-lab:football	Lucide Lab 实验图标 football；分类: sports, gaming；tags: rugby, american, touchdown, kick, pitch, team, goal, score, bounce, super bowl, nfl	icon	icons			bounce	
+lab:football-helmet	Lucide Lab 实验图标 football-helmet；分类: sports, gaming；tags: american, gridiron, touchdown, kick, pitch, team, cricket, protective equipment, protection, padding, headgear, goal, score, bounce	icon	icons				
+lab:football	Lucide Lab 实验图标 football；分类: sports, gaming；tags: rugby, american, touchdown, kick, pitch, team, goal, score, bounce, super bowl, nfl	icon	icons				
 lab:fork-knife-crossed	Lucide Lab 实验图标 fork-knife-crossed；分类: food-beverage, home, tools, travel, maps；tags: utensils, kitchenware, cutlery, culinary, cooking, cookery, cut, slice, eat, restaurant, meal, breakfast, brunch, lunch, dinner, supper；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:fork-knife	Lucide Lab 实验图标 fork-knife；分类: food-beverage, home, tools, travel, maps；tags: utensils, kitchenware, cutlery, culinary, cooking, cookery, cut, slice, eat, restaurant, meal, breakfast, brunch, lunch, dinner, supper；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:fox-face-tail	Lucide Lab 实验图标 fox-face-tail；分类: animals；tags: sly, wily, cunning, canine, mammal, bushy, furry, firefox, 🦊	icon	icons				
@@ -2017,11 +2017,11 @@ lab:garlic	Lucide Lab 实验图标 garlic；分类: food-beverage；tags: flavor
 lab:gearbox-square	Lucide Lab 实验图标 gearbox-square；分类: sports, gaming；tags: gears, gear lever, gearstick, shift, speed, driving, driver, racing, racer, motor sport, formula one, formula 1, f1, car, vehicle, mechanical, clutch, ratio	icon	icons				
 lab:gearbox	Lucide Lab 实验图标 gearbox；分类: sports, gaming；tags: gears, gear lever, gearstick, shift, speed, driving, driver, racing, racer, motor sport, formula one, formula 1, f1, car, vehicle, mechanical, clutch, ratio	icon	icons				
 lab:gem-ring	Lucide Lab 实验图标 gem-ring；分类: social；tags: diamond, crystal, ruby, rock, jewellery, price, special, present, gift, wedding, proposal, marriage, accessories	icon	icons				
-lab:glasses-square	Lucide Lab 实验图标 glasses-square；分类: accessibility, medical, shopping；tags: spectacles, eyesight, vision, reading, learning, education, academic, books, nerd, geek	icon	icons	glass		glass	
-lab:glasses-sun	Lucide Lab 实验图标 glasses-sun；分类: shopping, travel；tags: aviators, shades, sunglasses, summer holiday, seaside, beachwear, vacation, accessories, fashion	icon	icons	glass		glass	
+lab:glasses-square	Lucide Lab 实验图标 glasses-square；分类: accessibility, medical, shopping；tags: spectacles, eyesight, vision, reading, learning, education, academic, books, nerd, geek	icon	icons	glass			
+lab:glasses-sun	Lucide Lab 实验图标 glasses-sun；分类: shopping, travel；tags: aviators, shades, sunglasses, summer holiday, seaside, beachwear, vacation, accessories, fashion	icon	icons	glass			
 lab:goal-net	Lucide Lab 实验图标 goal-net；分类: sports, gaming；tags: score, football, futbol, soccer, ice hockey, posts, crossbar, kick, pitch, penalty	icon	icons				
-lab:goblet-crack	Lucide Lab 实验图标 goblet-crack；分类: food-beverage, social, transportation, mail；tags: glass, chalice, broken, break, smash, fragile, damaged, package, transit, shipping, postage	icon	icons	glass		glass	
-lab:goblet	Lucide Lab 实验图标 goblet；分类: food-beverage, social；tags: glass, chalice, alcohol, drink, vineyard, winery, red, white, rose, dry, sparkling, gin & tonic, spirits, cocktail, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass		glass	
+lab:goblet-crack	Lucide Lab 实验图标 goblet-crack；分类: food-beverage, social, transportation, mail；tags: glass, chalice, broken, break, smash, fragile, damaged, package, transit, shipping, postage	icon	icons	glass			
+lab:goblet	Lucide Lab 实验图标 goblet；分类: food-beverage, social；tags: glass, chalice, alcohol, drink, vineyard, winery, red, white, rose, dry, sparkling, gin & tonic, spirits, cocktail, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass			
 lab:golf-driver	Lucide Lab 实验图标 golf-driver；分类: sports, gaming；tags: tee off, driving range, sand wedge, pitching wedge, course, hole in one, par, double bogey, birdie, eagle, albatross, handicap, caddie, caddy, bunker, rough	icon	icons				
 lab:grapes	Lucide Lab 实验图标 grapes；分类: food-beverage；tags: bunch, wine, vineyard, seedless, blackberry, blackberries, rasberry, rasberries, wild berries, juice, squeeze, smoothie, sweet, snack, meal, lunch, eating, healthy, nutrition, diet, picked, fruit machine, slots, gambling, jackpot；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:grid-lines-offset	Lucide Lab 实验图标 grid-lines-offset；分类: layout, design, tools；tags: guides	icon	icons				
@@ -2064,8 +2064,8 @@ lab:jacket-sports	Lucide Lab 实验图标 jacket-sports；分类: shopping, spor
 lab:jacket	Lucide Lab 实验图标 jacket；分类: shopping, social；tags: blazer, coat, suit, gentleman, mens, boys, top, store, clothing, clothes, accessories, apparel, attire, outfit, fashion, formal, dressy, dinner, uniform, smart, classic, refined, elegant, evening wear, tuxedo, black tie event, special occasion, wedding, groom, gathering, thread, tailored, regular, slim fit, warmth	icon	icons				
 lab:japanese-yen-circle	Lucide Lab 实验图标 japanese-yen-circle；分类: currency, money, shapes；tags: monetization, marketing, finance, financial, markets, exchange, trader, trading, transaction, payment, coin, jpy, ¥	icon	icons				
 lab:japanese-yen-square	Lucide Lab 实验图标 japanese-yen-square；分类: currency, money, shapes；tags: monetization, marketing, finance, financial, markets, exchange, trader, trading, transaction, payment, jpy, ¥, toolbar, button	icon	icons				
-lab:jar	Lucide Lab 实验图标 jar；分类: food-beverage, text；tags: pot, container, storage, jam, preserve, conserve, honey, marmalade, sweet, sugar, diet, inkwell, glass, kitchenware	icon	icons	glass		glass	
-lab:jug	Lucide Lab 实验图标 jug；分类: food-beverage；tags: coffee pot, roast, ground, blend, arabica, filter, cafe, hot, drink, barista, fresh, juice, pour, glass	icon	icons	glass		glass	
+lab:jar	Lucide Lab 实验图标 jar；分类: food-beverage, text；tags: pot, container, storage, jam, preserve, conserve, honey, marmalade, sweet, sugar, diet, inkwell, glass, kitchenware	icon	icons	glass			
+lab:jug	Lucide Lab 实验图标 jug；分类: food-beverage；tags: coffee pot, roast, ground, blend, arabica, filter, cafe, hot, drink, barista, fresh, juice, pour, glass	icon	icons	glass			
 lab:kebab	Lucide Lab 实验图标 kebab；分类: food-beverage；tags: shish, skewer, meat, fast food, junk food, snack, meal, savory, savoury, cookery, cooking, grilled, barbecue, barbeque, bbq	icon	icons				
 lab:kettle-electric	Lucide Lab 实验图标 kettle-electric；分类: food-beverage, home, devices；tags: heat, boiling, water, steam, drink, tea, coffee, kitchen, appliances	icon	icons				
 lab:kettle	Lucide Lab 实验图标 kettle；分类: food-beverage, home, devices；tags: heat, boiling, water, steam, whistle, drink, tea, coffee, kitchen, appliances	icon	icons				
@@ -2147,8 +2147,8 @@ lab:sneaker	Lucide Lab 实验图标 sneaker；分类: shopping, sports；tags: t
 lab:snowboard	Lucide Lab 实验图标 snowboard；分类: sports, seasons；tags: slope, winter holiday, vacation, trip, equipment	icon	icons				
 lab:snowman	Lucide Lab 实验图标 snowman；分类: weather, seasons；tags: cold, freeze, frozen, winter	icon	icons				
 lab:soap-bar	Lucide Lab 实验图标 soap-bar；分类: home, travel；tags: toiletries, amenities, bathroom, shower, clean, wash, lather, bubbles	icon	icons				
-lab:soccer-ball	Lucide Lab 实验图标 soccer-ball；分类: sports, gaming；tags: football, futbol, kick, pitch, goal, score, bounce	icon	icons			bounce	
-lab:soccer-pitch	Lucide Lab 实验图标 soccer-pitch；分类: sports, gaming；tags: football, field, stadium, ground, surface, grass, futbol, kick, goal, score, bounce	icon	icons			bounce	
+lab:soccer-ball	Lucide Lab 实验图标 soccer-ball；分类: sports, gaming；tags: football, futbol, kick, pitch, goal, score, bounce	icon	icons				
+lab:soccer-pitch	Lucide Lab 实验图标 soccer-pitch；分类: sports, gaming；tags: football, field, stadium, ground, surface, grass, futbol, kick, goal, score, bounce	icon	icons				
 lab:socket-eu	Lucide Lab 实验图标 socket-eu；分类: devices, connectivity, travel, tools；tags: electricity, electronics, outlet, plug, european, two pin, 2 pin	icon	icons				
 lab:socket-uk	Lucide Lab 实验图标 socket-uk；分类: devices, connectivity, travel, tools；tags: electricity, electronics, outlet, plug, united kingdom, great britain, england, three pin, 3 pin	icon	icons	webgl			
 lab:socket-usa	Lucide Lab 实验图标 socket-usa；分类: devices, connectivity, travel, tools；tags: electricity, electronics, outlet, plug, united states, american, two pin, 2 pin	icon	icons				
@@ -2185,8 +2185,8 @@ lab:tab-text	Lucide Lab 实验图标 tab-text；分类: layout, social, developm
 lab:tab-x	Lucide Lab 实验图标 tab-x；分类: layout, social, development；tags: ballot, vote, poll, referendum, political, governance, government, democracy, democratic, social, decision, decide, no, reject, spoiled, cross, incorrect, no confidence, wrong, error, output, result, log, close, remove, cancel	icon	icons				
 lab:tab	Lucide Lab 实验图标 tab；分类: layout, social, development；tags: ballot, vote, poll, referendum, political, governance, government, democracy, democratic, social, decision, decide, undecided, unsure, printout, punched card, fax, paper, office, output, result, log, blank, clear	icon	icons				
 lab:target-arrow	Lucide Lab 实验图标 target-arrow；分类: sports, gaming；tags: archery, crossbow, bullseye, hit, range	icon	icons				
-lab:tennis-ball	Lucide Lab 实验图标 tennis-ball；分类: sports, gaming；tags: court, racquet, racket, net, deuce, love, bounce	icon	icons			bounce	
-lab:tennis-racket	Lucide Lab 实验图标 tennis-racket；分类: sports, gaming；tags: court, racquet, net, deuce, love, bounce	icon	icons			bounce	
+lab:tennis-ball	Lucide Lab 实验图标 tennis-ball；分类: sports, gaming；tags: court, racquet, racket, net, deuce, love, bounce	icon	icons				
+lab:tennis-racket	Lucide Lab 实验图标 tennis-racket；分类: sports, gaming；tags: court, racquet, net, deuce, love, bounce	icon	icons				
 lab:text-square	Lucide Lab 实验图标 text-square；分类: text, development；tags: note, log, document, page, paper, sheet, list, script, code, editor；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:tie-bow-ribbon	Lucide Lab 实验图标 tie-bow-ribbon；分类: shopping, social；tags: gift, present, party, birthday, box, decoration, neckwear, female, girls, kids, children, toys, doll, accessories, apparel	icon	icons				
 lab:tie-bow	Lucide Lab 实验图标 tie-bow；分类: shopping, social；tags: neckwear, gentleman, mens, boys, store, clothing, clothes, accessories, apparel, attire, outfit, fashion, formal, fancy, dressy, smart, classic, refined, elegant, evening, black tie event, occasion, tuxedo, wedding, groom, gathering, dinner, restaurant, waiter, uniform, service, serve	icon	icons				
@@ -2210,7 +2210,7 @@ lab:underline-square	Lucide Lab 实验图标 underline-square；分类: text, to
 lab:unicorn-head	Lucide Lab 实验图标 unicorn-head；分类: animals, gaming；tags: rare, unique, horn, fairy tale, nursery, story, fictional, imaginary, imagination, 🦄	icon	icons				
 lab:venn	Lucide Lab 实验图标 venn；分类: design, charts；tags: venn diagram, overlap, compare, common, blend mode, opacity, transparency	icon	icons				
 lab:vest	Lucide Lab 实验图标 vest；分类: shopping, sports, travel；tags: underwear, undergarment, mens, boys, top, waistcoat, sleeveless, sportswear, exercise, fitness, summer holiday, beachwear, bathing, seaside, store, clothing, clothes, apparel, attire, fashion, thread, cotton, casual, slim fit, regular	icon	icons				
-lab:volleyball	Lucide Lab 实验图标 volleyball；分类: sports, gaming, travel, home；tags: beach, sand, net, holiday, vacation, summer, soccer, football, futbol, kick, pitch, goal, score, bounce, leather, wool, yarn, knitting, sewing, thread, embroidery, textile；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons			bounce	
+lab:volleyball	Lucide Lab 实验图标 volleyball；分类: sports, gaming, travel, home；tags: beach, sand, net, holiday, vacation, summer, soccer, football, futbol, kick, pitch, goal, score, bounce, leather, wool, yarn, knitting, sewing, thread, embroidery, textile；仓库 main 分支有，但 @lucide/lab 0.7.0 尚未发布，无法 import	icon	icons				
 lab:waffle	Lucide Lab 实验图标 waffle；分类: food-beverage；tags: syrup, fast food, junk food, snack, sweet, dish, restaurant, breakfast, brunch, dessert, meal, cookery, cooking	icon	icons				
 lab:wardrobe	Lucide Lab 实验图标 wardrobe；分类: furniture；tags: closet, cupboard, shelves, drawer, storage, clothes, clothing, apparel	icon	icons				
 lab:watch-activity	Lucide Lab 实验图标 watch-activity；分类: time, devices, sports, medical；tags: clock, wearable, wrist, strap, face, digital, touchscreen, smart, gadget, technology, mobile, pulse, levels, heart rate monitor, vital signs, vitals, health, exercise, fitness, running, jogging, tracking, action, motion, movement, audio, waveform, sound	icon	icons		sound		
@@ -2234,7 +2234,7 @@ lab:whisk-fork-knife	Lucide Lab 实验图标 whisk-fork-knife；分类: food-bev
 lab:whisk	Lucide Lab 实验图标 whisk；分类: food-beverage, home, tools；tags: utensils, kitchenware, cutlery, culinary, cooking, cookery, restaurant, chef, mix	icon	icons				
 lab:whisks	Lucide Lab 实验图标 whisks；分类: food-beverage, tools；tags: kitchen, utensils, cutlery, culinary, cooking, cookery, restaurant, chef, mix	icon	icons				
 lab:windmill	Lucide Lab 实验图标 windmill；分类: buildings, maps, sustainability；tags: sails, turbine, electricity, power, energy, renewables	icon	icons				
-lab:wine-glass-bottle	Lucide Lab 实验图标 wine-glass-bottle；分类: food-beverage, social；tags: alcohol, drink, glass, goblet, chalice, vineyard, winery, red, white, rose, dry, sparkling, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass		glass	
+lab:wine-glass-bottle	Lucide Lab 实验图标 wine-glass-bottle；分类: food-beverage, social；tags: alcohol, drink, glass, goblet, chalice, vineyard, winery, red, white, rose, dry, sparkling, bar, party, nightclub, nightlife, sommelier, restaurant, dinner, meal	icon	icons	glass			
 lab:yarn-ball	Lucide Lab 实验图标 yarn-ball；分类: home, social, development；tags: wool, thread, needle, sewing, stitch, embroidery, waeve, woven, fabric, material, cloth, cotton, textile, string, unravel, unroll, code, conding, package manager, npm	icon	icons				
 lab:yin-yang	Lucide Lab 实验图标 yin-yang；分类: social, accessibility, sustainability；tags: yinyang, contrast, opposites, interconnected, balance, unity, chinese, culture, philosopy, chaos, calm, rest, tranquility, peace, harmony, energy, aura, sprituality, meditation, wellbeing, lifestyle, symbol	icon	icons				
 lab:bat	Lucide Lab 实验图标 bat（npm 0.7.0 已发布，仓库 main 分支已改名或移除，无 tags）	icon	icons				

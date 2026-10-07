@@ -1,11 +1,11 @@
-arc-foundation	设计 token 与 motion 预设 深浅色主题 accent 所有组件的基础依赖	other	foundation				
-arc-skill	Arc 的 agent skill 文件 SKILL.md 设计/动效/文案/无障碍规则	ai-ux,motion-transition	foundation				
-button	按钮 主操作 按压回弹 加载 spinner 标签变形	loading,button	foundation			bounce	
+arc-foundation	设计 token 与 motion 预设 深浅色主题 accent 所有组件的基础依赖	design-system	foundation				
+arc-skill	Arc 的 agent skill 文件 SKILL.md 设计/动效/文案/无障碍规则	design-system,motion-transition	foundation				
+button	按钮 主操作 按压回弹 加载 spinner 标签变形	loading,button	foundation				
 action-button	工具栏紧凑按钮 异步提交 pending/success 状态	button	foundation				
 split-button	分裂按钮 主操作+下拉备选菜单	navigation,button	foundation				
 button-group	按钮组 细分隔线 悬停高亮在分段间滑动 可附菜单	navigation,button	foundation		hover,swipe		
 floating-button-group	浮动按钮组 共享高亮随指针在按钮间 morph	button,motion-transition	foundation				
-expanding-button-group	图标按钮组 悬停/聚焦项展开显示文字标签	text-effect,button	foundation		hover		
+expanding-button-group	图标按钮组 悬停/聚焦项展开显示文字标签	button	foundation		hover		
 dropdown-menu	下拉菜单 锚定触发器的操作列表	navigation,select	foundation				
 context-menu	右键上下文菜单	overlay,navigation	foundation				
 copy-button	复制按钮 复制后即时确认反馈	button	foundation				
@@ -17,7 +17,7 @@ theme-switch-rise	主题切换 新主题自下而上升起	toggle-slider	foundat
 avatar	头像	avatar-user	foundation				
 avatar-group	头像组 叠放 团队成员	avatar-user	foundation				
 input	单行输入框 标签与状态	form-input	foundation				
-textarea	多行文本框	text-effect,form-input	foundation				
+textarea	多行文本框	form-input	foundation				
 select	下拉选择 键盘友好	select,form-input	foundation		keyboard		
 combobox	可搜索下拉 自动补全 combobox	search-command,select	foundation				
 checkbox	复选框	toggle-slider,form-input	foundation				
@@ -29,12 +29,12 @@ search-field	搜索框	search-command,form-input	foundation
 tag-input	标签输入 回车生成可删除 tag	select,form-input	foundation				
 file-dropzone	文件拖放区 上传	upload,form-input	foundation		drag		
 radio-group	单选组	toggle-slider,form-input	foundation				
-segmented-control	分段控件 视图切换	form-input	foundation				
+segmented-control	分段控件 视图切换	toggle-slider,navigation	foundation				
 calendar	月历 日期浏览	date-time,form-input	foundation				
 date-picker	日期选择器	date-time,select	foundation				
 time-picker	时间选择器	date-time,select	foundation				
 accordion	手风琴 折叠展开	layout-card	foundation				
-dialog	对话框 modal	ai-ux,overlay	foundation				
+dialog	对话框 modal	overlay	foundation				
 popover	气泡弹层 popover	overlay	foundation				
 tooltip	工具提示 tooltip	overlay	foundation				
 tabs	标签页 tabs	navigation	foundation				
@@ -48,12 +48,12 @@ badge	徽章 状态标签	feedback	foundation
 card	卡片容器	layout-card	foundation				
 metric-card	指标卡 KPI 数字+上下文	chart,layout-card	foundation				
 empty-state	空状态 引导下一步	empty-onboarding	foundation				
-tree-view	树形视图 嵌套文件夹	other	foundation				
+tree-view	树形视图 嵌套文件夹	navigation	foundation				
 pagination	分页	navigation	foundation				
 filter-toolbar	筛选工具栏 可重置	other	foundation				
 sortable-data-table	可排序数据表格 table	table	foundation				
 sparkline	迷你趋势图 sparkline	chart	foundation				
-gauge	仪表盘 量规 gauge	other	foundation				
+gauge	仪表盘 量规 gauge	chart	foundation				
 animated-counter	数字滚动动画 计数器	text-effect,motion-transition	foundation		scroll		
 code-block	代码块 带复制	other	foundation				
 text-reveal	文字揭示入场动画 hero 文案	text-effect,marketing-section	foundation				
@@ -63,7 +63,7 @@ text-shimmer	文字流光 shimmer 加载中状态	loading,text-effect	foundation
 hold-to-confirm	长按确认 危险操作 hold to delete	button	foundation				
 swipe-actions	列表行滑动操作 swipe 删除/归档	micro-interaction	foundation		swipe		
 slider	滑块 单值/范围 range slider	toggle-slider,form-input	foundation				
-inline-edit	原地编辑 重命名 文本变输入框	text-effect,form-input	foundation				
+inline-edit	原地编辑 重命名 文本变输入框	form-input	foundation				
 expanding-search	图标 morph 展开为搜索框+结果	search-command,form-input	foundation				
 chip-group	筛选 chip 组 选中 morph	select,form-input	foundation				
 password-strength	密码强度指示	form-input	foundation				
@@ -71,9 +71,9 @@ bottom-sheet	底部抽屉 bottom sheet 可拖拽 peek/全屏	overlay,micro-inter
 hover-card	悬停卡片 人物/链接预览	overlay,layout-card	foundation		hover		
 resizable-panels	可拖拽调整大小的分栏面板	layout-card,micro-interaction	foundation		drag		
 toast-stack	堆叠 toast 通知 悬停展开 sonner 风格	feedback,micro-interaction	foundation		hover		
-usage-meter	用量计量条 配额接近上限	other	foundation				
+usage-meter	用量计量条 配额接近上限	feedback,chart	foundation				
 image-compare	图片前后对比 拖拽分隔线 before/after	media,micro-interaction	foundation		drag		
-carousel	轮播 拖拽/轻扫 slider	toggle-slider,media	foundation		drag		
+carousel	轮播 拖拽/轻扫 slider	media	foundation		drag		
 card-stack	卡片堆 逐张滑走 tinder 式 撤销	layout-card	foundation				
 morph-nav	导航栏 morph 成富菜单/搜索/紧凑态 一体化	navigation,search-command	foundation				
 dock	浮动 dock 工具栏 标签滑动 托盘展开 macOS dock	navigation	foundation		swipe		
@@ -85,7 +85,7 @@ control-center	控制中心 快捷设置磁贴 morph 详情 iOS 风格	motion-tr
 cover-flow	Cover Flow 3D 图片轨道 倒影	media,fun-3d	foundation	3d			
 activity-rings	活动圆环 Apple Watch 风格 目标进度	loading	foundation				
 bar-chart	柱状图 可擦洗查看数值	chart	foundation				
-activity-heatmap	年度活动热力图 GitHub 贡献图	other	foundation				
+activity-heatmap	年度活动热力图 GitHub 贡献图	chart	foundation				
 timeline	时间线 按天分组	date-time	foundation				
 stretch-refresh	下拉刷新 拉伸线提示松手	other	foundation				
 orbit-menu	长按按钮 操作项环绕弹出 径向菜单	navigation,button	foundation				
@@ -119,19 +119,19 @@ radar-chart	雷达图 多剖面对比 morph	chart,motion-transition	foundation
 realtime-stream	实时流折线 60fps 滚动	other	foundation		scroll		
 slope-chart	斜率图 前后对比 排名变化	chart	foundation				
 countdown	倒计时 数字滚动 归零变 live	text-effect	foundation		scroll		
-announcement-bar	顶部公告条 轮播消息 倒计时 可关闭	media	foundation				
+announcement-bar	顶部公告条 轮播消息 倒计时 可关闭	marketing-section,feedback	foundation				
 json-viewer	JSON 树查看器 搜索 复制路径	search-command	foundation				
 product-gallery	商品图集 放大镜 缩略图 变体切换 电商	media	foundation				
 sheet-stack	嵌套 sheet 层叠 拖拽关闭 宽屏变对话框	ai-ux,overlay	foundation		drag		
 phone-input	手机号输入 国家选择 格式化 E.164	select,form-input	foundation				
 money-input	金额输入 千分位 滚动数字 最小单位输出	form-input	foundation		scroll		
 shortcut-recorder	快捷键录制 键帽 冲突提示 cheatsheet	form-input	foundation				
-confirm-morph	删除按钮 morph 成内联确认→spinner→结果+撤销	loading,button	foundation				
-mention-input	@提及 #频道 输入框 光标处建议	cursor-effect,form-input	foundation		cursor		
+confirm-morph	删除按钮 morph 成内联确认→spinner→结果+撤销	button,micro-interaction	foundation				
+mention-input	@提及 #频道 输入框 光标处建议	form-input,select	foundation		cursor		
 chat-thread	聊天消息线程 反应 已读 输入中 附件	ai-ux,form-input	foundation				
-rich-text-editor	轻量富文本编辑器 markdown 快捷 浮动工具栏 斜杠菜单	text-effect,navigation	foundation				
+rich-text-editor	轻量富文本编辑器 markdown 快捷 浮动工具栏 斜杠菜单	form-input	foundation				
 billing-toggle	月付/年付切换 节省徽章 价格滚动	pricing,toggle-slider	foundation		scroll		
-scroll-area	滚动容器 细滚动条 边缘渐隐	layout-card,motion-transition	foundation		scroll		
+scroll-area	滚动容器 细滚动条 边缘渐隐	layout-card	foundation		scroll		
 radio-cards	单选卡片 选中环滑动 价格	pricing,toggle-slider	foundation		swipe		
 comment-thread	评论线程 回复 反应 提及 解决	other	foundation				
 dot-grid	点阵背景 光标处透镜鼓起 点击涟漪	background,cursor-effect	foundation		press,cursor	grid-background	
@@ -153,7 +153,7 @@ link-unfurl	粘贴链接展开为富预览卡片	layout-card	foundation
 release-readiness	发布就绪清单 进度+最终发布按钮	loading,button	foundation				
 signup-form	注册表单 校验 密码强度 完成态	auth,form-input	foundation				
 wallet-card	钱包卡片 余额 交易 转账操作 金融	layout-card	foundation				
-logo-marquee	品牌 logo 跑马灯 可暂停	motion-transition	foundation			marquee	
+logo-marquee	品牌 logo 跑马灯 可暂停	marketing-section,motion-transition	foundation			marquee	
 team-directory	团队通讯录 搜索 筛选 资料面板	search-command	foundation				
 project-board	项目看板 kanban 拖拽阶段	micro-interaction	foundation		drag		
 invoice-studio	可编辑发票 实时合计	media	foundation				
@@ -187,7 +187,7 @@ page-header	项目页头 滚动折叠成紧凑栏 tab 计数滚动	navigation,la
 revenue-explorer	SaaS 收入图 刷选缩放	other	foundation				
 journey-flow	用户旅程桑基图 按渠道 morph	motion-transition	foundation				
 empty-states	四种空状态插画 切换 morph	empty-onboarding,motion-transition	foundation	illustration			
-login-centered	居中登录卡 passkey 优先 环形背景	auth,background	foundation				
+login-centered	居中登录卡 passkey 优先 环形背景	auth	foundation				
 login-immersive	沉浸式玻璃 magic link 登录 照片背景	auth,background	foundation			glass	
 security-settings	安全设置 两步验证 改密 会话	other	foundation				
 cancel-flow	取消订阅挽留流程 定制优惠 长按取消	button	foundation				
@@ -213,7 +213,7 @@ cart-drawer	购物车抽屉 商品飞入 运费进度	loading,overlay	foundation
 pricing-calculator	定价计算器 座位滑块 推荐徽章移动	pricing,toggle-slider	foundation				
 ai-chat	完整 AI 聊天 流式 markdown 推理折叠 工具 chip 引用 模型切换	ai-ux,select	foundation				
 checkout-summary	订单摘要 优惠码 税费 支付按钮状态	button	foundation				
-site-header	网站顶栏 滚动变实心 mega menu 移动端菜单	navigation	foundation		scroll		
+site-header	网站顶栏 滚动变实心 mega menu 移动端菜单	navigation,marketing-section	foundation		scroll		
 site-footer	网站页脚 链接列 订阅	marketing-section	foundation				
 hero-section	三种全屏 SaaS hero 首屏	marketing-section	foundation				
 faq-section	FAQ 手风琴/主题栏/可搜索	search-command,marketing-section	foundation				
@@ -223,11 +223,11 @@ usage-billing	按量计费仪表盘 预计支出 限额	pricing	foundation
 ai-side-panel	侧边 AI 助手面板 上下文 chip 应用修改	ai-ux,select	foundation				
 kpi-drilldown	KPI 卡片展开详情图 同比 拆解表	chart,layout-card	foundation				
 blog-grid	博客列表 精选 分类 分页 阅读器	navigation,layout-card	foundation				
-comparison-table	竞品对比表 sticky 表头	table	foundation				
-feature-bento	六格 bento 特性展示 悬停演示	layout-card,micro-interaction	foundation		hover		
-stats-band	统计数字带 进入视口计数	other	foundation				
+comparison-table	竞品对比表 sticky 表头	marketing-section,table	foundation				
+feature-bento	六格 bento 特性展示 悬停演示	marketing-section,layout-card	foundation		hover		
+stats-band	统计数字带 进入视口计数	marketing-section	foundation				
 cta-section	行动号召 CTA 区块	marketing-section	foundation				
-newsletter-signup	邮件订阅 往期堆叠	auth	foundation				
+newsletter-signup	邮件订阅 往期堆叠	marketing-section,form-input	foundation				
 product-listing	商品列表 筛选 排序 快速加购	other	foundation				
 product-detail	商品详情页 图集 变体 加入购物袋	other	foundation				
 hero-signup	等待列表 hero 网格渐变 邮箱校验	auth,marketing-section	foundation	gradient			

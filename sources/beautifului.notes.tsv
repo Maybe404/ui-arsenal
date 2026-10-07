@@ -1,20 +1,20 @@
-foundation	设计 token（:root/.dark）、@theme 映射、primitive-* 间距工具类、共享 keyframes；所有组件的必备前置样式 design tokens theme	other	specialized	dark			
+foundation	设计 token（:root/.dark）、@theme 映射、primitive-* 间距工具类、共享 keyframes；所有组件的必备前置样式 design tokens theme	design-system	specialized	dark			
 button	共享按钮原子组件（cva 变体），被审批卡/推荐卡/差异表等引用 button	button	specialized				
 glide-menu	共享下拉/滑动高亮菜单原子组件，被审批卡、表格、搜索、侧栏等引用 menu dropdown	table,navigation	specialized		swipe		
 entity-chip	共享实体标签 chip 原子组件（推荐卡使用）entity tag chip	select	specialized				
 value-pill	共享数值药丸标签原子组件（推荐卡使用）value pill badge	feedback	specialized				
 shimmer	共享文字闪光扫过效果原子组件 shimmer text loading	loading,text-effect	specialized				
-stream-text	共享流式逐字显现文本原子组件 streaming text typewriter	ai-ux,text-effect	specialized			typewriter	
+stream-text	共享流式逐字显现文本原子组件 streaming text typewriter	ai-ux,text-effect	specialized			typewriter	text 一变就从头重播，只能用于整段演示，不能接真流式
 loading-state	AI 加载态：像素点阵 loader + 文字 shimmer + 计时，变体 Drive/Dots/Orbit/Surfer pixel loader elapsed time	ai-ux,loading	specialized	pixel			
-thinking-state	可展开的 agent 思考轨迹，四种变体 Steps/Reasoning/Search/Coding，结束后折叠为 Thought for Ns thinking trace reasoning	ai-ux,search-command	specialized				
-streaming-text	流式回答：模糊渐显、行内引用来源、操作按钮与追问建议 streaming answer citations sources follow-ups	ai-ux,button	specialized				
-approval-card	agent 执行前向用户提问的多步审批/选择卡片（选项、自定义答案、跳过、分页）HITL approval question	ai-ux,navigation	specialized				
-tool-chips	把代码编辑和工具调用渲染为紧凑 chip，可展开看文件 diff tool calls code edits	ai-ux,select	specialized				
+thinking-state	可展开的 agent 思考轨迹，四种变体 Steps/Reasoning/Search/Coding，结束后折叠为 Thought for Ns thinking trace reasoning	ai-ux,loading	specialized				
+streaming-text	流式回答：模糊渐显、行内引用来源、操作按钮与追问建议 streaming answer citations sources follow-ups	ai-ux,text-effect	specialized				
+approval-card	agent 执行前向用户提问的多步审批/选择卡片（选项、自定义答案、跳过、分页）HITL approval question	ai-ux,form-input	specialized				
+tool-chips	把代码编辑和工具调用渲染为紧凑 chip，可展开看文件 diff tool calls code edits	ai-ux	specialized				
 task-rows	agent 任务实时状态行（运行中/失败/完成、进度、子项），变体 Capsules/List task status progress	ai-ux,loading	specialized				
-chat-composer	带标签页的聊天面板，含推理过程回复与输入框 chat panel composer tabs	ai-ux,navigation	specialized				
-prompt-bar	AI 输入框：@ 引用来源、/ 命令、模型选择、语音听写，Rounded/Pill 两种外形 prompt input composer model picker	ai-ux,select	specialized				
+chat-composer	带标签页的聊天面板，含推理过程回复与输入框 chat panel composer tabs	ai-ux,form-input	specialized				
+prompt-bar	AI 输入框：@ 引用来源、/ 命令、模型选择、语音听写，Rounded/Pill 两种外形 prompt input composer model picker	ai-ux,form-input	specialized				
 recommendation-card	agent 建议卡：置信度条、备选方案、接受/拒绝操作 recommendation confidence accept	ai-ux,layout-card	specialized				
-context-cards	RAG 检索到的知识片段卡片，显示字符数与来源文件 retrieved chunks citations knowledge	ai-ux,text-effect	specialized				
+context-cards	RAG 检索到的知识片段卡片，显示字符数与来源文件 retrieved chunks citations knowledge	ai-ux,layout-card	specialized				
 diff-table	AI 提议的表格数据修改，逐行扫过显示增删 diff，可接受 table diff proposed edits	table,ai-ux	specialized				
 records-table	CRM 风格数据网格：标签、排序、列宽拖拽、多选、关系强度、汇总计算 data grid CRM table	table,layout-card	specialized		drag		
 filter-table	状态 chip 筛选并实时重排的任务表格 filter tabs status table	table,navigation	specialized				

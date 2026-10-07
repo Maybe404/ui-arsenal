@@ -13,7 +13,7 @@ glitch-text	RGB 分离与抖动的故障风 glitch 文字	text-effect,motion-tra
 gradient-text	文字上流动的渐变色扫光，可调速度与颜色；依赖 motion	text-effect,motion-transition	specialized	gradient		gradient-text	
 masked-heading	大标题镂空透出流动色彩网格或图片，逐词揭示；依赖 gsap	text-effect,media	specialized				
 particle-text	由漂浮粒子聚合成的文字，可散开再重组	text-effect,background	specialized				
-rotating-text	多个短语轮播，3D 翻转/旋转切换，适合 hero 标语；依赖 motion	text-effect,media	specialized	3d			
+rotating-text	多个短语轮播，3D 翻转/旋转切换，适合 hero 标语；依赖 motion	text-effect	specialized	3d			
 scrambled-text	光标靠近处文字被打乱扭曲的交互文字；依赖 gsap	text-effect,cursor-effect	specialized		cursor		
 scroll-float	滚动时文字漂浮/视差位移入场；依赖 gsap	text-effect,motion-transition	specialized		scroll		
 scroll-reveal	滚动时文字去模糊逐步显现；依赖 gsap	text-effect,motion-transition	specialized		scroll		
@@ -34,13 +34,13 @@ warp-text	WebGL 文字在指针周围弯曲折射扭曲；依赖 ogl	text-effect
 animated-content	通用入场包装器，滚动/挂载时按方向、距离、缓动动画任意子元素；依赖 gsap	motion-transition	specialized		scroll		
 antigravity	3D 反重力粒子场，粒子被光标排斥 (react-three-fiber)；依赖 @react-three/fiber,three	background,cursor-effect	specialized	webgl,3d	cursor		
 blob-cursor	带惯性和弹性形变的液滴/blob 自定义光标；依赖 gsap	cursor-effect,motion-transition	specialized		cursor		
-click-spark	点击位置迸发粒子火花的点击反馈	background,motion-transition	specialized		press		
+click-spark	点击位置迸发粒子火花的点击反馈	micro-interaction	specialized		press		
 crosshair	十字准星自定义光标，带链接悬停效果；依赖 gsap	cursor-effect,motion-transition	specialized		hover,cursor		
 cubes	3D 旋转立方体阵列，可自动旋转或悬停交互；依赖 gsap	motion-transition,micro-interaction	specialized	3d	hover		
 cursor-grid	光标附近单元格发光的 canvas 网格，支持点击脉冲	cursor-effect,layout-card	specialized	canvas	press,cursor	glow	
 dither-veil	1-bit 抖动图片，光标烧穿露出彩色原图并逐格复原；依赖 ogl	cursor-effect,media	specialized	webgl	cursor		
 elastic-mesh	指针下拉伸、阻尼回弹的弹簧网格表面；依赖 ogl	motion-transition	specialized	webgl		bounce	
-electric-border	带电弧与辉光的电流边框，强度可调	motion-transition	specialized				
+electric-border	带电弧与辉光的电流边框，强度可调	motion-transition	specialized			glow	
 electric-logo	把 SVG/PNG logo 变成闪电描边，电荷跟随光标；依赖 ogl	cursor-effect,motion-transition	specialized	webgl	cursor		
 fade-content	方向淡入/滑入的简单入场退场包装器；依赖 gsap	motion-transition	specialized				
 ghost-cursor	半透明幽灵光标拖尾跟随；依赖 three	cursor-effect,motion-transition	specialized	webgl	drag,cursor		
@@ -50,7 +50,7 @@ gradual-blur	边缘渐进模糊/按滚动逐步去模糊的电影感揭示	motio
 halftone-reveal	印刷半调网点在光标周围显露清晰内容；依赖 ogl	cursor-effect,motion-transition	specialized	webgl	cursor		
 image-trail	光标移动时拖出图片轨迹，多种内置变体；依赖 gsap	cursor-effect,media	specialized		drag,cursor		
 laser-flow	流动激光光束打在表面上的光效；依赖 three	motion-transition,fun-3d	specialized	webgl			
-logo-loop	品牌/技术 logo 无缝循环滚动墙，悬停暂停	motion-transition,micro-interaction	specialized		hover,scroll		
+logo-loop	品牌/技术 logo 无缝循环滚动墙，悬停暂停	motion-transition,micro-interaction	specialized		hover,scroll	marquee	
 magic-rings	可交互的魔法光环效果；依赖 three	motion-transition,micro-interaction	specialized	webgl			
 magnet	元素被光标磁吸靠近并弹簧回位的磁性按钮	cursor-effect,button	specialized		cursor		
 magnet-lines	一片线段随光标方向偏转的磁力线	cursor-effect,motion-transition	specialized		cursor		
@@ -83,7 +83,7 @@ chroma-grid	灰度卡片网格，悬停处恢复彩色的聚光效果；依赖 g
 circular-carousel	3D 环形图片轮播，四种布局、惯性拖拽与吸附	media,layout-card	specialized	3d	drag		
 circular-gallery	环形轨道旋转的 WebGL 图片画廊；依赖 ogl	media	specialized	webgl			
 counter	带缓动的数字滚轮计数器；依赖 motion	text-effect	specialized				
-curved-input	弧形弯曲的输入框，文本光标与按钮沿曲线	text-effect,cursor-effect	specialized		cursor		
+curved-input	弧形弯曲的输入框，文本光标与按钮沿曲线	form-input	specialized		cursor		
 decay-card	悬停视差、内容崩解的卡片；依赖 gsap	layout-card,micro-interaction	specialized		hover		
 depth-carousel	卡片沿 3D 轨道后退的纵深轮播，支持拖拽与键盘；依赖 gsap	media,layout-card	specialized	3d	drag,keyboard		
 dock	macOS 风格放大 dock 栏；依赖 motion	navigation	specialized				
@@ -100,27 +100,27 @@ glass-surface	苹果风液态玻璃表面，实时折射与光照	other	speciali
 gooey-nav	粘滞 gooey 融合效果的导航指示器	navigation	specialized				
 infinite-menu	无限循环的 3D 球面菜单/图片选择；依赖 gl-matrix	navigation,select	specialized	3d			
 infinite-spiral	无限循环的 3D 螺旋图片带	media,fun-3d	specialized	3d			
-lanyard	物理摆动的 3D 挂绳工牌卡片	layout-card,fun-3d	specialized	3d			
+lanyard	物理摆动的 3D 挂绳工牌卡片	layout-card,fun-3d	specialized	3d			registry 依赖为空，但源码需要 @react-three/fiber、drei、rapier、meshline、three 和 card.glb 模型
 line-sidebar	光标邻近项偏移高亮的线条侧边导航	cursor-effect,navigation	specialized		cursor		
-magic-bento	带聚光、粒子与倾斜的交互 bento 网格卡片；依赖 gsap	background,layout-card	specialized			glow	
+magic-bento	带聚光、粒子与倾斜的交互 bento 网格卡片；依赖 gsap	layout-card	specialized			glow	
 masonry	动画重排的响应式瀑布流 masonry 布局；依赖 gsap	layout-card,motion-transition	specialized				
 model-viewer	three.js 3D 模型查看器，带轨道控制与光照预设；依赖 @react-three/drei,@react-three/fiber,three	fun-3d	specialized	webgl,3d			
-morph-slider	WebGL 位移转场融化切换的图片滑块；依赖 gsap,ogl	toggle-slider,media	specialized	webgl			
+morph-slider	WebGL 位移转场融化切换的图片滑块；依赖 gsap,ogl	media	specialized	webgl			
 option-wheel	滚轮/拖拽/方向键转动的弧形选项选择器	select,micro-interaction	specialized		drag		
 pill-nav	胶囊形导航，活动项滑动高亮；依赖 gsap,react-router-dom	navigation	specialized		swipe		
 pixel-card	像素扩散揭示内容的卡片	layout-card	specialized	pixel			
 profile-card	带 3D 悬停与反光的个人资料卡	avatar-user,layout-card	specialized	3d	hover		
 reflective-card	摄像头实时反射与眩光的卡片；依赖 lucide-react	layout-card	specialized				
 scroll-stack	滚动时卡片层叠堆积；依赖 lenis	layout-card,motion-transition	specialized		scroll		
-specular-button	着色器驱动边缘高光跟随光标的玻璃按钮；依赖 ogl	background,cursor-effect	specialized	webgl	cursor	glass	
+specular-button	着色器驱动边缘高光跟随光标的玻璃按钮；依赖 ogl	button,cursor-effect	specialized	webgl	cursor	glass	
 spotlight-card	光标聚光灯渐变照亮的卡片	cursor-effect,layout-card	specialized	gradient	cursor	glow	
 stack	可滑动切换的层叠卡片堆，支持自动播放；依赖 motion	layout-card	specialized		swipe		
 staggered-menu	错峰动画打开/关闭的全屏菜单；依赖 gsap	navigation,motion-transition	specialized				
 stepper	多步骤进度指示/分步表单向导；依赖 motion	loading,form-input	specialized				
 tilted-card	随指针 3D 透视倾斜的卡片；依赖 motion	layout-card,fun-3d	specialized	3d			
-bell-toggle	铃铛摇动并展开文字的胶囊开关/通知订阅切换；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	text-effect,feedback	specialized				
+bell-toggle	铃铛摇动并展开文字的胶囊开关/通知订阅切换；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	toggle-slider,micro-interaction	specialized				
 branched-menu	树状分支线展开的折叠菜单；依赖 @hugeicons/core-free-icons,@hugeicons/react	navigation,layout-card	specialized				
-call-chip	显示工具调用进度与耗时的内联 chip，成功/失败状态；依赖 @hugeicons/core-free-icons,@hugeicons/react	loading,select	specialized				
+call-chip	显示工具调用进度与耗时的内联 chip，成功/失败状态；依赖 @hugeicons/core-free-icons,@hugeicons/react	ai-ux,loading	specialized				
 code-slots	OTP 验证码输入框，支持粘贴与短信自动填充，错误/成功动画；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	form-input,motion-transition	specialized				
 comet-dial	可拨动的刻度旋钮，彗星拖尾；依赖 motion	micro-interaction	specialized		drag		
 dodge-field	让子元素躲避指针的包装器（逃跑按钮）；依赖 motion	form-input,button	specialized				
@@ -146,7 +146,7 @@ spring-check	弹簧动画勾选并划线的待办复选框；依赖 @hugeicons/c
 squish-switch	可拖动、挤压形变的开关 switch；依赖 motion	toggle-slider,micro-interaction	specialized		drag		
 status-mark	agent 任务状态小图标，空闲/进行/完成/失败形态变换；依赖 motion	ai-ux,micro-interaction	specialized				
 swipe-row	左滑露出操作、全滑删除的列表行；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	micro-interaction	specialized		swipe		
-swipe-toast	可下滑关闭、带剩余时间引线的 toast 通知；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	feedback,date-time	specialized		swipe		
+swipe-toast	可下滑关闭、带剩余时间引线的 toast 通知；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	feedback	specialized		swipe		
 tear-ticket	撕下票根的门票交互，3D 视差；依赖 motion	micro-interaction,fun-3d	specialized	3d			
 thought-line	AI 推理过程标题行，显示步骤与"思考了 N 秒"；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	ai-ux,micro-interaction	specialized				
 voice-pill	按住录音的麦克风按钮，展开为音量均衡条胶囊；依赖 @hugeicons/core-free-icons,@hugeicons/react	button,media	specialized				
@@ -168,7 +168,7 @@ evil-eye	程序化邪眼着色器，虹膜与火焰辉光；依赖 ogl	backgroun
 faulty-terminal	故障终端 CRT 扫描线方块背景；依赖 ogl	background	specialized	webgl			
 ferrofluid	磁流体等高线发光背景，光标磁铁；依赖 ogl	background,cursor-effect	specialized	webgl	cursor	glow	
 floating-lines	随光标反应的 3D 漂浮线条背景；依赖 three	background,cursor-effect	specialized	webgl,3d	cursor		
-galaxy	视差星空背景，指针交互；依赖 ogl	background,micro-interaction	specialized	webgl			
+galaxy	视差星空背景，指针交互；依赖 ogl	background	specialized	webgl			
 ghost-fibers	深蓝递归纤维光带背景；依赖 ogl	background	specialized	webgl			
 gradient-blinds	带聚光与噪声扭曲的渐变百叶窗背景；依赖 ogl	background	specialized	webgl,gradient		glow	
 gradient-waves	光线步进正弦波滚向朦胧地平线；依赖 ogl	background	specialized	webgl,gradient			
@@ -186,10 +186,10 @@ light-rays	体积光束/光线背景，方向可调；依赖 ogl	background	spec
 light-tunnel	径向光纤隧道光脉冲背景；依赖 ogl	background	specialized	webgl			
 line-waves	彩色扭曲线条波浪背景；依赖 ogl	background	specialized	webgl			
 liquid-chrome	液态铬金属反射背景；依赖 ogl	background	specialized	webgl			
-liquid-ether	可交互液体流动着色器背景；依赖 three	background,micro-interaction	specialized	webgl			
+liquid-ether	可交互液体流动着色器背景；依赖 three	background	specialized	webgl			
 micro-slats	细小板条组成的透视海浪背景，光标搅动；依赖 ogl	background,cursor-effect	specialized	webgl	cursor		
 molten-metal	熔融金属焦散等离子丝背景；依赖 ogl	background	specialized	webgl			
-orb	悬停可交互的能量光球背景；依赖 ogl	background,micro-interaction	specialized	webgl	hover		
+orb	悬停可交互的能量光球背景；依赖 ogl	background	specialized	webgl	hover		
 particles	可配置粒子系统背景；依赖 ogl	background	specialized	webgl			
 pattern-waves	点/线/字形半调表面如丝绸起伏的背景；依赖 ogl	background	specialized	webgl			
 pixel-blast	像素爆破粒子背景，可加液态后处理；依赖 postprocessing,three	background,fun-3d	specialized	webgl,pixel			
@@ -198,7 +198,7 @@ plasma	有机等离子渐变流动背景；依赖 ogl	background	specialized	web
 plasma-wave	双波干涉的光线步进等离子波背景；依赖 ogl	background	specialized	webgl			
 prism	旋转棱镜光效背景；依赖 ogl	background	specialized	webgl			
 prismatic-burst	可控颜色的放射光线爆发背景；依赖 ogl	background	specialized	webgl			
-radar	雷达扫描环与旋转波束背景；依赖 ogl	chart,background	specialized	webgl			
+radar	雷达扫描环与旋转波束背景；依赖 ogl	background	specialized	webgl			
 ripple-grid	持续涟漪波动的网格背景；依赖 ogl	background,layout-card	specialized	webgl		grid-background	
 scanner	示波器式干涉条纹扫过背景；依赖 ogl	background	specialized	webgl			
 shape-grid	方形/六边形/圆/三角形动态网格背景	background,layout-card	specialized			grid-background	
@@ -436,24 +436,24 @@ pro-template-portfolio-template	[Pro] Next.js 个人作品集模板（免费）�
 pro-template-8-bit-template	[Pro] Next.js 复古像素 8-bit 落地页模板；预览 https://rbp-8-bit-template.vercel.app/	template	specialized	pixel			
 pro-template-ai-app-template	[Pro] Next.js AI 应用极简落地页模板，滚动手机演示；预览 https://rbp-ai-app-template.vercel.app/	template	specialized		scroll		
 pro-template-security-template	[Pro] Next.js 安全产品暗色编辑风落地页模板；预览 https://rbp-security-template.vercel.app/	template	specialized	dark			
-pro-kit-apple-minimal	[Pro] 苹果极简风设计方向 skill	ai-ux	specialized				
-pro-kit-corporate-trust	[Pro] 企业/金融/医疗可信风设计 skill	ai-ux	specialized				
-pro-kit-editorial	[Pro] 杂志编辑排版风设计 skill	ai-ux	specialized				
-pro-kit-luxury-serif	[Pro] 奢侈品衬线风设计 skill	ai-ux	specialized				
-pro-kit-neobrutalism	[Pro] 新野兽派 neobrutalism 设计 skill	ai-ux	specialized				
-pro-kit-playful-motion	[Pro] 弹簧物理活泼动效风设计 skill	ai-ux,motion-transition	specialized				
-pro-kit-swiss-grid	[Pro] 瑞士国际主义网格风设计 skill	ai-ux,layout-card	specialized				
-pro-kit-terminal-dark	[Pro] 开发者工具暗色终端风设计 skill（免费）	ai-ux	specialized	dark			
-pro-kit-agency	[Pro] 工作室/代理公司官网提示词	ai-ux	specialized				
-pro-kit-consumer-hardware	[Pro] 消费硬件产品页提示词	ai-ux	specialized				
-pro-kit-developer-tool	[Pro] 开发者工具落地页提示词	ai-ux,marketing-section	specialized				
-pro-kit-ecommerce-brand	[Pro] DTC 电商产品页提示词	ai-ux	specialized				
-pro-kit-fintech	[Pro] 金融产品页提示词	ai-ux	specialized				
-pro-kit-fitness	[Pro] 健身房/健身产品页提示词	ai-ux	specialized				
-pro-kit-real-estate	[Pro] 房地产楼盘页提示词	ai-ux	specialized				
-pro-kit-saas	[Pro] SaaS 落地页提示词	ai-ux,marketing-section	specialized				
-pro-kit-agency-homepage	[Pro] 代理公司首页区块组合配方	ai-ux	specialized				
-pro-kit-product-launch	[Pro] 产品发布页区块组合配方	ai-ux	specialized				
-pro-kit-saas-homepage	[Pro] SaaS 首页区块组合配方	ai-ux	specialized				
-pro-kit-agent-skill	[Pro] 教 agent 正确安装使用 React Bits Pro 的 skill	ai-ux	specialized				
+pro-kit-apple-minimal	[Pro] 苹果极简风设计方向 skill	design-system	specialized				
+pro-kit-corporate-trust	[Pro] 企业/金融/医疗可信风设计 skill	design-system	specialized				
+pro-kit-editorial	[Pro] 杂志编辑排版风设计 skill	design-system	specialized				
+pro-kit-luxury-serif	[Pro] 奢侈品衬线风设计 skill	design-system	specialized				
+pro-kit-neobrutalism	[Pro] 新野兽派 neobrutalism 设计 skill	design-system	specialized				
+pro-kit-playful-motion	[Pro] 弹簧物理活泼动效风设计 skill	design-system	specialized				
+pro-kit-swiss-grid	[Pro] 瑞士国际主义网格风设计 skill	design-system	specialized				
+pro-kit-terminal-dark	开发者工具暗色终端风设计 skill（免费）	design-system	specialized	dark			
+pro-kit-agency	[Pro] 工作室/代理公司官网提示词	marketing-section,template	specialized				
+pro-kit-consumer-hardware	[Pro] 消费硬件产品页提示词	marketing-section,template	specialized				
+pro-kit-developer-tool	[Pro] 开发者工具落地页提示词	marketing-section,template	specialized				
+pro-kit-ecommerce-brand	[Pro] DTC 电商产品页提示词	marketing-section,template	specialized				
+pro-kit-fintech	[Pro] 金融产品页提示词	marketing-section,template	specialized				
+pro-kit-fitness	[Pro] 健身房/健身产品页提示词	marketing-section,template	specialized				
+pro-kit-real-estate	[Pro] 房地产楼盘页提示词	marketing-section,template	specialized				
+pro-kit-saas	[Pro] SaaS 落地页提示词	marketing-section,template	specialized				
+pro-kit-agency-homepage	[Pro] 代理公司首页区块组合配方	template	specialized				
+pro-kit-product-launch	[Pro] 产品发布页区块组合配方	template	specialized				
+pro-kit-saas-homepage	[Pro] SaaS 首页区块组合配方	template	specialized				
+pro-kit-agent-skill	[Pro] 教 agent 正确安装使用 React Bits Pro 的 skill	other	specialized				
 crystalized-ball	玻璃水晶球，边缘有噼啪电光，球内发光尘埃随光标旋转、点击时摇晃、挂载时点亮，单色可调 (WebGL)；依赖 ogl	fun-3d,cursor-effect	specialized	webgl,glass	cursor,press	glow,glass	

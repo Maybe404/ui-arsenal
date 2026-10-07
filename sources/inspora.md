@@ -51,7 +51,7 @@ PY
 每条字段：`slug, title, creator{name}, createdAt, media[{type:image|video, url, posterUrl(视频封面 webp), videoPreview{url 1080p 预览 mp4}, width, height}], mediaCount`。
 
 **步骤 2：不要翻页**
-robots.txt 禁止访问 `/api/`，所以**不调用 `/api/posts`**。运行时只用步骤 1 拿各分类首页的 16 条。想要更早的条目，从下方清单里挑 slug，把 `https://www.inspora.design/posts/{slug}` 给用户，让用户自己打开看；或者直接用清单里的媒体链接（CDN 不受限制）。
+robots.txt 禁止访问 `/api/`，所以**不调用 `/api/posts`**。运行时只用步骤 1 拿各分类首页的 16 条。想要更早的条目，从下方清单里挑 slug，把 `https://www.inspora.design/posts/{slug}` 给用户，让用户自己打开看。 注意：清单（inspora.tsv）里只有帖子页地址，没有媒体直链；媒体直链只能从分类首页（步骤 1）拿到。
 
 **步骤 3：详情页（描述 + 行业/配色/风格标签 + 原帖链接）**
 浏览器打开 `https://www.inspora.design/posts/{slug}`，用 get_page_text 读取。实测 `footer-section`：一段英文描述（"website footer with navigation links and a newsletter signup above a blue-and-cream desert illustration..."）、`Industries: Tableware`、`Colors: Blue, Cream`、`Styles: Editorial`、`View original` → X 原帖。这些标签只在详情页有，列表 JSON 里没有。

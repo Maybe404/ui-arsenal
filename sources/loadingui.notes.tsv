@@ -24,10 +24,10 @@ typing	竖向波浪起伏的圆点，像按键输入，聊天/搜索/协同编�
 twin-orbit	两个标记绕圆心对称旋转	loading	specialized				
 pulsating-dots	缩放+透明度律动的圆点（motion）（依赖 motion）	loading	specialized				
 triple-dot-spinner	三点排成小圆旋转，按钮与列表行内用	loading	specialized				
-text-shimmer	文字上的扫光闪烁（shimmer）效果，AI 思考中 Thinking 文案（motion）（依赖 motion）	loading	specialized			gradient-text	
+text-shimmer	文字上的扫光闪烁（shimmer）效果，AI 思考中 Thinking 文案（motion）（依赖 motion）	loading	specialized				
 text-blink	文字闪烁的加载文案	loading	specialized				
 text-dots	状态文字后跟动态省略号 ...	loading	specialized				
-text-shimmer-wave	沿文字逐字波浪式扫光（motion）（依赖 motion）	loading	specialized			gradient-text	
+text-shimmer-wave	沿文字逐字波浪式扫光（motion）（依赖 motion）	loading	specialized				
 morphing-infinity	圆形与无穷符号间变形的 SVG 动画（motion）（依赖 motion）	loading	specialized				
 infinity	沿无穷符号路径运动，长时间/持续加载	loading	specialized				
 accordion-loader	Unicode 方块字符在字符轨道上双向伸缩，终端/等宽风格	loading	specialized				

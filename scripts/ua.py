@@ -30,6 +30,7 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'sources')
+GUIDES = os.path.join(ROOT, 'guides')
 ADAPTERS = os.path.join(ROOT, 'scripts', 'adapters')
 STATE = os.path.join(SRC, '_state.json')
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36'
@@ -301,6 +302,15 @@ def cmd_find(args):
         print('    %s' % r['desc'][:160])
     if len(scored) > limit:
         print('... %d more (--limit N)' % (len(scored) - limit))
+    shown_task = task
+    if not shown_task:
+        counts = {}
+        for _, r in scored[:10]:
+            t = r['task'].split(',')[0]
+            counts[t] = counts.get(t, 0) + 1
+        shown_task = max(counts, key=counts.get) if counts else None
+    if shown_task and os.path.exists(os.path.join(GUIDES, shown_task + '.md')):
+        print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     if any(r['risk'] for _, r in scored[:limit]):
         print('\n⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
@@ -1110,8 +1120,26 @@ def cmd_audit(args):
                     errs.append('%s: risk %r' % (where, t))
         for missing in sorted(set(ids) - seen_notes)[:5]:
             errs.append('%s: id %s has no notes row' % (s, missing))
+    # guides must only reference catalogue items that exist
+    known = {(r['source'], r['id']) for r in load_rows(include_removed=True)}
+    srcs = set(sources())
+    warns = []
+    if os.path.isdir(GUIDES):
+        for fn in sorted(os.listdir(GUIDES)):
+            if not fn.endswith('.md') or fn.startswith('_'):
+                continue
+            if fn[:-3] not in TASKS:
+                errs.append('guides/%s: file name is not a task id' % fn)
+            for m in re.finditer(r'`([a-z0-9]+):([A-Za-z0-9:._-]+)`', open(os.path.join(GUIDES, fn), encoding='utf-8').read()):
+                if m.group(1) in srcs and (m.group(1), m.group(2)) not in known:
+                    errs.append('guides/%s: unknown item `%s:%s`' % (fn, m.group(1), m.group(2)))
+        missing = [t for t in TASKS if t != 'other' and not os.path.exists(os.path.join(GUIDES, t + '.md'))]
+        if missing:
+            warns.append('no guide yet for: ' + ' '.join(missing))
     for e in errs[:200]:
         print(e)
+    for w in warns:
+        print('warning: ' + w)
     print('%d rows checked, %d problems' % (total, len(errs)))
     return 1 if errs else 0
 

@@ -27,17 +27,17 @@ voice-glow	随说话音量从聊天输入框/手机屏底部升起的彩色光�
 voice-glow-default	约 350px 聊天输入框的语音光晕预设	ai-ux,form-input	specialized			glow	
 voice-glow-mobile	手机屏幕底部语音光晕预设，范围更宽更高	media	specialized			glow	
 voice-glow-processing	光晕聚成一束来回扫动，语音转写/回复思考中	ai-ux,media	specialized			glow	
-voice-glow-usemicrophone	麦克风权限与 MediaStream 管理 hook（start/stop/state）	media,micro-interaction	specialized			glow	
+voice-glow-usemicrophone	麦克风权限与 MediaStream 管理 hook（start/stop/state）	media,micro-interaction	specialized				
 voice-glow-pro	Voice 的 Pro 细调，仅 Studio/Pro skill	form-input,media	specialized			glow	
 bot-avatars	AI agent 动画头像：毛绒/塑料质感 3D 形状带表情，会四处看、跳、工作时蹦跳；canvas 无 WebGL	ai-ux,avatar-user	specialized	webgl,canvas,3d			
 bot-avatars-free-types	8 种免费身体形状 bot 头像，state default/working，size 96/64/32，shading fabric/plastic	avatar-user	specialized				
 bot-avatars-pro-types	另外 10 种身体形状（包内类型已存在，页面/免费 skill 未开放）	avatar-user	specialized				
 bot-avatars-pro-extras	sleeping 睡眠态、配饰、毛发/光照细调、自定义 SVG 轮廓	avatar-user	specialized				
 metal-fx	实时液态金属材质：按钮/图标/文字/徽章，游走光晕、邻近元素反射、光标弯折；WebGL（v2 基于 Paper Shaders）	text-effect,background	specialized	webgl	cursor	glow	
-metal-fx-button	液态金属描边胶囊按钮，卖东西的 CTA（Get Pro/Upgrade）	background,button	specialized	webgl			
-metal-fx-circle	液态金属圆形图标按钮（如发送按钮）	background,button	specialized	webgl			
+metal-fx-button	液态金属描边胶囊按钮，卖东西的 CTA（Get Pro/Upgrade）	button,micro-interaction	specialized	webgl			
+metal-fx-circle	液态金属圆形图标按钮（如发送按钮）	button,micro-interaction	specialized	webgl			
 metal-fx-text	液态金属文字，大标题 h1 高亮 headline	text-effect,background	specialized	webgl			
-metal-fx-badge	液态金属徽章 New/Pro/Beta badge	background,feedback	specialized	webgl			
+metal-fx-badge	液态金属徽章 New/Pro/Beta badge	feedback	specialized	webgl			
 metal-fx-presets	金属配色预设与光标弯折、文字反射 hook	text-effect,background	specialized	webgl	cursor		
 metal-fx-v1	旧版 v1 金属引擎	background	specialized	webgl			
 metal-fx-pro	Metal 的 Pro 细调，仅 Studio/Pro skill	background,feedback	specialized	webgl			
@@ -46,6 +46,6 @@ img-fx-pixels-organic	柔和云状像素马赛克生成占位	loading,media	spec
 img-fx-pixels-mechanic	锐利网格对齐像素马赛克生成占位	loading,media	specialized	pixel			
 img-fx-sweep-gradient	对角渐变带扫过+格子闪烁，可替代 skeleton 骨架屏	loading,media	specialized	gradient			
 img-fx-pro	Image 的 Pro 细调，仅 Studio/Pro skill	loading,background	specialized	webgl,pixel			
-libraries-dev-skill	官方免费 agent skill：7 个库的安装、用法、放置规则，含 libraries reveal/review/apply 命令	ai-ux,motion-transition	specialized				
+libraries-dev-skill	官方免费 agent skill：7 个库的安装、用法、放置规则，含 libraries reveal/review/apply 命令	other	specialized				
 libraries-pro-skill	Pro skill：Studio 全部参数、配色、cursor gravity、核心几何/shader 定制契约	ai-ux,background	specialized	webgl	cursor		
 studio	全部库的深度可视化调参台 + AI agent 调参，导出 React/RN/SwiftUI 配置	chart,ai-ux	specialized				

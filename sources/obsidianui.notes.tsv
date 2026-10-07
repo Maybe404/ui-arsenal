@@ -1,17 +1,17 @@
 active-sessions	已登录设备会话列表，单个/批量登出时行折叠动画，适合账户安全设置页 settings sessions devices	auth,layout-card	specialized				
 art-gallery	可拖拽平移的无限平铺照片墙，WebGL 桶形畸变透镜效果 three.js gallery drag	media,micro-interaction	specialized	webgl	drag		
-dashboard-shell	后台/仪表盘整体布局：可拖拽缩放侧栏、分组导航、头部状态与操作、滑动药丸 tabs、筛选工具栏，窄屏变抽屉 admin layout	overlay,navigation	specialized		drag,swipe		
-discover-button	圆角 CTA 按钮，hover 时箭头圆圈展开覆盖文字，可作链接或按钮 call-to-action	text-effect,button	specialized		hover		
+dashboard-shell	后台/仪表盘整体布局：可拖拽缩放侧栏、分组导航、头部状态与操作、滑动药丸 tabs、筛选工具栏，窄屏变抽屉 admin layout	navigation,template	specialized		drag,swipe		
+discover-button	圆角 CTA 按钮，hover 时箭头圆圈展开覆盖文字，可作链接或按钮 call-to-action	button	specialized		hover		
 draggable-marquee	可拖拽带惯性的无缝循环图片跑马灯，支持键盘左右键 GSAP marquee carousel	media,motion-transition	specialized		drag,keyboard	marquee	
-flip-text	逐字符翻转旋转的文字动效，hover 或循环触发 text animation typography	text-effect,motion-transition	specialized		hover		
+flip-text	逐字符翻转旋转的文字动效，hover 或循环触发 text animation typography	text-effect,motion-transition	specialized		hover		registry 未附带 .flip-char 的 keyframes CSS，装上不会动，需要自己补动画样式
 hover-img	悬停项目标题时出现跟随鼠标的缩略图预览，适合作品集/项目列表 portfolio GSAP	cursor-effect,media	specialized		hover,cursor		
 split-showcase	虚线分隔的双卡片展示，hover 向外弹簧位移、圆角扩展，适合合作伙伴/对比展示 partners	layout-card,micro-interaction	specialized		hover		
-status-bars	服务状态页按天的可用性条带（正常/降级/宕机），hover 查看当日 uptime 与事故，数字滚动 status page uptime	text-effect,micro-interaction	specialized		hover,scroll		
+status-bars	服务状态页按天的可用性条带（正常/降级/宕机），hover 查看当日 uptime 与事故，数字滚动 status page uptime	chart,feedback	specialized		hover,scroll		
 text-stream	随页面滚动改变速度和方向的竖向文字流/滚动字幕 scroll velocity text reel GSAP	text-effect,motion-transition	specialized		scroll		
 v-prism	可拖拽瞄准光束的玻璃棱镜色散效果，Three.js 后处理，复刻 Vercel v-prism hero 背景 3D	background,marketing-section	specialized	webgl,3d	drag	glass	
-click-spark	点击位置迸发火花粒子的全局点击特效 click effect	background	specialized		press		
+click-spark	点击位置迸发火花粒子的全局点击特效 click effect	micro-interaction	specialized		press		
 file-input	带动画的文件上传输入框，含类型校验与文件预览（用 next/image，限 Next.js）upload dropzone	upload,form-input	specialized				
-footer	黑底大尺寸页脚，带灯光扫射背景效果 footer lighting	background,marketing-section	specialized				
+footer	黑底大尺寸页脚，带灯光扫射背景效果 footer lighting	marketing-section	specialized				
 interactive-hover-button	hover 时内容滑动替换的交互按钮 button hover	button,micro-interaction	specialized		hover,swipe		
 liquid-metal	液态金属着色器效果（@paper-design/shaders-react）shader background	background	specialized	webgl			
 playground-button	playground 示例：Primary/Secondary/Outline/Ghost 按钮变体演示 button variants	button	specialized				
@@ -19,10 +19,10 @@ playground-navbar	实验性响应式动画导航栏（playground 页）navbar he
 sidebar-stackbits	可折叠的应用侧边栏+内容面板，motion 动画切换 sidebar navigation	navigation,layout-card	specialized				
 skeumorphic-music-card	拟物风音乐播放器卡片，按压式控制按钮（用 next/image）music player card skeuomorphic	button,media	specialized				
 smooth-scroll	基于 Lenis 的全页平滑滚动包装器 smooth scroll	motion-transition	specialized		scroll		
-visitor-count	访客计数徽标，需自行实现 /api/visitors 端点 visitor counter	text-effect,feedback	specialized				
+visitor-count	访客计数徽标，需自行实现 /api/visitors 端点 visitor counter	feedback	specialized				
 loaders-gooey-blobs	粘滞融合的 blob 加载动画 loader spinner gooey	loading,motion-transition	specialized				
 raised-button	立体凸起风格按钮，可按颜色自动生成阴影 3D button	button,fun-3d	specialized	3d			
-alert	shadcn 风格基础组件：提示框 alert（支撑型 primitive，与 shadcn/ui 同构）	overlay,feedback	foundation				
+alert	shadcn 风格基础组件：提示框 alert（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				
 avatar	shadcn 风格基础组件：头像 avatar（支撑型 primitive，与 shadcn/ui 同构）	avatar-user	foundation				
 badge	shadcn 风格基础组件：徽章标签 badge（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				
 breadcrumb	shadcn 风格基础组件：面包屑 breadcrumb（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
@@ -36,7 +36,7 @@ checkbox	shadcn 风格基础组件：复选框 checkbox（支撑型 primitive，
 collapsible	shadcn 风格基础组件：折叠面板 collapsible（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				
 command	shadcn 风格基础组件：命令面板/搜索 command cmdk（支撑型 primitive，与 shadcn/ui 同构）	search-command	foundation				
 context-menu	shadcn 风格基础组件：右键菜单 context menu（支撑型 primitive，与 shadcn/ui 同构）	overlay,navigation	foundation				
-dialog	shadcn 风格基础组件：对话框 modal dialog（支撑型 primitive，与 shadcn/ui 同构）	ai-ux,overlay	foundation				
+dialog	shadcn 风格基础组件：对话框 modal dialog（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
 drawer	shadcn 风格基础组件：底部抽屉 drawer vaul（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
 dropdown-menu	shadcn 风格基础组件：下拉菜单 dropdown（支撑型 primitive，与 shadcn/ui 同构）	navigation,select	foundation				
 empty	shadcn 风格基础组件：空状态 empty state（支撑型 primitive，与 shadcn/ui 同构）	empty-onboarding	foundation				
@@ -55,8 +55,8 @@ pagination	shadcn 风格基础组件：分页 pagination（支撑型 primitive�
 popover	shadcn 风格基础组件：弹出层 popover（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
 progress	shadcn 风格基础组件：进度条 progress（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				
 radio-group	shadcn 风格基础组件：单选组 radio（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
-resizable	shadcn 风格基础组件：可拖拽分栏 resizable panels（支撑型 primitive，与 shadcn/ui 同构）	layout-card,micro-interaction	foundation		drag		
-scroll-area	shadcn 风格基础组件：自定义滚动区域 scroll area（支撑型 primitive，与 shadcn/ui 同构）	layout-card,motion-transition	foundation		scroll		
+resizable	shadcn 风格基础组件：可拖拽分栏 resizable panels（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		drag		
+scroll-area	shadcn 风格基础组件：自定义滚动区域 scroll area（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		scroll		
 select	shadcn 风格基础组件：下拉选择 select（支撑型 primitive，与 shadcn/ui 同构）	select	foundation				
 separator	shadcn 风格基础组件：分隔线 separator（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				
 sheet	shadcn 风格基础组件：侧边抽屉 sheet（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
@@ -68,7 +68,7 @@ spinner	shadcn 风格基础组件：加载转圈 spinner（支撑型 primitive�
 switch	shadcn 风格基础组件：开关 switch toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
 table	shadcn 风格基础组件：表格 table（支撑型 primitive，与 shadcn/ui 同构）	table	foundation				
 tabs	shadcn 风格基础组件：选项卡 tabs（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-textarea	shadcn 风格基础组件：多行文本框 textarea（支撑型 primitive，与 shadcn/ui 同构）	text-effect,form-input	foundation				
+textarea	shadcn 风格基础组件：多行文本框 textarea（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
 toggle	shadcn 风格基础组件：切换按钮 toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				
 toggle-group	shadcn 风格基础组件：切换按钮组 toggle group（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				
 tooltip	shadcn 风格基础组件：工具提示 tooltip（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				

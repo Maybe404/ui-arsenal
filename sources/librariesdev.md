@@ -54,7 +54,7 @@ Jakub Antalik 做的 7 个"AI 时代"React 动效库，每个库都是独立 npm
 - img-fx 需要 peer 依赖 `three >= 0.149`。
 - bot-avatars 包里的类型定义有 18 种形状，但免费页面和 skill 只开放 8 种，另外 10 种和 `sleeping` 状态属于 Pro（类型是写在包里的，能不能直接传值使用没有实测，按授权视为 Pro）。
 - React Native 端口（`*-native`）**没有发布到 npm**，只能从仓库目录本地引用；Expo 需要 `expo run:ios/android`。SwiftUI 包用本地 Swift Package，Metal shader 要通过 Xcode 构建。
-- 每个库都处理了 `prefers-reduced-motion`（降为静帧），也会在离屏时暂停，不要覆盖这些行为。
+- 多数库处理了 `prefers-reduced-motion`（降为静帧）并在离屏时暂停，不要覆盖这些行为。**例外**：border-beam 官方文档写明旋转类型（`md`、`sm`、`line`）不处理减弱动效，用这些类型时要自己在 `prefers-reduced-motion: reduce` 下关掉或换成静态边框（2026-10-07 核实）。
 
 ## 组件清单
 | id | 名称 | 分类 | 一句话用途 | 获取（具体命令或URL） | 备注 |

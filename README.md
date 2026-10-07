@@ -38,6 +38,7 @@ scripts/refresh.sh                         # 和线上清单比对，只报告�
 - **不获取付费内容**：标为 Pro 的条目只记录名称，`fetch` 拒绝获取。
 - **不代替用户登录**：需要账号的条目只给出官方获取方式，由用户决定是否登录。
 - **不执行远程代码**：所有 adapter 只下载文本并解析。
+- **选型有依据**：`guides/` 下每类 UI 任务都有指南，推荐和慎用都基于实际读过的源码。
 - **遵守站点规则**：比如 inspora 的 robots.txt 禁止 `/api/`，这里就不调用该接口。
 - **内容归属**：组件、截图、视频、品牌和商标都归各自网站和作者所有，使用前请遵守原站的许可证和条款。本仓库的中文描述是对原站内容的概括，用于检索。
 
@@ -45,6 +46,8 @@ scripts/refresh.sh                         # 和线上清单比对，只报告�
 
 ```
 SKILL.md              agent 读的入口：原则、工作流、来源一览
+guides/_scenes.md     页面模式、效果预算、质量三级、动效规范（所有指南共用）
+guides/<task>.md      按 UI 任务分的选型指南：默认推荐、按场景换、慎用、接入要点
 scripts/ua.py         所有命令的实现（find / fetch / verify / refresh / stats / audit / searchtest）
 scripts/adapters/     需要专门处理的站点的取码脚本（只解析，不执行）
 scripts/aliases.json  中英文同义词组

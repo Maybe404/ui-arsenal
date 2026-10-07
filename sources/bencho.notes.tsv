@@ -1,13 +1,13 @@
 asset-swap	加密货币兑换 swap 卡片，点箭头翻转买卖方向，点币种弹出 coin picker 选择器，DeFi/钱包 UI	select,layout-card	specialized		press		
 heat-word	灰点阵 hover 热力图效果，光标附近的点膨胀融合，按下切换形状/文字，四套配色，Canvas 背景装饰	text-effect,background	specialized	canvas	hover,press,cursor		
-image-compare	前后对比图片滑块 before/after，拖动分割线透视两张图，甩动后惯性滑到边缘	toggle-slider,media	specialized		drag		
-like	点赞按钮动画，心形弹出并迸发粒子环，计数像里程表 odometer 滚动进位	text-effect,background	specialized		press,scroll		
+image-compare	前后对比图片滑块 before/after，拖动分割线透视两张图，甩动后惯性滑到边缘	media,micro-interaction	specialized		drag		
+like	点赞按钮动画，心形弹出并迸发粒子环，计数像里程表 odometer 滚动进位	micro-interaction,button	specialized		press,scroll		
 signature	手写签名板 signature pad，笔速越快墨迹越细，停顿提示 Signed，Clear 按笔画倒放清除	form-input,micro-interaction	specialized		drag		
 voice-note	按住录音的语音消息 voice note，实时波形，左滑丢弃，松手得到可拖动进度的播放条	loading,media	specialized		press,drag		
 eye-tracker	跟随光标转动的眼睛 eyes follow cursor，软立方体上两只眼睛带透视倾斜，趣味吉祥物/空状态	cursor-effect,empty-onboarding	specialized		hover,cursor		
 dynamic-island	iOS 灵动岛 Dynamic Island 胶囊，点击用同一弹簧展开为计时器/来电/音乐实时活动，再收回	micro-interaction	specialized		press		
-time-scrubber	时间选择刻度尺 time picker scrubber，拖动刻度数字滚动，甩动惯性滑行并吸附到步长	text-effect,date-time	specialized		drag,scroll		
-upload-dropzone	拖拽上传 drag and drop file upload，文件被吸入后显示进度条和勾，超大文件被拒绝并抖动	loading,upload	specialized		drag		
+time-scrubber	时间选择刻度尺 time picker scrubber，拖动刻度数字滚动，甩动惯性滑行并吸附到步长	date-time,toggle-slider	specialized		drag,scroll		
+upload-dropzone	拖拽上传动效演示：组件自带演示文件，不读取本地文件，进度用 Math.random() 模拟，只能参考交互，不能直接当上传组件	loading,upload	specialized		drag		
 particles	交互粒子 particles 形状，点阵被指针推散后弹回，按下产生冲击波并聚合成下一个形状，hero 装饰	background,marketing-section	specialized		hover,press		
 label-input	浮动标签输入框 floating label input，聚焦时 placeholder 上浮到描边缺口，字母小跳动画	form-input,motion-transition	specialized				
 one-time-code	OTP 验证码输入框，六格实为单一 input，支持粘贴/自动填充/退格，输错整行抖动	form-input	specialized				
@@ -18,9 +18,9 @@ image-accordion	图片手风琴画廊 image accordion，hover 的图展开，邻
 glass-bubble	液态玻璃折射效果 liquid glass refraction，拖动玻璃球扭曲下方图片，SVG/Canvas 透镜	media,micro-interaction	specialized	canvas,glass	drag	glass	
 action-node	自动化流程节点卡片 automation node card，类似 n8n/Zapier 工作流步骤，控件折叠在角落	layout-card,micro-interaction	specialized		hover		
 magnet-select	磁吸标签选择 magnetic chip select，按下的选项膨胀，其余选项被径向推开，标签/兴趣多选	select,micro-interaction	specialized		press		
-slide-confirm	滑动确认按钮 slide to confirm，手柄跟手推过轨道，越过阈值后自动完成，支付/危险操作确认	button,micro-interaction	specialized		drag,swipe		
+slide-confirm	滑动确认按钮 slide to confirm，手柄跟手推过轨道，越过阈值后自动完成，支付/危险操作确认（注意：手柄没有点击和键盘处理，也没有 onConfirm 回调，键盘用户无法确认）	button,micro-interaction	specialized		drag,swipe		
 picker	指派人选择器 assignee picker，下拉列表选人后头像在胶囊里堆叠 avatar stack	select,avatar-user	specialized				
-checklist	动画清单 animated checklist，勾选时方框填充、对勾描边、文字划线	text-effect,motion-transition	specialized		press		
+checklist	动画清单 animated checklist，勾选时方框填充、对勾描边、文字划线	toggle-slider,micro-interaction	specialized		press		
 carousel	3D 卡片轮播 card carousel，转盘式卡片静止漂移、指针下倾斜、可滑动旋转	media,layout-card	specialized	3d	swipe		
 palette	配色生成器 color palette generator，3-5 个协调色块，按钮生成新一组配色	button,micro-interaction	specialized		press		
 aspect	裁剪比例切换 aspect ratio crop selector，分段控件切换 4:3/1:1/3:4，保持面积不变	select	specialized				
@@ -36,13 +36,13 @@ liq-arrange	拖拽排序列表 drag to reorder，相邻行像液体 metaball 融
 toolbar	浮动画布工具栏 floating canvas toolbar，形状工具记住上次选择，类似 Figma/白板工具条	select,motion-transition	specialized	canvas			
 radial	径向菜单 radial menu，按中心按钮工具以半圆扇形展开	navigation,button	specialized		press		
 stepper	数字步进器 number stepper，点击加一，按住拖动快速扫值，兼顾精确和速度	micro-interaction	specialized		press,drag		
-confirm	行内删除确认 inline delete confirmation，删除按钮变成自身的确认按钮，之后提供撤销 undo	button,micro-interaction	specialized		press		
-toasts	通知我按钮 notify me，铃铛阻尼摆动，按钮保持按下态并替换文案，宽度平滑过渡	feedback,button	specialized		press		
+confirm	删除按钮动效：点击即删除，按钮原地展开为"已删除 + 撤销"；没有确认步骤、没有 ARIA，只能参考动效	button,micro-interaction	specialized		press		
+toasts	通知我按钮 notify me，铃铛阻尼摆动，按钮保持按下态并替换文案，宽度平滑过渡	button,micro-interaction	specialized		press		实际是"通知我"按钮的动效，不是 toast 通知组件
 icon-bar	动画标签栏 animated tab bar，选中胶囊前沿先行、拉伸跨越两格后尾部追上并回弹	navigation,select	specialized			bounce	
 dock	macOS 放大 Dock 栏 magnifying dock，图标按与光标距离衰减放大	cursor-effect,navigation	specialized		hover,cursor		
 progress	刻度滑块 tick slider，沿刻度刮擦设置值，拖动时显示数值和变化量	loading,toggle-slider	specialized		hover,drag		
 humidity	圆形刻度旋钮 circular dial slider，拖动环形刻度设值，点亮带波浪推进，湿度/温度控制	toggle-slider,micro-interaction	specialized		drag		
-command	命令栏 command bar，按钮与输入框液态融合展开，完成后滑回，cmd+k 搜索	search-command,form-input	specialized				
+command	输入栏与发送按钮的液态融合动效（AI 输入栏式）；没有 ⌘K 命令面板逻辑	ai-ux,form-input	specialized				
 roster	多选人员列表 multi-select list，选中行抬起，有选择后底部按钮从中间长出	select,button	specialized				
 sleep	圆形范围滑块 circular range slider，双手柄环形刻度设区间，睡眠时长/时间段	date-time,toggle-slider	specialized		drag		
 liq-toggle	液态开关 liquid toggle switch，滑动时水滴拉伸变形，gooey metaball 效果	toggle-slider,micro-interaction	specialized		press,swipe		
