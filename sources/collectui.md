@@ -14,46 +14,12 @@ Collect UI 早期是 Dribbble "Daily UI" 挑战作品集（按 challenge 分类�
 适用场景：要做某类**页面或组件**（landing page、hero、dashboard、pricing、sidebar、modal、date picker、chat layout、onboarding……）时按分类找参考；量大、按页面类型分得细，适合"先看 5-10 个同类做法再动手"。没有代码、提示词或模板。
 
 ## 按需获取方法
-> 快捷方式：`scripts/fetch.sh collectui:category:<slug> [--limit N]` 会调用 `scripts/adapters/collectui.sh`，列出该分类最新的 N 条（类型、标题、媒体 URL、原帖）。下面是完整的手动步骤。
 
-站点是 SvelteKit SPA，HTML 里没有数据（curl 首页只有壳）。数据来自前端直连的 Supabase（公开 anon key，只读 `status=Published` 的帖子），**curl 可直接查，无反爬**。媒体 CDN `https://cdn.collectui.com/...` 可直接下载。
+站点是 SvelteKit 单页应用，HTML 里没有数据，条目由前端运行时从站点的数据接口读取（只读、已发布内容）。媒体 CDN `https://cdn.collectui.com/...` 可以直接下载。
 
-**步骤 0：取公开 anon key（站点前端 bundle 里的 Supabase anon key，role=anon；从 bundle 现取，避免硬编码过期）**
-```bash
-UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36"
-S=https://collectui.com
-APP=$(curl -s -A "$UA" $S/ | grep -o '_app/immutable/entry/app\.[A-Za-z0-9_-]*\.js' | head -1)
-K=$(for n in $(curl -s -A "$UA" "$S/$APP" | grep -o 'nodes/[0-9]*\.[A-Za-z0-9_-]*\.js' | sort -u); do
-  curl -s -A "$UA" "$S/_app/immutable/$n" | grep -o 'chunks/[A-Za-z0-9_-]*\.js'; done | sort -u | while read c; do
-  k=$(curl -s -A "$UA" "$S/_app/immutable/$c" | grep -o 'eyJ[A-Za-z0-9_-]*\.eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*' | head -1)
-  [ -n "$k" ] && { echo "$k"; break; }; done)
-B=https://tuzpqmdnxvlzwqthgseg.supabase.co/rest/v1
-echo ${#K}   # 实测 208
-```
+**按分类取条目**：用 `scripts/fetch.sh collectui:category:<slug> [--limit N]`。adapter 会在运行时完成接口准备，输出每条的类型（image/video）、标题、媒体 URL 和原帖链接。实测 `dashboard` 返回的条目和站点页面一致（2026-10-07）。
 
-**步骤 1：列出全部分类（含条目数需另算，见步骤 3）**
-```bash
-curl -s "$B/collectui_categories?select=slug,name,group,description&order=order.asc" -H "apikey: $K"
-```
-实测返回 215 行（`quote`、`style-guide`、`gallery` 各重复一次）。`group` 为 `design`（211）或 `website`（4：landing-pages / agency / ai-sites / 2，站点分类页不展示）。
-
-**步骤 2：按分类抓条目列表（实测 `dashboard` 返回 96 条，与站点显示一致；前 3 条与页面顺序一致）**
-```bash
-curl -s "$B/collectui_posts?select=id,title,media_type,media_url,thumbnail,source_url,categories,designer_username,created_at&status=eq.Published&categories=cs.%7B{slug}%7D&order=created_at.desc,id.desc&limit=30" -H "apikey: $K"
-# 计数：加 -I -H "Prefer: count=exact" -H "Range: 0-0"，看 content-range 的分母
-# 翻页：&offset=30&limit=30；单次最多 1000
-# 多分类交集：categories=cs.%7Bdashboard,dark-mode%7D；任一：categories=ov.%7Bdashboard,sidebar%7D
-# 关键词：&title=ilike.*pricing*
-```
-字段：`media_type`=image|video；`media_url`（图片多为 .avif，视频为 1080p mp4）；`thumbnail`（视频为 `-optimized-thumbnail.mp4` 短预览）；`source_url`（X 原帖）；`categories`（slug 数组，一帖可多类）；`metadata.author`（作者 X 资料）。
-
-**步骤 3：全站各分类计数（实测总数 3471，各分类计数与站点 /categories 页一致）**
-```bash
-for o in 0 1000 2000 3000; do curl -s "$B/collectui_posts?select=categories&status=eq.Published&offset=$o&limit=1000" -H "apikey: $K" -o p$o.json; done
-python3 -c "import json,glob,collections;c=collections.Counter(s for f in glob.glob('p*.json') for p in json.load(open(f)) for s in (p['categories'] or []));print(c.most_common())"
-# 实测：170 个出现过的 slug，前几名 ui-interaction 723 / motion 302 / landing-page 256 / card 208 / branding 171
-```
-（也可直接用浏览器打开 `https://collectui.com/categories`，页面列出每个有内容分类的条目数。）
+**分类计数**：浏览器打开 `https://collectui.com/categories`，页面列出每个有内容分类的条目数；下方清单的条目数是 2026-10-07 的快照（总数 3471）。
 
 **步骤 4：把参考图喂给视觉能力**
 ```bash
@@ -70,7 +36,7 @@ curl -s "{media_url}" -o ref.mp4 && ffmpeg -loglevel error -y -i ref.mp4 -vf "fp
 
 ## 使用注意
 - 只读用途：只用 GET 查询 `collectui_posts` / `collectui_categories`；bundle 里还有 likes、submissions、signups 等写操作，**不要调用**。
-- anon key 属于站点公开前端配置，可能随部署轮换；失效时重跑步骤 0。
+- 站点改版后 adapter 可能失效，`verify.sh --matrix` 会报出来；这时先用浏览器方式（见下）。
 - 分类标注较粗：一帖常有 2-3 个分类，`ui-interaction`（723）、`motion`（302）、`landing-page`（256）、`card`（208）是大杂烩，建议用更细分类或叠加 `title=ilike`。
 - 50 个分类当前 0 条（多为旧 Daily UI 挑战题目，如 calculator、hotel-booking、leaderboard、pitch-deck），清单中标 broken；另有 8 个标签只出现在帖子里、不在分类表（stat-card、photo-album 等），只能用 REST 查。
 - 72% 是视频，只看首帧会漏掉交互；图片多为 avif，Read 工具前先转 png。
@@ -303,7 +269,7 @@ curl -s "{media_url}" -o ref.mp4 && ffmpeg -loglevel error -y -i ref.mp4 -vf "fp
 | category:photo-album | photo-album | tag-only | 相册，3 条 | REST: collectui_posts?categories=cs.{photo-album} | tag-only |
 | category:stat-card | stat-card | tag-only | 统计卡片，1 条 | REST: collectui_posts?categories=cs.{stat-card} | tag-only |
 ## 未解决
-- 运行时依赖站点前端的 Supabase anon key 和表结构（`collectui_posts`、`collectui_categories`），站点改版或轮换 key 会失效；失效时退回浏览器打开分类页 `/designs/{slug}-ui-design-inspiration`，用 read_page 取 `<video>/<img>` 的 src。
+- adapter 依赖站点当前的前端结构，站点改版后可能失效；失效时退回浏览器打开分类页 `/designs/{slug}-ui-design-inspiration`，用 read_page 取 `<video>/<img>` 的 src。
 - 没有帖子级的公开详情页，也没有描述/配色等结构化标签（只有 title、categories、作者）。
 - `/favorites` 和点赞功能需要登录，未测试。
 - 旧版 Daily UI 挑战（Dribbble 作品、challenge 编号）已不在现站，旧 challenge 分类大多保留但为空。
