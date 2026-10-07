@@ -8,6 +8,13 @@ license: MIT（npm 包与 GitHub 仓库）；Studio 导出、Pro 预设/配方�
 pro: partial（7 个库本身全部免费；Studio、Pro 预设/配色/额外形状与状态、Pro skill 付费：Pro 月付 / Lifetime $149 / Business $59/mo）
 fetch: npm
 verified: 2026-10-07
+source_status: active
+visual_style: ai-state glow and canvas/webgl effects
+foundation: none
+styling: inline
+motion_lib: mixed(none,three)
+dark_mode: prop
+mixing_notes: 颜色和明暗走 props 不读主底座 token；border-beam 默认 theme="dark" 且 auto 只看 prefers-color-scheme，站内手动切暗色时要显式传 theme；同一元素或相邻元素不要叠两个特效
 ---
 ## 是什么 / 什么时候用
 Jakub Antalik 做的 7 个"AI 时代"React 动效库，每个库都是独立 npm 包和一个组件，包住你已有的元素即可：Border beam（边框光束）、Thinking orbs（AI 思考点阵球）、Gooey（液态融合）、Voice（语音光晕）、Bot avatars（agent 动画头像）、Liquid metal（液态金属按钮/徽章/文字）、Image（图片生成占位 loader）。
@@ -108,3 +115,7 @@ Jakub Antalik 做的 7 个"AI 时代"React 动效库，每个库都是独立 npm
 - Pro 内容（Studio、Pro 预设和配色、bot 的另外 10 种形状和 sleeping 状态、Pro skill）需要登录并付费，没有抓取，只按官方 skill 的 "Go further (Pro)" 段落列出。
 - Pro 月付的具体价格在静态 HTML 里显示为空的 "$"（应该是客户端渲染的），能确认的只有 Lifetime $149、Business $59/月（或 $590/年）。
 - RN/SwiftUI 端口没上 npm，没有实测构建。
+
+## 风格字段说明（2026-10-07）
+- `dark_mode: prop`：明暗都由 `theme` prop 决定。`auto` 的解析在各包不一致：thinking-orbs 先看祖先的 `data-theme` / `.dark` / `.light`，再看 `prefers-color-scheme`；border-beam（`src/BorderBeam.tsx`）的 `auto` 只看 `prefers-color-scheme`，且默认值是 `theme="dark"`。站点自己切换明暗时，显式传 `theme`。
+- `motion_lib: mixed(none,three)`：多数包是自写 canvas / WebGL 循环，不依赖动效库；img-fx 需要 peer 依赖 `three`。

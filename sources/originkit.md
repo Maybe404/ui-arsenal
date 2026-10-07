@@ -8,6 +8,13 @@ license: 自定义（Originkit Licensing & Usage：可用于自有/客户项目�
 pro: partial（236/593 个 component、39/58 个 section、16/23 个 template 需 Pro/Ultimate 订阅；免费账号每天 10 个 component / 10 个 section / 1 个 template）
 fetch: npm
 verified: 2026-10-07
+source_status: active
+visual_style: flashy webgl/3d showcase effects
+foundation: none
+styling: unknown
+motion_lib: mixed(framer-motion,three,motion,gsap,ogl)
+dark_mode: unknown
+mixing_notes: 取码要用户登录；同一项目里 framer-motion 和 motion 只留一种写法，颜色按主底座传参，一页最多一个重 WebGL 背景
 ---
 ## 是什么 / 什么时候用
 Originkit 自称最大的免费动效组件库：593 个 component（其中约 200 个是 WebGL/shader/Canvas 背景动画）、58 个页面区块 section（hero 47、features 4、pricing 3、cta 2、footer 2）和 23 套整站模板。风格偏"炫"：3D、粒子、液态、光带、动态文字、画廊、preloader、自定义光标、网页小游戏。
@@ -22,7 +29,7 @@ npx -y originkit list --json                          # 同上，CLI 封装
 npx -y originkit list --category loader               # 按分类；--kind component|section
 npx -y originkit search "text reveal"                 # 关键词搜索
 ```
-registry 不返回 Pro 标记。要判断 Pro，看本目录的 originkit.tsv 第 7 列；或在任意组件页 HTML 的 RSC payload 里找 `{"name":"<name>",...,"paid":true}`（整份目录都内嵌在每个组件页里）。
+registry 不返回 Pro 标记。要判断 Pro，看本目录 originkit.tsv 的 access 列（`pro` 或 `login`）；不确定时请用户在浏览器里打开组件页确认，不从页面数据里抓取。
 
 **2. 官方取码：CLI（类似 shadcn，需要登录）**
 ```sh
@@ -79,7 +86,7 @@ npx originkit whoami                  # 查看当前凭据，不耗额度
 | category:cta | cta | section | 页面区块 section：cta；共 2（免费 0 / Pro 2），例：cta-02, cta-01 | https://www.originkit.dev/sections/category/cta；`npx originkit add <name>` | pro 占多数 |
 
 ## 未解决
-- 所有正式取码途径（CLI add、MCP、网页 Copy code）都需要登录，按规范没有登录，所以 `add` 的成功路径没有实测，只验证了未登录时的报错。免费组件可以用第 4 种方法读源码，已实测。
+- 所有正式取码途径（CLI add、MCP、网页 Copy code）都需要登录，按规范没有登录，所以 `add` 的成功路径没有实测，只验证了未登录时的报错。不从页面提取源码（见第 4 节）。
 - Pro 条目（component 236、section 39、template 16）需要付费订阅，没有测试，也不提供绕过方法。
 - MCP 的确切 URL 路径（是否带 `/mcp` 等后缀）和完整工具清单需要登录后在 Settings 里查看，文档里只能确认主机 `mcp.originkit.dev` 以及 `get_component`、`fetch` 两个工具名。
 - 模板不在 registry 里，也不在 sitemap 里（`/templates/{slug}` 页面可以打开）；模板价格字段是 null，Pro 标记来自页面数据里的 `paid`。

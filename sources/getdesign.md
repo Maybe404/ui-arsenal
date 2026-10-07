@@ -8,6 +8,13 @@ license: 76 个免费 DESIGN.md 来自 GitHub VoltAgent/awesome-design-md（MIT�
 pro: partial（76 个品牌 DESIGN.md 免费；566 条网站目录的截图、标签、简介免费可看，但对应的 DESIGN.md 原文要付费；Animated Backgrounds 36 个效果、Catalog Pass、Private DESIGN.md、Starter Kit、落地页模板、视频模板都要付费）
 fetch: github-raw
 verified: 2026-10-07
+source_status: active
+visual_style: brand-replica design specs, varies per brand
+foundation: n/a
+styling: n/a
+motion_lib: none
+dark_mode: n/a
+mixing_notes: DESIGN.md 是给主底座填 token 值用的规范，一个项目只用一份，不要同时套两个品牌，也不要再叠 uiarc/beautifului 自带的 token
 ---
 ## 是什么 / 什么时候用
 VoltAgent 团队维护的 DESIGN.md 合集。DESIGN.md 是一份 Markdown 设计规范，写的是某个知名品牌的视觉语言：YAML front-matter 里放颜色 token 和字号阶梯，正文写间距、组件和动效。把它放在项目根目录，让 agent 先读再写 UI，产出就不会千篇一律。

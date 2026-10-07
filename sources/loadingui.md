@@ -8,6 +8,13 @@ license: MIT（GitHub turbostarter/loading-ui）
 pro: none
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: minimal currentColor spinners and shimmers
+foundation: none
+styling: tailwind-v4
+motion_lib: mixed(css,motion)
+dark_mode: none
+mixing_notes: 颜色走 currentColor，放进任何底座都继承文字色，只有 skeleton 用了 shadcn 的 bg-muted；7 个组件用 motion（不是 framer-motion），非 Tailwind 项目要改写 className
 ---
 ## 是什么 / 什么时候用
 loading-ui 是专做"加载态"的 shadcn 自定义 registry，47 个组件：环形 spinner、点状/typing 指示、文字扫光（text shimmer）、Unicode 字符动画（终端风）、骨架屏、图片分析扫描占位等。全部免费、MIT。

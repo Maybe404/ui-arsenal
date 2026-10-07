@@ -8,6 +8,13 @@ license: 未声明（视频为各产品界面录屏，版权归原产品；仅�
 pro: none
 fetch: browse-only
 verified: 2026-10-07
+source_status: active
+visual_style: playful delight micro-details from real products
+foundation: n/a
+styling: n/a
+motion_lib: none
+dark_mode: n/a
+mixing_notes: 复刻时用主底座 token 和项目已有的动效库实现，彩蛋式动效一页最多一两处
 ---
 ## 是什么 / 什么时候用
 Design Spells 收集真实产品里"有魔法感"的设计细节：微交互、彩蛋、拟物、节日限定动画、404 小游戏等。每条（spell）= 一段 5~20 秒的 mp4 录屏 + 一句英文标题（标题本身就是交互描述）+ 来源产品 + 标签，没有代码、没有长文说明。

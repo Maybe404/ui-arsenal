@@ -8,6 +8,13 @@ license: MIT（blocks 代码；站点内图片、Bencho 商标不在授权内）
 pro: none
 fetch: page-copy
 verified: 2026-10-07
+source_status: active
+visual_style: tactile spring-physics micro-interactions
+foundation: host-tokens
+styling: global-css
+motion_lib: mixed(framer-motion,liquid-gooey)
+dark_mode: data-theme
+mixing_notes: block 只引用不附带 token（--ink、--ink-rgb、--card、--fill-on、--fill-slab、--pane-edge、--font-ui、--signal 等），必须映射到主底座，其中 --ink-rgb 要逗号分隔的 RGB 三元组，oklch 变量不能直接套
 ---
 ## 是什么 / 什么时候用
 Bencho 是 Lorenzo Cabra 做的 React 微交互 blocks 库：48 个公开 block（另有 15 个未上架的 parked block 源码也在 bundle 里），每个都是可调参数的真组件，偏"手感"——弹簧、磁吸、液态 metaball、物理、刻度旋钮、拖拽手势。

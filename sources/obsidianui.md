@@ -8,6 +8,13 @@ license: MIT（GitHub Atharvsinh-codez/ObsidianUI；模板 Project-1 也是 MIT�
 pro: none
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: showcase motion blocks over shadcn-style primitives
+foundation: shadcn-compatible
+styling: mixed
+motion_lib: mixed(motion,gsap,three)
+dark_mode: class
+mixing_notes: 基础 primitive 是 Radix 版 shadcn 同构件，已有 shadcn（尤其 Base UI）时跳过不装；dashboard-shell 等 block 自带 --obsidian-* 硬编码色板，同页要改成引用 shadcn 变量
 ---
 ## 是什么 / 什么时候用
 开源 React 动效/交互组件库，shadcn registry 形式分发，源码完全归你。强项是"有记忆点"的展示型组件：拖拽画廊、跑马灯、hover 跟随图、滚动文字流、WebGL 棱镜、状态页条带、登录设备列表、Dashboard 外壳。
@@ -132,3 +139,6 @@ npx shadcn@latest view "https://www.obsidianui.dev/r/{name}.json"
 ## 未解决
 - 13 个无文档条目（click-spark、file-input、footer、interactive-hover-button、liquid-metal、playground-*、sidebar-stackbits、skeumorphic-music-card、smooth-scroll、visitor-count、loaders-gooey-blobs、raised-button）没有 Markdown 文档和用法示例，描述是从源码开头推断的；使用时需读源码确认 props。
 - 未在真实项目里跑 `shadcn add` 后的构建/渲染，只验证到 registry JSON 与 `shadcn view` 层面。
+
+## 风格字段说明（2026-10-07）
+- `styling: mixed`：主体是 Tailwind v4 类，但部分 block 另带全局 CSS 文件（如 `dashboard-shell.css`、`active-sessions.css`、`hover-img.css`），文件里用 `.obsidian-*` 作用域和 `--obsidian-*` 硬编码色板，暗色写成 `.dark .obsidian-…`。基础 primitive（button 等）是 Radix + `@/lib/utils` 的 shadcn new-york 写法，用 shadcn 的 CSS 变量。

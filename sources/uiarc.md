@@ -8,6 +8,13 @@ license: 自定义（免费项标注 "Free, open source"，可用于商业/客�
 pro: partial（238 项中 129 项免费：107 个组件 + 22 个 block 免费；43 个 Pro 组件、66 个 Pro block、3 个模板 Arc SaaS/AI/Startup 付费，Pro $129/年）
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: restrained neutral with spring motion
+foundation: own-tokens
+styling: css-modules
+motion_lib: motion
+dark_mode: data-theme
+mixing_notes: arc-foundation.css 在 :root 定义 --background/--foreground/--border/--accent/--surface（与 shadcn 同名不同义）并全局 outline: none !important，和 shadcn 同页会互相覆盖；暗色靠 data-theme 而不是 .dark
 ---
 ## 是什么 / 什么时候用
 Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克制、动效讲究（spring、morph、共享高亮），每个条目都附带机器可读的 when to use / when not / a11y / motion / responsive 说明。适合：需要质感好的基础控件（按钮、输入、菜单、toast、tabs 等）、数据可视化（折线、treemap、heatmap 等）、以及完整页面区块（登录、command palette、hero、FAQ、定价）的 React 项目。因为是 CSS Modules + 自带 token，和 Tailwind 项目并存不冲突，但风格自成体系，混用 shadcn/ui 时注意视觉一致性。Pro 项（大量炫技交互和 SaaS 页面区块）不能获取源码。
@@ -39,6 +46,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 依赖：`motion`（125 项）、`lucide-react`（81 项）、少量 `@radix-ui/react-*`（dropdown-menu、dialog、popover、tooltip、tabs、select、checkbox、switch、accordion），shadcn CLI 会自动装。
 
 ## 使用注意
+- **可访问性硬伤（必须处理）**：`arc-foundation.css` 第 179 行对全站写了 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`（注释写着"产品决策"），会让键盘用户看不到焦点。用 uiarc 时要删掉这条，或在项目样式里用更高优先级补回 `:focus-visible` 样式。2026-10-07 核实。
 - 用 CSS Modules + CSS 变量，不是 Tailwind 类；Tailwind v3/v4 都不冲突。语义 token：`--background --surface --foreground --text-secondary --border --accent --success --warning --danger`。
 - 暗色：`<html data-theme="dark">`；强调色：`data-accent` = neutral/violet/blue/green/amber/orange/coral/rose。不是 `class="dark"`，与 shadcn/next-themes 默认的 class 策略不同，需要同步设置。
 - 动效库是 `motion`（import from `motion/react`），不是 `framer-motion`；项目里已有 framer-motion 也能共存，但别重复装两份。

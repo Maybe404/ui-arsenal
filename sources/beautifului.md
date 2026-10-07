@@ -8,6 +8,13 @@ license: MIT（站点 /license，Copyright 2026 Shane Levine）
 pro: none
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: ai-native soft neutral, hairline borders, dense 13-14px type
+foundation: own-tokens
+styling: tailwind-v4
+motion_lib: css
+dark_mode: class
+mixing_notes: foundation.css 会再次 @import "tailwindcss"、给 body 加斜纹背景和 14px 字号、并定义 --accent/--color-accent/--font-sans，非主底座时不要整份导入，只把 --ink/--canvas/--surface/--line/--accent 映射到主底座变量
 ---
 ## 是什么 / 什么时候用
 专做"AI-native 界面"的小而精组件库：agent 思考轨迹、加载态、流式回答带引用、工具调用 chip、任务状态行、人机协同审批卡、推荐卡、RAG 上下文卡、AI 改表 diff、选中文本改写、Prompt 输入框、聊天面板等，共 21 个展示组件。

@@ -8,6 +8,13 @@ license: 个人站源码未声明；Transitions.dev 过渡与 skill 为自定义
 pro: partial（Transitions.dev 43 个过渡中 11 个 Pro，$9/月起；Libraries.dev 的 Studio、Pro 预设和 Pro skill 付费，$9/月起，七个库本身免费）
 fetch: github-raw
 verified: 2026-10-07
+source_status: active
+visual_style: refined product-design micro-transitions
+foundation: none
+styling: css-only
+motion_lib: css
+dark_mode: none
+mixing_notes: Transitions.dev 的 :root 动效变量（--duration-fast 250ms、--ease-in-out）与 uiarc foundation 同名不同值，同页时只用组件级变量（如 --resize-dur）或改前缀
 ---
 ## 是什么 / 什么时候用
 Jakub Antalik 是产品设计师兼工程师（曾任 0x.org 设计负责人，先后在 Frame.io、Intercom 工作），个人站本身只有简介、两个项目卡和一组 "Selected work" 动效视频，没有 sitemap、llms.txt 和文章。真正能复用的是他的两个开源项目：**Transitions.dev**（43 个精调 CSS 过渡、一个 agent skill 和动效 token，适合给下拉、模态、toast、tabs、开关、AI 思考态等加"成熟"的过渡）和 **Libraries.dev**（7 个 React 特效包：光束边框、思考光球、机器人头像、液态 gooey、语音辉光、液态金属、AI 生图加载）。做 AI 产品界面（思考/流式/生图）或想把动效时长和缓动统一成 token 时优先看这里。Selected work 里的 Web3 钱包、交易状态和 toast 交互没有源码，只能看视频复刻。
@@ -48,7 +55,7 @@ Jakub Antalik 是产品设计师兼工程师（曾任 0x.org 设计负责人，�
 - Transitions.dev 是纯 CSS，类名带 `t-*` 前缀，变量是语义化 token。多个过渡共用一个 `:root` 块，粘贴前先查重名变量。React 版会在首次 import 时往 document 注入 `<style>`（SSR 安全）。
 - 许可方面：过渡和 skill 可以商用、可以修改，但不得重新打包成竞品过渡库；Pro 过渡要登录才能拿源码，不要仿写。
 - Libraries.dev 要求 React 18+，多数包只依赖 react/react-dom；img-fx 依赖 three（WebGL），metal-fx 也用 WebGL 着色器，注意移动端性能和 SSR（README 里有 SSR 和性能章节）。
-- 主题：Libraries.dev 默认 `theme="auto"`，会读祖先元素的 `data-theme` 或 `.dark` 类，再回退到 `prefers-color-scheme`；border-beam 默认 `theme="dark"`，浅色背景要显式传 `light` 或 `auto`。
+- 主题：Libraries.dev 各包的明暗都由 `theme` 参数决定，`auto` 的解析不一致：thinking-orbs 先看祖先元素的 `data-theme` 或 `.dark`，再看 `prefers-color-scheme`；border-beam 默认 `theme="dark"`，`auto` 只看系统设置。站点自己切换明暗时，显式传 `theme`。详见 librariesdev.md。
 - `npx transitions-refine live` 会往运行中的应用注入 script 并启动本地 relay，`npx transitions-agent fix` 需要注册账号。两者都会改项目，用之前先征得用户同意。
 - 个人站的 Selected work 只是展示，与 0x、Frame.io 等公司产品相关的设计稿不能当作素材直接使用，只借鉴交互思路。
 

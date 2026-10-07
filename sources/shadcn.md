@@ -8,6 +8,13 @@ license: MIT
 pro: none
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: restrained neutral, style presets vary
+foundation: own-tokens
+styling: tailwind-v4
+motion_lib: css
+dark_mode: class
+mixing_notes: 通常就是主底座，其他来源向它映射；它的 --accent 是浅色 hover 底而不是品牌色，别家的 --accent 应映射到 --primary
 ---
 ## 是什么 / 什么时候用
 shadcn/ui 是"把源码复制进项目"的 React 组件集合和代码分发平台：CLI 把组件源码写进 `components/ui/`，代码归你所有、可随意改。覆盖表单、浮层、导航、反馈、数据展示、聊天界面（MessageScroller/Message/Bubble/Attachment/Marker/Questionnaire）等 63 个基础组件，另有登录/注册/侧边栏/仪表盘 block、70 个 Recharts 图表、主题与字体。做任何 React + Tailwind 的后台、SaaS、表单、AI 聊天界面时，都应先用它做基础层，再叠加其他走 shadcn registry 的第三方库（magicui、aceternity、react-bits 等）。不适合：非 React 项目（Vue/Svelte 需用社区移植版 shadcn-vue / shadcn-svelte，不在本索引内）。

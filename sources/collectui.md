@@ -8,6 +8,13 @@ license: 未声明（作品版权归原作者，内容转自 X/Twitter）
 pro: none
 fetch: browse-only
 verified: 2026-10-07
+source_status: active
+visual_style: curated x/twitter ui references, mixed styles
+foundation: n/a
+styling: n/a
+motion_lib: none
+dark_mode: n/a
+mixing_notes: 只借鉴布局、层级和动效节奏，配色、字体、圆角一律按主底座实现，不要把参考图的风格当成第二套设计系统
 ---
 ## 是什么 / 什么时候用
 Collect UI 早期是 Dribbble "Daily UI" 挑战作品集（按 challenge 分类，如 Sign Up、Checkout、404 Page）；2026 年的现版本改成了 SvelteKit + Supabase，内容换成从 X/Twitter 策展的设计帖（视频 2486 条、图片 985 条，**共 3471 条已发布**），沿用了 challenge 风格的分类体系（分类表 215 行 / 212 个唯一 slug，其中 162 个有内容）。旧的 `/challenges/{slug}` 会 308 跳转到 `/designs/{slug}-ui-design-inspiration`。

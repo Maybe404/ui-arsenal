@@ -8,6 +8,13 @@ license: 未声明（作品版权归原作者，多数转自 X/Twitter）
 pro: none
 fetch: browse-only
 verified: 2026-10-07
+source_status: active
+visual_style: trend-driven motion and product ui references
+foundation: n/a
+styling: n/a
+motion_lib: none
+dark_mode: n/a
+mixing_notes: 只借鉴布局和动效节奏，液态玻璃、shader 卡片这类强风格只在主底座能表达时才用，颜色字体按主底座实现
 ---
 ## 是什么 / 什么时候用
 Inspora 是一个"每小时更新"的视觉设计灵感策展站，收录近期 X/Twitter 上的 UI、动效、品牌、插画作品，绝大多数是短视频（258/287 条为 mp4，29 条为静态图）。强项是**微交互与动效**（Motion 129 条）、**产品界面卡片/组件**（Product 65 条）、**网页区块**（Web 42 条：footer、hero、portfolio、bento、FAQ）。没有代码、没有提示词、没有模板下载，只能当视觉参考。

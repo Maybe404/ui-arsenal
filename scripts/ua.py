@@ -41,6 +41,9 @@ COLS = ('source', 'id', 'name', 'category', 'url', 'fetch', 'spec', 'access', 'u
         'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint')
 NOTE_COLS = ('id', 'desc', 'task', 'layer', 'vtags', 'itags', 'risk', 'notes')
 STATUS = ('active', 'needs-review', 'removed')
+SOURCE_STATUS = ('active', 'degraded', 'parser-broken', 'offline', 'closed')
+FOUNDATIONS = ('own-tokens', 'host-tokens', 'shadcn-compatible', 'none', 'n/a')
+DARK_MODES = ('class', 'data-theme', 'media', 'prop', 'none', 'n/a', 'unknown')
 LAYERS = ('foundation', 'specialized', 'reference', 'icons', 'design-spec')
 TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table', 'ai-ux', 'loading', 'text-effect',
          'background', 'cursor-effect', 'overlay', 'navigation', 'feedback', 'search-command', 'date-time', 'upload',
@@ -1028,9 +1031,13 @@ def cmd_audit(args):
     errs = []
     for s in sources():
         fm = frontmatter(s)
-        for k in ('id', 'name', 'url', 'kind', 'pro', 'fetch', 'verified'):
+        for k in ('id', 'name', 'url', 'kind', 'pro', 'fetch', 'verified', 'source_status', 'visual_style',
+                  'foundation', 'styling', 'motion_lib', 'dark_mode', 'mixing_notes'):
             if k not in fm:
                 errs.append('%s.md: missing frontmatter %s' % (s, k))
+        for k, allowed in (('source_status', SOURCE_STATUS), ('foundation', FOUNDATIONS), ('dark_mode', DARK_MODES)):
+            if k in fm and fm[k] not in allowed:
+                errs.append('%s.md: %s %r (allowed: %s)' % (s, k, fm[k], ' '.join(allowed)))
         for ext in ('.tsv', '.notes.tsv'):
             if not os.path.exists(os.path.join(SRC, s + ext)):
                 errs.append('%s: missing %s' % (s, ext))

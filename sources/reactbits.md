@@ -8,6 +8,13 @@ license: MIT + Commons Clause（可商用于自己的应用/网站；禁止转�
 pro: partial（免费站 213 个组件全部开源；另有付费 React Bits Pro：150 组件 + 280 页面区块 + 300 应用 UI + 15 模板 + 20 Agent Kit，Starter $129 / Pro $249 / Ultimate $349 一次性，或年付）
 fetch: shadcn-registry
 verified: 2026-10-07
+source_status: active
+visual_style: expressive webgl and text effects
+foundation: none
+styling: mixed
+motion_lib: mixed(motion,gsap,ogl,three)
+dark_mode: none
+mixing_notes: 颜色全靠 props 和组件内变量，要手动传入主底座的颜色；TW 变体需 Tailwind v4，CSS 变体是全局类名；只用于 hero、背景、标题等点缀，不要拿来替代基础控件
 ---
 ## 是什么 / 什么时候用
 React Bits 是 David Haz 维护的开源动效组件库（GitHub DavidHDev/react-bits），共 213 个组件，分 5 类：Text Animations（文字动效 33）、Animations（光标/悬停/入场等交互动效 40）、Components（卡片/画廊/导航/轮播等带动效的 UI 47）、Micro（开关/按钮/输入/AI 状态等微交互 34）、Backgrounds（WebGL/着色器背景 59）。每个组件有 4 个变体：JS+CSS、JS+Tailwind、TS+CSS、TS+Tailwind。
@@ -529,3 +536,6 @@ React Bits 是 David Haz 维护的开源动效组件库（GitHub DavidHDev/react
 - 免费 Portfolio 模板和 Terminal Dark skill 标了"无需购买"，但这次没有确认具体下载/安装入口（文档页是 https://pro.reactbits.dev/docs/templates/portfolio-template 和 /docs/agent-kit/skills/terminal-dark）。
 - jsrepo 在本机第一次运行报 fetch failed：Node 原生 fetch 默认不走 HTTPS_PROXY，加上 `NODE_USE_ENV_PROXY=1` 后正常。这是本机网络环境的问题，不是站点的问题；shadcn CLI 不受影响。
 - Tailwind 变体在 Tailwind v3 项目里的兼容性没有逐个验证。
+
+## 风格字段说明（2026-10-07）
+- `styling: mixed`：每个组件有 Tailwind 变体（`-TW`，按 Tailwind v4 写）和 CSS 变体（`-CSS`，`import './{Name}.css'` 的全局类名）两种，按项目栈选一种。实测 SplitText-TS-TW（gsap + @gsap/react）、Aurora-TS-TW（ogl，颜色走 `colorStops` prop，明暗走 `lightMode` prop）、StatusMark-TS-TW（motion，组件内 `--sm-*` 变量）。

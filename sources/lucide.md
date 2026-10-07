@@ -8,6 +8,13 @@ license: ISC（图标与各包；部分源自 Feather 的图标为 MIT）
 pro: none
 fetch: npm
 verified: 2026-10-07
+source_status: active
+visual_style: uniform 2px outline icons
+foundation: n/a
+styling: n/a
+motion_lib: none
+dark_mode: n/a
+mixing_notes: 一页只用一套图标：shadcn、uiarc、obsidianui 默认都是 lucide，引入 beautifului（Central Icons、iconoir）或 reactbits Micro（hugeicons）的组件时把图标换成 lucide
 ---
 ## 是什么 / 什么时候用
 Lucide 是社区维护的开源线性图标库（Feather 的继承者），当前 1866 个图标（lucide-static 1.52.0），24×24 网格、2px 描边、`currentColor`，风格统一。shadcn/ui 默认图标库就是它，做任何 UI 需要通用图标时首选；需要填充风格、品牌 logo（Lucide 已不再收录品牌图标）或插画式图标时换别的库（品牌用 simple-icons）。
