@@ -1,11 +1,11 @@
 ---
 name: ui-arsenal
-description: 用户收藏的 UI 组件库、动效库、灵感库和图标库的索引与选型协议（shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide、getdesign.md、designspells、inspora、collectui、Jakub Antalik）。做页面、调整页面 UI、加组件、交互、动效、背景、加载态、图标、落地页或 dashboard 时使用：先评估收藏库里的成熟组件，按设计基线和页面模式选型并说明理由，避免东拼西凑和 AI 味。用户点名某个库或组件、或给出这些站点的链接时，也用这个 skill。
+description: 在前端 UI 任务里选择和获取成熟组件时使用：新增或替换组件、调整页面视觉、加交互或动效、背景、加载态、图标、AI 界面、落地页或后台页面。提供用户收藏的组件库、动效库、灵感库和图标库的本地索引，按 UI 任务分类的选型指南，以及只读的取码工具；先评估成熟组件再决定是否自己写，保证整页风格统一并给出选型理由。用户点名某个组件库、组件，或给出组件网站链接时也使用。纯后端、非 UI 的任务，以及只改一个间距、颜色等数值的微调不需要。
 ---
 
 # UI Arsenal：先评估成熟组件，合理选用
 
-本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
+本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。收录的来源：shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik（详见文末「来源一览」）。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
 
 下文 `$S` 指本 skill 的 `scripts/` 目录，比如 `~/.claude/skills/ui-arsenal/scripts`；`guides/`、`sources/` 都在本 skill 目录下。
 
@@ -23,6 +23,7 @@ description: 用户收藏的 UI 组件库、动效库、灵感库和图标库的
 - 项目已有组件和收藏库组件冲突时，**项目已有的优先**，除非已有组件有缺陷或用户要求替换。
 - impeccable 里"不要用现成组件"的规则只适用于新建或重做视觉风格；局部调整时，复用成熟组件的交互逻辑，再调整外观。
 - **和 impeccable 的配合**：整页重做、新建页面，或者用户明确调用 impeccable 时，用它的页面模式、DESIGN.md 和收尾检测。微调、bug 修复、局部和区域新增，直接用 `guides/_scenes.md`，不必跑 impeccable 的完整上下文流程。如果 impeccable 输出要求先问一轮问题或先初始化，以用户本次请求的规模为准：局部任务不被它阻塞，最多在汇报里提一句"可以运行 impeccable init"。
+- **impeccable 只用调整和评估类命令**（polish、layout、typeset、quieter、animate、critique、audit 等）。它的新建视觉风格流程（concept-seed 掷骰子、出效果图）只在用户明确要求"重新设计视觉风格"时才走。
 
 ## 二、先判断任务规模
 
