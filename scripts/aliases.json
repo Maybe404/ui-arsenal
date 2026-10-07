@@ -521,6 +521,31 @@
    "one-time",
    "verification code",
    "一次性密码"
+  ],
+  [
+   "筛选",
+   "过滤",
+   "筛选器",
+   "多选筛选",
+   "filter",
+   "filters",
+   "faceted",
+   "facet"
+  ],
+  [
+   "面板",
+   "侧边面板",
+   "panel",
+   "side panel",
+   "inspector"
+  ],
+  [
+   "工具调用",
+   "工具状态",
+   "tool call",
+   "function call",
+   "tool use",
+   "tool status"
   ]
  ]
 }

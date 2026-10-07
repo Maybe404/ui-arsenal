@@ -19,6 +19,7 @@
 |---|---|---|
 | shadcn | `shadcn:message-scroller` + `shadcn:message` + `shadcn:bubble` | 官方聊天件，2026 新增。message-scroller 基于 `@shadcn/react` 的 headless 实现：只在读者停在底部时跟随新内容，滚轮、触摸、键盘一动就释放；列表默认 `role="log"`、`aria-relevant="additions"`，流式时可设 `aria-busy`；用 `content-visibility:auto` 处理长对话。message / bubble 只是带 `data-slot` 的布局件，颜色全走 `--primary`、`--muted`、`--secondary`，零映射成本（源码已看） |
 | shadcn | `shadcn:shimmer`（工具类） | 思考中文字。`init` 后自带，基于 currentColor，官方文档写明减弱动效时自动停；只要在"等待首个 token"期间加上 `shimmer` 类，收到内容就移除 |
+| shadcn | 工具调用状态图标：`reactbits:status-mark`（受控 `status` / `progress`，只依赖 motion） | shadcn 没有现成的工具状态图标件；status-mark 不带底座、颜色走参数，容易映射到 shadcn token |
 | shadcn | `shadcn:questionnaire` | 审批、追问、多选确认。底层是真实 `<input type=radio/checkbox>`，焦点环、`min-h-11` 触控目标都在；比 beautifului 的审批卡更好接真实状态（源码已看） |
 | uiarc | `uiarc:chat-thread` + `uiarc:text-shimmer` | chat-thread 免费，列表 `role="log" aria-live="polite"`，消息有 `sending / sent / delivered / read / failed` 状态和重试，自带输入框（Enter 发送、粘贴附件）。text-shimmer 是看过的流光里实现最好的：`active` 受控，结束时光带滑出、文字变实，减弱动效、离屏、标签页隐藏都会停，设 `aria-busy`。AI 专用的 `ai-chat`、`agent-run`、`ai-composer` 都是 Pro，不推荐 |
 | 没有底座或其他 | `reactbits:thought-line` + `reactbits:status-mark` | 思考过程标题行和工具调用状态图标，都是受控 props（`working`、`elapsed`、`status`、`progress`），有 `useReducedMotion`、`sr-only role="status"`。依赖 motion 和 hugeicons，接入时把图标换成 lucide |
@@ -75,7 +76,7 @@
 - `shadcn:marker` — 对话中的系统提示、分隔行
 - `uiarc:chat-thread` — uiarc 底座的聊天线程（IM 取向）
 - `uiarc:text-shimmer` — 受控流光，结束时平滑变实
-- `reactbits:thought-line` — 受控的思考标题行，带耗时
+- `reactbits:thought-line` — 受控的思考标题行，带耗时。**注意**：不传 `elapsed` 时它会退回内部 `setInterval` 自己计时，必须由真实开始时间计算后传入
 - `reactbits:status-mark` — 工具调用 / 任务状态图标
 - `reactbits:lattice-loader` — 带计时和完成标记的 agent 状态行
 - `librariesdev:thinking-orbs` — 按活动类型区分的思考指示器

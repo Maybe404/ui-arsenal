@@ -50,7 +50,7 @@ metric-card	指标卡 KPI 数字+上下文	chart,layout-card	foundation
 empty-state	空状态 引导下一步	empty-onboarding	foundation				
 tree-view	树形视图 嵌套文件夹	navigation	foundation				
 pagination	分页	navigation	foundation				
-filter-toolbar	筛选工具栏 可重置	other	foundation				
+filter-toolbar	筛选工具栏：多选筛选 faceted filters、筛选 chip、一键重置 filter toolbar，配合表格和列表使用	table,search-command	foundation				
 sortable-data-table	可排序数据表格 table	table	foundation				
 sparkline	迷你趋势图 sparkline	chart	foundation				
 gauge	仪表盘 量规 gauge	chart	foundation				

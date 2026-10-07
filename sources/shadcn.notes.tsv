@@ -59,7 +59,7 @@ attachment	附件展示 Attachment，文件/图片、上传状态、元数据	ai
 bubble	聊天气泡 Bubble，variants、对齐、reactions	ai-ux	foundation				
 message-scroller	聊天滚动容器 MessageScroller，AI 对话流式回复锚定、历史加载、跳转消息	ai-ux	foundation		scroll		
 questionnaire	多步问卷 Questionnaire，单选/多选/自由输入/跳过，AI human-in-the-loop 追问	ai-ux,toggle-slider	foundation				
-marker	对话中的状态标记 Marker，系统提示、分隔行、标签行	ai-ux	foundation				
+marker	对话中的状态标记 Marker：工具调用、系统提示、分隔行、标签行（tool call / system marker）	ai-ux	foundation				
 message	聊天消息行 Message，头像、对齐、header/footer，AI chat	ai-ux	foundation				
 dashboard-01	后台仪表盘整页：侧边栏 + 指标卡 + 交互面积图 + 可拖拽数据表 data table（A dashboard with sidebar, charts and data table.）	template,chart	foundation		drag		
 sidebar-01	侧边栏：按分组的简单导航（A simple sidebar with navigation grouped by section.）	navigation	foundation				

@@ -40,6 +40,7 @@
 - Experience：1 个，为作品服务，作品图片/视频不能被背景抢走注意力。
 
 ## 接入要点
+- **项目还没有品牌色时**（shadcn 默认的 neutral 主题，`--primary` 接近黑色）：不要自己编一套渐变色。先问用户要品牌色，或者从 getdesign 的 DESIGN.md 里借一个方向（见 `guides/design-system.md`）；用户决定前，只用中性色的低对比度版本，或者先不加背景。
 - **减弱动效**：抽查的 11 个 reactbits 背景都没有处理 `prefers-reduced-motion`（只有 obsidianui:liquid-metal 处理了）。reduce 时渲染一帧后停止循环，或直接换成同色的静态 CSS 渐变。
 - **暂停与清理**：没有 IntersectionObserver 的组件（aurora、dark-veil、soft-aurora、particles、silk、noise、waves、dot-grid），自己在外层加：离屏时卸载或停 rAF，`visibilitychange` 时停。卸载时确认 `cancelAnimationFrame` 和 `WEBGL_lose_context`（grainient、dark-veil 没有 loseContext）。
 - **尺寸和像素比**：容器给固定高度（如 `h-[70svh]`），不要让 canvas 铺满整个可滚动文档；像素比上限 1.5–2；移动端可以降到 1 或直接用静态图。

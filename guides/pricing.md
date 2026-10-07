@@ -33,6 +33,7 @@
 - Experience：不涉及。
 
 ## 接入要点
+- **OriginKit 进 shadcn 项目**：`npx originkit init` 会生成自己的 `components.json`，可能覆盖 shadcn 的配置。先用 `npx originkit add <name> --dry-run` 看它要写哪些文件，不要直接 init。有些条目注明搬自公开的 GitHub 仓库，不要自行改从上游取码，先核实上游许可证，交给用户决定。
 - **价格读法**：货币符号、金额、周期写在同一个可读的文本里（"¥99 / 月，按年付费"），不要拆成多个视觉碎片让读屏念成"九十九 斜杠 月"。划掉的原价用 `<del>`，并配文字"原价"。
 - **切换后播报**：月付 / 年付切换后价格变化要被读到；uiarc 已用 `aria-live`，shadcn 组合时在价格区加 `aria-live="polite"`。
 - **数字**：价格用 `tabular-nums`，切换时宽度不跳。

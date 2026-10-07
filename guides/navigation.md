@@ -11,6 +11,11 @@
 | 没有底座或其他 | 原生 `<nav aria-label>` + 链接列表；tabs 滑块动效用 `jakubantalik:transition:tabs-sliding` | 已拉文档：纯 CSS，`t-*` 前缀，有 `prefers-reduced-motion` 守卫；只管滑块过渡，tablist 的方向键要自己写 |
 
 ## 按场景换
+
+> **让 tabs 更有质感，首选 Base UI 自带的 `Tabs.Indicator`**：shadcn base-nova 的 tabs 封装没有用它（2026-10-07 核实源码），但 `@base-ui/react` 里有这个部件，会提供当前选中项位置和尺寸的 CSS 变量。项目已经依赖 Base UI，加一个滑动选中指示器不需要引入任何新库，交互和可访问性也不变。Radix 底座没有这个部件，可以参考 `jakubantalik:transition:tabs-sliding` 的参数自己写。
+>
+> **用户在 Operate 页面要求"更炫"**：先说明这和效果预算（`_scenes.md`）冲突。默认只做到"滑动指示器 + 150–250ms 过渡"。用户坚持要更强的效果时，照做，但在汇报里写明这是有意的例外，并且保证键盘、焦点和减弱动效不受影响。
+
 | 场景 | 推荐 | 理由 |
 |---|---|---|
 | shadcn 后台要一整套外壳（可拖宽侧栏 + 头部 + 药丸 tabs + 筛选栏，窄屏变抽屉） | `obsidianui:dashboard-shell` | 已拉源码：侧栏分隔条是 `role="separator"` 并支持键盘调整宽度，有减弱动效分支；但 CSS 里有约 50 处写死颜色（`--obsidian-dashboard-shell-*: #ffffff` 等），必须按 `_styles.md` 映射到 shadcn 变量；依赖 Radix 和 motion，装 block 时跳过覆盖 `ui/*` 的提示 |

@@ -144,7 +144,7 @@ sling-button	弹弓式拉动发射的发送按钮；依赖 @hugeicons/core-free-
 slosh-gauge	液体晃动的储罐仪表/竖向滑块	toggle-slider,micro-interaction	specialized				
 spring-check	弹簧动画勾选并划线的待办复选框；依赖 @hugeicons/core-free-icons,motion	toggle-slider,motion-transition	specialized				
 squish-switch	可拖动、挤压形变的开关 switch；依赖 motion	toggle-slider,micro-interaction	specialized		drag		
-status-mark	agent 任务状态小图标，空闲/进行/完成/失败形态变换；依赖 motion	ai-ux,micro-interaction	specialized				
+status-mark	agent 任务和工具调用状态小图标（tool call status），空闲/进行/完成/失败形态变换，受控 status/progress；依赖 motion	ai-ux,micro-interaction	specialized				
 swipe-row	左滑露出操作、全滑删除的列表行；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	micro-interaction	specialized		swipe		
 swipe-toast	可下滑关闭、带剩余时间引线的 toast 通知；依赖 @hugeicons/core-free-icons,@hugeicons/react,motion	feedback	specialized		swipe		
 tear-ticket	撕下票根的门票交互，3D 视差；依赖 motion	micro-interaction,fun-3d	specialized	3d			

@@ -106,6 +106,26 @@
    ],
    "k": 1,
    "topk_no_usage": "reference"
+  },
+  {
+   "q": [
+    "多选 筛选"
+   ],
+   "k": 3,
+   "topk_any": [
+    "uiarc:filter-toolbar"
+   ]
+  },
+  {
+   "q": [
+    "工具调用"
+   ],
+   "k": 5,
+   "topk_any": [
+    "beautifului:tool-chips",
+    "reactbits:status-mark",
+    "shadcn:marker"
+   ]
   }
  ]
 }

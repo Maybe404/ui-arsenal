@@ -14,7 +14,7 @@
 ## 按场景换
 | 场景 | 推荐 | 理由 |
 |---|---|---|
-| Persuade 首屏主标题（本页唯一的主导效果） | `uiarc:text-reveal`；shadcn 项目可用 `reactbits:split-text` | split-text 用 GSAP SplitText + ScrollTrigger，字符/单词/行都能拆，等字体加载完再拆避免抖动；依赖 gsap + @gsap/react，比 motion 重 |
+| Persuade 首屏主标题（本页唯一的主导效果） | `uiarc:text-reveal`；shadcn 项目用 `reactbits:blur-text`（motion，和 shadcn 项目常用的动效库一致）；只有项目已经在用 gsap 时才选 `reactbits:split-text` | 不要为一个文字效果再引入第二套动效库。split-text 用 GSAP SplitText + ScrollTrigger，字符/单词/行都能拆，等字体加载完再拆避免抖动；依赖 gsap + @gsap/react，比 motion 重 |
 | 状态文字切换（保存、同步、复制成功） | `jakubantalik:transition:text-states-swap` / `uiarc:text-morph` | 文字变化即状态变化，Operate 页面可以用；uiarc 版有 sr-only 文本和减弱动效分支 |
 | AI 状态行 | 见 loading 指南：`shadcn:shimmer` / `uiarc:text-shimmer` | 扫光属于加载态，不在这里重复 |
 | AI 流式输出 | `jakubantalik:transition:streaming-text` | 逐词柔和模糊浮现，有减弱动效守卫；别用打字机光标模拟流式 |

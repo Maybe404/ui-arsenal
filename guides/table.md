@@ -34,6 +34,8 @@
 - Experience：基本不用。
 
 ## 接入要点
+- **data-table 示例只有 new-york-v4（Radix 写法）**：`fetch.sh shadcn:data-table-demo` 不带 `--style` 时拉的就是它，带 `--style base-nova` 会 404。拉下来只作参考，按项目的 base 改写（Base UI 用 `render`，不用 `asChild`）。
+- **多选筛选（faceted filter）**：shadcn 官方的 tasks 示例里有完整的写法（Popover + Command + Badge），在 GitHub 仓库 `shadcn-ui/ui` 的 `apps/v4/app/(app)/examples/tasks/` 下，不在 registry 里，按需参考。uiarc 底座用 `uiarc:filter-toolbar`。
 - **`aria-sort`（shadcn）**：data-table 指南的排序按钮只调用 `column.toggleSorting()`，没有设置 `aria-sort`。在 `<TableHead>` 上加：
   ```tsx
   <TableHead aria-sort={s === "asc" ? "ascending" : s === "desc" ? "descending" : "none"}>

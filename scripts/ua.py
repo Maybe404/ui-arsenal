@@ -231,6 +231,7 @@ FIND_MODES = {
 
 def search(terms, src=None, mode='default', task=None, layer=None):
     """Rank catalogue rows for a query. Returns ([(score, row)], note)."""
+    terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
     rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
             and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
     groups = load_groups()
@@ -471,6 +472,8 @@ def install_hint(r, opts=None):
         return r['fetch']
     if r['source'] == 'lucide':
         return "npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）" % r['name']
+    if r['source'] == 'shadcn' and r['category'].startswith(('util', 'headless', 'helper')):
+        return r['fetch'] + '\n  （项目已装 shadcn 时，先确认版本里是否已包含这个工具类或包，再决定是否升级）'
     if (opts.get('style') or opts.get('variant')) and opts.get('_final_url'):
         return ('npx shadcn@latest add %s\n  （用完整 URL 固定这个 style/变体；只写组件名时 CLI 会按项目 components.json 的 style 解析）'
                 % opts['_final_url'])
@@ -1176,9 +1179,31 @@ def cmd_searchtest(args):
     return 1 if fails else 0
 
 
+def cmd_compat(args):
+    """Look up rows of the compatibility matrix in sources/_styles.md that mention all given sources."""
+    if not args or args[0] in ('-h', '--help'):
+        print('usage: compat.sh <source> [source...]   例：compat.sh shadcn uiarc；只给一个来源时列出它的全部组合')
+        return 0
+    p = os.path.join(SRC, '_styles.md')
+    lines = open(p, encoding='utf-8').read().splitlines()
+    names = [a.lower() for a in args]
+    hits = [l for l in lines if l.startswith('|') and all(n in l.lower() for n in names) and ('+' in l or len(names) == 1)]
+    if not hits:
+        print('兼容矩阵里没有同时提到 %s 的行；看 sources/_styles.md 的「混用规则」。' % ' + '.join(args))
+        return 1
+    for l in hits:
+        print(l)
+    for a in args:
+        fm = frontmatter(a)
+        if fm:
+            print('\n%s: foundation=%s styling=%s motion=%s dark=%s\n  %s' % (
+                a, fm.get('foundation'), fm.get('styling'), fm.get('motion_lib'), fm.get('dark_mode'), fm.get('mixing_notes', '')))
+    return 0
+
+
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
         'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
-        'diff': cmd_diff, 'apply': cmd_apply}
+        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:
