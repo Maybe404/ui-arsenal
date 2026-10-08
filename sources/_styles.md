@@ -23,6 +23,10 @@
 | collectui | curated x/twitter ui references, mixed styles | n/a | n/a | none | n/a | 只借鉴结构和节奏 |
 | inspora | trend-driven motion and product ui references | n/a | n/a | none | n/a | 只借鉴结构和节奏 |
 | designspells | playful delight micro-details from real products | n/a | n/a | none | n/a | 彩蛋式动效一页最多一两处 |
+| magicui | polished marketing effects with motion and svg patterns | none | tailwind-v4 | motion | class | 32/78 写死颜色、13/78 用 shadcn 变量，接入时换成主底座颜色；只有 5 个处理减弱动效 |
+| aielements | neutral shadcn chat surfaces | shadcn-compatible | tailwind-v4 | none | class | 依赖 shadcn 的 button、collapsible、dropdown-menu 等组件；类型来自 `ai` 包 |
+| animateui | shadcn-like controls with spring motion | shadcn-compatible | tailwind-v4 | motion | class | 与 shadcn 同名的 dialog、tabs 等会覆盖 `components/ui`；Radix / Base UI / Headless 三套底层同页只选一套；只有 1 个处理减弱动效 |
+| tailark | clean saas marketing sections | shadcn-compatible | tailwind-v4 | mixed(css,motion) | class | 开源版每套 kit 自带 button、card 等 ui，和 shadcn 同名；付费区块只当灵感 |
 
 字段取值说明：
 - foundation：`own-tokens` 自带一套 token 定义，必须一起装；`host-tokens` 组件引用一套自己的变量名，但不附带定义，必须由宿主项目映射；`shadcn-compatible` 沿用 shadcn 的 CSS 变量；`none` 自包含，颜色靠参数或继承；`n/a` 灵感、图标、规范类。
@@ -42,6 +46,8 @@
 不能当主底座：
 - **beautifului**：有自己完整的 token（`--ink`、`--canvas`、`--surface`、`--line`、`--accent`、四档圆角、六档阴影），但组件只有 21 个 AI 场景件（thinking、tool call、审批卡、聊天输入等），没有通用的输入框、对话框、选择器。只能做 AI 区域的局部组件。
 - **bencho、loadingui、reactbits、originkit、librariesdev、jakubantalik**：都是单点交互、加载态或特效，没有基础组件集。
+- **animateui**：dialog、tabs、switch 等基础件都有带动画的版本，但它是给 shadcn 加动画的库，没有自己的 token；用 shadcn 当底座时把它当动画版的替换件，不单独当底座。
+- **aielements、magicui、tailark**：分别是 AI 界面件、营销特效和营销区块，都建立在 shadcn（或自包含）之上，不是底座。
 - **getdesign**：DESIGN.md 只是规范，没有组件；它决定主底座的 token 取什么值，本身不是底座。
 - **lucide、collectui、inspora、designspells**：图标和灵感，不涉及。
 
@@ -69,6 +75,14 @@
 | 任意 + jakubantalik（Transitions.dev） | 可以；uiarc 底座有条件 | 纯 CSS，`t-*` 类名前缀，没有颜色 | 和 uiarc 同页时，`_root.css` 里的 `--duration-fast`（250ms，uiarc 是 160ms）、`--ease-in-out` 与 arc-foundation 同名不同值，不要粘 `_root.css` 的公共块，只用每个过渡自己的变量（如 `--resize-dur`） |
 | 任意底座 + getdesign | 可以 | DESIGN.md 只提供 token 值和规则 | 一个项目只用一份 DESIGN.md，把它的颜色、字号、圆角填进主底座的变量；不要同时用 DESIGN.md 和 uiarc/beautifului 自带的取值 |
 | 任意 + collectui / inspora / designspells | 可以 | 只是参考 | 只借鉴结构、层级、动效节奏，视觉取值全部来自主底座 |
+| shadcn + aielements | 可以 | 本身就是 shadcn 组件的组合（button、collapsible、dropdown-menu、tooltip、hover-card、command 等），Tailwind v4 + `.dark` | 用 shadcn CLI 安装让依赖一起装上；`ai` 包版本和项目一致；示例里的消息和工具状态换成 `useChat` 的真实数据 |
+| shadcn + magicui | 可以 | Tailwind v4 + `.dark`，在 shadcn 官方 registry 目录里；不带 token | 写死颜色的 32 个组件通过 props 或改源码换成 shadcn 主题色；循环动画补 `prefers-reduced-motion` 并离屏暂停；同一屏主导效果最多一个 |
+| shadcn + animateui | 有条件 | 同为 Tailwind v4 + shadcn 变量；但 components-* 和 shadcn 同名，会覆盖 `components/ui` 下的文件，底层也分 Radix / Base UI | 选和项目 shadcn style 一致的底层（base-nova 等 Base UI 风格用 `-base-` 版，Radix 风格用 `-radix-` 版）；装到单独目录或替换前确认没有改过原文件；用 `MotionConfig reducedMotion="user"` 统一处理减弱动效 |
+| shadcn + tailark | 有条件 | 开源版区块引用每套 kit 自带的 button、card、input 等，和 shadcn 同名但样式微调过 | 取码后把 `@/components/ui/*` 改成引用项目自己的 shadcn 组件，或把 kit 的 ui 放到单独目录；同页只用一套 kit；付费区块只当灵感 |
+| uiarc + aielements | 不建议 | 依赖 shadcn 组件，装上等于引入第二个底座 | 只借结构和状态模型（消息 parts、工具状态、推理折叠），用 uiarc 的 ai-chat、ai-composer、agent-run 或主底座组件自己实现 |
+| uiarc + animateui | 不建议 | 是 shadcn 风格的基础件，和 uiarc 的同类组件重复，样式体系也不同（Tailwind vs CSS Modules） | uiarc 自带的组件已有 motion 动画和减弱动效分支，直接用 uiarc |
+| uiarc + magicui / tailark | 有条件 | 需要 Tailwind；uiarc 风格规范不要装饰性光晕和渐变 | 只借纯 SVG 背景图案、设备外框或区块结构，改写成 CSS Modules 并换成 uiarc 变量；光束、流光边框、渐变字不用 |
+| magicui + reactbits / originkit | 有条件 | 都是强视觉特效，同页容易各说各话 | 每个区块只放一个特效来源；同一页的特效用同一组颜色（来自主底座） |
 
 最重要的三条：
 1. shadcn 和 uiarc 不要同页当底座：变量同名不同义，加载顺序决定谁覆盖谁，uiarc 的全局焦点描边还会叠到 shadcn 组件上。

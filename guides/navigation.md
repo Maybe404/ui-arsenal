@@ -69,3 +69,6 @@
 - `reactbits:pill-nav` / `reactbits:staggered-menu` — 落地页表现型导航，慎用
 - `bencho:dock` / `reactbits:dock` — 作品集 Dock，仅 Experience
 - `uiarc:workspace-sidebar` / `uiarc:sidebar-rail` — Pro，不推荐，只读文档作参考
+- `animateui:components-radix-tabs`、`animateui:components-base-tabs` — 指示器滑动的 tabs
+- `animateui:components-radix-sidebar` — 带动画的侧边栏
+- `magicui:dock` — macOS 风格 dock

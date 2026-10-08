@@ -23,6 +23,7 @@
 | 同一个位置两个图标切换（复制 → 已复制、菜单 ↔ 关闭、播放 ↔ 暂停） | `jakubantalik:transition:icon-swap` | 纯 CSS，两个图标叠在同一格里交叉淡入、轻微模糊和缩放，250ms，带 `prefers-reduced-motion` 关闭过渡（已看文档）。状态由 `data-state` 驱动，不需要 JS 动画库 |
 | 品牌 logo（GitHub、X、Figma 等） | 不用 Lucide | Lucide 已移除品牌图标（`/api/tags` 里没有 github、twitter、figma、chrome）。用品牌官方提供的 SVG，或 simple-icons；并且按品牌规范使用 |
 | 小尺寸密集界面（16px） | `lucide-react` 加 `strokeWidth={1.5}` 或 `nonScalingStroke` | 默认 2px 描边在 16px 下显得粗，配 13–14px 正文时用 1.5–1.75 |
+| 少数图标要悬停或触发时动起来（复制、刷新、设置、通知） | `animateui:icons-<名字>`（260 个，形状来自 Lucide） | 项目在用 Lucide 时形状一致；依赖 motion 和 `animateui:icons-icon`；只给一两个有反馈意义的图标加动画，并补减弱动效 |
 
 ## 慎用
 - 一页混用两套图标库：描边粗细、端点、网格不同，一眼能看出来。需要替换的常见来源：
@@ -64,3 +65,4 @@
 - `jakubantalik:transition:icon-swap` — 同位置两个图标的状态切换过渡
 - 按分类浏览：42 个分类（text、arrows、files、devices、account 等）不在索引里，用 `https://lucide.dev/api/categories` 查
 - 不推荐：仓库未发布的 26 个 Lab 图标（索引标 broken）
+- `animateui:icons-*` — 基于 Lucide 形状的动画图标（260 个）

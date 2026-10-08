@@ -18,6 +18,7 @@
 | 和竞品比功能 | `uiarc:comparison-table` | 见 table 指南 |
 | 按座位数、用量计价 | 自己用 slider + 数字输入组合 | `uiarc:usage-pricing`、`uiarc:pricing-calculator` 是 Pro，不推荐 |
 | 价格随周期切换时要有变化感 | `uiarc:billing-toggle` 自带的 `BillingPrice` | 数字滚动来自 `AnimatedCounter`，减弱动效下直接替换 |
+| shadcn 底座，免费的定价区块和对比表 | `tailark:oss-*-pricing-*`、`tailark:oss-*-comparator-*` | Tailark 开源版（MIT，dusk / mist / veil 三套，2026-10-08 收录、条目待人审）；价格、功能项换成真实数据，月付/年付切换要自己加或配 `uiarc:billing-toggle` 的做法 |
 
 ## 慎用
 - 推荐档加发光边框、渐变描边、脉冲徽章（⚠ glow / pulse-dot）：参考类 `jakubantalik:work:tx-result-cards` 就是彩色光晕。定价卡是要被仔细比较的内容，推荐档用"推荐"徽章 + 实色边框或略深的背景就够，不要让光效降低价格和条目文字的对比度。
@@ -53,3 +54,4 @@
 - `uiarc:usage-pricing` / `uiarc:pricing-calculator` — Pro，不推荐
 - `collectui:category:pricing` — 仅参考：定价页版式
 - `jakubantalik:work:tx-result-cards` — 仅参考，带光晕，不照搬
+- `tailark:oss-*-pricing-*`、`tailark:oss-*-comparator-*` — Tailark 开源定价区块和对比表

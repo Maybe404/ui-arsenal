@@ -20,6 +20,7 @@
 | 液态金属质感 | `obsidianui:liquid-metal` | 基于 `@paper-design/shaders-react`，`useReducedMotion` 时速度设为 0；同时依赖 motion |
 | 胶片颗粒质感 | 静态噪点（SVG `feTurbulence` 或一张平铺 PNG） | 不需要动；`reactbits:noise` 的实现太贵，见慎用 |
 | Experience 页面的沉浸背景 | `reactbits:grainient` / `reactbits:light-rays`，或需登录的 originkit 背景 | 一页一个；作品本身仍是主角 |
+| shadcn 底座，安静的 SVG 图案背景（点阵、网格、条纹、六边形、噪点） | `magicui:dot-pattern`、`magicui:grid-pattern`、`magicui:striped-pattern`、`magicui:hexagon-pattern`、`magicui:noise-texture` | 静态 SVG，没有动画成本；配合 mask 渐隐边缘；网格是 `grid-background` 风险，一页一处 |
 
 ## 慎用
 - `reactbits:aurora`：功能没问题（`colorStops`、`lightMode` 都能控），但 rAF 一直跑，离屏和隐藏标签页都不停；没有显式设置像素比；每帧都对每个色标 `new Color()`，产生持续的垃圾回收；只监听 window resize，容器尺寸变了不跟。清理做得对（cancelAnimationFrame + loseContext）。要用就自己加 IntersectionObserver 暂停，并把颜色解析移出渲染循环。
@@ -64,3 +65,6 @@
 - `reactbits:dot-grid` — 光标交互点阵，依赖 gsap（第 3 级风险）
 - `reactbits:ballpit` — 仅 Experience（第 3 级风险）
 - `jakubantalik:site:backgrounds` — 仅参考：渐变与 Dots/Grid/Waves/Noise 静态背景的取值思路
+- `magicui:dot-pattern`、`magicui:grid-pattern`、`magicui:noise-texture` 等 — 静态 SVG 图案背景
+- `magicui:retro-grid`、`magicui:flickering-grid`、`magicui:light-rays`、`magicui:particles`、`magicui:meteors` — 动态背景（主导效果，补离屏暂停和减弱动效）
+- `animateui:components-backgrounds-*` — 星空、气泡、烟花、渐变、六边形背景

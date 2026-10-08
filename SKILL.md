@@ -5,7 +5,7 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
 
 # UI Arsenal：先评估成熟组件，合理选用
 
-本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。收录的来源：shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik（详见文末「来源一览」）。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
+本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。收录的来源：shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik、Magic UI、AI Elements、Animate UI、Tailark（详见文末「来源一览」）。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
 
 下文 `$S` 指本 skill 的 `scripts/` 目录，比如 `~/.claude/skills/ui-arsenal/scripts`；`guides/`、`sources/` 都在本 skill 目录下。
 
@@ -149,15 +149,17 @@ $S/stats.sh                                   # 各来源统计
 **收录原则**：这是用户自己收藏的来源，不是全市场的组件目录。`find.sh` 找不到合适候选，可能只是没收录，不代表生态里没有。已知缺口：
 - 只收了 React 生态的组件库；Vue、Svelte、Angular 没有组件库（见第三节第 1 步的短路径）。
 - 图标只有 Lucide；Heroicons、Phosphor、Tabler、Hugeicons 没收录（项目已经在用的照样用）。
-- shadcn 官方 registry 目录里的一批常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Magic UI（动效组件，约 250 项）、Animate UI（带动画的基础件，约 580 项）、AI Elements（Vercel 的 AI 界面件，约 77 项）、Aceternity（约 295 项）、Tailark（营销区块，约 476 项）、Motion Primitives、Kibo UI、Cult UI。
-- 收藏库没有合适候选、但上面某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
-- OriginKit 占条目的约 11%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
+- shadcn 官方 registry 目录里还有一些常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Aceternity（约 295 项）、Motion Primitives（Tailark 开源区块里带了其中 4 个）、Kibo UI、Cult UI。Magic UI、AI Elements、Animate UI、Tailark 已于 2026-10-08 收录。
+- 收藏库没有合适候选、但上面没收录的某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
+- OriginKit 占条目的约 10%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
 
 由 `$S/stats.sh --write-skill` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
 <!-- STATS:BEGIN -->
 | 来源 | 名称 | 类型 | 条目 | 分类行 | 免费可装 | 免费取源码 | 免费提示词 | 仅参考 | 需登录 | Pro | 失效 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| aielements | [AI Elements](https://ai-sdk.dev/elements) | component-library | 77 |  | 77 |  |  |  |  |  |  |
+| animateui | [Animate UI](https://animate-ui.com/) | component-library | 414 |  | 414 |  |  |  |  |  |  |
 | beautifului | [Beautiful UI](https://www.beautifului.dev/) | component-library | 28 |  | 27 | 1 |  |  |  |  |  |
 | bencho | [Bencho](https://bencho.dev/) | blocks | 214 | 1 |  | 63 |  | 152 |  |  |  |
 | collectui | [Collect UI](https://collectui.com/) | inspiration |  | 220 |  |  |  | 170 |  |  | 50 |
@@ -168,12 +170,14 @@ $S/stats.sh                                   # 各来源统计
 | librariesdev | [Libraries.dev](https://libraries.dev) | effects | 51 |  | 41 |  |  |  |  | 10 |  |
 | loadingui | [loading-ui](https://www.loading-ui.com/) | component-library | 47 |  | 47 |  |  |  |  |  |  |
 | lucide | [Lucide](https://lucide.dev) | icons | 2249 |  | 2223 |  |  |  |  |  | 26 |
+| magicui | [Magic UI](https://magicui.design/) | effects | 78 |  | 78 |  |  |  |  |  |  |
 | obsidianui | [ObsidianUI](https://www.obsidianui.dev/) | component-library | 75 |  | 75 |  |  |  |  |  |  |
 | originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
 | reactbits | [React Bits](https://reactbits.dev/) | effects | 399 | 60 | 216 |  |  |  |  | 243 |  |
 | shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
+| tailark | [Tailark](https://tailark.com/) | blocks | 539 |  | 8 | 144 |  |  |  | 387 |  |
 | uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 245 |  | 131 |  |  |  |  | 114 |  |
-| **合计** | | | **5940** | **284** | **3009** | **417** | **76** | **1543** | **383** | **719** | **77** |
+| **合计** | | | **7048** | **284** | **3586** | **561** | **76** | **1543** | **383** | **1106** | **77** |
 <!-- STATS:END -->
 
 ## 维护

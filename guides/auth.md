@@ -20,6 +20,7 @@
 | 验证码那一步 | `shadcn:input-otp` 或 `uiarc:otp-input` | 见 `form-input.md` |
 | 注册时的密码强度 | `uiarc:password-strength` | 见 `form-input.md` |
 | 产品发布前的 waitlist 首屏 | `uiarc:newsletter-signup`，或 `shadcn:input-group` + `shadcn:button` 拼一行邮箱表单 | uiarc 版 catalog 写明它的可访问性很完整：可见性隐藏的 label、`autocomplete="email"`、失焦后才校验、提交中 `aria-busy`。登录后可换：`originkit:hero-07`（waitlist 首屏，用户自己登录取码） |
+| shadcn 底座，免费的登录、注册、找回密码整页 | `tailark:oss-*-login-*`、`tailark:oss-*-sign-up-*`、`tailark:oss-*-forgot-password-*` | Tailark 开源版（MIT，dusk / mist / veil 三套，2026-10-08 收录、条目待人审）；只是页面结构和样式，表单校验、错误态、提交防重复要自己接（见 `form-input.md`、`button.md`） |
 
 ## 慎用
 - 直接上线 shadcn login/signup block：骨架里 `href="#"`、没有 `onSubmit`、没有错误展示，原样上线就是坏链和无反馈（第 1 级）。
@@ -61,3 +62,4 @@
 - `originkit:hero-07` — 需登录；waitlist 首屏，免费替代见上
 - `inspora:1-19` — 仅参考：注册页布局
 - `collectui:category:sign-up` — 仅参考：注册样式
+- `tailark:oss-*-login-*`、`tailark:oss-*-sign-up-*`、`tailark:oss-*-forgot-password-*` — Tailark 开源登录注册页

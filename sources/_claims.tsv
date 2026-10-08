@@ -36,3 +36,7 @@ reactbits:text-type	ssr-empty	defect	source	2026-10-08	5b8ad9ec25225900		lacks:p
 reactbits:magnet	pointer-only	gap	source	2026-10-08	7e15e1bab0490050		lacks:pointer: fine		跟随指针用 React state 更新，没有 `(pointer: fine)` 判断，触屏没有效果
 shadcn:empty	undeclared-dep	gap	source	2026-10-08	e89ffe0fc2969956		has:class-variance-authority		源码 import 了 `class-variance-authority`，自己的 registry 依赖只写了 `cn`；cva 由 `shadcn init` 安装的 style 提供（base-nova 的 style 依赖里有它），没跑过 init 的项目单独装 empty 时要手动装 cva
 loadingui:text-shimmer	motion-create	defect	source	2026-10-08	93522a076003984e		has:motion.create(		在组件体内调用 `motion.create`，每次渲染都新建一个组件类型
+magicui:marquee	reduced-motion	gap	source	2026-10-08	6378d12f6ac7b383		lacks:prefers-reduced-motion && lacks:useReducedMotion && has:pauseOnHover = false		无限滚动不处理减弱动效，`pauseOnHover` 默认 false，也没有暂停按钮；接入时打开 pauseOnHover、补可见的暂停控制和 `motion-reduce` 停止
+magicui:border-beam	reduced-motion	gap	source	2026-10-08	5ed4f31cf1aa2cf4		lacks:prefers-reduced-motion && lacks:useReducedMotion		边框光束无限循环（默认 6 秒一圈），不处理减弱动效，要自己补
+aielements:shimmer	reduced-motion	gap	source	2026-10-08	3920932a64b2a516		lacks:prefers-reduced-motion && lacks:useReducedMotion		流光循环动画不处理减弱动效；和 `shadcn:shimmer`（官方工具类自带减弱动效守卫）相比要自己补
+aielements:tool	real-state	ok	source	2026-10-08	866cf6bdf488f5a5		has:input-streaming && has:output-error		状态徽章直接取 AI SDK 工具 part 的 state（input-streaming / input-available / output-available / output-error），没有内部定时器

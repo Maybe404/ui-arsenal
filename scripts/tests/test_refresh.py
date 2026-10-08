@@ -204,6 +204,17 @@ class Proposals(Access):
                 out.append(f.read())
         return out
 
+    def test_new_source_starts_from_empty_files(self):
+        with open(os.path.join(self.src, 'demo.md'), 'w', encoding='utf-8') as f:
+            f.write('---\nid: demo\nsource_status: active\n---\n')
+        for n in ('demo.tsv', 'demo.notes.tsv'):
+            open(os.path.join(self.src, n), 'w').close()
+        rc, d = self.refresh('demo', self.new_item_refresher(), [])
+        self.assertEqual(self.apply(self.fill(d, desc_zh='房子', task='icon', layer='icons')), 0)
+        tsv, notes = self.snapshot()
+        self.assertEqual([l.split('\t')[0] for l in notes.splitlines()], ['house', 'tent'])  # no leading blank line
+        self.assertEqual(sorted(self.read_source()), ['house', 'tent'])
+
     def test_wrong_source_refused(self):
         self.write_source([row('house')])
         rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
@@ -331,6 +342,36 @@ class Lifecycle(Access):
         got = self.read_source()
         self.assertEqual((got['house']['status'], got['house']['review']), ('active', ''))
         self.assertEqual((got['tent']['status'], got['tent']['review']), ('needs-review', 'missing:2026-10-02'))
+
+
+class RegistryOptions(unittest.TestCase):
+    """r_registry for the sources added on 2026-10-08: item filters, a custom index path, and paid items listed
+    next to free ones (Tailark)."""
+    def index_of(self, items, **kw):
+        body = json.dumps({'items': items}).encode()
+        with patch.object(ua, 'get_json', return_value=(json.loads(body), body)) as g:
+            ix = ua.r_registry('https://x.invalid', **kw)()
+        return ix, g.call_args[0][0]
+
+    def test_keep_and_custom_index(self):
+        items = [{'name': 'card', 'type': 'registry:ui'}, {'name': 'card-demo', 'type': 'registry:example'}]
+        ix, url = self.index_of(items, keep=lambda it: it['type'] == 'registry:ui',
+                                index_url='https://x.invalid/registry.json', item_url='https://x.invalid/%s.json')
+        self.assertEqual(url, 'https://x.invalid/registry.json')
+        self.assertEqual(list(ix['remote']), ['card'])
+        self.assertEqual(ix['new_row']('card', ix['remote']['card'])['spec'], 'registry:https://x.invalid/card.json')
+
+    def test_paid_items_get_no_fetch_route(self):
+        items = [{'name': 'hero-1', 'type': 'registry:block'}, {'name': 'core-x', 'type': 'registry:component'}]
+        ix, _ = self.index_of(items, tier=lambda it: 'free' if it['name'].startswith('core-') else 'pro',
+                              pro_fetch=lambda k, m: 'https://x.invalid/%s.png' % k)
+        pro = ix['new_row']('hero-1', ix['remote']['hero-1'])
+        self.assertEqual((pro['spec'], pro['access'], pro['fetch']), ('none', 'pro', 'https://x.invalid/hero-1.png'))
+        self.assertEqual(ix['new_row']('core-x', ix['remote']['core-x'])['access'], 'free')
+        self.assertIn('access', ix['detects'])
+        # pro rows (spec none) are matched by id; rows fetched from elsewhere are not this index's business
+        self.assertEqual(ix['key_of']({'id': 'hero-1', 'spec': 'none'}), 'hero-1')
+        self.assertIsNone(ix['key_of']({'id': 'oss-x', 'spec': 'url:https://raw.invalid/x.tsx'}))
 
 
 class Aliases(unittest.TestCase):

@@ -70,3 +70,5 @@
 - `bencho:slide-confirm` — 仅参考手感，键盘不可用
 - `designspells:329-delete-confirmation-animation-in-things-take-time` — 仅参考：删除确认的动效节奏
 - `inspora:multi-action-button` — 仅参考：多动作按钮结构
+- `animateui:components-buttons-*` — 带动画的按钮（复制、波纹、液体填充、翻转）
+- `magicui:shimmer-button`、`magicui:rainbow-button`、`magicui:interactive-hover-button` — 营销页按钮特效（第 3 级风险，一页一个）
