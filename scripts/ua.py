@@ -1496,7 +1496,20 @@ def kebab(name):
     return re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', name).lower()
 
 
-# Each refresher returns (remote: {key: meta}, key_of(row) -> key|None, index_sha, new_row(key, meta) -> dict).
+def index(remote, key_of, h, new_row, covered=None, degraded=(), detects=()):
+    """What a refresher found:
+    remote    {key: meta} for every item the public index lists
+    key_of    row -> key, or None for rows this index does not cover (templates, parked blocks...)
+    sha       hash of the raw index, to tell whether anything changed at all
+    new_row   (key, meta) -> machine fields for an item that is new locally
+    covered   key -> False when the part of the index that would list it failed to load, so its absence proves
+              nothing; True by default
+    degraded  reasons some part of the index could not be read
+    detects   which changes this index can see besides presence: 'access' (free/pro), 'deps' (dependency lists)"""
+    return {'remote': remote, 'key_of': key_of, 'sha': h, 'new_row': new_row, 'covered': covered or (lambda k: True),
+            'degraded': list(degraded), 'detects': tuple(detects)}
+
+
 def r_shadcn():
     remote, h = {}, []
     for st in ('base-nova', 'radix-nova', 'aria-nova', 'new-york-v4'):
@@ -1511,7 +1524,7 @@ def r_shadcn():
         'base-nova' if 'base-nova' in m['styles'] else m['styles'][0], k),
         'fetch': 'npx shadcn@latest add %s' % k, 'url': 'https://ui.shadcn.com/docs/components/' + k,
         'framework': 'react', 'category': m['type']}
-    return remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new
+    return index(remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new, detects=('deps',))
 
 
 def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
@@ -1531,7 +1544,7 @@ def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
             return {'spec': 'registry:%s/r/%s.json' % (base, name),
                     'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s/r/%s.json' % (base, name),
                     'url': (url_tpl % k) if url_tpl else base, 'framework': 'react', 'category': m.get('type', '')}
-        return remote, lambda r: spec_key(r, strip), sha(body), new
+        return index(remote, lambda r: spec_key(r, strip), sha(body), new, detects=('deps',))
     return f
 
 
@@ -1548,22 +1561,32 @@ def r_uiarc():
                 'access': 'pro' if pro else 'free'}
     # foundation, agent skill and templates are not part of the component catalog
     key = lambda r: None if r['category'] in ('Templates', 'Skill', 'Foundation') else r['id']
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new, detects=('access', 'deps'))
 
 
 def r_lucide():
-    st, ct, body = http('https://unpkg.com/lucide-static@latest/tags.json', tries=3)
+    url = 'https://unpkg.com/lucide-static@latest/tags.json'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     remote = {k: {'tags': sorted(v)} for k, v in json.loads(body).items()}
-    st2, _, meta = http('https://unpkg.com/@lucide/lab@latest/?meta', tries=3)
-    if st2 == 200:
+    lab_url = 'https://unpkg.com/@lucide/lab@latest/?meta'
+    st2, _, meta = http(lab_url, tries=3)
+    lab, degraded = [], []
+    try:
+        if st2 != 200:
+            raise ValueError(http_fail(st2, meta, lab_url))
         def walk(n):
             for f in n.get('files', []):
                 yield from (walk(f) if f.get('type') == 'directory' else [f['path']])
-        for f in walk(json.loads(meta)):
-            if f.startswith('/dist/esm/icons/') and f.endswith('.js'):
-                remote['lab:' + os.path.basename(f)[:-3]] = {}
+        lab = [f for f in walk(json.loads(meta)) if f.startswith('/dist/esm/icons/') and f.endswith('.js')]
+        if not lab:
+            raise ValueError('no icons listed in %s' % lab_url)
+    except ValueError as e:  # bad JSON lands here too
+        degraded.append('Lucide Lab list unavailable (%s): lab:* items are left as they are' % str(e)[:160])
+        meta = b''
+    for f in lab:
+        remote['lab:' + os.path.basename(f)[:-3]] = {}
     def new(k, m):
         lab = k.startswith('lab:')
         n = k[4:] if lab else k
@@ -1572,7 +1595,8 @@ def r_lucide():
                 'fetch': 'npm i @lucide/lab' if lab else 'https://unpkg.com/lucide-static@latest/icons/%s.svg' % n,
                 'url': 'https://lucide.dev/icons/' + (('lab/' + n) if lab else n), 'framework': 'multi',
                 'category': 'lab' if lab else 'icon'}
-    return remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new
+    return index(remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new,
+                 covered=(lambda k: not k.startswith('lab:')) if degraded else None, degraded=degraded)
 
 
 def r_originkit():
@@ -1583,17 +1607,22 @@ def r_originkit():
     new = lambda k, m: {'spec': 'manual', 'fetch': 'npx originkit add %s（需 originkit login）；页面 https://www.originkit.dev/components/%s' % (k, k),
                         'url': 'https://www.originkit.dev/components/' + k, 'framework': 'react',
                         'category': m['category'], 'access': 'login'}
-    return remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new
+    return index(remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new, detects=('deps',))
 
 
 def r_bencho():
-    st, ct, body = http('https://bencho.dev/llms.txt', tries=3)
+    url = 'https://bencho.dev/llms.txt'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     remote = {k: {} for k in re.findall(r'bencho\.dev/blocks/([a-z0-9-]+)', body.decode())}
-    st2, _, sm = http('https://bencho.dev/sitemap.xml', tries=3)
-    if st2 == 200:
-        remote.update({'find:' + x: {} for x in re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode())})
+    sm_url = 'https://bencho.dev/sitemap.xml'
+    st2, _, sm = http(sm_url, tries=3)
+    finds = re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode('utf-8', 'replace')) if st2 == 200 else []
+    degraded = [] if finds else ['Finds sitemap unavailable (%s): find:* items are left as they are' % (
+        http_fail(st2, sm, sm_url) if st2 != 200 else 'no finds listed in %s' % sm_url)]
+    if finds:
+        remote.update({'find:' + x: {} for x in finds})
         body += sm
     parked = {r['id'] for r in load_rows('bencho') if '未在站点上架' in r['desc'] or 'parked' in r['desc']}
     def new(k, m):
@@ -1603,13 +1632,15 @@ def r_bencho():
         return {'spec': 'script:bencho ' + k, 'fetch': 'scripts/fetch.sh bencho:' + k,
                 'url': 'https://bencho.dev/blocks/' + k, 'framework': 'react', 'usage': 'source'}
     key = lambda r: None if r['id'] in parked or r['id'].startswith('category:') else r['id']
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new, covered=(lambda k: not k.startswith('find:')) if degraded else None,
+                 degraded=degraded)
 
 
 def r_getdesign():
-    st, ct, body = http('https://getdesign.md/sitemap.xml', tries=3)
+    url = 'https://getdesign.md/sitemap.xml'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     txt = body.decode()
     remote = {x: {} for x in re.findall(r'https://getdesign\.md/([^/<]+)/design-md<', txt)}
     remote.update({'site:' + x: {} for x in re.findall(r'https://getdesign\.md/design-md/([^/<]+)<', txt)})
@@ -1622,8 +1653,12 @@ def r_getdesign():
                 'fetch': 'curl -s https://getdesign.md/design-md/%s/DESIGN.md -o DESIGN.md' % k,
                 'url': 'https://getdesign.md/%s/design-md' % k, 'usage': 'prompt', 'category': 'design-md'}
     key = lambda r: r['id'] if r['usage'] == 'prompt' or r['id'].startswith('site:') else None
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new)
 
+
+# A non-empty index that lacks more than this share of the known items is treated as incomplete: the missing items
+# are listed for a human to check instead of being proposed as gone. A heuristic alarm, not proof of completeness.
+SHRINK_ALARM = 0.2
 
 REFRESH = {
     'shadcn': r_shadcn,
@@ -1669,7 +1704,8 @@ def cmd_refresh(args):
             continue
         prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok'}
         try:
-            remote, key_of, h, new_row = REFRESH[s]()
+            ix = REFRESH[s]()
+            remote, key_of, h, new_row = ix['remote'], ix['key_of'], ix['sha'], ix['new_row']
             if not remote:
                 raise RuntimeError('index returned 0 items (parser broken or site changed)')
         except Exception as e:
@@ -1683,7 +1719,7 @@ def cmd_refresh(args):
             k = key_of(r)
             if k:
                 local[k] = r
-        seen, init, changed, missing, added = [], [], [], [], []
+        seen, init, changed, missing, added, unverified = [], [], [], [], [], []
         for k, r in local.items():
             if k in remote:
                 seen.append(r['id'])
@@ -1696,6 +1732,9 @@ def cmd_refresh(args):
                     changed.append({'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
                                     'access': [r['access'], acc or r['access']]})
             elif r['status'] != 'removed':
+                if not ix['covered'](k):  # the part of the index that lists it failed to load: no conclusion
+                    unverified.append(r['id'])
+                    continue
                 stale = r['status'] == 'needs-review' and days_between(r['last_seen'], today) >= REMOVE_AFTER_DAYS
                 missing.append({'id': r['id'], 'status': r['status'], 'last_seen': r['last_seen'],
                                 'proposal': 'removed' if stale else 'needs-review'})
@@ -1704,14 +1743,23 @@ def cmd_refresh(args):
             added.append(dict(row, key=k, id=kebab(k) if s == 'reactbits' else k, title=k,
                               fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps', [])),
                               desc_zh='', task='', layer=''))
+        degraded, suspect = list(ix['degraded']), []
+        known = sum(1 for k, r in local.items() if r['status'] != 'removed' and ix['covered'](k))
+        if missing and len(missing) > max(10, SHRINK_ALARM * known):
+            degraded.append('%d of %d known items are absent from a non-empty index (%.0f%%): treated as an incomplete '
+                            'index; they are listed under suspect_missing for a human to check, none is proposed as '
+                            'gone' % (len(missing), known, 100.0 * len(missing) / max(known, 1)))
+            suspect, missing = missing, []
         prev = load_state().get('refresh', {}).get(s, {})
-        prop.update(index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
+        prop.update(status='degraded' if degraded else 'ok', degraded=degraded, detects=list(ix['detects']),
+                    index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
-                    missing=missing, added=added)
+                    missing=missing, suspect_missing=suspect, unverified=unverified, added=added)
         json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         update_state(lambda st: st.setdefault('refresh', {}).__setitem__(s, {'at': prop['generated_at'], 'index_sha': h}))
-        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d' % (
-            s, len(remote), len(local), len(init), len(changed), len(missing), len(added)))
+        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s' % (
+            s, len(remote), len(local), len(init), len(changed), len(missing), len(added),
+            ''.join('\n              DEGRADED %s' % d for d in degraded)))
     print('\n待审变更已写入 %s/（不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。' % outdir)
     return rc
 
@@ -1733,11 +1781,18 @@ def cmd_diff(args):
         if not p:
             continue
         d = json.load(open(p, encoding='utf-8'))
-        if d['status'] != 'ok':
+        if d['status'] == 'error':
             print('## %s  ERROR %s' % (s, d.get('error')))
             continue
         print('## %s  (%s)  init %d  changed %d  missing %d  new %d' % (
             s, d['generated_at'], len(d['init']), len(d['changed']), len(d['missing']), len(d['added'])))
+        for reason in d.get('degraded', []):
+            print('  DEGRADED %s' % reason)
+        if d.get('unverified'):
+            print('  未核对 %d 条（所在的子清单没取到，不判断是否消失）' % len(d['unverified']))
+        if d.get('suspect_missing'):
+            print('  疑似消失 %d 条（清单异常缩水，没有生成下线提案；人工确认后可 apply.sh %s --accept-suspect）' % (
+                len(d['suspect_missing']), s))
         for c in d['changed'][:20]:
             print('  changed  %-36s deps %r → %r  access %s → %s' % (c['id'], c['deps'][0], c['deps'][1], *c['access']))
         for m in d['missing'][:20]:
@@ -1761,8 +1816,10 @@ def cmd_apply(args):
     if not p:
         sys.exit('no pending proposal for %s; run refresh.sh %s first' % (s, s))
     d = json.load(open(p, encoding='utf-8'))
-    if d['status'] != 'ok':
+    if d['status'] == 'error':
         sys.exit('proposal is an error report, nothing to apply: %s' % d.get('error'))
+    if '--accept-suspect' in args:  # a human checked the items an alarming shrink held back
+        d['missing'] = d.get('missing', []) + d.get('suspect_missing', [])
     today = d['generated_at'][:10]
     mp, np_ = os.path.join(SRC, s + '.tsv'), os.path.join(SRC, s + '.notes.tsv')
     rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in open(mp, encoding='utf-8') if l.strip()]
