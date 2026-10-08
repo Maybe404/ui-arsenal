@@ -7,7 +7,8 @@ stack: React（"use client"，Next.js 友好）+ Tailwind CSS v4，shadcn regist
 license: MIT（站点 /license，Copyright 2026 Shane Levine）
 pro: none
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: 全量：官方 registry 的全部条目；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: ai-native soft neutral, hairline borders, dense 13-14px type
 foundation: own-tokens

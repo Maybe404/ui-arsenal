@@ -5,9 +5,10 @@ url: https://uiarc.dev
 kind: component-library
 stack: React + CSS Modules + CSS 变量 + Motion（motion/react），部分用 Radix 与 lucide-react；不依赖 Tailwind
 license: 自定义（免费项标注 "Free, open source"，可用于商业/客户项目；Pro 为商业许可，见 https://uiarc.dev/pricing）
-pro: partial（238 项中 129 项免费：107 个组件 + 22 个 block 免费；43 个 Pro 组件、66 个 Pro block、3 个模板 Arc SaaS/AI/Startup 付费，Pro $129/年）
+pro: partial（2026-10-08 catalog：240 项中 129 项免费（107 个组件 + 22 个 block），111 项 Pro（45 个组件、66 个 block）；另有 3 个模板 Arc SaaS/AI/Startup 付费，不在 catalog 里；Pro $129/年）
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: catalog 全量（含 Pro 的元数据）；Foundation、Skill、Templates 不参与比对；refresh 自动比对
+catalog_checked: 2026-10-08
 source_status: active
 visual_style: restrained neutral with spring motion
 foundation: own-tokens
@@ -21,9 +22,9 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 
 ## 按需获取方法
 机器可读入口（全部实测 200）：
-- 索引：`https://uiarc.dev/llms.txt`（全部 238 项按分类列出，Pro 标 `(Pro)`）；`https://uiarc.dev/llms-small.txt`；`https://uiarc.dev/llms-full.txt`（约 1.5MB，内联每个组件 markdown）
+- 索引：`https://uiarc.dev/llms.txt`（全部条目按分类列出，Pro 标 `(Pro)`；2026-10-08 是 240 项）；`https://uiarc.dev/llms-small.txt`；`https://uiarc.dev/llms-full.txt`（约 1.5MB，内联每个组件 markdown）
 - 元数据目录（含 Pro）：`https://uiarc.dev/r/catalog.json` → `items[]`，字段 `name/kind(component|block)/tier(free|pro)/category/description/keywords/whenToUse/whenNotToUse/dependencies/usage/registry`
-- shadcn registry（仅免费 131 项，含 arc-foundation、arc-skill）：`https://uiarc.dev/r/registry.json`
+- shadcn registry（仅免费项，2026-10-08 是 132 项，含 arc-foundation、arc-motion-tokens、arc-skill）：`https://uiarc.dev/r/registry.json`
 - 单项源码（含文件内容）：`https://uiarc.dev/r/{name}.json`
 - 单项文档 markdown：组件 `https://uiarc.dev/components/{name}/markdown`，区块 `https://uiarc.dev/components/blocks/{name}/markdown`（Pro 项也能读文档，但不含源码）
 - MCP：`https://uiarc.dev/api/mcp`（Streamable HTTP，需 OAuth 登录 Arc 账号，免费账号即可；本次未连接）
@@ -39,7 +40,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 6. 不用 shadcn CLI 时：`curl -s https://uiarc.dev/r/{name}.json | jq -r '.files[] | .target, .content'` 手动落盘（target 中 `@components` 即 components 别名目录），并同样取 `arc-foundation.json` 和 `registryDependencies` 中的项。
 
 实测（in-view-title）：
-- `curl -s https://uiarc.dev/r/in-view-title.json` → 200，`type: registry:ui`，`dependencies: ["motion"]`，`registryDependencies: ["https://uiarc.dev/r/arc-foundation.json"]`，files 含 `in-view-title.tsx`（变体 `word|line|blur|tracking|wipe`，props `text/variant/as/lines/once`）与 `.module.css`
+- `curl -s https://uiarc.dev/r/in-view-title.json` → 200，`type: registry:ui`，`dependencies: ["motion"]`，`registryDependencies: ["https://uiarc.dev/r/arc-motion-tokens.json"]`（2026-10-08；之前依赖 arc-foundation。现在组件只带动效预设，`arc-foundation` 的 token 要在根布局单独装一次，否则没有颜色和焦点描边），files 含 `in-view-title.tsx`（变体 `word|line|blur|tracking|wipe`，props `text/variant/as/lines/once`）与 `.module.css`
 - `curl -s https://uiarc.dev/components/in-view-title/markdown` → "Access: Free, open source"，安装命令 `npx shadcn@latest add @uiarc/in-view-title`
 - Pro 实测：`curl https://uiarc.dev/r/pro/dock.json` → 401（需 `Authorization: Bearer $ARC_PRO_TOKEN`）
 
@@ -99,6 +100,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | date-picker | Date picker | Inputs | 日期选择器 | `npx shadcn@latest add https://uiarc.dev/r/date-picker.json` |  |
 | time-picker | Time picker | Inputs | 时间选择器 | `npx shadcn@latest add https://uiarc.dev/r/time-picker.json` |  |
 | accordion | Accordion | Disclosure | 手风琴 折叠展开 | `npx shadcn@latest add https://uiarc.dev/r/accordion.json` |  |
+| share-access | Share access | Disclosure | 分享与权限面板 邮箱邀请 chip 改角色 链接权限 复制链接 | https://uiarc.dev/components/share-access/markdown | pro；2026-10-08 新增 |
 | dialog | Dialog | Disclosure | 对话框 modal | `npx shadcn@latest add https://uiarc.dev/r/dialog.json` |  |
 | popover | Popover | Disclosure | 气泡弹层 popover | `npx shadcn@latest add https://uiarc.dev/r/popover.json` |  |
 | tooltip | Tooltip | Disclosure | 工具提示 tooltip | `npx shadcn@latest add https://uiarc.dev/r/tooltip.json` |  |
@@ -142,6 +144,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | card-stack | Card stack | Data | 卡片堆 逐张滑走 tinder 式 撤销 | `npx shadcn@latest add https://uiarc.dev/r/card-stack.json` |  |
 | morph-nav | Morph nav | Special | 导航栏 morph 成富菜单/搜索/紧凑态 一体化 | https://uiarc.dev/components/morph-nav/markdown | pro |
 | dock | Dock | Special | 浮动 dock 工具栏 标签滑动 托盘展开 macOS dock | https://uiarc.dev/components/dock/markdown | pro |
+| glass-menu | Glass menu | Special | 毛玻璃操作菜单 触发器形变成面板 行间滑动高亮 子菜单 键盘可用 | https://uiarc.dev/components/glass-menu/markdown | pro；2026-10-08 新增 |
 | wallet-stack | Wallet stack | Special | 钱包卡片扇形展开 抽出单张看交易 | https://uiarc.dev/components/wallet-stack/markdown | pro |
 | liquid-tab-bar | Liquid tab bar | Special | 液态选中效果的 tab bar 图标填充 | https://uiarc.dev/components/liquid-tab-bar/markdown | pro |
 | now-playing | Now playing | Special | 迷你播放器连续 morph 成全屏播放器 | https://uiarc.dev/components/now-playing/markdown | pro |

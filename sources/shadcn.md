@@ -7,7 +7,8 @@ stack: React + Tailwind CSS v4 + Base UI / Radix UI / React Aria（三选一）+
 license: MIT
 pro: none
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: 全量：官方 registry 的 base-nova、radix-nova、aria-nova、new-york-v4 四个 style；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: restrained neutral, style presets vary
 foundation: own-tokens

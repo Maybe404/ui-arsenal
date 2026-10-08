@@ -62,6 +62,9 @@ TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table
          'empty-onboarding', 'layout-card', 'motion-transition', 'micro-interaction', 'fun-3d', 'page-inspiration',
          'other')
 RISKS = ('gradient-text', 'marquee', 'glow', 'grid-background', 'typewriter', 'bounce', 'glass', 'pulse-dot')
+# required in every sources/<id>.md frontmatter; sources/_SPEC.md documents each one (a test keeps the two in step)
+FRONTMATTER = ('id', 'name', 'url', 'kind', 'stack', 'license', 'pro', 'fetch', 'coverage', 'catalog_checked',
+               'source_status', 'visual_style', 'foundation', 'styling', 'motion_lib', 'dark_mode', 'mixing_notes')
 # Why an item is not plainly active. Online presence (missing) is tracked apart from what still needs a human look
 # (new, changed, access, back): reappearing online clears `missing` and nothing else.
 REVIEW_REASONS = {'new': '上游新增，还没人审过', 'changed': '上游元数据有变化，还没人复核', 'access': '访问状态变了',
@@ -1797,7 +1800,7 @@ REFRESH = {
 NO_REFRESH = {
     'designspells': '站点有 Vercel 反爬，只能在浏览器里更新（见 designspells.md）',
     'inspora': 'robots.txt 禁止 /api/，不自动刷新；人工快照',
-    'collectui': '按分类实时查询（script:collectui），清单只到分类级，无需刷新条目',
+    'collectui': '条目按分类实时查询（script:collectui），不用刷新；但分类名单会增删，要定期对照 https://collectui.com/categories 人工核对',
     'jakubantalik': '个人站 + GitHub，条目少，人工维护',
     'librariesdev': '固定 7 个库，人工维护',
 }
@@ -2246,6 +2249,38 @@ def cmd_review(args):
     return 0
 
 
+def cmd_coverage(args):
+    """One line per source: what the catalogue covers and when each kind of check last happened. Catalogue checks,
+    fetch spot checks and claim reviews are reported separately on purpose: one passing does not vouch for the
+    others."""
+    if args and args[0] in ('-h', '--help'):
+        print('usage: coverage.sh [source...]   每个来源的覆盖范围、更新方式和各类核对的日期\n'
+              '  清单：frontmatter 的 coverage / catalog_checked，refresh 的最近一次运行（本机 _state.json）\n'
+              '  取码：verify 最近一次抽查（本机 _state.json）；结论：sources/_claims.tsv 的条数和最早核对日期；待审：review.sh')
+        return 0
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s' % ', '.join(unknown))
+    state, claims, rows = load_state(), load_claims(), load_rows(include_removed=True)
+    for s in args or sources():
+        fm = frontmatter(s)
+        rs = [r for r in rows if r['source'] == s]
+        refresh = state.get('refresh', {}).get(s, {}).get('at', '没跑过')
+        v = state.get('verify', {}).get(s, {})
+        verify = ('%s（%s）' % (v['at'], '跳过' if v.get('skipped') else '%d 失败' % v.get('fails', 0))) if v else '没跑过'
+        cl = [c for c in claims if c['ref'].split(':', 1)[0] == s]
+        print('## %s  [%s]' % (s, fm.get('source_status', '?')))
+        print('  覆盖：%s' % fm.get('coverage', '（没写）'))
+        print('  更新：%s' % ('refresh 自动比对，人工 apply' if s in REFRESH else '不自动刷新：' + NO_REFRESH.get(s, '没有刷新器')))
+        print('  清单核对：%s；本机最近 refresh：%s；本机最近 verify 抽查：%s' % (fm.get('catalog_checked', '?'), refresh, verify))
+        print('  条目 %d（待审 %d，已下线 %d）；登记结论 %d 条%s' % (
+            sum(1 for r in rs if r['status'] != 'removed'), sum(1 for r in rs if r['status'] == 'needs-review'),
+            sum(1 for r in rs if r['status'] == 'removed'), len(cl),
+            '，最早核对 %s' % min(c['checked'] for c in cl if c['checked']) if any(c['checked'] for c in cl) else ''))
+    print('\n这些命令都要手动运行：仓库没有自带定时任务，要定期跑 refresh、verify、claims --check，需要自己配 cron 或 CI。')
+    return 0
+
+
 SOURCE_STATUS_ZH = {'degraded': '来源部分可用', 'parser-broken': '来源的解析器坏了', 'offline': '来源下线',
                     'closed': '来源已关闭'}
 
@@ -2304,10 +2339,11 @@ def cmd_audit(args):
     errs = []
     for s in sources():
         fm = frontmatter(s)
-        for k in ('id', 'name', 'url', 'kind', 'pro', 'fetch', 'verified', 'source_status', 'visual_style',
-                  'foundation', 'styling', 'motion_lib', 'dark_mode', 'mixing_notes'):
+        for k in FRONTMATTER:
             if k not in fm:
                 errs.append('%s.md: missing frontmatter %s' % (s, k))
+        if 'catalog_checked' in fm and not re.match(r'^\d{4}-\d{2}-\d{2}$', fm['catalog_checked']):
+            errs.append('%s.md: catalog_checked %r must be YYYY-MM-DD' % (s, fm['catalog_checked']))
         for k, allowed in (('source_status', SOURCE_STATUS), ('foundation', FOUNDATIONS), ('dark_mode', DARK_MODES)):
             if k in fm and fm[k] not in allowed:
                 errs.append('%s.md: %s %r (allowed: %s)' % (s, k, fm[k], ' '.join(allowed)))
@@ -2566,7 +2602,8 @@ def cmd_compat(args):
 
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
         'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
-        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims, 'review': cmd_review}
+        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims, 'review': cmd_review,
+        'coverage': cmd_coverage}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:

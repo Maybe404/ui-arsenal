@@ -165,8 +165,8 @@ $S/stats.sh                                   # 各来源统计
 | originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
 | reactbits | [React Bits](https://reactbits.dev/) | effects | 399 | 60 | 216 |  |  |  |  | 243 |  |
 | shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
-| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 243 |  | 131 |  |  |  |  | 112 |  |
-| **合计** | | | **5938** | **284** | **3009** | **417** | **76** | **1543** | **383** | **717** | **77** |
+| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 245 |  | 131 |  |  |  |  | 114 |  |
+| **合计** | | | **5940** | **284** | **3009** | **417** | **76** | **1543** | **383** | **719** | **77** |
 <!-- STATS:END -->
 
 ## 维护
@@ -176,6 +176,7 @@ $S/stats.sh                                   # 各来源统计
 - `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖；这个文件的读改写有文件锁、写入是原子的，verify 和 refresh 同时跑也不会互相覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
 - `$S/test.sh`：离线单元测试（解析器、取码、刷新和 apply 的状态转换），不联网。改了 `scripts/` 下的代码后跑。
 - `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
+- `$S/coverage.sh`：每个来源的覆盖范围、更新方式（自动 refresh 还是人工维护及原因）、清单核对日期、最近一次 refresh 和 verify、登记的结论和待审条目。清单核对、取码抽查、结论复核分开记录，一项通过不代表另外两项。这些命令都不会自动运行，仓库没有定时任务。
 - `$S/claims.sh --check`：重新拉取 `sources/_claims.tsv` 里的组件，用 probe 复核结论是否仍成立；`--pending` 列出证据不足、待复核的结论和指南里互相矛盾的说法。改指南或台账后跑。
 - **更新流程（自动报告，人工批准）**：
   1. `$S/refresh.sh [id...]`：拉取线上清单，和本地比对，每次写一份新的 `sources/_pending/<日期>/<id>-<时分秒>.json`，**不改正式数据**；上一份还没 apply 的待审稿里补好的新条目字段会沿用过来。能发现新增、消失、元数据指纹变化，以及各来源能看到的依赖或付费标记变化（`diff.sh` 会写明每个来源看得到、看不到什么）。清单返回 0 条或报错时只记录错误；子清单没取到（比如 Lucide Lab）或清单异常缩水时状态是 degraded，相关条目不会被当成下线。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。

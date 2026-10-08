@@ -8,19 +8,27 @@
    - 弄清获取方式和访问边界：free、login、pro。"页面上能看到"不等于"源码免费"。
    - 挑一个真实条目实测获取。
    - 列全部条目，Pro 条目也列。
-3. **写文件**：`sources/<id>.md`（frontmatter 必填）、`sources/<id>.tsv`（机器字段 15 列）和 `sources/<id>.notes.tsv`（人工字段 8 列，中文描述、UI 任务、层级、标签、风险），格式见 `_SPEC.md`。站点需要专门处理才能取代码时，写 `scripts/adapters/<id>.py`（或 `.sh`），要求：只读，结果输出到 stdout；**只下载文本并解析，不执行任何远程代码**（不用 `node import`、`eval`，也不运行下载来的脚本）；解析不了时报错退出。spec 写成 `script:<id> <item>`。
-4. **接入 refresh（可选）**：站点有公开的清单接口时，在 `scripts/ua.py` 的 `REFRESH` 里加一个函数，返回 `(remote, key_of, index_sha, new_row)`：`remote` 是 `{key: 元数据}`（依赖、文件、类型、付费标记等，用来算指纹）；`key_of(row)` 把本地条目映射到同一个 key，不参与比对的返回 None；`new_row(key, meta)` 生成新条目的机器字段。没有接口的，在 `NO_REFRESH` 里写明原因。
+3. **写文件**：`sources/<id>.md`（frontmatter 全部必填，包括 `coverage`、`catalog_checked` 和兼容表用的 6 个字段）、`sources/<id>.tsv`（机器字段 16 列，新条目的 `review` 填 `new:<日期>`、状态 needs-review，人审过再用 `review.sh --done` 改成 active）和 `sources/<id>.notes.tsv`（人工字段 8 列，中文描述、UI 任务、层级、标签、风险），格式见 `_SPEC.md`。站点需要专门处理才能取代码时，写 `scripts/adapters/<id>.py`，要求：只读，结果输出到 stdout；**只下载文本并解析，不执行任何远程代码**（不用 `node import`、`eval`，也不运行下载来的脚本）；每个请求有超时；失败时非零退出，stderr 最后一行写明出错的步骤和 HTTP 码；在 `scripts/tests/` 加不联网的测试。spec 写成 `script:<id> <item>`。
+4. **接入 refresh（可选）**：站点有公开的清单接口时，在 `scripts/ua.py` 的 `REFRESH` 里加一个函数，返回 `index(remote, key_of, sha, new_row, covered=…, degraded=…, detects=…, blind=…)`：`remote` 是 `{key: 元数据}`（依赖、文件、类型、付费标记等，用来算指纹）；`key_of(row)` 把本地条目映射到同一个 key，不参与比对的返回 None；`new_row(key, meta)` 生成新条目的机器字段；清单分几部分加载时，某部分失败要通过 `covered` / `degraded` 说明，不能让它的条目被当成下线；`detects` / `blind` 写明能看到、看不到哪些变化。在 `scripts/tests/test_refresh.py` 加不联网的用例。没有接口的，在 `NO_REFRESH` 里写明原因，`coverage` 写清是人工快照还是人工维护。
 5. **校验**：
    - `scripts/audit.sh` 0 问题；
    - `scripts/verify.sh -s <id>` 全部 ok；
    - `scripts/find.sh -s <id> <关键词>` 能搜到；
    - `scripts/fetch.sh <id>:<item>` 能取到；
    - `scripts/searchtest.sh` 全部通过，可以给新来源加一两条用例到 `scripts/search_cases.json`；
-   - 新增了获取方式或 adapter 时，在 `scripts/ua.py` 的 `MATRIX` 里加一个场景，`scripts/verify.sh --matrix` 全部 ok。
+   - 新增了获取方式或 adapter 时，在 `scripts/ua.py` 的 `MATRIX` 里加一个场景，`scripts/verify.sh --matrix` 全部 ok；
+   - `scripts/test.sh` 全部通过。
 6. **登记**：
    - 运行 `scripts/stats.sh --write-skill`，更新 SKILL.md 的来源表；
-   - 新来源的名字加进 SKILL.md frontmatter description 的括号里；
+   - 新来源的名字加进 SKILL.md 正文开头的"收录的来源"和 README 的「收录来源」（frontmatter 的 description 只写触发条件，不列来源名）；
+   - 在 `sources/_styles.md` 的总表加一行，并补它和 shadcn、uiarc 等已有来源的兼容矩阵行，否则 `find --base` 会标"兼容性未登记"；
+   - 新来源能用于哪些 UI 任务，就更新对应的 `guides/<task>.md`（默认推荐、按场景换或慎用），不然搜得到但选型协议不认识它；
+   - 读源码时发现的缺陷、演示性质、缺失能力，登记到 `sources/_claims.tsv`，跑 `scripts/claims.sh --pending` 看有没有和指南冲突的说法；
    - 有新的常用中文说法时，补进 `scripts/aliases.json`。
 7. **汇报**：告诉用户条目数、获取方式、哪些拿不到以及原因。
 
-已有来源改版或失效时（verify 报 FAIL，或 refresh 报出新增、下线），重新调研，覆盖这两个文件，并更新 `verified` 日期。
+已有来源改版或失效时（verify 报 FAIL，或 refresh 报出新增、下线）：
+- 机器字段走 `refresh.sh` → `diff.sh` → `apply.sh`，不要手工整份覆盖 `<id>.tsv`；`<id>.notes.tsv` 是人工判断，只改需要改的行，不整份重写。
+- 重新调研后更新 `<id>.md` 的说明和 `catalog_checked`；接口或站点结构变了，改刷新器或 adapter 并补测试。
+- 跑 `scripts/claims.sh --check` 复核这个来源登记的结论，失效的连同引用它的指南一起改；`scripts/review.sh <id>` 处理待审条目。
+- 站点关闭或长期不可用时，把 `source_status` 改成 offline 或 closed（find 默认不再列它，fetch 拒绝获取），条目留在索引里，不删除。

@@ -7,7 +7,8 @@ stack: React + TypeScript + 纯 CSS（多数用 framer-motion，部分 lucide-re
 license: MIT（blocks 代码；站点内图片、Bencho 商标不在授权内）
 pro: none
 fetch: page-copy
-verified: 2026-10-07
+coverage: blocks 全量（llms.txt）+ Finds 全量（sitemap）；Sounds 音效没有收录；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: tactile spring-physics micro-interactions
 foundation: host-tokens
@@ -19,7 +20,7 @@ mixing_notes: block 只引用不附带 token（--ink、--ink-rgb、--card、--fi
 ## 是什么 / 什么时候用
 Bencho 是 Lorenzo Cabra 做的 React 微交互 blocks 库：48 个公开 block（另有 15 个未上架的 parked block 源码也在 bundle 里），每个都是可调参数的真组件，偏"手感"——弹簧、磁吸、液态 metaball、物理、刻度旋钮、拖拽手势。
 适合：需要一个有质感的单点交互（磁吸选择、滑动确认、OTP 输入、灵动岛、Dock、点赞、签名板、下拉刷新、液态开关等）而不想自己调弹簧参数时。不适合：要成套表单/布局/设计系统组件（去 shadcn）、要整页 section。
-站点另有 Finds（约 152 条他人作品的灵感视频，无源码）和 Sounds（82 个合成 UI 音效，可下载 WAV）。全站免费，无 Pro。
+站点另有 Finds（151 条他人作品的灵感视频，无源码；2026-10-08 sitemap 与索引一致）和 Sounds（82 个合成 UI 音效，可下载 WAV）。全站免费，无 Pro。
 
 ## 按需获取方法
 
@@ -116,11 +117,11 @@ python3 scripts/adapters/bencho.py {name} meta        # 导出名、deps、token
 | scratch-card | Scratch card | Drag | 刮刮卡 scratch card，Canvas 擦除涂层，刮够比例后整片揭开，未在站点上架（parked） | `fetch.sh bencho:scratch-card` / https://bencho.dev/blocks/scratch-card | deps: 仅 React；占位: COVER；parked 未上架 |
 | swipe-row | Swipe row | Swipe | 列表行左右滑动操作 swipe row，越过阈值提交并回弹，移动端邮件/消息列表，未在站点上架（parked） | `fetch.sh bencho:swipe-row` / https://bencho.dev/blocks/swipe-row | deps: lucide-react；占位: AVATARS；parked 未上架 |
 | tag-input | Tag input | Type | 标签输入框 tag input，chip 加入/移除时 layout 动画推挤与换行，未在站点上架（parked） | `fetch.sh bencho:tag-input` / https://bencho.dev/blocks/tag-input | deps: framer-motion lucide-react；parked 未上架 |
-| category:finds | Finds | inspiration | Finds 灵感墙：约 152 条他人发布的 UI 微交互视频（多来自 X），只能看不提供源码，按 Morph/Reveal/Press/Hover/Drag 等标签 | https://bencho.dev/finds/{id}（列表见 https://bencho.dev/sitemap.xml） | 无源码 |
+| category:finds | Finds | inspiration | Finds 灵感墙：151 条他人发布的 UI 微交互视频（多来自 X），只能看不提供源码，按 Morph/Reveal/Press/Hover/Drag 等标签 | https://bencho.dev/finds/{id}（列表见 https://bencho.dev/sitemap.xml） | 无源码 |
 | category:sounds | Sounds | sound | Sounds UI 音效库：82 个合成音效（点击、通知、反馈、导航、系统等），页面可试听并下载 WAV，无代码 | https://bencho.dev/sounds（浏览器内合成后 Download WAV） | 无源码 |
 
 ## 未解决
-- Finds（约 152 条）是他人作品的视频收藏，只能看，没有源码，清单只到分类级；单条元数据在主 bundle 的数组里（id/title/by/from/tags/src），可用 `https://bencho.dev/sitemap.xml` 列出全部 `/finds/*`。
+- Finds（151 条，2026-10-08）是他人作品的视频收藏，只能看，没有源码，清单只到分类级；单条元数据在主 bundle 的数组里（id/title/by/from/tags/src），可用 `https://bencho.dev/sitemap.xml` 列出全部 `/finds/*`。
 - Sounds（82 个）在浏览器里用 Web Audio 合成后下载 WAV，没有静态音频文件或代码可直接 curl；需要时请在页面上手动下载。
 - Copy prompt 按钮的原文需要浏览器渲染才能拿到；脚本输出的是同一份 tsx/css/deps/tokens/stubs，只是外层说明文字不同。
 - Bench（画布工作台）是站点功能，不是组件，未收录。

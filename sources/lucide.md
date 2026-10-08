@@ -7,7 +7,8 @@ stack: 任意（Vanilla JS / React / React Native / Vue / Svelte / Solid / Preac
 license: ISC（图标与各包；部分源自 Feather 的图标为 MIT）
 pro: none
 fetch: npm
-verified: 2026-10-07
+coverage: 全量：lucide-static 的 tags.json（正式库）+ @lucide/lab 已发布的图标；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: uniform 2px outline icons
 foundation: n/a

@@ -7,7 +7,8 @@ stack: 任意（只有视频参考，无代码）
 license: 未声明（视频为各产品界面录屏，版权归原产品；仅作参考复刻，勿直接搬运素材）
 pro: none
 fetch: browse-only
-verified: 2026-10-07
+coverage: 人工快照（340 条）；站点有反爬，只能在浏览器里更新，不保证全站完整
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: playful delight micro-details from real products
 foundation: n/a

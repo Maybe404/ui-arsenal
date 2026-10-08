@@ -1,4 +1,4 @@
-# 来源文件规范（每个站点产出两个文件）
+# 来源文件规范（每个站点产出三个文件：说明 md、机器 tsv、人工 notes.tsv）
 
 ## 1. sources/<id>.md
 ```
@@ -11,8 +11,20 @@ stack: <如 React + Tailwind + Motion / 纯 CSS / 任意>
 license: <MIT / 自定义 / 未声明>
 pro: none | partial | all   （partial 写明哪些付费）
 fetch: <主获取方式：shadcn-registry | npm | github-raw | page-copy | prompt-copy | browse-only>
-verified: 2026-10-07
+coverage: <覆盖粒度和已知完整性，如"全量：官方 registry；refresh 自动比对"或"人工快照：每个分类首屏，不保证全站完整">
+catalog_checked: <清单最后一次和站点核对一致的日期 YYYY-MM-DD（refresh 后 apply，或人工快照）>
+source_status: active | degraded | parser-broken | offline | closed
+visual_style: <英文短语，如 restrained neutral with spring motion>
+foundation: own-tokens | host-tokens | shadcn-compatible | none | n/a
+styling: <tailwind-v4 | css-modules | global-css | inline | css-only | mixed | n/a | unknown>
+motion_lib: <css | motion | framer-motion | gsap | three | mixed(...) | none>
+dark_mode: class | data-theme | media | prop | none | n/a | unknown
+mixing_notes: <和其他来源同页时要注意的事，一句话>
 ---
+（frontmatter 字段都必填，audit 会检查；source_status、foundation、dark_mode 只能取上面的值。
+ visual_style 到 mixing_notes 这 6 个字段是 `_styles.md` 兼容表的数据来源，取值说明见那里。
+ catalog_checked 只说明清单核对的日期：取码是否还能用看 verify，组件结论是否还成立看 _claims.tsv，三者分开记录，`coverage.sh` 一起列出。
+ source_status 的影响：offline、closed 时 find 默认不列它的条目、fetch 不再获取；degraded、parser-broken 时会提示。）
 ## 是什么 / 什么时候用
 （2-5 句，给开发 agent 判断"该不该用这个库"）
 

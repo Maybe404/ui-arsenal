@@ -7,7 +7,8 @@ stack: 任意（纯参考图/视频，无代码）
 license: 未声明（作品版权归原作者，内容转自 X/Twitter）
 pro: none
 fetch: browse-only
-verified: 2026-10-07
+coverage: 分类级：212 个分类 + 8 个只有标签的分类，条目按分类实时查询；分类名单靠人工核对，refresh 不覆盖
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: curated x/twitter ui references, mixed styles
 foundation: n/a

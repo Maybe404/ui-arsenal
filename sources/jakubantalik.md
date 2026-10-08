@@ -7,7 +7,8 @@ stack: 个人站为纯 HTML/CSS/JS（GitHub Pages）；其产品 Transitions.dev
 license: 个人站源码未声明；Transitions.dev 过渡与 skill 为自定义许可（可免费商用、可修改，禁止作为竞品库再分发），其 CLI/agent/refine 工具 MIT；Libraries.dev 七个 npm 包 MIT
 pro: partial（Transitions.dev 43 个过渡中 11 个 Pro，$9/月起；Libraries.dev 的 Studio、Pro 预设和 Pro skill 付费，$9/月起，七个库本身免费）
 fetch: github-raw
-verified: 2026-10-07
+coverage: 人工维护：个人站作品和 Transitions.dev 的过渡；条目少，改版时人工更新
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: refined product-design micro-transitions
 foundation: none

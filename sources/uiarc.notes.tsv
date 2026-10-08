@@ -241,3 +241,5 @@ line-replay	折线回放 播放头 关键时刻注释	other	foundation
 template:arc-saas	SaaS 完整入门模板	template	foundation				
 template:arc-ai	AI 应用完整模板	template	foundation				
 template:arc-startup	创业公司营销站模板	template	foundation				
+glass-menu	[Pro] 毛玻璃操作菜单：触发器形变成面板，高亮胶囊在行间滑动，一层就地展开的子菜单，键盘完整可用；适合压在图片或彩色画布上的照片、文件、卡片操作 glass menu dropdown context menu	overlay,micro-interaction	specialized	glass	keyboard	glass	
+share-access	[Pro] 分享与权限面板：邮箱邀请（校验成 chip、带联想）、紧凑菜单改角色、移除可撤销、切换链接权限并复制链接，改动就地生效 share permissions invite roles copy link	form-input,overlay	specialized		keyboard		

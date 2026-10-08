@@ -35,6 +35,10 @@ scripts/refresh.sh                         # 和线上清单比对，只报告�
 scripts/claims.sh --check                  # 重新拉取，复核组件级结论是否对新版本仍成立
 ```
 
+## 维护
+
+更新清单、抽查取码、复核组件结论都是手动运行的命令（`refresh.sh` → `diff.sh` → `apply.sh`、`verify.sh`、`claims.sh --check`），仓库没有自带定时任务；要定期跑，需要自己配 cron 或 CI。`coverage.sh` 按来源列出覆盖范围和各类核对的日期，`review.sh` 列出待审条目。
+
 ## 边界
 
 - **不获取付费内容**：标为 Pro 的条目只记录名称，`fetch` 拒绝获取。
