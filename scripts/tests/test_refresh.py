@@ -204,6 +204,21 @@ class Proposals(Access):
                 out.append(f.read())
         return out
 
+    def test_malformed_changed_entry_leaves_both_files_untouched(self):
+        """A changed entry is checked like a new item: tab in spec, a spec that is not https, an unknown id or a
+        bad fingerprint is refused before anything is written (the tab used to produce a 17-column row)."""
+        rows = [row('button', access='pro', spec='none', fetch='docs only', fingerprint='old')]
+        for mutate in (lambda c: c.update(spec='registry:https://x.invalid/r/button.json\tx'),
+                       lambda c: c.update(spec='registry:http://x.invalid/r/button.json'),
+                       lambda c: c.update(id='ghost'),
+                       lambda c: c.update(fingerprint=['old', 'not a hash'])):
+            self.write_source(rows)
+            rc, d = self.refresh('demo', self.uiarc_like('free'), rows)
+            mutate(d['changed'][0])
+            before = self.snapshot()
+            self.assertEqual(self.apply(d), 1)
+            self.assertEqual(self.snapshot(), before)
+
     def test_wrong_source_refused(self):
         self.write_source([row('house')])
         rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])

@@ -36,3 +36,5 @@ reactbits:text-type	ssr-empty	defect	source	2026-10-08	5b8ad9ec25225900		lacks:p
 reactbits:magnet	pointer-only	gap	source	2026-10-08	7e15e1bab0490050		lacks:pointer: fine		跟随指针用 React state 更新，没有 `(pointer: fine)` 判断，触屏没有效果
 shadcn:empty	undeclared-dep	gap	source	2026-10-08	e89ffe0fc2969956		has:class-variance-authority		源码 import 了 `class-variance-authority`，自己的 registry 依赖只写了 `cn`；cva 由 `shadcn init` 安装的 style 提供（base-nova 的 style 依赖里有它），没跑过 init 的项目单独装 empty 时要手动装 cva
 loadingui:text-shimmer	motion-create	defect	source	2026-10-08	93522a076003984e		has:motion.create(		在组件体内调用 `motion.create`，每次渲染都新建一个组件类型
+shadcn:helpers-ai-sdk	fake-transport	demo	vendor	2026-10-08	71ef70377fa9bfce		has:predefined conversations && has:without a model		预先写好的对话经本地 transport 回放（官方文档：没有模型、API 路由、网络请求和 API key）；只用于原型和 Storybook，上线前必须换成真实 transport，否则界面状态是假的
+shadcn:helpers-tanstack-ai	fake-transport	demo	vendor	2026-10-08	ba19d8a30b119a42		has:predefined conversations && has:without a model		预先写好的对话经本地 connection 以 AG-UI 事件回放（官方文档：没有模型和网络请求）；只用于原型，上线前换成真实连接
