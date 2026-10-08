@@ -81,7 +81,7 @@ stamp-shader	动效/微交互灵感视频：印章着色器（Stamp Shader）；
 paid-stamp	动效/微交互灵感视频：3D 已付讫印章（3D paid stamp）；印章 付款	motion-transition,micro-interaction	reference	3d			
 travel-app	产品界面/应用 UI灵感视频：旅行应用（travel app）；旅行	page-inspiration	reference				
 bencho-logo	品牌/图标/Logo灵感视频：Bencho 标志（Bencho logo）；标志	page-inspiration	reference				
-support-analytics	产品界面/应用 UI灵感视频：支持数据分析（Support analytics）；支持 分析	page-inspiration	reference				
+support-analytics	产品界面/应用 UI灵感视频：客服数据分析（Support analytics）；客服 分析 仪表盘	page-inspiration	reference				
 onboarding-flow	产品界面/应用 UI灵感视频：新手引导流程（onboarding flow）；新手 引导 流程	empty-onboarding	reference				
 dynamic-island-streak	动效/微交互灵感视频：Dynamic Island 连续记录（Dynamic Island Streak）；连续	motion-transition,micro-interaction	reference				
 file-upload-card	动效/微交互灵感视频：文件上传卡片（File upload card）；文件 上传	upload,layout-card	reference				
@@ -187,7 +187,7 @@ orb-interation	动效/微交互灵感视频：光球交互（Orb interaction）�
 1-27	动效/微交互灵感视频：带透镜折射的平滑滚动（Smooth scroll with lens refraction.）；滚动 折射	motion-transition,micro-interaction	reference		scroll		
 1-26	3D灵感视频：波浪式思考动画（Wave thinking animations）；思考 动画	ai-ux,motion-transition	reference	3d			
 1-25	网页/落地页区块灵感视频：团队区块（Team section）；团队	marketing-section	reference				
-1-24	动效/微交互灵感视频：Spider-Man 式下拉菜单（Spider-Man web dropdown）；下拉 菜单	select,motion-transition	reference				
+1-24	动效/微交互灵感视频：蜘蛛侠蛛网式下拉菜单（Spider-Man web dropdown）；下拉 菜单 彩蛋	select,motion-transition	reference				
 1-23	动效/微交互灵感视频：Grok Bot 向更多人开放（We're making Grok Bot more widely available.）；开放 可用	motion-transition,micro-interaction	reference				
 1-22	动效/微交互灵感视频：波浪式轮播（wavy carousel）；轮播 波浪（Featured 精选）	media,motion-transition	reference				
 1-21	网页/落地页区块灵感视频：品牌故事卡片（Brand story cards）；品牌 故事	marketing-section,layout-card	reference				

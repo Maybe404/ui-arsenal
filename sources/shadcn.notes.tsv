@@ -555,11 +555,11 @@ toggle-example	切换按钮示例代码：新 style 全变体合集（toggle-exa
 toggle-group-example	切换按钮组示例代码：新 style 全变体合集（toggle-group-example）	toggle-slider	foundation				
 tooltip-example	文字提示示例代码：新 style 全变体合集（tooltip-example）	overlay	foundation				
 demo	多组件综合演示：卡片、表单字段、输入框组、开关、滑块、单选、下拉菜单、确认对话框放在一起用（新 style 全变体合集，demo）	other	foundation				
-component-example	通用组件示例代码：新 style 全变体合集（component-example）	other	foundation				
+component-example	多组件综合示例页：确认对话框、徽章、按钮、卡片、可搜索下拉、下拉菜单、表单字段、输入框、选择框放在一起用（新 style 全变体合集，component-example）	other	foundation				
 attachment-example	附件展示示例代码：新 style 全变体合集（attachment-example）	other	foundation				
 bubble-example	聊天气泡示例代码：新 style 全变体合集（bubble-example）	other	foundation				
 message-scroller-example	聊天滚动容器示例代码：新 style 全变体合集（message-scroller-example）	motion-transition	foundation		scroll		
 questionnaire-example	多步问卷示例代码：新 style 全变体合集（questionnaire-example）	other	foundation				
 marker-example	状态标记示例代码：新 style 全变体合集（marker-example）	other	foundation				
 message-example	聊天消息行示例代码：新 style 全变体合集（message-example）	other	foundation				
-example	通用组件示例代码：新 style 全变体合集（example）	other	foundation				
+example	示例页布局辅助组件 ExampleWrapper / Example：各 *-example 全变体合集用它排版，不是某个组件的示例（example）	other	foundation				
