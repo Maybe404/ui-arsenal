@@ -40,3 +40,5 @@ magicui:marquee	reduced-motion	gap	source	2026-10-08	6378d12f6ac7b383		lacks:pre
 magicui:border-beam	reduced-motion	gap	source	2026-10-08	5ed4f31cf1aa2cf4		lacks:prefers-reduced-motion && lacks:useReducedMotion		边框光束无限循环（默认 6 秒一圈），不处理减弱动效，要自己补
 aielements:shimmer	reduced-motion	gap	source	2026-10-08	3920932a64b2a516		lacks:prefers-reduced-motion && lacks:useReducedMotion		流光循环动画不处理减弱动效；和 `shadcn:shimmer`（官方工具类自带减弱动效守卫）相比要自己补
 aielements:tool	real-state	ok	source	2026-10-08	866cf6bdf488f5a5		has:input-streaming && has:output-error		状态徽章直接取 AI SDK 工具 part 的 state（input-streaming / input-available / output-available / output-error），没有内部定时器
+shadcn:helpers-ai-sdk	fake-transport	demo	vendor	2026-10-08	71ef70377fa9bfce		has:predefined conversations && has:without a model		预先写好的对话经本地 transport 回放（官方文档：没有模型、API 路由、网络请求和 API key）；只用于原型和 Storybook，上线前必须换成真实 transport，否则界面状态是假的
+shadcn:helpers-tanstack-ai	fake-transport	demo	vendor	2026-10-08	ba19d8a30b119a42		has:predefined conversations && has:without a model		预先写好的对话经本地 connection 以 AG-UI 事件回放（官方文档：没有模型和网络请求）；只用于原型，上线前换成真实连接

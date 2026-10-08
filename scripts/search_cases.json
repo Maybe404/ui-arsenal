@@ -1,5 +1,5 @@
 {
- "_comment": "Search relevance regression cases. Run: ua.py searchtest. Each case may combine several assertions and all of them must hold. top1 = exact first id; topk_any = any of these ids within k; topk_any_id = some top-k id matches the regex; topk_all_category / topk_all_id / topk_all_task_primary = every top-k row matches; topk_no_usage = no top-k row has this usage; topk_any_obtainable = some top-k row can be fetched now (free, not reference); topk_all_access = every top-k row has this access; none_id = no result id matches the regex; none_source / none_framework = no result comes from this source / has this framework; top1_clean = whether the first row must be free of recorded demo/defect problems; confident = whether the result must be free of the low-confidence note; guide = the guide find recommends; empty = no results. Optional src / mode / task / base / stack narrow the search like find.sh -s / --code / --task / --base / --stack.",
+ "_comment": "Search relevance regression cases. Run: ua.py searchtest. Each case may combine several assertions and all of them must hold. top1 = exact first id; topk_any = any of these ids within k; topk_any_id = some top-k id matches the regex; topk_all_category / topk_all_id / topk_all_task_primary = every top-k row matches; topk_no_usage = no top-k row has this usage; topk_any_obtainable = some top-k row can be fetched now (free, not reference); topk_all_access = every top-k row has this access; none_id = no result id matches the regex; topk_none_id = no top-k id matches the regex; none_source / none_framework = no result comes from this source / has this framework; top1_clean = whether the first row must be free of recorded demo/defect problems; confident = whether the result must be free of the low-confidence note; guide = the guide find recommends; empty = no results. Optional src / mode / task / base / stack narrow the search like find.sh -s / --code / --task / --base / --stack.",
  "cases": [
   {
    "q": [
@@ -419,6 +419,13 @@
    "stack": "vue",
    "k": 5,
    "topk_any_id": "^transition:"
+  },
+  {
+   "q": [
+    "工具调用"
+   ],
+   "k": 10,
+   "topk_none_id": "^helpers-"
   },
   {
    "q": [

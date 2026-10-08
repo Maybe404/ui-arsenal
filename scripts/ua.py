@@ -2116,11 +2116,45 @@ def check_added(a, s, taken):
         errs.append('%s: risk %s (allowed: %s)' % (where, ','.join(bad_risk), ' '.join(RISKS)))
     if a.get('access', 'free') not in ACCESS or a.get('usage', 'install') not in USAGE:
         errs.append('%s: access %r / usage %r' % (where, a.get('access'), a.get('usage')))
-    for k, arg in parse_spec(a.get('spec', 'manual')):
-        if k not in ADAPTER_KINDS or (k in ('registry', 'url', 'doc', 'prompt', 'browser') and not arg.startswith('https://')):
-            errs.append('%s: spec %s:%s' % (where, k, arg))
+    errs += check_spec(a.get('spec', 'manual'), where)
     if a.get('access') == 'pro' and a.get('spec') != 'none':
         errs.append('%s: a pro item must have spec none' % where)
+    return errs
+
+
+def check_spec(spec, where):
+    return ['%s: spec %s:%s' % (where, k, arg) for k, arg in parse_spec(spec)
+            if k not in ADAPTER_KINDS or (k in ('registry', 'url', 'doc', 'prompt', 'browser') and not arg.startswith('https://'))]
+
+
+FINGERPRINT = re.compile(r'^[0-9a-f]{0,40}$')
+
+
+def check_changed(c, by_id, kind='changed'):
+    """What a changed or init entry would write into an existing row, checked as strictly as a new item."""
+    where = '%s %s' % (kind, c.get('id', '?'))
+    if c.get('id') not in by_id:
+        return ['%s: no such item in the machine file' % where]
+    errs = []
+    for k, v in c.items():
+        for x in (v if isinstance(v, list) else [v]):
+            if isinstance(x, str) and not CLEAN.match(x):
+                errs.append('%s: field %s contains a tab or line break' % (where, k))
+    fps = c.get('fingerprint')
+    new_fp = fps[1] if kind == 'changed' and isinstance(fps, list) and len(fps) == 2 else fps
+    if not isinstance(new_fp, str) or not FINGERPRINT.match(new_fp):  # the value that will be written
+        errs.append('%s: fingerprint %r' % (where, fps))
+    deps = c['deps'][1] if kind == 'changed' else c.get('deps')
+    if deps is not None and not isinstance(deps, str):
+        errs.append('%s: deps %r' % (where, deps))
+    if kind == 'changed':
+        if c['access'][1] not in ACCESS:
+            errs.append('%s: access %r' % (where, c['access'][1]))
+        if c['access'][0] == 'pro' and c['access'][1] != 'pro':
+            if not (c.get('spec') and c['spec'] != 'none'):
+                errs.append('%s: leaves Pro but the proposal has no official fetch route; check by hand' % where)
+            else:
+                errs += check_spec(c['spec'], where)
     return errs
 
 
@@ -2162,12 +2196,9 @@ def cmd_apply(args):
     # 1. validate everything first
     errs = []
     for c in d['changed']:
-        if c['access'][1] not in ACCESS:
-            errs.append('changed %s: access %r' % (c['id'], c['access'][1]))
-        if c['access'][0] == 'pro' and c['access'][1] != 'pro' and not (c.get('spec') and c['spec'] != 'none'):
-            errs.append('changed %s: leaves Pro but the proposal has no official fetch route; check by hand' % c['id'])
-        if c['deps'][1] is not None and not CLEAN.match(c['deps'][1]):
-            errs.append('changed %s: deps contain a tab or line break' % c['id'])
+        errs += check_changed(c, by_id)
+    for c in d['init']:
+        errs += check_changed(c, by_id, 'init')
     for m in d['missing']:
         if m.get('proposal') not in ('needs-review', 'removed'):
             errs.append('missing %s: proposal %r' % (m['id'], m.get('proposal')))
@@ -2672,6 +2703,8 @@ def cmd_searchtest(args):
             checks.append(bool(top) and all(r['access'] == c['topk_all_access'] for r in top))
         if 'none_id' in c:
             checks.append(not any(re.search(c['none_id'], r['id']) for _, r in res))
+        if 'topk_none_id' in c:
+            checks.append(not any(re.search(c['topk_none_id'], r['id']) for r in top))
         if 'none_framework' in c:
             checks.append(bool(res) and not any(r['framework'] == c['none_framework'] for _, r in res))
         if 'none_source' in c:
