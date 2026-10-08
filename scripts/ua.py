@@ -2026,7 +2026,7 @@ def cmd_diff(args):
         if d.get('applied_at'):
             print('## %s  最近的待审稿已在 %s apply（%s）' % (s, d['applied_at'], os.path.relpath(p, ROOT)))
             continue
-        if d['status'] == 'error':
+        if d.get('status') == 'error':
             print('## %s  ERROR %s' % (s, d.get('error')))
             continue
         print('## %s  (%s)  init %d  changed %d  missing %d  new %d' % (
@@ -2128,13 +2128,25 @@ def check_spec(spec, where):
             if k not in ADAPTER_KINDS or (k in ('registry', 'url', 'doc', 'prompt', 'browser') and not arg.startswith('https://'))]
 
 
-FINGERPRINT = re.compile(r'^[0-9a-f]{0,40}$')
+FINGERPRINT = re.compile(r'^([0-9a-f]{10})?$')  # what fp() returns: 10 hex digits, or '' for an item without metadata
 
 
 def check_changed(c, by_id, kind='changed'):
     """What a changed or init entry would write into an existing row, checked as strictly as a new item."""
+    if not isinstance(c, dict):
+        return ['%s entry %r is not an object' % (kind, c)]
     where = '%s %s' % (kind, c.get('id', '?'))
-    if c.get('id') not in by_id:
+    text = lambda v: isinstance(v, str)
+    pair = lambda v: isinstance(v, list) and len(v) == 2
+    anything = lambda v: True
+    shape = {'changed': (('id', text), ('fingerprint', pair), ('deps', pair), ('access', pair)),
+             'init': (('id', text), ('fingerprint', text), ('deps', anything))}[kind]
+    missing = [k for k, _ in shape if k not in c]
+    bad = [k for k, ok in shape if k in c and not ok(c[k])]
+    if missing or bad:
+        return ['%s: %s' % (where, '; '.join((['missing field ' + ', '.join(missing)] if missing else []) +
+                                            (['malformed field ' + ', '.join(bad)] if bad else [])))]
+    if c['id'] not in by_id:
         return ['%s: no such item in the machine file' % where]
     errs = []
     for k, v in c.items():
@@ -2195,7 +2207,14 @@ def cmd_apply(args):
     note_ids = {l.split('\t', 1)[0] for l in notes_text.splitlines() if l.strip()}
     by_id = {r['id']: r for r in rows}
     # 1. validate everything first
-    errs = []
+    errs = ['proposal field %s must be a list' % k for k in ('seen', 'init', 'changed', 'missing', 'added')
+            if not isinstance(d.get(k), list)]
+    errs += ['missing entry %r has no id' % m for m in d.get('missing') or [] if not isinstance(m, dict) or 'id' not in m]
+    if errs:
+        print('refusing to apply %s, nothing was written:' % os.path.relpath(p, ROOT))
+        for e in errs:
+            print('  ' + e)
+        return 1
     for c in d['changed']:
         errs += check_changed(c, by_id)
     for c in d['init']:

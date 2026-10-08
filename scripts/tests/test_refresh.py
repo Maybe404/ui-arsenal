@@ -1,4 +1,5 @@
 """Offline tests for refresh/apply: proposals are built from mocked indexes and written to a temp directory."""
+import copy
 import importlib.util
 import json
 import os
@@ -215,19 +216,38 @@ class Proposals(Access):
         self.assertEqual([l.split('\t')[0] for l in notes.splitlines()], ['house', 'tent'])  # no leading blank line
         self.assertEqual(sorted(self.read_source()), ['house', 'tent'])
     def test_malformed_changed_entry_leaves_both_files_untouched(self):
-        """A changed entry is checked like a new item: tab in spec, a spec that is not https, an unknown id or a
-        bad fingerprint is refused before anything is written (the tab used to produce a 17-column row)."""
+        """A changed entry is checked like a new item: tab in spec, a spec that is not https, an unknown id, a
+        fingerprint that fp() could not have produced, or a missing or malformed field is refused with a message
+        before anything is written (the tab used to produce a 17-column row, a missing field a KeyError)."""
         rows = [row('button', access='pro', spec='none', fetch='docs only', fingerprint='old')]
+        self.write_source(rows)
+        rc, proposal = self.refresh('demo', self.uiarc_like('free'), rows)
         for mutate in (lambda c: c.update(spec='registry:https://x.invalid/r/button.json\tx'),
                        lambda c: c.update(spec='registry:http://x.invalid/r/button.json'),
                        lambda c: c.update(id='ghost'),
-                       lambda c: c.update(fingerprint=['old', 'not a hash'])):
-            self.write_source(rows)
-            rc, d = self.refresh('demo', self.uiarc_like('free'), rows)
+                       lambda c: c.update(fingerprint=['old', 'not a hash']),
+                       lambda c: c.update(fingerprint=['old', '0']),
+                       lambda c: c.pop('deps'),
+                       lambda c: c.pop('access'),
+                       lambda c: c.update(access='free')):
+            d = copy.deepcopy(proposal)
             mutate(d['changed'][0])
             before = self.snapshot()
             self.assertEqual(self.apply(d), 1)
             self.assertEqual(self.snapshot(), before)
+        for drop in ('init', 'changed'):  # a hand-edited proposal without one of its lists
+            d = copy.deepcopy(proposal)
+            del d[drop]
+            self.assertEqual(self.apply(d), 1)
+            self.assertEqual(self.snapshot(), before)
+
+    def test_empty_fingerprint_is_still_accepted(self):
+        """fp() returns '' for an item without metadata (React Bits variants), so '' stays a valid new value."""
+        rows = [row('button', access='pro', spec='none', fetch='docs only', fingerprint='old')]
+        self.write_source(rows)
+        rc, d = self.refresh('demo', self.uiarc_like('free'), rows)
+        d['changed'][0]['fingerprint'][1] = ''
+        self.assertEqual(self.apply(d), 0)
 
     def test_wrong_source_refused(self):
         self.write_source([row('house')])
