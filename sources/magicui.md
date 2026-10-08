@@ -30,9 +30,9 @@ shadcn 生态里最常用的动效组件库之一：营销页的背景图案（�
 实测（2026-10-08）：`curl -s https://magicui.design/r/light-rays.json` 返回 1 个文件 `registry/magicui/light-rays.tsx`（3682 字符），依赖 `motion`。
 
 ## 使用注意
-- 2026-10-08 拉取全部 78 个组件源码统计：只有 retro-grid、dia-text-reveal、icon-cloud、scroll-based-velocity、floating-3d-particles 5 个有减弱动效处理；其余循环动画（marquee、border-beam、shine-border、animated-beam、orbiting-circles、ripple 等）要自己加 `prefers-reduced-motion` 分支，并在离屏时暂停。
+- 2026-10-08 拉取全部 78 个组件源码统计（来源级统计；指南里点名的有动画的组件已逐个登记到 `sources/_claims.tsv`，带源码 hash 和探针，搜索结果里显示为 ⚑ 缺能力）：只有 retro-grid、dia-text-reveal、icon-cloud、scroll-based-velocity、floating-3d-particles 5 个有减弱动效处理；其余循环动画（marquee、border-beam、shine-border、animated-beam、orbiting-circles、ripple 等）要自己加 `prefers-reduced-motion` 分支，并在离屏时暂停。
 - canvas 类（flickering-grid、globe、glyph-matrix、particles、icon-cloud、confetti、floating-3d-particles、retro-grid）注意离屏暂停和移动端性能。
-- 颜色：2026-10-08 统计，32 个组件写死了 hex / rgb 颜色（光束、流光边框、渐变文字的默认色等），13 个用 shadcn 变量；接入时通过 props 或改源码换成主底座颜色，暗色下逐个检查。
+- 颜色（来源级统计；指南点名的组件里写死颜色的已登记为 hardcoded-color 结论）：2026-10-08 统计，32 个组件写死了 hex / rgb 颜色（光束、流光边框、渐变文字的默认色等），13 个用 shadcn 变量；接入时通过 props 或改源码换成主底座颜色，暗色下逐个检查。
 - 动效依赖是 `motion`（不是 framer-motion）；globe 依赖 `cobe`，confetti 依赖 `canvas-confetti`，tweet-card 依赖 `react-tweet`。
 - 很多效果属于 `guides/_scenes.md` 的主导效果（光束、流光边框、渐变文字），同一屏最多一个；Operate 页面不用。
 

@@ -484,9 +484,10 @@ def compat_verdict(base, source, matrix):
     return 'ok'
 
 
-def flagged(claims, r):
-    """Engineering problems recorded for a row: ledger rows of kind defect/demo, plus the human note."""
-    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in ('defect', 'demo')]
+def flagged(claims, r, kinds=('defect', 'demo')):
+    """Engineering problems recorded for a row: ledger rows of kind defect/demo (these also rank a row after clean
+    ones); find also prints gap rows (missing capability, e.g. no reduced-motion branch) without changing the order."""
+    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in kinds]
 
 
 def claims_by_ref():
@@ -674,7 +675,7 @@ def cmd_find(args):
         print('    %s' % r['desc'][:160])
         ref = '%s:%s' % (r['source'], r['id'])
         flags = ['%s（%s %s）：%s' % (CLAIM_KINDS[c['kind']], CLAIM_DEPTHS[c['depth']], c['checked'], c['claim'])
-                 for c in flagged(claims, r)] + (
+                 for c in flagged(claims, r, ('defect', 'demo', 'gap'))] + (
             ['备注：' + r['notes']] if r['notes'] else []) + (
             ['待审：' + review_text(r)] if r['status'] == 'needs-review' else []) + (
             ['%s（%s 的 source_status）' % (SOURCE_STATUS_ZH[source_status(r['source'])], r['source'])]
@@ -693,8 +694,8 @@ def cmd_find(args):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
     if any_flag:
-        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
-              '接真实业务前要处理，或换同类候选；同等相关时排在没有备注的候选之后。')
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用、没有减弱动效处理等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
+              '接真实业务前要处理，或换同类候选；演示、缺陷、备注和待审同等相关时排在后面，缺能力只提示。')
     if any(r['risk'] for _, r in scored[:limit]):
         print('⚠ = 场景化审美风险：Persuade/Experience 写清场景可以用，Operate/Read 不用（用户明确要求时作为例外写明），见 guides/_scenes.md「质量三级」')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
