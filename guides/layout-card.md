@@ -30,7 +30,7 @@ impeccable 的三条规则在这里最常被违反：
 - `reactbits:magic-bento`（⚠ glow）：已拉源码，860 行，依赖 gsap，粒子 + 聚光 + 倾斜，约 28 处写死颜色，源码里没有 `prefers-reduced-motion` 处理，也没有任何 ARIA。只用于 Persuade 页面一处，接入时自己补减弱动效（关闭粒子和倾斜），颜色改为主底座变量。
 - `reactbits:spotlight-card`（⚠ glow）：已拉源码，73 行，跟随光标的渐变光斑，无减弱动效处理；触屏没有效果。Operate 页面不用。
 - `reactbits:border-glow`、`reactbits:chroma-grid`、`reactbits:cursor-grid`（均 ⚠ glow）、`reactbits:bounce-cards`（⚠ bounce）、`reactbits:tilted-card`、`reactbits:reflective-card`（会申请摄像头权限，reactbits.md）：表现型卡片，未逐个拉源码；只在 Persuade / Experience 页面，且同一屏不叠两个。
-- `jakubantalik:transition:card-resize`：已拉文档，直接过渡 `width` / `height`。`_scenes.md` 要求不要动画宽高；只用于单个小元素（一张卡的紧凑 ↔ 展开），不要用在会推动整列布局的容器上。
+- `jakubantalik:transition:card-resize`：已拉文档，直接过渡 `width` / `height`，会触发布局。按 `_scenes.md`「动效规范」的条件，单个小元素（一张卡的紧凑 ↔ 展开）可以用；不要用在会推动整列布局的容器上，网格里多张卡同时变化时换 transform 方案或先实测。
 - `bencho:tilt`、`bencho:mb-holo`、`bencho:scratch-card`：交互玩具，需要 token 映射（bencho.md），只在 Experience 页面考虑。
 - `librariesdev:border-beam-md`（⚠ glow）：作者规则是等待不足 2 秒不加效果，适合"正在运行"的 AI 卡片，不是常驻装饰。
 - `originkit:neon-border`、`originkit:pulsating-border`（⚠ glow，需登录）：同上，且需用户自己登录取码；免费替代是 `librariesdev:border-beam-md`。
