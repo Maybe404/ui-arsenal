@@ -27,7 +27,7 @@ tech-text	字母在光标下变成虚线矢量路径，可拖拽回弹的科技�
 text-cursor	文字跟随光标并留下拖尾副本；依赖 motion	text-effect,cursor-effect	specialized		drag,cursor		
 text-loop	沿弯曲 SVG 路径无缝流动的文字跑马灯；依赖 gsap	text-effect,motion-transition	specialized			marquee	
 text-pressure	字符随指针距离缩放/形变的可变字体压力效果	text-effect,motion-transition	specialized		press		
-text-type	打字机效果，带闪烁光标与可调打字节奏；依赖 gsap	text-effect,cursor-effect	specialized		cursor	typewriter	
+text-type	打字机效果，带闪烁光标与可调打字节奏；依赖 gsap	text-effect	specialized			typewriter	
 true-focus	依次聚焦单词、其余模糊的焦点切换文字；依赖 motion	text-effect,motion-transition	specialized				
 variable-proximity	随指针距离连续变化字重等样式的可变字体效果；依赖 motion	text-effect,motion-transition	specialized				
 warp-text	WebGL 文字在指针周围弯曲折射扭曲；依赖 ogl	text-effect,motion-transition	specialized	webgl			
@@ -107,7 +107,7 @@ masonry	动画重排的响应式瀑布流 masonry 布局；依赖 gsap	layout-ca
 model-viewer	three.js 3D 模型查看器，带轨道控制与光照预设；依赖 @react-three/drei,@react-three/fiber,three	fun-3d	specialized	webgl,3d			
 morph-slider	WebGL 位移转场融化切换的图片滑块；依赖 gsap,ogl	media	specialized	webgl			
 option-wheel	滚轮/拖拽/方向键转动的弧形选项选择器	select,micro-interaction	specialized		drag		
-pill-nav	胶囊形导航，活动项滑动高亮；依赖 gsap,react-router-dom	navigation	specialized		swipe		
+pill-nav	胶囊形导航，活动项滑动高亮；依赖 gsap,react-router-dom	navigation	specialized				
 pixel-card	像素扩散揭示内容的卡片	layout-card	specialized	pixel			
 profile-card	带 3D 悬停与反光的个人资料卡	avatar-user,layout-card	specialized	3d	hover		
 reflective-card	摄像头实时反射与眩光的卡片；依赖 lucide-react	layout-card	specialized				

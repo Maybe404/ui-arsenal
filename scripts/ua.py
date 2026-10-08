@@ -2291,6 +2291,26 @@ def source_status(s):
 
 # ---------- stats / audit ----------
 
+RISK_HINTS = {'marquee': r'marquee|跑马灯', 'typewriter': r'typewriter|打字机', 'glow': r'\bglow\b|光晕',
+              'glass': r'glassmorphism|毛玻璃|玻璃拟态', 'gradient-text': r'渐变文字|gradient text'}
+
+
+def label_warnings(rows):
+    """Candidates for a human to check, never written automatically: a risk the name or description suggests but
+    the risk column lacks, and visual tags that contradict the description."""
+    warns = []
+    for r in rows:
+        if r['layer'] == 'icons':
+            continue
+        text = (r['name'] + ' ' + r['desc']).lower()
+        missing = [k for k, rx in RISK_HINTS.items() if re.search(rx, text) and k not in r['risk'].split(',')]
+        if missing:
+            warns.append('%s:%s: 描述提到 %s，risk 列没有（确认后补，或者确认是误报）' % (r['source'], r['id'], ','.join(missing)))
+        if 'webgl' in r['vtags'].split(',') and re.search(r'(?:无|不用|没有|不需要|no) ?webgl', text):
+            warns.append('%s:%s: 描述说没有 WebGL，visual_tags 却有 webgl' % (r['source'], r['id']))
+    return warns
+
+
 def cmd_stats(args):
     md = '--md' in args or '--write-skill' in args
     buf = []
@@ -2450,6 +2470,7 @@ def cmd_audit(args):
         missing = [t for t in TASKS if t != 'other' and not os.path.exists(os.path.join(GUIDES, t + '.md'))]
         if missing:
             warns.append('no guide yet for: ' + ' '.join(missing))
+    warns += label_warnings(load_rows())
     errs += audit_claims(known)
     for e in errs[:200]:
         print(e)
