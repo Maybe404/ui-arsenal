@@ -1,6 +1,6 @@
 ---
 name: ui-arsenal
-description: 在前端 UI 任务里选择和获取成熟组件时使用：新增或替换组件、调整页面视觉、加交互或动效、背景、加载态、图标、AI 界面、落地页或后台页面。提供用户收藏的组件库、动效库、灵感库和图标库的本地索引，按 UI 任务分类的选型指南，以及只读的取码工具；先评估成熟组件再决定是否自己写，保证整页风格统一并给出选型理由。用户点名某个组件库、组件，或给出组件网站链接时也使用。纯后端、非 UI 的任务，以及只改一个间距、颜色等数值的微调不需要。
+description: 在前端 UI 任务里选择和获取成熟组件时使用：新增或替换组件、调整页面视觉、加交互或动效、背景、加载态、图标、AI 界面、落地页或后台页面。提供用户收藏的组件库、动效库、灵感库和图标库的本地索引（组件以 React 生态为主：shadcn、Tailwind、motion；Vue、Svelte、Angular、纯 HTML 项目只能用其中的图标、纯 CSS 过渡、设计规范和灵感参考），按 UI 任务分类的选型指南，以及只读的取码工具；先评估成熟组件再决定是否自己写，保证整页风格统一并给出选型理由。用户点名某个组件库、组件，或给出组件网站链接时也使用。纯后端、非 UI 的任务，以及只改一个间距、颜色等数值的微调不需要。
 ---
 
 # UI Arsenal：先评估成熟组件，合理选用
@@ -40,7 +40,9 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
 
 ## 三、UI 选型协议（局部和整页）
 
-1. **读项目现状**：已有组件、`components.json`、tokens、DESIGN.md、相关页面、依赖（Tailwind 版本、motion 还是 framer-motion、SSR 边界）。
+1. **读项目现状**：先确认技术栈，再看已有组件、`components.json`、tokens、DESIGN.md、相关页面、依赖（Tailwind 版本、motion 还是 framer-motion、SSR 边界）。
+   - **不是 React 的项目**（Vue、Svelte、Angular、纯 HTML 等）走短路径：不选主底座，不引入任何 React 组件库；能直接用的只有 Lucide（各框架都有官方包）、`jakubantalik:transition:*`（纯 CSS 过渡）、getdesign 的 DESIGN.md 和灵感参考。搜索加 `--stack <栈>`（例如 `find.sh 侧边栏 --stack vue`），React 组件只借结构和交互思路，用项目自己的组件库实现。
+   - **React 但用别的组件库**（Ant Design、MUI、Chakra 等）：这个组件库就是主底座，本库只提供能映射进去的专项件，见第 4 步。
 2. **判断页面模式**：Persuade、Operate、Read 或 Experience，定义和效果预算见 `guides/_scenes.md`。
 3. **写设计基线**：配色、字体、圆角、阴影、密度、图标系统、动效强度。项目已有设计就照着写；新项目可以从 getdesign 的免费 DESIGN.md 挑一份作为方向（见 `guides/design-system.md`），只借方向，不复制品牌资产。
 4. **定一个主底座**：已有项目就是它现在用的组件库或设计系统，不为了用收藏库而换；新的 React 项目从 shadcn、uiarc 里选。一页只有一个，见 `sources/_styles.md`。再列出本页允许的专项来源，不超过 2–3 个。参考类来源只影响方向，不能直接当生产组件。
@@ -114,6 +116,7 @@ $S/find.sh --task loading --layer foundation  # 按统一 UI 任务和层级筛�
 $S/find.sh 背景 --code                        # 只要现在就能直接拿到代码或提示词的
 $S/find.sh dashboard --ref                    # 只要灵感参考
 $S/find.sh 按钮 --base shadcn                 # 已定主底座：去掉兼容矩阵里"不建议"同页的来源，标出"有条件"的
+$S/find.sh 侧边栏 --stack vue                 # 非 React 项目：只列纯 CSS、多框架图标、设计规范和参考
 $S/find.sh --help                             # 全部筛选参数、任务和层级取值（不带任何参数时也打印它）
 $S/fetch.sh bencho:magnet-select              # 只读拉取，打印依赖和安装命令；--help 看全部选项
 $S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS

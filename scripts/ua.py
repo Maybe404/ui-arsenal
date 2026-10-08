@@ -493,7 +493,16 @@ def claims_by_ref():
     return out
 
 
-def search(terms, src=None, mode='default', task=None, layer=None, info=None, base=None):
+STACKS = ('react', 'vue', 'svelte', 'angular', 'solid', 'html', 'css')
+
+
+def fits_stack(r, stack):
+    """Whether a row can be used in a project on this stack: React code only in React projects; pure CSS, multi-
+    framework packages (Lucide), prompts/specs (framework any) and references everywhere."""
+    return r['framework'] in ('', 'any', 'multi', 'css') or r['framework'] == stack
+
+
+def search(terms, src=None, mode='default', task=None, layer=None, info=None, base=None, stack=None):
     """Rank catalogue rows for a query. Returns ([(score, row)], note); `info`, if given, receives details
     (hidden_icons, base_hidden, low_confidence) for callers that need more than the note text. With `base`, rows
     the compatibility matrix rules out for that primary base are dropped and the rest carry r['_compat']."""
@@ -501,7 +510,8 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None, ba
     terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
     gone = {s for s in sources() if source_status(s) in ('offline', 'closed')} if mode != 'all' else set()
     rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r) and r['source'] not in gone
-            and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
+            and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)
+            and (not stack or fits_stack(r, stack))]
     info['base_hidden'] = 0
     if base:
         matrix = compat_matrix()
@@ -581,8 +591,9 @@ COMPAT_ZH = {'conditional': '有条件', 'unknown': '兼容性未登记'}
 
 
 def find_help():
-    print('usage: find.sh [-s source] [--base B] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+    print('usage: find.sh [-s source] [--base B] [--stack S] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
     print('  -s       只搜一个来源：' + ' '.join(sources()))
+    print('  --stack  项目的技术栈：' + ' '.join(STACKS) + '。非 React 时只列纯 CSS、多框架图标、设计规范和参考')
     print('  --base   项目的主底座（如 shadcn、uiarc）：按 sources/_styles.md 的兼容矩阵去掉"不建议"同页的来源，标出"有条件"的')
     print('  --task   UI 任务：' + ' '.join(TASKS))
     print('  --layer  层级：' + ' '.join(LAYERS))
@@ -595,13 +606,15 @@ def find_help():
 
 
 def cmd_find(args):
-    src, limit, mode, terms, task, layer, base = None, 25, 'default', [], None, None, None
+    src, limit, mode, terms, task, layer, base, stack = None, 25, 'default', [], None, None, None, None
     it = iter(args)
     for a in it:
         if a == '-s':
             src = take(it, a)
         elif a == '--base':
             base = take(it, a)
+        elif a == '--stack':
+            stack = take(it, a)
         elif a == '--task':
             task = take(it, a)
         elif a == '--layer':
@@ -617,7 +630,7 @@ def cmd_find(args):
             unknown_option(a)
         else:
             terms.append(a)
-    if not (terms or src or task or layer or base):
+    if not (terms or src or task or layer or base or stack):
         find_help()
         return 2
     if task and task not in TASKS:
@@ -627,8 +640,13 @@ def cmd_find(args):
     for name, v in (('source', src), ('base', base)):
         if v and v not in sources():
             raise UsageError('unknown %s %r. choose from: %s' % (name, v, ' '.join(sources())))
+    if stack and stack not in STACKS:
+        raise UsageError('unknown stack %r. choose from: %s' % (stack, ' '.join(STACKS)))
     info = {}
-    scored, note = search(terms, src, mode, task, layer, info, base)
+    scored, note = search(terms, src, mode, task, layer, info, base, stack)
+    if stack and stack != 'react':
+        note += ('\n按 %s 项目过滤：只列纯 CSS、多框架图标、设计规范和灵感参考；React 组件库的条目都去掉了，'
+                 '结构和交互可以借鉴，代码要在 %s 里自己实现。' % (stack, stack))
     icons = ('（另有 %d 个 Lucide 图标也匹配，默认不显示：查询里加 icon / 图标，或用 --task icon）' % info['hidden_icons']
              if info.get('hidden_icons') else '')
     if info.get('base_hidden'):
@@ -2461,7 +2479,8 @@ def cmd_searchtest(args):
     fails = 0
     for c in cases:
         info = {}
-        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info, base=c.get('base'))
+        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info, base=c.get('base'),
+                        stack=c.get('stack'))
         ids = ['%s:%s' % (r['source'], r['id']) for _, r in res]
         k = c.get('k', 1)
         top = [r for _, r in res[:k]]
@@ -2488,6 +2507,8 @@ def cmd_searchtest(args):
             checks.append(bool(top) and all(r['access'] == c['topk_all_access'] for r in top))
         if 'none_id' in c:
             checks.append(not any(re.search(c['none_id'], r['id']) for _, r in res))
+        if 'none_framework' in c:
+            checks.append(bool(res) and not any(r['framework'] == c['none_framework'] for _, r in res))
         if 'none_source' in c:
             checks.append(bool(res) and not any(r['source'] == c['none_source'] for _, r in res))
         if 'confident' in c:
@@ -2499,8 +2520,8 @@ def cmd_searchtest(args):
         ok = bool(checks) and all(checks)
         fails += not ok
         print('%-4s %-34s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + ''.join(
-            {'mode': ' --%s', 'src': ' -s %s', 'task': ' --task %s', 'base': ' --base %s'}[x] % c[x]
-            for x in ('mode', 'src', 'task', 'base') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
+            {'mode': ' --%s', 'src': ' -s %s', 'task': ' --task %s', 'base': ' --base %s', 'stack': ' --stack %s'}[x] % c[x]
+            for x in ('mode', 'src', 'task', 'base', 'stack') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
     print('\n%d/%d passed' % (len(cases) - fails, len(cases)))
     return 1 if fails else 0
 

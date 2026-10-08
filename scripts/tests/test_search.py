@@ -113,6 +113,15 @@ class Relevance(unittest.TestCase):
 
 
 
+class Stack(unittest.TestCase):
+    def test_react_code_only_for_react(self):
+        for fw, vue, react in (('react', False, True), ('css', True, True), ('multi', True, True),
+                               ('any', True, True), ('', True, True)):
+            r = row('x')
+            r['framework'] = fw
+            self.assertEqual((ua.fits_stack(r, 'vue'), ua.fits_stack(r, 'react')), (vue, react), fw)
+
+
 class CompatMatrix(unittest.TestCase):
     """Reads the real matrix in sources/_styles.md (a repository file, no network)."""
     def setUp(self):
