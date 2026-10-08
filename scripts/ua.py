@@ -1703,7 +1703,8 @@ def days_between(a, b):
 
 def cmd_refresh(args):
     if '-h' in args or '--help' in args:
-        print('usage: refresh.sh [source...]   拉取线上清单，生成 sources/_pending/<日期>/<source>.json 待审变更，不改正式数据')
+        print('usage: refresh.sh [source...]   拉取线上清单，生成 sources/_pending/<日期>/<source>-<时分秒>.json 待审变更，不改正式数据\n'
+              '  每次运行写一份新文件；上一份还没 apply 的待审稿里补好的新条目字段（desc_zh/task/layer 等）会沿用过来。')
         return 0
     targets = [a for a in args if not a.startswith('-')] or sources()
     today = time.strftime('%Y-%m-%d')
@@ -1714,7 +1715,13 @@ def cmd_refresh(args):
         if s not in REFRESH:
             print('%-13s skip   %s' % (s, NO_REFRESH.get(s, 'no refresh adapter')))
             continue
-        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok', 'format': PROPOSAL_FORMAT}
+        stamp = time.strftime('%H%M%S')
+        while os.path.exists(os.path.join(outdir, '%s-%s.json' % (s, stamp))):  # two runs in one second
+            time.sleep(1)
+            stamp = time.strftime('%H%M%S')
+        path = os.path.join(outdir, '%s-%s.json' % (s, stamp))
+        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'revision': '%s %s' % (today, stamp),
+                'status': 'ok', 'format': PROPOSAL_FORMAT, 'base_sha': source_sha(s)}
         try:
             ix = REFRESH[s]()
             remote, key_of, h, new_row = ix['remote'], ix['key_of'], ix['sha'], ix['new_row']
@@ -1722,7 +1729,8 @@ def cmd_refresh(args):
                 raise RuntimeError('index returned 0 items (parser broken or site changed)')
         except Exception as e:
             prop.update(status='error', error=str(e)[:300])
-            json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(prop, f, ensure_ascii=False, indent=1)
             print('%-13s ERROR  %s  → 不产生任何条目变更（不会当作全部下线）' % (s, prop['error']))
             rc = 1
             continue
@@ -1767,27 +1775,66 @@ def cmd_refresh(args):
                             'index; they are listed under suspect_missing for a human to check, none is proposed as '
                             'gone' % (len(missing), known, 100.0 * len(missing) / max(known, 1)))
             suspect, missing = missing, []
+        carried = carry_over(s, added)
         prev = load_state().get('refresh', {}).get(s, {})
         prop.update(status='degraded' if degraded else 'ok', degraded=degraded, detects=list(ix['detects']),
                     blind=ix['blind'],
                     index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
                     missing=missing, suspect_missing=suspect, unverified=unverified, added=added)
-        json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(prop, f, ensure_ascii=False, indent=1)
         update_state(lambda st: st.setdefault('refresh', {}).__setitem__(s, {'at': prop['generated_at'], 'index_sha': h}))
-        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s' % (
+        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s%s' % (
             s, len(remote), len(local), len(init), len(changed), len(missing), len(added),
+            '  （沿用上一份待审稿里补好的 %d 个新条目）' % carried if carried else '',
             ''.join('\n              DEGRADED %s' % d for d in degraded)))
-    print('\n待审变更已写入 %s/（不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。' % outdir)
+    print('\n待审变更已写入 %s/（每次一份新文件，不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。'
+          % outdir)
     return rc
 
 
-def latest_pending(s):
-    if not os.path.isdir(PENDING):
-        return None
-    for d in sorted(os.listdir(PENDING), reverse=True):
-        p = os.path.join(PENDING, d, s + '.json')
-        if os.path.exists(p):
+def pending_files(s):
+    """Every proposal written for a source, oldest first: _pending/<date>/<source>-<HHMMSS>.json (and the older
+    one-per-day <source>.json)."""
+    out = []
+    for d in (sorted(os.listdir(PENDING)) if os.path.isdir(PENDING) else []):
+        folder = os.path.join(PENDING, d)
+        for fn in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+            if fn == s + '.json' or re.fullmatch(re.escape(s) + r'-\d{6}\.json', fn):
+                out.append(os.path.join(folder, fn))
+    return sorted(out, key=lambda p: (os.path.basename(os.path.dirname(p)), os.path.basename(p) != s + '.json', p))
+
+
+HUMAN_FIELDS = ('desc_zh', 'task', 'layer', 'visual_tags', 'interaction_tags', 'risk', 'notes')
+
+
+def carry_over(s, added):
+    """Copy what a human already filled in for new items in the previous unapplied proposal, so refreshing again
+    never throws that work away. Returns how many items got something."""
+    p = latest_pending(s)
+    if not p:
+        return 0
+    with open(p, encoding='utf-8') as f:
+        before = {a['id']: a for a in json.load(f).get('added', [])}
+    n = 0
+    for a in added:
+        old = before.get(a['id'], {})
+        filled = {k: old[k] for k in HUMAN_FIELDS if old.get(k) and not a.get(k)}
+        a.update(filled)
+        n += bool(filled)
+    return n
+
+
+def latest_pending(s, applied=False):
+    """The newest proposal for a source that has not been applied yet (or the newest of all with applied=True)."""
+    for p in reversed(pending_files(s)):
+        try:
+            with open(p, encoding='utf-8') as f:
+                done = json.load(f).get('applied_at')
+        except ValueError:
+            continue
+        if applied or not done:
             return p
     return None
 
@@ -1795,10 +1842,14 @@ def latest_pending(s):
 def cmd_diff(args):
     targets = [a for a in args if not a.startswith('-')] or sources()
     for s in targets:
-        p = latest_pending(s)
+        p = latest_pending(s) or latest_pending(s, applied=True)
         if not p:
             continue
-        d = json.load(open(p, encoding='utf-8'))
+        with open(p, encoding='utf-8') as f:
+            d = json.load(f)
+        if d.get('applied_at'):
+            print('## %s  最近的待审稿已在 %s apply（%s）' % (s, d['applied_at'], os.path.relpath(p, ROOT)))
+            continue
         if d['status'] == 'error':
             print('## %s  ERROR %s' % (s, d.get('error')))
             continue
@@ -1828,9 +1879,78 @@ def cmd_diff(args):
     return 0
 
 
+def source_sha(s):
+    """Hash of the machine file a proposal was computed against; apply refuses when it has changed since."""
+    p = os.path.join(SRC, s + '.tsv')
+    if not os.path.exists(p):
+        return ''
+    with open(p, 'rb') as f:
+        return sha(f.read())[:16]
+
+
+def write_together(pairs):
+    """Write several files so that either all of them change or none does: each is written to a temp file first,
+    then the originals are swapped out one by one and put back if a later swap fails."""
+    staged, swapped = [], []
+    try:
+        for path, text in pairs:
+            with open(path + '.apply-tmp', 'w', encoding='utf-8') as f:
+                f.write(text)
+            staged.append(path)
+        try:
+            for path in staged:
+                if os.path.exists(path):
+                    shutil.copy2(path, path + '.apply-bak')
+                os.replace(path + '.apply-tmp', path)
+                swapped.append(path)
+        except BaseException:
+            for path in swapped:
+                if os.path.exists(path + '.apply-bak'):
+                    os.replace(path + '.apply-bak', path)
+            raise
+    finally:
+        for path in staged:
+            for tail in ('.apply-tmp', '.apply-bak'):
+                if os.path.exists(path + tail):
+                    os.remove(path + tail)
+
+
+CLEAN = re.compile(r'^[^\t\r\n]*$')
+
+
+def check_added(a, s, taken):
+    """Everything audit would reject in a new item, found before anything is written."""
+    errs, where = [], 'new %s' % a.get('id', '?')
+    if not re.match(r'^[A-Za-z0-9][A-Za-z0-9:._@-]*$', a.get('id', '')):
+        errs.append('%s: id must be letters, digits and : . _ @ -' % where)
+    elif a['id'] in taken:
+        errs.append('%s: id already exists in %s.tsv or %s.notes.tsv' % (where, s, s))
+    for k, v in a.items():
+        if isinstance(v, str) and not CLEAN.match(v):
+            errs.append('%s: field %s contains a tab or line break' % (where, k))
+    tasks = [x for x in a.get('task', '').split(',') if x]
+    if not 1 <= len(tasks) <= 2 or any(x not in TASKS for x in tasks):
+        errs.append('%s: task %r (one or two of: %s)' % (where, a.get('task'), ' '.join(TASKS)))
+    if a.get('layer') not in LAYERS:
+        errs.append('%s: layer %r (one of: %s)' % (where, a.get('layer'), ' '.join(LAYERS)))
+    bad_risk = [x for x in a.get('risk', '').split(',') if x and x not in RISKS]
+    if bad_risk:
+        errs.append('%s: risk %s (allowed: %s)' % (where, ','.join(bad_risk), ' '.join(RISKS)))
+    if a.get('access', 'free') not in ACCESS or a.get('usage', 'install') not in USAGE:
+        errs.append('%s: access %r / usage %r' % (where, a.get('access'), a.get('usage')))
+    for k, arg in parse_spec(a.get('spec', 'manual')):
+        if k not in ADAPTER_KINDS or (k in ('registry', 'url', 'doc', 'prompt', 'browser') and not arg.startswith('https://')):
+            errs.append('%s: spec %s:%s' % (where, k, arg))
+    if a.get('access') == 'pro' and a.get('spec') != 'none':
+        errs.append('%s: a pro item must have spec none' % where)
+    return errs
+
+
 def cmd_apply(args):
     if not args or args[0] in ('-h', '--help'):
-        print('usage: apply.sh <source> [--file pending.json]   把已审的待审变更写入 sources/<source>.tsv（只写机器字段）')
+        print('usage: apply.sh <source> [--file pending.json] [--accept-suspect]\n'
+              '  把审过的待审变更写进 sources/<source>.tsv（机器字段），新条目同时追加 sources/<source>.notes.tsv 的一行\n'
+              '  （来自待审文件里补好的 desc_zh/task/layer 等）；已有的 notes 行不会改。全部校验通过才写，两份文件一起写入。')
         return 0
     s = args[0]
     if '--file' in args and args.index('--file') + 1 >= len(args):
@@ -1838,24 +1958,54 @@ def cmd_apply(args):
     p = args[args.index('--file') + 1] if '--file' in args else latest_pending(s)
     if not p:
         sys.exit('no pending proposal for %s; run refresh.sh %s first' % (s, s))
-    d = json.load(open(p, encoding='utf-8'))
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    if d.get('source') != s:
+        sys.exit('refusing to apply: %s is a proposal for %r, not %r' % (p, d.get('source'), s))
     if d['status'] == 'error':
         sys.exit('proposal is an error report, nothing to apply: %s' % d.get('error'))
     if d.get('format') != PROPOSAL_FORMAT:
         sys.exit('proposal %s was written by an older refresh (format %s); run refresh.sh %s again' % (
             p, d.get('format', 1), s))
-    unrouted = [c['id'] for c in d['changed'] if c['access'][1] != 'pro' and c['access'][0] == 'pro'
-                and not (c.get('spec') and c['spec'] != 'none')]
-    if unrouted:
-        sys.exit('refusing to apply: %s leave Pro but the proposal has no official fetch route for them; '
-                 'check the source by hand' % ', '.join(unrouted))
+    if d.get('applied_at'):
+        sys.exit('proposal %s was already applied at %s' % (p, d['applied_at']))
+    if d.get('base_sha') != source_sha(s):
+        sys.exit('refusing to apply: sources/%s.tsv changed after this proposal was generated (another proposal '
+                 'applied, or a hand edit); run refresh.sh %s again so nothing newer is overwritten' % (s, s))
     if '--accept-suspect' in args:  # a human checked the items an alarming shrink held back
         d['missing'] = d.get('missing', []) + d.get('suspect_missing', [])
-    today = d['generated_at'][:10]
     mp, np_ = os.path.join(SRC, s + '.tsv'), os.path.join(SRC, s + '.notes.tsv')
-    rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in open(mp, encoding='utf-8') if l.strip()]
+    with open(mp, encoding='utf-8') as f:
+        rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+    with open(np_, encoding='utf-8') as f:
+        notes_text = f.read()
+    note_ids = {l.split('\t', 1)[0] for l in notes_text.splitlines() if l.strip()}
     by_id = {r['id']: r for r in rows}
-    n = {'seen': 0, 'init': 0, 'changed': 0, 'missing': 0, 'added': 0, 'skipped_new': 0}
+    # 1. validate everything first
+    errs = []
+    for c in d['changed']:
+        if c['access'][1] not in ACCESS:
+            errs.append('changed %s: access %r' % (c['id'], c['access'][1]))
+        if c['access'][0] == 'pro' and c['access'][1] != 'pro' and not (c.get('spec') and c['spec'] != 'none'):
+            errs.append('changed %s: leaves Pro but the proposal has no official fetch route; check by hand' % c['id'])
+        if c['deps'][1] is not None and not CLEAN.match(c['deps'][1]):
+            errs.append('changed %s: deps contain a tab or line break' % c['id'])
+    for m in d['missing']:
+        if m.get('proposal') not in ('needs-review', 'removed'):
+            errs.append('missing %s: proposal %r' % (m['id'], m.get('proposal')))
+    ready = [a for a in d['added'] if a.get('desc_zh') and a.get('task') and a.get('layer')]
+    taken = set(by_id) | note_ids
+    for a in ready:
+        errs += check_added(a, s, taken)
+        taken.add(a.get('id'))
+    if errs:
+        print('refusing to apply %s, nothing was written:' % os.path.relpath(p, ROOT))
+        for e in errs:
+            print('  ' + e)
+        return 1
+    # 2. compute the new state in memory
+    today = d['generated_at'][:10]
+    n = {'seen': 0, 'init': 0, 'changed': 0, 'missing': 0, 'added': 0, 'skipped_new': len(d['added']) - len(ready)}
     for i in d['seen']:
         r = by_id.get(i)
         if r:
@@ -1888,30 +2038,27 @@ def cmd_apply(args):
             r['status'] = m['proposal']
             n['missing'] += 1
     new_notes = []
-    for a in d['added']:
-        if not (a.get('desc_zh') and a.get('task') and a.get('layer')):
-            n['skipped_new'] += 1
-            continue
-        if a['id'] in by_id:
-            continue
+    for a in ready:
         row = {k: '' for k in COLS}
         row.update(source=s, id=a['id'], name=a['title'], category=a.get('category', ''), url=a.get('url', ''),
                    fetch=a.get('fetch', ''), spec=a.get('spec', 'manual'), access=a.get('access', 'free'),
                    usage=a.get('usage', 'install'), framework=a.get('framework', ''), deps=a.get('deps', ''),
                    status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''))
         rows.append(row)
-        by_id[row['id']] = row
         new_notes.append('\t'.join([a['id'], a['desc_zh'], a['task'], a['layer'], a.get('visual_tags', ''),
-                                    a.get('interaction_tags', ''), a.get('risk', ''), '']))
+                                    a.get('interaction_tags', ''), a.get('risk', ''), a.get('notes', '')]))
         n['added'] += 1
-    with open(mp, 'w', encoding='utf-8') as f:
-        f.write('\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n')
-    if new_notes:
-        with open(np_, 'a', encoding='utf-8') as f:
-            f.write('\n'.join(new_notes) + '\n')
+    # 3. write both files together, then mark the proposal as used
+    tsv = '\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n'
+    notes = notes_text if not new_notes else notes_text.rstrip('\n') + '\n' + '\n'.join(new_notes) + '\n'
+    write_together([(mp, tsv), (np_, notes)])
+    d['applied_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
+    with open(p, 'w', encoding='utf-8') as f:
+        json.dump(d, f, ensure_ascii=False, indent=1)
     print('applied %s: %s' % (os.path.relpath(p, ROOT), ', '.join('%s %d' % kv for kv in n.items())))
     if n['skipped_new']:
-        print('有 %d 个新条目缺 desc_zh/task/layer，没有写入：在 %s 里补全后再 apply。' % (n['skipped_new'], p))
+        print('有 %d 个新条目缺 desc_zh/task/layer，没有写入：在 %s 里补全后重新 refresh.sh %s（补好的字段会沿用到新的待审稿），'
+              '再 apply。' % (n['skipped_new'], p, s))
     print('下一步：audit.sh，确认无误后 git commit（回滚用 git revert）。')
     return 0
 

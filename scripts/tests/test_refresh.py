@@ -129,7 +129,8 @@ class Access(Harness):
 
     def apply(self, d):
         p = os.path.join(self.tmp, 'proposal.json')
-        json.dump(d, open(p, 'w', encoding='utf-8'))
+        with open(p, 'w', encoding='utf-8') as f:
+            json.dump(d, f)
         with redirect_stdout(StringIO()):
             return ua.cmd_apply(['demo', '--file', p])
 
@@ -179,6 +180,92 @@ class Access(Harness):
         with self.assertRaises(SystemExit):
             self.apply({'source': 'demo', 'status': 'ok', 'generated_at': TODAY, 'seen': [], 'init': [],
                         'changed': [], 'missing': [], 'added': []})
+
+
+
+class Proposals(Access):
+    """#9: a proposal is checked against its source and base before anything is written, the two files change
+    together or not at all, and refreshing again keeps what a human filled in."""
+    def new_item_refresher(self):
+        return lambda: ua.index({'house': {}, 'tent': {}}, lambda r: r['id'], 'h',
+                                lambda k, m: {'spec': 'url:https://x.invalid/%s.svg' % k, 'usage': 'install'})
+
+    def fill(self, d, **fields):
+        for a in d['added']:
+            a.update(fields)
+        return d
+
+    def snapshot(self):
+        return [open(os.path.join(self.src, n), encoding='utf-8').read() for n in ('demo.tsv', 'demo.notes.tsv')]
+
+    def test_wrong_source_refused(self):
+        self.write_source([row('house')])
+        rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        d['source'] = 'other'
+        with self.assertRaises(SystemExit):
+            self.apply(d)
+
+    def test_base_changed_after_refresh_refused(self):
+        self.write_source([row('house')])
+        rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        self.write_source([row('house', desc='edited by hand')])  # the machine file moves on
+        with open(os.path.join(self.src, 'demo.tsv'), 'a', encoding='utf-8') as f:
+            f.write(tsv_line(row('extra')) + '\n')
+        with self.assertRaises(SystemExit):
+            self.apply(self.fill(d, desc_zh='帐篷', task='icon', layer='icons'))
+
+    def test_invalid_new_item_leaves_both_files_untouched(self):
+        self.write_source([row('house')])
+        rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        before = self.snapshot()
+        self.assertEqual(self.apply(self.fill(d, desc_zh='帐篷', task='camping', layer='icons')), 1)
+        self.assertEqual(self.snapshot(), before)
+
+    def test_failure_while_swapping_files_rolls_back(self):
+        self.write_source([row('house')])
+        rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        before = self.snapshot()
+        real_replace, calls = os.replace, []
+
+        def flaky(src, dst):
+            calls.append(dst)
+            if dst.endswith('demo.notes.tsv') and src.endswith('.apply-tmp'):
+                raise OSError('disk full (simulated)')
+            return real_replace(src, dst)
+        with patch.object(ua.os, 'replace', side_effect=flaky):
+            with self.assertRaises(OSError):
+                self.apply(self.fill(d, desc_zh='帐篷', task='icon', layer='icons'))
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(sorted(os.listdir(self.src)), ['demo.notes.tsv', 'demo.tsv'])  # no temp or backup files
+
+    def test_refresh_again_keeps_human_fields_in_a_new_revision(self):
+        self.write_source([row('house')])
+        rc, first = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        p1 = ua.latest_pending('demo')
+        self.fill(first, desc_zh='帐篷图标', task='icon', layer='icons')
+        with open(p1, 'w', encoding='utf-8') as f:
+            json.dump(first, f)
+        with patch.object(ua.time, 'strftime', side_effect=lambda fmt, *a: {'%H%M%S': '235959'}.get(fmt, TODAY)):
+            rc, second = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        p2 = ua.latest_pending('demo')
+        self.assertNotEqual(p1, p2)
+        self.assertEqual(second['added'][0]['desc_zh'], '帐篷图标')
+        with open(p1, encoding='utf-8') as f:
+            self.assertEqual(json.load(f)['added'][0]['desc_zh'], '帐篷图标')  # first revision untouched
+
+    def test_applied_proposal_is_not_applied_twice(self):
+        self.write_source([row('house')])
+        rc, d = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        p = ua.latest_pending('demo')
+        self.fill(d, desc_zh='帐篷', task='icon', layer='icons')
+        with open(p, 'w', encoding='utf-8') as f:
+            json.dump(d, f)
+        with redirect_stdout(StringIO()):
+            self.assertEqual(ua.cmd_apply(['demo', '--file', p]), 0)
+        self.assertIn('tent', self.read_source())
+        self.assertIsNone(ua.latest_pending('demo'))
+        with self.assertRaises(SystemExit), redirect_stdout(StringIO()):
+            ua.cmd_apply(['demo', '--file', p])
 
 
 if __name__ == '__main__':
