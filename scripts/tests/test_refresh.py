@@ -43,7 +43,8 @@ class Harness(unittest.TestCase):
                 patch.object(ua, 'load_rows', side_effect=lambda s=None, include_removed=False: rows), \
                 redirect_stdout(StringIO()):
             rc = ua.cmd_refresh([source])
-        return rc, json.load(open(ua.latest_pending(source), encoding='utf-8'))
+        with open(ua.latest_pending(source), encoding='utf-8') as f:
+            return rc, json.load(f)
 
 
 class PartialIndexes(Harness):
@@ -89,6 +90,95 @@ class PartialIndexes(Harness):
         rc, d = self.refresh('demo', lambda: most, rows)
         self.assertEqual(d['status'], 'ok')
         self.assertEqual([m['id'] for m in d['missing']], ['icon-00'])
+
+
+
+def tsv_line(r):
+    return '\t'.join(r.get(k, '') for k in ua.COLS)
+
+
+class Access(Harness):
+    """#8: access changes are reported even before a fingerprint exists; leaving Pro restores the official route;
+    dependency lists can be cleared, and an index that lists none leaves them alone."""
+    def setUp(self):
+        super().setUp()
+        self.src = os.path.join(self.tmp, 'sources')
+        os.makedirs(self.src)
+        self.stack.enter_context(patch.object(ua, 'SRC', self.src))
+
+    def write_source(self, rows):
+        with open(os.path.join(self.src, 'demo.tsv'), 'w', encoding='utf-8') as f:
+            f.write('\n'.join(tsv_line(r) for r in rows) + '\n')
+        with open(os.path.join(self.src, 'demo.notes.tsv'), 'w', encoding='utf-8') as f:
+            f.write('\n'.join('\t'.join([r['id'], r['desc'], r['task'], r['layer'], '', '', '', '']) for r in rows) + '\n')
+
+    def read_source(self):
+        with open(os.path.join(self.src, 'demo.tsv'), encoding='utf-8') as f:
+            return {r['id']: r for r in (dict(zip(ua.COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip())}
+
+    def uiarc_like(self, tier, deps=()):
+        def refresher():
+            def new(k, m):
+                pro = m['tier'] != 'free'
+                return {'spec': 'none' if pro else 'registry:https://x.invalid/r/%s.json' % k,
+                        'fetch': 'docs only' if pro else 'npx shadcn@latest add https://x.invalid/r/%s.json' % k,
+                        'access': 'pro' if pro else 'free'}
+            return ua.index({'button': {'tier': tier, 'deps': sorted(deps)}}, lambda r: r['id'], 'h', new,
+                            detects=('access', 'deps'))
+        return refresher
+
+    def apply(self, d):
+        p = os.path.join(self.tmp, 'proposal.json')
+        json.dump(d, open(p, 'w', encoding='utf-8'))
+        with redirect_stdout(StringIO()):
+            return ua.cmd_apply(['demo', '--file', p])
+
+    def test_free_to_pro_reported_without_fingerprint(self):
+        rows = [row('button', access='free', fingerprint='', spec='registry:https://x.invalid/r/button.json')]
+        rc, d = self.refresh('demo', self.uiarc_like('pro'), rows)
+        self.assertEqual(d['init'], [])
+        self.assertEqual(d['changed'][0]['access'], ['free', 'pro'])
+
+    def test_pro_to_free_restores_the_fetch_route_and_clears_deps(self):
+        rows = [row('button', access='pro', spec='none', fetch='docs only', deps='old-dep', fingerprint='old')]
+        self.write_source(rows)
+        rc, d = self.refresh('demo', self.uiarc_like('free'), rows)
+        self.apply(d)
+        r = self.read_source()['button']
+        self.assertEqual((r['access'], r['spec'], r['deps'], r['status']),
+                         ('free', 'registry:https://x.invalid/r/button.json', '', 'needs-review'))
+        self.assertIn('npx shadcn@latest add', r['fetch'])
+
+    def test_unlisted_deps_are_kept(self):
+        rows = [row('house', deps='lucide-react', fingerprint='old')]
+        self.write_source(rows)
+        plain = lambda: ua.index({'house': {'tags': ['home']}}, lambda r: r['id'], 'h', lambda k, m: {})
+        rc, d = self.refresh('demo', plain, rows)
+        self.assertIsNone(d['changed'][0]['deps'][1])
+        self.apply(d)
+        self.assertEqual(self.read_source()['house']['deps'], 'lucide-react')
+
+    def test_unknown_tier_is_no_access_claim(self):
+        rows = [row('button', access='free', fingerprint='')]
+        rc, d = self.refresh('demo', self.uiarc_like('enterprise'), rows)
+        self.assertEqual(d['changed'], [])
+        self.assertEqual(len(d['init']), 1)
+
+    def test_leaving_pro_without_a_route_is_refused(self):
+        rows = [row('button', access='pro', spec='none', fingerprint='old')]
+        self.write_source(rows)
+        d = {'source': 'demo', 'status': 'ok', 'format': ua.PROPOSAL_FORMAT, 'generated_at': TODAY + ' 10:00',
+             'seen': ['button'], 'init': [], 'missing': [], 'added': [],
+             'changed': [{'id': 'button', 'fingerprint': ['old', 'new'], 'deps': ['', None], 'access': ['pro', 'free']}]}
+        with self.assertRaises(SystemExit):
+            self.apply(d)
+        self.assertEqual(self.read_source()['button']['access'], 'pro')
+
+    def test_old_proposal_format_is_refused(self):
+        self.write_source([row('button')])
+        with self.assertRaises(SystemExit):
+            self.apply({'source': 'demo', 'status': 'ok', 'generated_at': TODAY, 'seen': [], 'init': [],
+                        'changed': [], 'missing': [], 'added': []})
 
 
 if __name__ == '__main__':

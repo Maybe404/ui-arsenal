@@ -1426,6 +1426,7 @@ def cmd_verify(args):
 #          is the rollback.
 
 PENDING = os.path.join(SRC, '_pending')
+PROPOSAL_FORMAT = 2  # 2: deps null = not listed by the index, '' = known empty; changed entries carry spec/fetch
 REMOVE_AFTER_DAYS = 30  # an item missing in two refreshes at least this far apart is proposed as removed
 
 
@@ -1496,7 +1497,7 @@ def kebab(name):
     return re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', name).lower()
 
 
-def index(remote, key_of, h, new_row, covered=None, degraded=(), detects=()):
+def index(remote, key_of, h, new_row, covered=None, degraded=(), detects=(), blind=()):
     """What a refresher found:
     remote    {key: meta} for every item the public index lists
     key_of    row -> key, or None for rows this index does not cover (templates, parked blocks...)
@@ -1505,9 +1506,13 @@ def index(remote, key_of, h, new_row, covered=None, degraded=(), detects=()):
     covered   key -> False when the part of the index that would list it failed to load, so its absence proves
               nothing; True by default
     degraded  reasons some part of the index could not be read
-    detects   which changes this index can see besides presence: 'access' (free/pro), 'deps' (dependency lists)"""
+    detects   which changes this index can see besides presence: 'access' (free/pro), 'deps' (dependency lists)
+    blind     changes this index cannot see, said in words for the report"""
     return {'remote': remote, 'key_of': key_of, 'sha': h, 'new_row': new_row, 'covered': covered or (lambda k: True),
-            'degraded': list(degraded), 'detects': tuple(detects)}
+            'degraded': list(degraded), 'detects': tuple(detects), 'blind': list(blind)}
+
+
+ACCESS_OF_TIER = {'free': 'free', 'pro': 'pro'}  # an index tier we do not know never becomes a free/pro claim
 
 
 def r_shadcn():
@@ -1524,7 +1529,9 @@ def r_shadcn():
         'base-nova' if 'base-nova' in m['styles'] else m['styles'][0], k),
         'fetch': 'npx shadcn@latest add %s' % k, 'url': 'https://ui.shadcn.com/docs/components/' + k,
         'framework': 'react', 'category': m['type']}
-    return index(remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new, detects=('deps',))
+    return index(remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new, detects=('deps',),
+                 blind=['依赖和文件只跟默认 style（base-nova，没有时用第一个有的 style）；其他 style 以 fetch --style 时 registry 给的为准',
+                        '访问状态（官方 registry 全部免费）'])
 
 
 def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
@@ -1544,7 +1551,9 @@ def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
             return {'spec': 'registry:%s/r/%s.json' % (base, name),
                     'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s/r/%s.json' % (base, name),
                     'url': (url_tpl % k) if url_tpl else base, 'framework': 'react', 'category': m.get('type', '')}
-        return index(remote, lambda r: spec_key(r, strip), sha(body), new, detects=('deps',))
+        return index(remote, lambda r: spec_key(r, strip), sha(body), new, detects=('deps',),
+                     blind=['访问状态：registry 只列免费项，Pro 条目不在里面'] +
+                           (['JS / CSS 变体的变化：指纹只看 TS-TW'] if strip else []))
     return f
 
 
@@ -1561,7 +1570,8 @@ def r_uiarc():
                 'access': 'pro' if pro else 'free'}
     # foundation, agent skill and templates are not part of the component catalog
     key = lambda r: None if r['category'] in ('Templates', 'Skill', 'Foundation') else r['id']
-    return index(remote, key, sha(body), new, detects=('access', 'deps'))
+    return index(remote, key, sha(body), new, detects=('access', 'deps'),
+                 blind=['源码内容的变化：catalog 只有元数据（层级、依赖、tier）'])
 
 
 def r_lucide():
@@ -1596,7 +1606,8 @@ def r_lucide():
                 'url': 'https://lucide.dev/icons/' + (('lab/' + n) if lab else n), 'framework': 'multi',
                 'category': 'lab' if lab else 'icon'}
     return index(remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new,
-                 covered=(lambda k: not k.startswith('lab:')) if degraded else None, degraded=degraded)
+                 covered=(lambda k: not k.startswith('lab:')) if degraded else None, degraded=degraded,
+                 blind=['图标形状的变化：tags.json 只有名称和标签'])
 
 
 def r_originkit():
@@ -1607,7 +1618,8 @@ def r_originkit():
     new = lambda k, m: {'spec': 'manual', 'fetch': 'npx originkit add %s（需 originkit login）；页面 https://www.originkit.dev/components/%s' % (k, k),
                         'url': 'https://www.originkit.dev/components/' + k, 'framework': 'react',
                         'category': m['category'], 'access': 'login'}
-    return index(remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new, detects=('deps',))
+    return index(remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new, detects=('deps',),
+                 blind=['付费和登录的变化：registry 没有 tier，新条目一律按需登录处理'])
 
 
 def r_bencho():
@@ -1633,7 +1645,7 @@ def r_bencho():
                 'url': 'https://bencho.dev/blocks/' + k, 'framework': 'react', 'usage': 'source'}
     key = lambda r: None if r['id'] in parked or r['id'].startswith('category:') else r['id']
     return index(remote, key, sha(body), new, covered=(lambda k: not k.startswith('find:')) if degraded else None,
-                 degraded=degraded)
+                 degraded=degraded, blind=['block 内容和依赖的变化：llms.txt 和 sitemap 只列地址'])
 
 
 def r_getdesign():
@@ -1653,7 +1665,7 @@ def r_getdesign():
                 'fetch': 'curl -s https://getdesign.md/design-md/%s/DESIGN.md -o DESIGN.md' % k,
                 'url': 'https://getdesign.md/%s/design-md' % k, 'usage': 'prompt', 'category': 'design-md'}
     key = lambda r: r['id'] if r['usage'] == 'prompt' or r['id'].startswith('site:') else None
-    return index(remote, key, sha(body), new)
+    return index(remote, key, sha(body), new, blind=['DESIGN.md 内容的变化：sitemap 只列地址'])
 
 
 # A non-empty index that lacks more than this share of the known items is treated as incomplete: the missing items
@@ -1702,7 +1714,7 @@ def cmd_refresh(args):
         if s not in REFRESH:
             print('%-13s skip   %s' % (s, NO_REFRESH.get(s, 'no refresh adapter')))
             continue
-        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok'}
+        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok', 'format': PROPOSAL_FORMAT}
         try:
             ix = REFRESH[s]()
             remote, key_of, h, new_row = ix['remote'], ix['key_of'], ix['sha'], ix['new_row']
@@ -1724,13 +1736,18 @@ def cmd_refresh(args):
             if k in remote:
                 seen.append(r['id'])
                 newfp, m = fp(remote[k]), remote[k]
-                deps = ' '.join(m.get('deps', []))
-                acc = {'pro': 'pro', 'free': 'free'}.get(m.get('tier', ''), None)
-                if not r['fingerprint']:
+                deps = ' '.join(m['deps']) if 'deps' in m else None  # None: this index does not list dependencies
+                acc = ACCESS_OF_TIER.get(m.get('tier')) if 'access' in ix['detects'] else None
+                moved = acc is not None and acc != r['access']  # checked whether or not a fingerprint exists yet
+                if moved or (r['fingerprint'] and r['fingerprint'] != newfp):
+                    c = {'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
+                         'access': [r['access'], acc or r['access']]}
+                    if moved and acc == 'free':  # became free: the index's own fetch route replaces spec "none"
+                        fresh = new_row(k, m)
+                        c.update(spec=fresh.get('spec', ''), fetch=fresh.get('fetch', ''))
+                    changed.append(c)
+                elif not r['fingerprint']:
                     init.append({'id': r['id'], 'fingerprint': newfp, 'deps': deps})
-                elif r['fingerprint'] != newfp or (acc and acc != r['access']):
-                    changed.append({'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
-                                    'access': [r['access'], acc or r['access']]})
             elif r['status'] != 'removed':
                 if not ix['covered'](k):  # the part of the index that lists it failed to load: no conclusion
                     unverified.append(r['id'])
@@ -1741,7 +1758,7 @@ def cmd_refresh(args):
         for k in sorted(set(remote) - set(local)):
             row = new_row(k, remote[k])
             added.append(dict(row, key=k, id=kebab(k) if s == 'reactbits' else k, title=k,
-                              fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps', [])),
+                              fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps') or []),
                               desc_zh='', task='', layer=''))
         degraded, suspect = list(ix['degraded']), []
         known = sum(1 for k, r in local.items() if r['status'] != 'removed' and ix['covered'](k))
@@ -1752,6 +1769,7 @@ def cmd_refresh(args):
             suspect, missing = missing, []
         prev = load_state().get('refresh', {}).get(s, {})
         prop.update(status='degraded' if degraded else 'ok', degraded=degraded, detects=list(ix['detects']),
+                    blind=ix['blind'],
                     index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
                     missing=missing, suspect_missing=suspect, unverified=unverified, added=added)
@@ -1788,13 +1806,18 @@ def cmd_diff(args):
             s, d['generated_at'], len(d['init']), len(d['changed']), len(d['missing']), len(d['added'])))
         for reason in d.get('degraded', []):
             print('  DEGRADED %s' % reason)
+        print('  能看到：新增、消失、元数据指纹%s%s' % (''.join({'access': '、免费/Pro 变化', 'deps': '、依赖列表'}.get(x, '')
+                                                         for x in d.get('detects', [])),
+                                                 '；看不到：' + '；'.join(d['blind']) if d.get('blind') else ''))
         if d.get('unverified'):
             print('  未核对 %d 条（所在的子清单没取到，不判断是否消失）' % len(d['unverified']))
         if d.get('suspect_missing'):
             print('  疑似消失 %d 条（清单异常缩水，没有生成下线提案；人工确认后可 apply.sh %s --accept-suspect）' % (
                 len(d['suspect_missing']), s))
         for c in d['changed'][:20]:
-            print('  changed  %-36s deps %r → %r  access %s → %s' % (c['id'], c['deps'][0], c['deps'][1], *c['access']))
+            print('  changed  %-36s deps %r → %s  access %s → %s%s' % (
+                c['id'], c['deps'][0], '（未提供，保留）' if c['deps'][1] is None else repr(c['deps'][1]), *c['access'],
+                '  spec → %s' % c['spec'] if c.get('spec') else ''))
         for m in d['missing'][:20]:
             print('  missing  %-36s %s → %s (last seen %s)' % (m['id'], m['status'], m['proposal'], m['last_seen']))
         for a in d['added'][:20]:
@@ -1818,6 +1841,14 @@ def cmd_apply(args):
     d = json.load(open(p, encoding='utf-8'))
     if d['status'] == 'error':
         sys.exit('proposal is an error report, nothing to apply: %s' % d.get('error'))
+    if d.get('format') != PROPOSAL_FORMAT:
+        sys.exit('proposal %s was written by an older refresh (format %s); run refresh.sh %s again' % (
+            p, d.get('format', 1), s))
+    unrouted = [c['id'] for c in d['changed'] if c['access'][1] != 'pro' and c['access'][0] == 'pro'
+                and not (c.get('spec') and c['spec'] != 'none')]
+    if unrouted:
+        sys.exit('refusing to apply: %s leave Pro but the proposal has no official fetch route for them; '
+                 'check the source by hand' % ', '.join(unrouted))
     if '--accept-suspect' in args:  # a human checked the items an alarming shrink held back
         d['missing'] = d.get('missing', []) + d.get('suspect_missing', [])
     today = d['generated_at'][:10]
@@ -1835,15 +1866,20 @@ def cmd_apply(args):
     for c in d['init']:
         if c['id'] in by_id:
             by_id[c['id']]['fingerprint'] = c['fingerprint']
-            if c['deps']:
+            if c['deps'] is not None:  # '' is a known empty list; None means this index does not list deps
                 by_id[c['id']]['deps'] = c['deps']
             n['init'] += 1
     for c in d['changed']:
         r = by_id.get(c['id'])
         if r:
-            r['fingerprint'], r['deps'], r['access'] = c['fingerprint'][1], c['deps'][1] or r['deps'], c['access'][1]
+            old_access, r['access'] = c['access']
+            r['fingerprint'] = c['fingerprint'][1]
+            if c['deps'][1] is not None:
+                r['deps'] = c['deps'][1]
             if r['access'] == 'pro':
                 r['spec'] = 'none'
+            elif r['spec'] == 'none':  # left Pro: use the official route the index gave, never guess one
+                r['spec'], r['fetch'] = c['spec'], c.get('fetch') or r['fetch']
             r['status'] = 'needs-review'
             n['changed'] += 1
     for m in d['missing']:
