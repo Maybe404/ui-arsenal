@@ -535,7 +535,8 @@ def cmd_find(args):
                                                  '  · 与 %s：%s' % (base, compat) if compat else ''))
         print('    %s' % r['desc'][:160])
         ref = '%s:%s' % (r['source'], r['id'])
-        flags = ['%s：%s' % (CLAIM_KINDS[c['kind']], c['claim']) for c in flagged(claims, r)] + (
+        flags = ['%s（%s %s）：%s' % (CLAIM_KINDS[c['kind']], CLAIM_DEPTHS[c['depth']], c['checked'], c['claim'])
+                 for c in flagged(claims, r)] + (
             ['备注：' + r['notes']] if r['notes'] else [])
         for f in flags:
             print('    ⚑ %s' % (f if len(f) <= 120 else f[:118] + '…'))
