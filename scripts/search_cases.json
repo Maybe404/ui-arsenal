@@ -226,6 +226,34 @@
   },
   {
    "q": [
+    "进度条"
+   ],
+   "k": 2,
+   "topk_all_id": "^progress\\b"
+  },
+  {
+   "q": [
+    "步骤条"
+   ],
+   "k": 3,
+   "topk_any": [
+    "uiarc:stepper",
+    "reactbits:stepper"
+   ]
+  },
+  {
+   "q": [
+    "进度条"
+   ],
+   "src": "inspora",
+   "k": 2,
+   "topk_any": [
+    "inspora:progress-bar-animation",
+    "inspora:progress-bars"
+   ]
+  },
+  {
+   "q": [
     "toast"
    ],
    "k": 3,

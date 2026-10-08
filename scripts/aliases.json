@@ -11,6 +11,13 @@
    "进度"
   ],
   [
+   "进度条",
+   "progress bar",
+   "progressbar",
+   "progress",
+   "进度"
+  ],
+  [
    "骨架",
    "占位",
    "skeleton",
@@ -322,7 +329,7 @@
   ],
   [
    "步骤",
-   "进度条",
+   "步骤条",
    "stepper",
    "steps",
    "wizard",
