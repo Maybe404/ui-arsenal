@@ -27,6 +27,11 @@ class LiteralError(ValueError):
 
 class Parser:
     ESC = {'n': '\n', 't': '\t', 'r': '\r', 'b': '\b', 'f': '\f', 'v': '\v', '0': '\0'}
+    # Minifiers write true/false as !0/!1 and undefined as void 0. Keywords are matched before numbers and must end
+    # at a word boundary, so `trueish` is rejected as an identifier instead of being read as true + garbage.
+    KEYWORDS = {'!0': True, '!1': False, 'true': True, 'false': False, 'null': None, 'void 0': None}
+    KEYWORD = re.compile(r'(?:!0|!1|true|false|null|void 0)(?![\w$])')
+    NUMBER = re.compile(r'-?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?(?![\w$.])')  # minifiers also write .5
 
     def __init__(self, s, i):
         self.s, self.i = s, i
@@ -44,12 +49,15 @@ class Parser:
             return self.arr()
         if c in '"\'`':
             return self.string()
-        m = re.compile(r'-?\d+(\.\d+)?(e[+-]?\d+)?|!0|!1|true|false|null|void 0').match(self.s, self.i)
+        m = self.KEYWORD.match(self.s, self.i)
+        if m:
+            self.i = m.end()
+            return self.KEYWORDS[m.group(0)]
+        m = self.NUMBER.match(self.s, self.i)
         if m:
             self.i = m.end()
             t = m.group(0)
-            return {'!0': True, '!1': False, 'true': True, 'false': False, 'null': None, 'void 0': None}.get(
-                t, float(t) if '.' in t or 'e' in t else int(t) if t[0] in '-0123456789' else t)
+            return float(t) if any(ch in t for ch in '.eE') else int(t)
         raise LiteralError('non-literal value at %d: %r' % (self.i, self.s[self.i:self.i + 40]))
 
     def key(self):
@@ -143,10 +151,13 @@ def load_blocks():
     decl = re.search(r'\b(?:var|let|const)\s+' + re.escape(m.group(1)) + r'\s*=\s*\{', src)
     if not decl:
         raise SystemExit('bencho: BLOCKS declaration not found (site changed?)')
+    p = Parser(src, decl.end() - 1)
     try:
-        return Parser(src, decl.end() - 1).value()
-    except (LiteralError, IndexError) as e:
+        return p.value()
+    except LiteralError as e:
         raise SystemExit('bencho: cannot parse BLOCKS as a pure literal: %s' % e)
+    except IndexError:
+        raise SystemExit('bencho: cannot parse BLOCKS as a pure literal: unexpected end of input at %d' % p.i)
 
 
 def main():

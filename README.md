@@ -30,6 +30,7 @@ scripts/stats.sh                           # 各来源统计
 scripts/audit.sh                           # 格式检查
 scripts/verify.sh --matrix                 # 获取链路固定场景测试
 scripts/searchtest.sh                      # 搜索相关性回归测试
+scripts/test.sh                            # 离线单元测试（不联网）
 scripts/refresh.sh                         # 和线上清单比对，只报告差异
 scripts/claims.sh --check                  # 重新拉取，复核组件级结论是否对新版本仍成立
 ```
