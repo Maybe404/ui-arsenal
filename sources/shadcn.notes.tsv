@@ -244,322 +244,322 @@ date-picker	日期选择器组合：Popover + Calendar，单日/范围/预设	ov
 typography	排版样式示例 h1-h4/p/blockquote/list/inline code	other	foundation				
 icons-map	跨图标库映射表（lucide/tabler/hugeicons/phosphor 等），migrate icons 用	icon	foundation				
 templates	init 用的项目模板 tar.gz（next/vite/start/react-router/astro，单仓/monorepo）	template	foundation				
-accordion-demo	accordion 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-alert-demo	alert 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-alert-destructive	alert-destructive 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-alert-dialog-demo	alert-dialog 用法示例代码（demo/变体），可直接复制做参考	overlay,feedback	foundation				
-aspect-ratio-demo	aspect-ratio 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-avatar-demo	avatar 用法示例代码（demo/变体），可直接复制做参考	avatar-user	foundation				
-badge-demo	badge 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-badge-destructive	badge-destructive 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-badge-outline	badge-outline 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-badge-secondary	badge-secondary 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-breadcrumb-demo	breadcrumb 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-breadcrumb-separator	breadcrumb-separator 用法示例代码（demo/变体），可直接复制做参考	navigation,layout-card	foundation				
-breadcrumb-dropdown	breadcrumb-dropdown 用法示例代码（demo/变体），可直接复制做参考	navigation,select	foundation				
-breadcrumb-ellipsis	breadcrumb-ellipsis 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-breadcrumb-link	breadcrumb-link 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-breadcrumb-responsive	breadcrumb-responsive 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-button-demo	button 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-default	button-default 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-secondary	button-secondary 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-destructive	button-destructive 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-outline	button-outline 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-ghost	button-ghost 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-link	button-link 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-with-icon	button-with-icon 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-loading	button-loading 用法示例代码（demo/变体），可直接复制做参考	loading,button	foundation				
-button-icon	button-icon 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-as-child	button-as-child 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-rounded	button-rounded 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-size	button-size 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-group-demo	button-group 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-group-nested	button-group-nested 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-group-size	button-group-size 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-group-separator	button-group-separator 用法示例代码（demo/变体），可直接复制做参考	button,layout-card	foundation				
-button-group-split	button-group-split 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-button-group-input	button-group-input 用法示例代码（demo/变体），可直接复制做参考	form-input,button	foundation				
-button-group-dropdown	button-group-dropdown 用法示例代码（demo/变体），可直接复制做参考	select,button	foundation				
-button-group-select	button-group-select 用法示例代码（demo/变体），可直接复制做参考	select,button	foundation				
-button-group-popover	button-group-popover 用法示例代码（demo/变体），可直接复制做参考	overlay,button	foundation				
-button-group-input-group	button-group-input-group 用法示例代码（demo/变体），可直接复制做参考	form-input,button	foundation				
-button-group-orientation	button-group-orientation 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-calendar-demo	calendar 用法示例代码（demo/变体），可直接复制做参考	date-time	foundation				
-card-demo	card 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-card-with-form	card-with-form 用法示例代码（demo/变体），可直接复制做参考	form-input,layout-card	foundation				
-carousel-demo	carousel 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-carousel-size	carousel-size 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-carousel-spacing	carousel-spacing 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-carousel-orientation	carousel-orientation 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-carousel-api	carousel-api 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-carousel-plugin	carousel-plugin 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-checkbox-demo	checkbox 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-checkbox-disabled	checkbox-disabled 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-checkbox-with-text	checkbox-with-text 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-collapsible-demo	collapsible 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-combobox-demo	combobox 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-combobox-dropdown-menu	combobox-dropdown-menu 用法示例代码（demo/变体），可直接复制做参考	navigation,select	foundation				
-combobox-popover	combobox-popover 用法示例代码（demo/变体），可直接复制做参考	overlay,select	foundation				
-combobox-responsive	combobox-responsive 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-command-demo	command 用法示例代码（demo/变体），可直接复制做参考	search-command	foundation				
-command-dialog	command-dialog 用法示例代码（demo/变体），可直接复制做参考	overlay,search-command	foundation				
-context-menu-demo	context-menu 用法示例代码（demo/变体），可直接复制做参考	overlay,navigation	foundation				
-data-table-demo	data-table 用法示例代码（demo/变体），可直接复制做参考	table	foundation				
-date-picker-demo	date-picker 用法示例代码（demo/变体），可直接复制做参考	date-time,select	foundation				
-date-picker-with-presets	date-picker-with-presets 用法示例代码（demo/变体），可直接复制做参考	date-time,select	foundation				
-date-picker-with-range	date-picker-with-range 用法示例代码（demo/变体），可直接复制做参考	date-time,select	foundation				
-dialog-demo	dialog 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-dialog-close-button	dialog-close-button 用法示例代码（demo/变体），可直接复制做参考	overlay,button	foundation				
-drawer-demo	drawer 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-empty-demo	empty 用法示例代码（demo/变体），可直接复制做参考	empty-onboarding	foundation				
-empty-icon	empty-icon 用法示例代码（demo/变体），可直接复制做参考	empty-onboarding	foundation				
-empty-avatar	empty-avatar 用法示例代码（demo/变体），可直接复制做参考	avatar-user,empty-onboarding	foundation				
-empty-avatar-group	empty-avatar-group 用法示例代码（demo/变体），可直接复制做参考	avatar-user,empty-onboarding	foundation				
-empty-input-group	empty-input-group 用法示例代码（demo/变体），可直接复制做参考	form-input,empty-onboarding	foundation				
-empty-outline	empty-outline 用法示例代码（demo/变体），可直接复制做参考	empty-onboarding	foundation				
-empty-background	empty-background 用法示例代码（demo/变体），可直接复制做参考	background,empty-onboarding	foundation				
-field-demo	field 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-field-input	field-input 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-field-textarea	field-textarea 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-field-fieldset	field-fieldset 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-field-radio	field-radio 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-field-checkbox	field-checkbox 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-field-switch	field-switch 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-field-slider	field-slider 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-field-select	field-select 用法示例代码（demo/变体），可直接复制做参考	select,form-input	foundation				
-field-choice-card	field-choice-card 用法示例代码（demo/变体），可直接复制做参考	form-input,layout-card	foundation				
-field-group	field-group 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-field-responsive	field-responsive 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-next-demo	form-next 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-next-complex	form-next-complex 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-demo	form-rhf 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-input	form-rhf-input 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-select	form-rhf-select 用法示例代码（demo/变体），可直接复制做参考	select,form-input	foundation				
-form-rhf-checkbox	form-rhf-checkbox 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-rhf-switch	form-rhf-switch 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-rhf-textarea	form-rhf-textarea 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-radiogroup	form-rhf-radiogroup 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-rhf-array	form-rhf-array 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-complex	form-rhf-complex 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-rhf-password	form-rhf-password 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-tanstack-demo	form-tanstack 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-tanstack-input	form-tanstack-input 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-tanstack-textarea	form-tanstack-textarea 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-tanstack-select	form-tanstack-select 用法示例代码（demo/变体），可直接复制做参考	select,form-input	foundation				
-form-tanstack-checkbox	form-tanstack-checkbox 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-tanstack-switch	form-tanstack-switch 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-tanstack-radiogroup	form-tanstack-radiogroup 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-tanstack-array	form-tanstack-array 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-tanstack-complex	form-tanstack-complex 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-formisch-demo	form-formisch 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-formisch-input	form-formisch-input 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-formisch-textarea	form-formisch-textarea 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-formisch-select	form-formisch-select 用法示例代码（demo/变体），可直接复制做参考	select,form-input	foundation				
-form-formisch-checkbox	form-formisch-checkbox 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-formisch-radiogroup	form-formisch-radiogroup 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-formisch-switch	form-formisch-switch 用法示例代码（demo/变体），可直接复制做参考	toggle-slider,form-input	foundation				
-form-formisch-array	form-formisch-array 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-form-formisch-complex	form-formisch-complex 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-drawer-dialog	drawer-dialog 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-dropdown-menu-demo	dropdown-menu 用法示例代码（demo/变体），可直接复制做参考	navigation,select	foundation				
-dropdown-menu-checkboxes	dropdown-menu-checkboxes 用法示例代码（demo/变体），可直接复制做参考	navigation,select	foundation				
-dropdown-menu-radio-group	dropdown-menu-radio-group 用法示例代码（demo/变体），可直接复制做参考	navigation,select	foundation				
-dropdown-menu-dialog	dropdown-menu-dialog 用法示例代码（demo/变体），可直接复制做参考	overlay,navigation	foundation				
-hover-card-demo	hover-card 用法示例代码（demo/变体），可直接复制做参考	overlay,layout-card	foundation		hover		
-input-demo	input 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-disabled	input-disabled 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-file	input-file 用法示例代码（demo/变体），可直接复制做参考	upload,form-input	foundation				
-input-with-button	input-with-button 用法示例代码（demo/变体），可直接复制做参考	form-input,button	foundation				
-input-with-label	input-with-label 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-with-text	input-with-text 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-demo	input-group 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-label	input-group-label 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-text	input-group-text 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-tooltip	input-group-tooltip 用法示例代码（demo/变体），可直接复制做参考	overlay,form-input	foundation				
-input-group-button	input-group-button 用法示例代码（demo/变体），可直接复制做参考	form-input,button	foundation				
-input-group-button-group	input-group-button-group 用法示例代码（demo/变体），可直接复制做参考	form-input,button	foundation				
-input-group-dropdown	input-group-dropdown 用法示例代码（demo/变体），可直接复制做参考	select,form-input	foundation				
-input-group-spinner	input-group-spinner 用法示例代码（demo/变体），可直接复制做参考	loading,form-input	foundation				
-input-group-textarea	input-group-textarea 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-icon	input-group-icon 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-group-custom	input-group-custom 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-otp-demo	input-otp 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-otp-pattern	input-otp-pattern 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-input-otp-separator	input-otp-separator 用法示例代码（demo/变体），可直接复制做参考	form-input,layout-card	foundation				
-input-otp-controlled	input-otp-controlled 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-item-demo	item 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-item-size	item-size 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-item-variant	item-variant 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-item-icon	item-icon 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-item-image	item-image 用法示例代码（demo/变体），可直接复制做参考	media	foundation				
-item-avatar	item-avatar 用法示例代码（demo/变体），可直接复制做参考	avatar-user	foundation				
-item-group	item-group 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-item-header	item-header 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-item-dropdown	item-dropdown 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-item-link	item-link 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-kbd-demo	kbd 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-kbd-tooltip	kbd-tooltip 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-kbd-input-group	kbd-input-group 用法示例代码（demo/变体），可直接复制做参考	form-input	foundation				
-kbd-button	kbd-button 用法示例代码（demo/变体），可直接复制做参考	button	foundation				
-kbd-group	kbd-group 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-label-demo	label 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-menubar-demo	menubar 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-navigation-menu-demo	navigation-menu 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-native-select-demo	native-select 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-native-select-groups	native-select-groups 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-native-select-disabled	native-select-disabled 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-native-select-invalid	native-select-invalid 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-pagination-demo	pagination 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-popover-demo	popover 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-progress-demo	progress 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-radio-group-demo	radio-group 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-resizable-demo	resizable 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-resizable-demo-with-handle	resizable-with-handle 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-resizable-vertical	resizable-vertical 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-resizable-handle	resizable-handle 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-scroll-area-demo	scroll-area 用法示例代码（demo/变体），可直接复制做参考	layout-card,motion-transition	foundation		scroll		
-scroll-area-horizontal-demo	scroll-area-horizontal 用法示例代码（demo/变体），可直接复制做参考	layout-card,motion-transition	foundation		scroll		
-select-demo	select 用法示例代码（demo/变体），可直接复制做参考	select	foundation				
-select-scrollable	select-scrollable 用法示例代码（demo/变体），可直接复制做参考	select	foundation		scroll		
-separator-demo	separator 用法示例代码（demo/变体），可直接复制做参考	layout-card	foundation				
-sheet-demo	sheet 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-sheet-side	sheet-side 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-skeleton-demo	skeleton 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-skeleton-card	skeleton-card 用法示例代码（demo/变体），可直接复制做参考	loading,layout-card	foundation				
-slider-demo	slider 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-sonner-demo	sonner 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-sonner-types	sonner-types 用法示例代码（demo/变体），可直接复制做参考	feedback	foundation				
-spinner-demo	spinner 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-spinner-basic	spinner-basic 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-spinner-button	spinner-button 用法示例代码（demo/变体），可直接复制做参考	loading,button	foundation				
-spinner-badge	spinner-badge 用法示例代码（demo/变体），可直接复制做参考	loading,feedback	foundation				
-spinner-input-group	spinner-input-group 用法示例代码（demo/变体），可直接复制做参考	loading,form-input	foundation				
-spinner-empty	spinner-empty 用法示例代码（demo/变体），可直接复制做参考	loading,empty-onboarding	foundation				
-spinner-color	spinner-color 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-spinner-custom	spinner-custom 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-spinner-size	spinner-size 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-spinner-item	spinner-item 用法示例代码（demo/变体），可直接复制做参考	loading	foundation				
-switch-demo	switch 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-table-demo	table 用法示例代码（demo/变体），可直接复制做参考	table	foundation				
-tabs-demo	tabs 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-textarea-demo	textarea 用法示例代码（demo/变体），可直接复制做参考	text-effect,form-input	foundation				
-textarea-disabled	textarea-disabled 用法示例代码（demo/变体），可直接复制做参考	text-effect,form-input	foundation				
-textarea-with-button	textarea-with-button 用法示例代码（demo/变体），可直接复制做参考	text-effect,form-input	foundation				
-textarea-with-label	textarea-with-label 用法示例代码（demo/变体），可直接复制做参考	text-effect,form-input	foundation				
-textarea-with-text	textarea-with-text 用法示例代码（demo/变体），可直接复制做参考	text-effect,form-input	foundation				
-toggle-group-demo	toggle-group 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-disabled	toggle-group-disabled 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-lg	toggle-group-lg 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-outline	toggle-group-outline 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-sm	toggle-group-sm 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-single	toggle-group-single 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-group-spacing	toggle-group-spacing 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-demo	toggle 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-disabled	toggle-disabled 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-lg	toggle-lg 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-outline	toggle-outline 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-sm	toggle-sm 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-toggle-with-text	toggle-with-text 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-tooltip-demo	tooltip 用法示例代码（demo/变体），可直接复制做参考	overlay	foundation				
-typography-blockquote	typography-blockquote 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-demo	typography 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-h1	typography-h1 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-h2	typography-h2 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-h3	typography-h3 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-h4	typography-h4 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-inline-code	typography-inline-code 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-large	typography-large 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-lead	typography-lead 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-list	typography-list 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-muted	typography-muted 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-p	typography-p 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-small	typography-small 用法示例代码（demo/变体），可直接复制做参考	other	foundation				
-typography-table	typography-table 用法示例代码（demo/变体），可直接复制做参考	table	foundation				
-mode-toggle	mode-toggle 用法示例代码（demo/变体），可直接复制做参考	toggle-slider	foundation				
-chart-bar-demo	chart-bar 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-grid	chart-bar-grid 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-axis	chart-bar-axis 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-tooltip	chart-bar-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-bar-demo-legend	chart-bar-legend 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-chart-tooltip-demo	chart-tooltip 用法示例代码（demo/变体），可直接复制做参考	chart	foundation				
-calendar-hijri	calendar-hijri 用法示例代码（demo/变体），可直接复制做参考	date-time	foundation				
-sidebar-demo	sidebar 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-header	sidebar-header 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-footer	sidebar-footer 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-group	sidebar-group 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-group-collapsible	sidebar-group-collapsible 用法示例代码（demo/变体），可直接复制做参考	navigation,layout-card	foundation				
-sidebar-group-action	sidebar-group-action 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-menu	sidebar-menu 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-menu-action	sidebar-menu-action 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-menu-sub	sidebar-menu-sub 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-menu-collapsible	sidebar-menu-collapsible 用法示例代码（demo/变体），可直接复制做参考	navigation,layout-card	foundation				
-sidebar-menu-badge	sidebar-menu-badge 用法示例代码（demo/变体），可直接复制做参考	navigation,feedback	foundation				
-sidebar-rsc	sidebar-rsc 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-sidebar-controlled	sidebar-controlled 用法示例代码（demo/变体），可直接复制做参考	navigation	foundation				
-accordion-example	accordion 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card	foundation				
-alert-example	alert 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	feedback	foundation				
-alert-dialog-example	alert-dialog 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay,feedback	foundation				
-aspect-ratio-example	aspect-ratio 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-avatar-example	avatar 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	avatar-user	foundation				
-badge-example	badge 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	feedback	foundation				
-breadcrumb-example	breadcrumb 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-button-example	button 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	button	foundation				
-button-group-example	button-group 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	button	foundation				
-calendar-example	calendar 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	date-time	foundation				
-card-example	card 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card	foundation				
-carousel-example	carousel 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	media	foundation				
-chart-example	chart 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	chart	foundation				
-checkbox-example	checkbox 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-collapsible-example	collapsible 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card	foundation				
-combobox-example	combobox 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	select	foundation				
-command-example	command 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	search-command	foundation				
-context-menu-example	context-menu 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay,navigation	foundation				
-dialog-example	dialog 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay	foundation				
-drawer-example	drawer 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay	foundation				
-dropdown-menu-example	dropdown-menu 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation,select	foundation				
-empty-example	empty 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	empty-onboarding	foundation				
-field-example	field 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	form-input	foundation				
-hover-card-example	hover-card 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay,layout-card	foundation		hover		
-input-example	input 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	form-input	foundation				
-input-group-example	input-group 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	form-input	foundation				
-input-otp-example	input-otp 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	form-input	foundation				
-item-example	item 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-kbd-example	kbd 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-label-example	label 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-menubar-example	menubar 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-native-select-example	native-select 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	select	foundation				
-navigation-menu-example	navigation-menu 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-pagination-example	pagination 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-popover-example	popover 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay	foundation				
-progress-example	progress 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	loading	foundation				
-radio-group-example	radio-group 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-resizable-example	resizable 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card	foundation				
-scroll-area-example	scroll-area 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card,motion-transition	foundation		scroll		
-select-example	select 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	select	foundation				
-separator-example	separator 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	layout-card	foundation				
-sheet-example	sheet 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay	foundation				
-sidebar-example	sidebar 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-sidebar-icon-example	sidebar-icon 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-sidebar-inset-example	sidebar-inset 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-sidebar-floating-example	sidebar-floating 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-skeleton-example	skeleton 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	loading	foundation				
-slider-example	slider 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-sonner-example	sonner 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	feedback	foundation				
-spinner-example	spinner 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	loading	foundation				
-switch-example	switch 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-table-example	table 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	table	foundation				
-tabs-example	tabs 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	navigation	foundation				
-textarea-example	textarea 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	text-effect,form-input	foundation				
-toast-example	toast 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	feedback	foundation				
-toggle-example	toggle 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-toggle-group-example	toggle-group 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	toggle-slider	foundation				
-tooltip-example	tooltip 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	overlay	foundation				
-demo	demo 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-component-example	component 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-attachment-example	attachment 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-bubble-example	bubble 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-message-scroller-example	message-scroller 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	motion-transition	foundation		scroll		
-questionnaire-example	questionnaire 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-marker-example	marker 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-message-example	message 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
-example	example 用法示例代码（demo/变体），可直接复制做参考（新 style 全变体合集）	other	foundation				
+accordion-demo	手风琴示例代码：基础用法（accordion-demo）	layout-card	foundation				
+alert-demo	提示条示例代码：基础用法（alert-demo）	feedback	foundation				
+alert-destructive	提示条示例代码：危险/错误样式（alert-destructive）	feedback	foundation				
+alert-dialog-demo	确认对话框示例代码：基础用法（alert-dialog-demo）	overlay,feedback	foundation				
+aspect-ratio-demo	宽高比容器示例代码：基础用法（aspect-ratio-demo）	other	foundation				
+avatar-demo	头像示例代码：基础用法（avatar-demo）	avatar-user	foundation				
+badge-demo	徽标示例代码：基础用法（badge-demo）	feedback	foundation				
+badge-destructive	徽标示例代码：危险/错误样式（badge-destructive）	feedback	foundation				
+badge-outline	徽标示例代码：描边样式（badge-outline）	feedback	foundation				
+badge-secondary	徽标示例代码：次要样式（badge-secondary）	feedback	foundation				
+breadcrumb-demo	面包屑示例代码：基础用法（breadcrumb-demo）	navigation	foundation				
+breadcrumb-separator	面包屑示例代码：分隔符（breadcrumb-separator）	navigation,layout-card	foundation				
+breadcrumb-dropdown	面包屑示例代码：下拉菜单（breadcrumb-dropdown）	navigation,select	foundation				
+breadcrumb-ellipsis	面包屑示例代码：省略号（breadcrumb-ellipsis）	navigation	foundation				
+breadcrumb-link	面包屑示例代码：链接组件（breadcrumb-link）	navigation	foundation				
+breadcrumb-responsive	面包屑示例代码：响应式（breadcrumb-responsive）	navigation	foundation				
+button-demo	按钮示例代码：基础用法（button-demo）	button	foundation				
+button-default	按钮示例代码：默认样式（button-default）	button	foundation				
+button-secondary	按钮示例代码：次要样式（button-secondary）	button	foundation				
+button-destructive	按钮示例代码：危险/错误样式（button-destructive）	button	foundation				
+button-outline	按钮示例代码：描边样式（button-outline）	button	foundation				
+button-ghost	按钮示例代码：幽灵样式（button-ghost）	button	foundation				
+button-link	按钮示例代码：链接样式（button-link）	button	foundation				
+button-with-icon	按钮示例代码：带图标（button-with-icon）	button	foundation				
+button-loading	按钮示例代码：加载状态（button-loading）	loading,button	foundation				
+button-icon	按钮示例代码：图标按钮（button-icon）	button	foundation				
+button-as-child	按钮示例代码：as-child 用法（button-as-child）	button	foundation				
+button-rounded	按钮示例代码：圆角样式（button-rounded）	button	foundation				
+button-size	按钮示例代码：不同尺寸（button-size）	button	foundation				
+button-group-demo	按钮组示例代码：基础用法（button-group-demo）	button	foundation				
+button-group-nested	按钮组示例代码：嵌套（button-group-nested）	button	foundation				
+button-group-size	按钮组示例代码：不同尺寸（button-group-size）	button	foundation				
+button-group-separator	按钮组示例代码：分隔线（button-group-separator）	button,layout-card	foundation				
+button-group-split	按钮组示例代码：主按钮加下拉拆分（button-group-split）	button	foundation				
+button-group-input	按钮组示例代码：和输入框拼接（button-group-input）	form-input,button	foundation				
+button-group-dropdown	按钮组示例代码：搭配下拉菜单（button-group-dropdown）	select,button	foundation				
+button-group-select	按钮组示例代码：搭配下拉选择（button-group-select）	select,button	foundation				
+button-group-popover	按钮组示例代码：搭配气泡弹层（button-group-popover）	overlay,button	foundation				
+button-group-input-group	按钮组示例代码：和输入框组拼接（button-group-input-group）	form-input,button	foundation				
+button-group-orientation	按钮组示例代码：排列方向（button-group-orientation）	button	foundation				
+calendar-demo	日历示例代码：基础用法（calendar-demo）	date-time	foundation				
+card-demo	卡片示例代码：基础用法（card-demo）	layout-card	foundation				
+card-with-form	卡片示例代码：带表单（card-with-form）	form-input,layout-card	foundation				
+carousel-demo	轮播示例代码：基础用法（carousel-demo）	media	foundation				
+carousel-size	轮播示例代码：不同尺寸（carousel-size）	media	foundation				
+carousel-spacing	轮播示例代码：间距（carousel-spacing）	media	foundation				
+carousel-orientation	轮播示例代码：排列方向（carousel-orientation）	media	foundation				
+carousel-api	轮播示例代码：API 用法（carousel-api）	media	foundation				
+carousel-plugin	轮播示例代码：插件用法（carousel-plugin）	media	foundation				
+checkbox-demo	复选框示例代码：基础用法（checkbox-demo）	toggle-slider	foundation				
+checkbox-disabled	复选框示例代码：禁用状态（checkbox-disabled）	toggle-slider	foundation				
+checkbox-with-text	复选框示例代码：带文字（checkbox-with-text）	toggle-slider	foundation				
+collapsible-demo	可折叠容器示例代码：基础用法（collapsible-demo）	layout-card	foundation				
+combobox-demo	可搜索下拉示例代码：基础用法（combobox-demo）	select	foundation				
+combobox-dropdown-menu	可搜索下拉示例代码：搭配下拉菜单（combobox-dropdown-menu）	navigation,select	foundation				
+combobox-popover	可搜索下拉示例代码：搭配气泡弹层（combobox-popover）	overlay,select	foundation				
+combobox-responsive	可搜索下拉示例代码：响应式（combobox-responsive）	select	foundation				
+command-demo	命令面板示例代码：基础用法（command-demo）	search-command	foundation				
+command-dialog	命令面板示例代码：搭配对话框（command-dialog）	overlay,search-command	foundation				
+context-menu-demo	右键菜单示例代码：基础用法（context-menu-demo）	overlay,navigation	foundation				
+data-table-demo	数据表格示例代码：基础用法（data-table-demo）	table	foundation				
+date-picker-demo	日期选择器示例代码：基础用法（date-picker-demo）	date-time,select	foundation				
+date-picker-with-presets	日期选择器示例代码：带快捷预设（date-picker-with-presets）	date-time,select	foundation				
+date-picker-with-range	日期选择器示例代码：带范围选择（date-picker-with-range）	date-time,select	foundation				
+dialog-demo	模态对话框示例代码：基础用法（dialog-demo）	overlay	foundation				
+dialog-close-button	模态对话框示例代码：关闭按钮（dialog-close-button）	overlay,button	foundation				
+drawer-demo	抽屉示例代码：基础用法（drawer-demo）	overlay	foundation				
+empty-demo	空状态示例代码：基础用法（empty-demo）	empty-onboarding	foundation				
+empty-icon	空状态示例代码：带图标（empty-icon）	empty-onboarding	foundation				
+empty-avatar	空状态示例代码：搭配头像（empty-avatar）	avatar-user,empty-onboarding	foundation				
+empty-avatar-group	空状态示例代码：搭配头像组（empty-avatar-group）	avatar-user,empty-onboarding	foundation				
+empty-input-group	空状态示例代码：搭配输入框组（empty-input-group）	form-input,empty-onboarding	foundation				
+empty-outline	空状态示例代码：描边样式（empty-outline）	empty-onboarding	foundation				
+empty-background	空状态示例代码：带背景（empty-background）	background,empty-onboarding	foundation				
+field-demo	表单字段示例代码：基础用法（field-demo）	form-input	foundation				
+field-input	表单字段示例代码：输入框字段（field-input）	form-input	foundation				
+field-textarea	表单字段示例代码：多行文本字段（field-textarea）	form-input	foundation				
+field-fieldset	表单字段示例代码：字段集（field-fieldset）	form-input	foundation				
+field-radio	表单字段示例代码：单选字段（field-radio）	toggle-slider,form-input	foundation				
+field-checkbox	表单字段示例代码：复选字段（field-checkbox）	toggle-slider,form-input	foundation				
+field-switch	表单字段示例代码：开关字段（field-switch）	toggle-slider,form-input	foundation				
+field-slider	表单字段示例代码：滑块字段（field-slider）	toggle-slider,form-input	foundation				
+field-select	表单字段示例代码：下拉选择字段（field-select）	select,form-input	foundation				
+field-choice-card	表单字段示例代码：选项卡片（field-choice-card）	form-input,layout-card	foundation				
+field-group	表单字段示例代码：字段分组（field-group）	form-input	foundation				
+field-responsive	表单字段示例代码：响应式（field-responsive）	form-input	foundation				
+form-next-demo	旧版表单示例代码：next 基础用法（form-next-demo）	form-input	foundation				
+form-next-complex	旧版表单示例代码：next 复杂表单（form-next-complex）	form-input	foundation				
+form-rhf-demo	旧版表单示例代码：react-hook-form 基础用法（form-rhf-demo）	form-input	foundation				
+form-rhf-input	旧版表单示例代码：react-hook-form 输入框（form-rhf-input）	form-input	foundation				
+form-rhf-select	旧版表单示例代码：react-hook-form 下拉选择（form-rhf-select）	select,form-input	foundation				
+form-rhf-checkbox	旧版表单示例代码：react-hook-form 复选框（form-rhf-checkbox）	toggle-slider,form-input	foundation				
+form-rhf-switch	旧版表单示例代码：react-hook-form 开关（form-rhf-switch）	toggle-slider,form-input	foundation				
+form-rhf-textarea	旧版表单示例代码：react-hook-form 多行文本（form-rhf-textarea）	form-input	foundation				
+form-rhf-radiogroup	旧版表单示例代码：react-hook-form 单选组（form-rhf-radiogroup）	toggle-slider,form-input	foundation				
+form-rhf-array	旧版表单示例代码：react-hook-form 数组字段（form-rhf-array）	form-input	foundation				
+form-rhf-complex	旧版表单示例代码：react-hook-form 复杂表单（form-rhf-complex）	form-input	foundation				
+form-rhf-password	旧版表单示例代码：react-hook-form 密码输入（form-rhf-password）	form-input	foundation				
+form-tanstack-demo	旧版表单示例代码：tanstack 基础用法（form-tanstack-demo）	form-input	foundation				
+form-tanstack-input	旧版表单示例代码：tanstack 输入框（form-tanstack-input）	form-input	foundation				
+form-tanstack-textarea	旧版表单示例代码：tanstack 多行文本（form-tanstack-textarea）	form-input	foundation				
+form-tanstack-select	旧版表单示例代码：tanstack 下拉选择（form-tanstack-select）	select,form-input	foundation				
+form-tanstack-checkbox	旧版表单示例代码：tanstack 复选框（form-tanstack-checkbox）	toggle-slider,form-input	foundation				
+form-tanstack-switch	旧版表单示例代码：tanstack 开关（form-tanstack-switch）	toggle-slider,form-input	foundation				
+form-tanstack-radiogroup	旧版表单示例代码：tanstack 单选组（form-tanstack-radiogroup）	toggle-slider,form-input	foundation				
+form-tanstack-array	旧版表单示例代码：tanstack 数组字段（form-tanstack-array）	form-input	foundation				
+form-tanstack-complex	旧版表单示例代码：tanstack 复杂表单（form-tanstack-complex）	form-input	foundation				
+form-formisch-demo	旧版表单示例代码：formisch 基础用法（form-formisch-demo）	form-input	foundation				
+form-formisch-input	旧版表单示例代码：formisch 输入框（form-formisch-input）	form-input	foundation				
+form-formisch-textarea	旧版表单示例代码：formisch 多行文本（form-formisch-textarea）	form-input	foundation				
+form-formisch-select	旧版表单示例代码：formisch 下拉选择（form-formisch-select）	select,form-input	foundation				
+form-formisch-checkbox	旧版表单示例代码：formisch 复选框（form-formisch-checkbox）	toggle-slider,form-input	foundation				
+form-formisch-radiogroup	旧版表单示例代码：formisch 单选组（form-formisch-radiogroup）	toggle-slider,form-input	foundation				
+form-formisch-switch	旧版表单示例代码：formisch 开关（form-formisch-switch）	toggle-slider,form-input	foundation				
+form-formisch-array	旧版表单示例代码：formisch 数组字段（form-formisch-array）	form-input	foundation				
+form-formisch-complex	旧版表单示例代码：formisch 复杂表单（form-formisch-complex）	form-input	foundation				
+drawer-dialog	抽屉示例代码：搭配对话框（drawer-dialog）	overlay	foundation				
+dropdown-menu-demo	下拉菜单示例代码：基础用法（dropdown-menu-demo）	navigation,select	foundation				
+dropdown-menu-checkboxes	下拉菜单示例代码：勾选项（dropdown-menu-checkboxes）	navigation,select	foundation				
+dropdown-menu-radio-group	下拉菜单示例代码：单选组（dropdown-menu-radio-group）	navigation,select	foundation				
+dropdown-menu-dialog	下拉菜单示例代码：搭配对话框（dropdown-menu-dialog）	overlay,navigation	foundation				
+hover-card-demo	悬停卡片示例代码：基础用法（hover-card-demo）	overlay,layout-card	foundation		hover		
+input-demo	输入框示例代码：基础用法（input-demo）	form-input	foundation				
+input-disabled	输入框示例代码：禁用状态（input-disabled）	form-input	foundation				
+input-file	输入框示例代码：文件选择（input-file）	upload,form-input	foundation				
+input-with-button	输入框示例代码：带按钮（input-with-button）	form-input,button	foundation				
+input-with-label	输入框示例代码：带标签（input-with-label）	form-input	foundation				
+input-with-text	输入框示例代码：带文字（input-with-text）	form-input	foundation				
+input-group-demo	输入框组示例代码：基础用法（input-group-demo）	form-input	foundation				
+input-group-label	输入框组示例代码：带标签（input-group-label）	form-input	foundation				
+input-group-text	输入框组示例代码：带文本（input-group-text）	form-input	foundation				
+input-group-tooltip	输入框组示例代码：带文字提示（input-group-tooltip）	overlay,form-input	foundation				
+input-group-button	输入框组示例代码：带按钮（input-group-button）	form-input,button	foundation				
+input-group-button-group	输入框组示例代码：带按钮组（input-group-button-group）	form-input,button	foundation				
+input-group-dropdown	输入框组示例代码：带下拉菜单（input-group-dropdown）	select,form-input	foundation				
+input-group-spinner	输入框组示例代码：带加载转圈（input-group-spinner）	loading,form-input	foundation				
+input-group-textarea	输入框组示例代码：带多行文本（input-group-textarea）	form-input	foundation				
+input-group-icon	输入框组示例代码：带图标（input-group-icon）	form-input	foundation				
+input-group-custom	输入框组示例代码：自定义（input-group-custom）	form-input	foundation				
+input-otp-demo	验证码输入示例代码：基础用法（input-otp-demo）	form-input	foundation				
+input-otp-pattern	验证码输入示例代码：格式规则（input-otp-pattern）	form-input	foundation				
+input-otp-separator	验证码输入示例代码：分隔符（input-otp-separator）	form-input,layout-card	foundation				
+input-otp-controlled	验证码输入示例代码：受控（input-otp-controlled）	form-input	foundation				
+item-demo	列表项示例代码：基础用法（item-demo）	other	foundation				
+item-size	列表项示例代码：不同尺寸（item-size）	other	foundation				
+item-variant	列表项示例代码：变体样式（item-variant）	other	foundation				
+item-icon	列表项示例代码：图标（item-icon）	other	foundation				
+item-image	列表项示例代码：图片（item-image）	media	foundation				
+item-avatar	列表项示例代码：头像（item-avatar）	avatar-user	foundation				
+item-group	列表项示例代码：分组（item-group）	other	foundation				
+item-header	列表项示例代码：头部（item-header）	navigation	foundation				
+item-dropdown	列表项示例代码：下拉菜单（item-dropdown）	select	foundation				
+item-link	列表项示例代码：链接（item-link）	other	foundation				
+kbd-demo	键盘按键示例代码：基础用法（kbd-demo）	other	foundation				
+kbd-tooltip	键盘按键示例代码：搭配文字提示（kbd-tooltip）	overlay	foundation				
+kbd-input-group	键盘按键示例代码：搭配输入框组（kbd-input-group）	form-input	foundation				
+kbd-button	键盘按键示例代码：搭配按钮（kbd-button）	button	foundation				
+kbd-group	键盘按键示例代码：分组（kbd-group）	other	foundation				
+label-demo	表单标签示例代码：基础用法（label-demo）	other	foundation				
+menubar-demo	菜单栏示例代码：基础用法（menubar-demo）	navigation	foundation				
+navigation-menu-demo	导航菜单示例代码：基础用法（navigation-menu-demo）	navigation	foundation				
+native-select-demo	原生下拉选择示例代码：基础用法（native-select-demo）	select	foundation				
+native-select-groups	原生下拉选择示例代码：分组（native-select-groups）	select	foundation				
+native-select-disabled	原生下拉选择示例代码：禁用状态（native-select-disabled）	select	foundation				
+native-select-invalid	原生下拉选择示例代码：错误状态（native-select-invalid）	select	foundation				
+pagination-demo	分页示例代码：基础用法（pagination-demo）	navigation	foundation				
+popover-demo	气泡弹层示例代码：基础用法（popover-demo）	overlay	foundation				
+progress-demo	进度条示例代码：基础用法（progress-demo）	loading	foundation				
+radio-group-demo	单选组示例代码：基础用法（radio-group-demo）	toggle-slider	foundation				
+resizable-demo	可拖拽面板示例代码：基础用法（resizable-demo）	layout-card	foundation				
+resizable-demo-with-handle	可拖拽面板示例代码：带拖拽手柄（resizable-demo-with-handle）	layout-card	foundation				
+resizable-vertical	可拖拽面板示例代码：垂直方向（resizable-vertical）	layout-card	foundation				
+resizable-handle	可拖拽面板示例代码：拖拽手柄（resizable-handle）	layout-card	foundation				
+scroll-area-demo	滚动条区域示例代码：基础用法（scroll-area-demo）	layout-card,motion-transition	foundation		scroll		
+scroll-area-horizontal-demo	滚动条区域示例代码：水平方向基础用法（scroll-area-horizontal-demo）	layout-card,motion-transition	foundation		scroll		
+select-demo	下拉选择示例代码：基础用法（select-demo）	select	foundation				
+select-scrollable	下拉选择示例代码：可滚动列表（select-scrollable）	select	foundation		scroll		
+separator-demo	分隔线示例代码：基础用法（separator-demo）	layout-card	foundation				
+sheet-demo	侧滑面板示例代码：基础用法（sheet-demo）	overlay	foundation				
+sheet-side	侧滑面板示例代码：滑出方向（sheet-side）	overlay	foundation				
+skeleton-demo	骨架屏示例代码：基础用法（skeleton-demo）	loading	foundation				
+skeleton-card	骨架屏示例代码：卡片骨架（skeleton-card）	loading,layout-card	foundation				
+slider-demo	滑块示例代码：基础用法（slider-demo）	toggle-slider	foundation				
+sonner-demo	Toast 通知示例代码：基础用法（sonner-demo）	feedback	foundation				
+sonner-types	Toast 通知示例代码：通知类型（sonner-types）	feedback	foundation				
+spinner-demo	加载转圈示例代码：基础用法（spinner-demo）	loading	foundation				
+spinner-basic	加载转圈示例代码：基础样式（spinner-basic）	loading	foundation				
+spinner-button	加载转圈示例代码：按钮内加载（spinner-button）	loading,button	foundation				
+spinner-badge	加载转圈示例代码：徽标内加载（spinner-badge）	loading,feedback	foundation				
+spinner-input-group	加载转圈示例代码：输入框组内加载（spinner-input-group）	loading,form-input	foundation				
+spinner-empty	加载转圈示例代码：空状态内加载（spinner-empty）	loading,empty-onboarding	foundation				
+spinner-color	加载转圈示例代码：颜色（spinner-color）	loading	foundation				
+spinner-custom	加载转圈示例代码：自定义（spinner-custom）	loading	foundation				
+spinner-size	加载转圈示例代码：不同尺寸（spinner-size）	loading	foundation				
+spinner-item	加载转圈示例代码：列表项内加载（spinner-item）	loading	foundation				
+switch-demo	开关示例代码：基础用法（switch-demo）	toggle-slider	foundation				
+table-demo	表格示例代码：基础用法（table-demo）	table	foundation				
+tabs-demo	标签页示例代码：基础用法（tabs-demo）	navigation	foundation				
+textarea-demo	多行文本输入示例代码：基础用法（textarea-demo）	text-effect,form-input	foundation				
+textarea-disabled	多行文本输入示例代码：禁用状态（textarea-disabled）	text-effect,form-input	foundation				
+textarea-with-button	多行文本输入示例代码：带按钮（textarea-with-button）	text-effect,form-input	foundation				
+textarea-with-label	多行文本输入示例代码：带标签（textarea-with-label）	text-effect,form-input	foundation				
+textarea-with-text	多行文本输入示例代码：带文字（textarea-with-text）	text-effect,form-input	foundation				
+toggle-group-demo	切换按钮组示例代码：基础用法（toggle-group-demo）	toggle-slider	foundation				
+toggle-group-disabled	切换按钮组示例代码：禁用状态（toggle-group-disabled）	toggle-slider	foundation				
+toggle-group-lg	切换按钮组示例代码：大尺寸（toggle-group-lg）	toggle-slider	foundation				
+toggle-group-outline	切换按钮组示例代码：描边样式（toggle-group-outline）	toggle-slider	foundation				
+toggle-group-sm	切换按钮组示例代码：小尺寸（toggle-group-sm）	toggle-slider	foundation				
+toggle-group-single	切换按钮组示例代码：单选（toggle-group-single）	toggle-slider	foundation				
+toggle-group-spacing	切换按钮组示例代码：间距（toggle-group-spacing）	toggle-slider	foundation				
+toggle-demo	切换按钮示例代码：基础用法（toggle-demo）	toggle-slider	foundation				
+toggle-disabled	切换按钮示例代码：禁用状态（toggle-disabled）	toggle-slider	foundation				
+toggle-lg	切换按钮示例代码：大尺寸（toggle-lg）	toggle-slider	foundation				
+toggle-outline	切换按钮示例代码：描边样式（toggle-outline）	toggle-slider	foundation				
+toggle-sm	切换按钮示例代码：小尺寸（toggle-sm）	toggle-slider	foundation				
+toggle-with-text	切换按钮示例代码：带文字（toggle-with-text）	toggle-slider	foundation				
+tooltip-demo	文字提示示例代码：基础用法（tooltip-demo）	overlay	foundation				
+typography-blockquote	排版样式示例代码：引用块（typography-blockquote）	other	foundation				
+typography-demo	排版样式示例代码：基础用法（typography-demo）	other	foundation				
+typography-h1	排版样式示例代码：h1 标题（typography-h1）	other	foundation				
+typography-h2	排版样式示例代码：h2 标题（typography-h2）	other	foundation				
+typography-h3	排版样式示例代码：h3 标题（typography-h3）	other	foundation				
+typography-h4	排版样式示例代码：h4 标题（typography-h4）	other	foundation				
+typography-inline-code	排版样式示例代码：行内代码（typography-inline-code）	other	foundation				
+typography-large	排版样式示例代码：大号文字（typography-large）	other	foundation				
+typography-lead	排版样式示例代码：导语段落（typography-lead）	other	foundation				
+typography-list	排版样式示例代码：列表（typography-list）	other	foundation				
+typography-muted	排版样式示例代码：弱化文字（typography-muted）	other	foundation				
+typography-p	排版样式示例代码：段落（typography-p）	other	foundation				
+typography-small	排版样式示例代码：小号文字（typography-small）	other	foundation				
+typography-table	排版样式示例代码：表格（typography-table）	table	foundation				
+mode-toggle	主题切换示例代码：深浅色模式切换（mode-toggle）	toggle-slider	foundation				
+chart-bar-demo	图表示例代码：柱状图基础用法（chart-bar-demo）	chart	foundation				
+chart-bar-demo-grid	图表示例代码：柱状图加网格线（chart-bar-demo-grid）	chart	foundation				
+chart-bar-demo-axis	图表示例代码：柱状图加坐标轴（chart-bar-demo-axis）	chart	foundation				
+chart-bar-demo-tooltip	图表示例代码：柱状图加提示框（chart-bar-demo-tooltip）	chart	foundation				
+chart-bar-demo-legend	图表示例代码：柱状图加图例（chart-bar-demo-legend）	chart	foundation				
+chart-tooltip-demo	图表示例代码：提示框基础用法（chart-tooltip-demo）	chart	foundation				
+calendar-hijri	日历示例代码：伊斯兰历（calendar-hijri）	date-time	foundation				
+sidebar-demo	侧边栏示例代码：基础用法（sidebar-demo）	navigation	foundation				
+sidebar-header	侧边栏示例代码：头部区域（sidebar-header）	navigation	foundation				
+sidebar-footer	侧边栏示例代码：底部区域（sidebar-footer）	navigation	foundation				
+sidebar-group	侧边栏示例代码：分组（sidebar-group）	navigation	foundation				
+sidebar-group-collapsible	侧边栏示例代码：可折叠分组（sidebar-group-collapsible）	navigation,layout-card	foundation				
+sidebar-group-action	侧边栏示例代码：分组操作按钮（sidebar-group-action）	navigation	foundation				
+sidebar-menu	侧边栏示例代码：菜单（sidebar-menu）	navigation	foundation				
+sidebar-menu-action	侧边栏示例代码：菜单项操作按钮（sidebar-menu-action）	navigation	foundation				
+sidebar-menu-sub	侧边栏示例代码：子菜单（sidebar-menu-sub）	navigation	foundation				
+sidebar-menu-collapsible	侧边栏示例代码：可折叠菜单（sidebar-menu-collapsible）	navigation,layout-card	foundation				
+sidebar-menu-badge	侧边栏示例代码：菜单徽标（sidebar-menu-badge）	navigation,feedback	foundation				
+sidebar-rsc	侧边栏示例代码：RSC 版（sidebar-rsc）	navigation	foundation				
+sidebar-controlled	侧边栏示例代码：受控（sidebar-controlled）	navigation	foundation				
+accordion-example	手风琴示例代码：新 style 全变体合集（accordion-example）	layout-card	foundation				
+alert-example	提示条示例代码：新 style 全变体合集（alert-example）	feedback	foundation				
+alert-dialog-example	确认对话框示例代码：新 style 全变体合集（alert-dialog-example）	overlay,feedback	foundation				
+aspect-ratio-example	宽高比容器示例代码：新 style 全变体合集（aspect-ratio-example）	other	foundation				
+avatar-example	头像示例代码：新 style 全变体合集（avatar-example）	avatar-user	foundation				
+badge-example	徽标示例代码：新 style 全变体合集（badge-example）	feedback	foundation				
+breadcrumb-example	面包屑示例代码：新 style 全变体合集（breadcrumb-example）	navigation	foundation				
+button-example	按钮示例代码：新 style 全变体合集（button-example）	button	foundation				
+button-group-example	按钮组示例代码：新 style 全变体合集（button-group-example）	button	foundation				
+calendar-example	日历示例代码：新 style 全变体合集（calendar-example）	date-time	foundation				
+card-example	卡片示例代码：新 style 全变体合集（card-example）	layout-card	foundation				
+carousel-example	轮播示例代码：新 style 全变体合集（carousel-example）	media	foundation				
+chart-example	图表示例代码：新 style 全变体合集（chart-example）	chart	foundation				
+checkbox-example	复选框示例代码：新 style 全变体合集（checkbox-example）	toggle-slider	foundation				
+collapsible-example	可折叠容器示例代码：新 style 全变体合集（collapsible-example）	layout-card	foundation				
+combobox-example	可搜索下拉示例代码：新 style 全变体合集（combobox-example）	select	foundation				
+command-example	命令面板示例代码：新 style 全变体合集（command-example）	search-command	foundation				
+context-menu-example	右键菜单示例代码：新 style 全变体合集（context-menu-example）	overlay,navigation	foundation				
+dialog-example	模态对话框示例代码：新 style 全变体合集（dialog-example）	overlay	foundation				
+drawer-example	抽屉示例代码：新 style 全变体合集（drawer-example）	overlay	foundation				
+dropdown-menu-example	下拉菜单示例代码：新 style 全变体合集（dropdown-menu-example）	navigation,select	foundation				
+empty-example	空状态示例代码：新 style 全变体合集（empty-example）	empty-onboarding	foundation				
+field-example	表单字段示例代码：新 style 全变体合集（field-example）	form-input	foundation				
+hover-card-example	悬停卡片示例代码：新 style 全变体合集（hover-card-example）	overlay,layout-card	foundation		hover		
+input-example	输入框示例代码：新 style 全变体合集（input-example）	form-input	foundation				
+input-group-example	输入框组示例代码：新 style 全变体合集（input-group-example）	form-input	foundation				
+input-otp-example	验证码输入示例代码：新 style 全变体合集（input-otp-example）	form-input	foundation				
+item-example	列表项示例代码：新 style 全变体合集（item-example）	other	foundation				
+kbd-example	键盘按键示例代码：新 style 全变体合集（kbd-example）	other	foundation				
+label-example	表单标签示例代码：新 style 全变体合集（label-example）	other	foundation				
+menubar-example	菜单栏示例代码：新 style 全变体合集（menubar-example）	navigation	foundation				
+native-select-example	原生下拉选择示例代码：新 style 全变体合集（native-select-example）	select	foundation				
+navigation-menu-example	导航菜单示例代码：新 style 全变体合集（navigation-menu-example）	navigation	foundation				
+pagination-example	分页示例代码：新 style 全变体合集（pagination-example）	navigation	foundation				
+popover-example	气泡弹层示例代码：新 style 全变体合集（popover-example）	overlay	foundation				
+progress-example	进度条示例代码：新 style 全变体合集（progress-example）	loading	foundation				
+radio-group-example	单选组示例代码：新 style 全变体合集（radio-group-example）	toggle-slider	foundation				
+resizable-example	可拖拽面板示例代码：新 style 全变体合集（resizable-example）	layout-card	foundation				
+scroll-area-example	滚动条区域示例代码：新 style 全变体合集（scroll-area-example）	layout-card,motion-transition	foundation		scroll		
+select-example	下拉选择示例代码：新 style 全变体合集（select-example）	select	foundation				
+separator-example	分隔线示例代码：新 style 全变体合集（separator-example）	layout-card	foundation				
+sheet-example	侧滑面板示例代码：新 style 全变体合集（sheet-example）	overlay	foundation				
+sidebar-example	侧边栏示例代码：新 style 全变体合集（sidebar-example）	navigation	foundation				
+sidebar-icon-example	侧边栏示例代码：折叠成图标栏（新 style 全变体合集，sidebar-icon-example）	navigation	foundation				
+sidebar-inset-example	侧边栏示例代码：内嵌布局 inset（新 style 全变体合集，sidebar-inset-example）	navigation	foundation				
+sidebar-floating-example	侧边栏示例代码：悬浮布局 floating（新 style 全变体合集，sidebar-floating-example）	navigation	foundation				
+skeleton-example	骨架屏示例代码：新 style 全变体合集（skeleton-example）	loading	foundation				
+slider-example	滑块示例代码：新 style 全变体合集（slider-example）	toggle-slider	foundation				
+sonner-example	Toast 通知示例代码：新 style 全变体合集（sonner-example）	feedback	foundation				
+spinner-example	加载转圈示例代码：新 style 全变体合集（spinner-example）	loading	foundation				
+switch-example	开关示例代码：新 style 全变体合集（switch-example）	toggle-slider	foundation				
+table-example	表格示例代码：新 style 全变体合集（table-example）	table	foundation				
+tabs-example	标签页示例代码：新 style 全变体合集（tabs-example）	navigation	foundation				
+textarea-example	多行文本输入示例代码：新 style 全变体合集（textarea-example）	text-effect,form-input	foundation				
+toast-example	Toast 通知示例代码：新 style 全变体合集（toast-example）	feedback	foundation				
+toggle-example	切换按钮示例代码：新 style 全变体合集（toggle-example）	toggle-slider	foundation				
+toggle-group-example	切换按钮组示例代码：新 style 全变体合集（toggle-group-example）	toggle-slider	foundation				
+tooltip-example	文字提示示例代码：新 style 全变体合集（tooltip-example）	overlay	foundation				
+demo	多组件综合演示：卡片、表单字段、输入框组、开关、滑块、单选、下拉菜单、确认对话框放在一起用（新 style 全变体合集，demo）	other	foundation				
+component-example	通用组件示例代码：新 style 全变体合集（component-example）	other	foundation				
+attachment-example	附件展示示例代码：新 style 全变体合集（attachment-example）	other	foundation				
+bubble-example	聊天气泡示例代码：新 style 全变体合集（bubble-example）	other	foundation				
+message-scroller-example	聊天滚动容器示例代码：新 style 全变体合集（message-scroller-example）	motion-transition	foundation		scroll		
+questionnaire-example	多步问卷示例代码：新 style 全变体合集（questionnaire-example）	other	foundation				
+marker-example	状态标记示例代码：新 style 全变体合集（marker-example）	other	foundation				
+message-example	聊天消息行示例代码：新 style 全变体合集（message-example）	other	foundation				
+example	通用组件示例代码：新 style 全变体合集（example）	other	foundation				

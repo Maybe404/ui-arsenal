@@ -59,5 +59,32 @@ class SpecMatchesAudit(unittest.TestCase):
             shutil.rmtree(tmp)
 
 
+def desc_row(source, item, desc):
+    return {'source': source, 'id': item, 'name': item, 'desc': desc, 'layer': 'foundation'}
+
+
+class DescQuality(unittest.TestCase):
+    """stats --desc and the audit warnings it feeds (#20)."""
+
+    def test_template_and_english_shares(self):
+        rows = [desc_row('a', 'x%d' % i, 'x%d 用法示例代码' % i) for i in range(4)]
+        rows.append(desc_row('a', 'card', 'A card with an image and a title'))
+        n, _, tpl, eng = ua.desc_quality(rows)['a']
+        self.assertEqual((n, tpl, eng), (5, 0.8, 0.2))
+
+    def test_english_keyword_segment_is_not_counted(self):
+        desc = '网站整页设计参考：去中心化借贷协议；英文关键词 decentralized lending liquidity protocol crypto finance web3'
+        self.assertEqual(ua.desc_quality([desc_row('g', 'site:aave', desc)])['g'][3], 0.0)
+        bare = desc.replace(ua.EN_KEYWORDS + ' ', '')
+        self.assertEqual(ua.desc_quality([desc_row('g', 'site:aave', bare)])['g'][3], 1.0)
+
+    def test_warnings_only_past_the_thresholds(self):
+        short = [desc_row('s', 'i%d' % i, '短') for i in range(12)]
+        self.assertTrue(any('中位长度' in w and '模板' in w for w in ua.desc_warnings(short)))
+        words = '按钮 输入框 下拉菜单 对话框 抽屉 标签页 工具提示 进度条 骨架屏 分页 面包屑 头像'.split()
+        fine = [desc_row('f', 'i%d' % i, '%s：带键盘操作和减弱动效分支的基础组件' % w) for i, w in enumerate(words)]
+        self.assertEqual(ua.desc_warnings(fine), [])
+
+
 if __name__ == '__main__':
     unittest.main()

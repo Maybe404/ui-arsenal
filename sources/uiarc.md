@@ -152,14 +152,14 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | control-center | Control center | Special | 控制中心 快捷设置磁贴 morph 详情 iOS 风格 | https://uiarc.dev/components/control-center/markdown | pro |
 | cover-flow | Cover flow | Special | Cover Flow 3D 图片轨道 倒影 | https://uiarc.dev/components/cover-flow/markdown | pro |
 | activity-rings | Activity rings | Special | 活动圆环 Apple Watch 风格 目标进度 | https://uiarc.dev/components/activity-rings/markdown | pro |
-| bar-chart | Bar chart | Data | 柱状图 可擦洗查看数值 | `npx shadcn@latest add https://uiarc.dev/r/bar-chart.json` |  |
+| bar-chart | Bar chart | Data | 柱状图 拖动游标读数 | `npx shadcn@latest add https://uiarc.dev/r/bar-chart.json` |  |
 | activity-heatmap | Activity heatmap | Data | 年度活动热力图 GitHub 贡献图 | `npx shadcn@latest add https://uiarc.dev/r/activity-heatmap.json` |  |
 | timeline | Timeline | Data | 时间线 按天分组 | `npx shadcn@latest add https://uiarc.dev/r/timeline.json` |  |
 | stretch-refresh | Stretch refresh | Special | 下拉刷新 拉伸线提示松手 | https://uiarc.dev/components/stretch-refresh/markdown | pro |
 | orbit-menu | Orbit menu | Special | 长按按钮 操作项环绕弹出 径向菜单 | https://uiarc.dev/components/orbit-menu/markdown | pro |
 | time-dial | Time dial | Special | 旋转表盘选时间 显示团队城市时区 | https://uiarc.dev/components/time-dial/markdown | pro |
 | booking-pill | Booking pill | Special | 预订胶囊 一个 pill 连续变形 人数/日期/时间/票 | https://uiarc.dev/components/booking-pill/markdown | pro |
-| voice-recorder | Voice recorder | Special | 录音 实时波形 回放擦洗 发送 | https://uiarc.dev/components/voice-recorder/markdown | pro |
+| voice-recorder | Voice recorder | Special | 录音 实时波形 拖动游标回看 发送 | https://uiarc.dev/components/voice-recorder/markdown | pro |
 | user-menu | User menu | Actions | 用户头像菜单 账号/设置/主题/登出 手机端 bottom sheet | `npx shadcn@latest add https://uiarc.dev/r/user-menu.json` |  |
 | data-grid | Data grid | Data | 电子表格网格 区域选择 原地编辑 填充柄 | https://uiarc.dev/components/data-grid/markdown | pro |
 | lightbox-gallery | Lightbox gallery | Special | 瀑布流+灯箱 从格子缩放进入查看器 手势 | https://uiarc.dev/components/lightbox-gallery/markdown | pro |
@@ -266,7 +266,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | mrr-waterfall | MRR waterfall | Blocks | MRR 瀑布图 收入桥 | https://uiarc.dev/components/blocks/mrr-waterfall/markdown | pro |
 | webhooks | Webhooks | Blocks | Webhook 控制台 投递历史 payload 检查 重试 | https://uiarc.dev/components/blocks/webhooks/markdown | pro |
 | roles-permissions | Roles and permissions | Blocks | 角色权限矩阵 | https://uiarc.dev/components/blocks/roles-permissions/markdown | pro |
-| metric-explorer | Metric explorer | Blocks | KPI 卡片展开成可擦洗图表 | https://uiarc.dev/components/blocks/metric-explorer/markdown | pro |
+| metric-explorer | Metric explorer | Blocks | KPI 卡片展开成可拖动游标读数的图表 | https://uiarc.dev/components/blocks/metric-explorer/markdown | pro |
 | activity-terrain | Activity terrain | Blocks | 3D 活动地形图 可旋转 转热力图 | https://uiarc.dev/components/blocks/activity-terrain/markdown | pro |
 | revenue-globe | Revenue globe | Blocks | 点阵地球 支付弧线 3D globe | https://uiarc.dev/components/blocks/revenue-globe/markdown | pro |
 | customer-galaxy | Customer galaxy | Blocks | 2400 客户星系 粒子聚类 | https://uiarc.dev/components/blocks/customer-galaxy/markdown | pro |

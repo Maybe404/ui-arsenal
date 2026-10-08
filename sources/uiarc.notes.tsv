@@ -1,245 +1,245 @@
-arc-foundation	设计 token 与 motion 预设 深浅色主题 accent 所有组件的基础依赖	design-system	foundation				
-arc-skill	Arc 的 agent skill 文件 SKILL.md 设计/动效/文案/无障碍规则	design-system,motion-transition	design-spec				
-button	按钮 主操作 按压回弹 加载 spinner 标签变形	loading,button	foundation				
-action-button	工具栏紧凑按钮 异步提交 pending/success 状态	button	foundation				
-split-button	分裂按钮 主操作+下拉备选菜单	navigation,button	foundation				
-button-group	按钮组 细分隔线 悬停高亮在分段间滑动 可附菜单	navigation,button	foundation		hover,swipe		
-floating-button-group	浮动按钮组 共享高亮随指针在按钮间 morph	button,motion-transition	foundation				
-expanding-button-group	图标按钮组 悬停/聚焦项展开显示文字标签	button	foundation		hover		
-dropdown-menu	下拉菜单 锚定触发器的操作列表	navigation,select	foundation				
-context-menu	右键上下文菜单	overlay,navigation	foundation				
-copy-button	复制按钮 复制后即时确认反馈	button	foundation				
-drawer	抽屉 侧边临时面板	overlay	foundation				
-theme-switch	深浅色主题切换 四种过渡动画	toggle-slider,motion-transition	foundation				
-theme-switch-eclipse	主题切换 日食式圆形扩散过渡 dark mode toggle	toggle-slider,motion-transition	foundation	dark			
-theme-switch-split	主题切换 中缝向两侧展开过渡	toggle-slider,motion-transition	foundation				
-theme-switch-rise	主题切换 新主题自下而上升起	toggle-slider	foundation				
-avatar	头像	avatar-user	foundation				
-avatar-group	头像组 叠放 团队成员	avatar-user	foundation				
-input	单行输入框 标签与状态	form-input	foundation				
-textarea	多行文本框	form-input	foundation				
-select	下拉选择 键盘友好	select,form-input	foundation		keyboard		
-combobox	可搜索下拉 自动补全 combobox	search-command,select	foundation				
-checkbox	复选框	toggle-slider,form-input	foundation				
-switch	开关 toggle 设置即时生效	toggle-slider,form-input	foundation				
-multi-select	多选下拉 选中项保持可读	select,form-input	foundation				
-number-field	数字输入 步进按钮 范围限制	form-input,button	foundation				
-password-field	密码框 显示/隐藏切换	form-input	foundation				
-search-field	搜索框	search-command,form-input	foundation				
-tag-input	标签输入 回车生成可删除 tag	select,form-input	foundation				
-file-dropzone	文件拖放区 上传	upload,form-input	foundation		drag		
-radio-group	单选组	toggle-slider,form-input	foundation				
-segmented-control	分段控件 视图切换	toggle-slider,navigation	foundation				
-calendar	月历 日期浏览	date-time,form-input	foundation				
-date-picker	日期选择器	date-time,select	foundation				
-time-picker	时间选择器	date-time,select	foundation				
-accordion	手风琴 折叠展开	layout-card	foundation				
-dialog	对话框 modal	overlay	foundation				
-popover	气泡弹层 popover	overlay	foundation				
-tooltip	工具提示 tooltip	overlay	foundation				
-tabs	标签页 tabs	navigation	foundation				
-expandable-card	可展开卡片	layout-card	foundation				
-breadcrumb	面包屑导航	navigation	foundation				
-alert	警告提示条 持久消息	feedback	foundation				
-toast	轻提示 toast 通知	feedback	foundation				
-progress	进度条	loading	foundation				
-skeleton	骨架屏 加载占位	loading	foundation				
-badge	徽章 状态标签	feedback	foundation				
-card	卡片容器	layout-card	foundation				
-metric-card	指标卡 KPI 数字+上下文	chart,layout-card	foundation				
-empty-state	空状态 引导下一步	empty-onboarding	foundation				
-tree-view	树形视图 嵌套文件夹	navigation	foundation				
-pagination	分页	navigation	foundation				
-filter-toolbar	筛选工具栏：多选筛选 faceted filters、筛选 chip、一键重置 filter toolbar，配合表格和列表使用	table,search-command	foundation				
-sortable-data-table	可排序数据表格 table	table	foundation				
-sparkline	迷你趋势图 sparkline	chart	foundation				
-gauge	仪表盘 量规 gauge	chart	foundation				
-animated-counter	数字滚动动画 计数器	text-effect,motion-transition	foundation		scroll		
-code-block	代码块 带复制	other	foundation				
-text-reveal	文字揭示入场动画 hero 文案	text-effect,marketing-section	specialized				
-in-view-title	滚动进入视口时标题入场动画 scroll reveal 逐词/模糊/擦除	motion-transition	specialized		scroll		
-text-morph	文字逐字母 morph 到新状态	text-effect,motion-transition	specialized				
-text-shimmer	文字流光 shimmer 加载中状态	loading,text-effect	specialized				
-hold-to-confirm	长按确认 危险操作 hold to delete	button	foundation				
-swipe-actions	列表行滑动操作 swipe 删除/归档	micro-interaction	foundation		swipe		
-slider	滑块 单值/范围 range slider	toggle-slider,form-input	foundation				
-inline-edit	原地编辑 重命名 文本变输入框	form-input	foundation				
-expanding-search	图标 morph 展开为搜索框+结果	search-command,form-input	foundation				
-chip-group	筛选 chip 组 选中 morph	select,form-input	foundation				
-password-strength	密码强度指示	form-input	foundation				
-bottom-sheet	底部抽屉 bottom sheet 可拖拽 peek/全屏	overlay,micro-interaction	foundation		drag		
-hover-card	悬停卡片 人物/链接预览	overlay,layout-card	foundation		hover		
-resizable-panels	可拖拽调整大小的分栏面板	layout-card,micro-interaction	foundation		drag		
-toast-stack	堆叠 toast 通知 悬停展开 sonner 风格	feedback,micro-interaction	foundation		hover		
-usage-meter	用量计量条 配额接近上限	feedback,chart	foundation				
-image-compare	图片前后对比 拖拽分隔线 before/after	media,micro-interaction	foundation		drag		
-carousel	轮播 拖拽/轻扫 slider	media	foundation		drag		
-card-stack	卡片堆 逐张滑走 tinder 式 撤销	layout-card	foundation				
-morph-nav	导航栏 morph 成富菜单/搜索/紧凑态 一体化	navigation,search-command	specialized				
-dock	浮动 dock 工具栏 标签滑动 托盘展开 macOS dock	navigation	specialized		swipe		
-wallet-stack	钱包卡片扇形展开 抽出单张看交易	layout-card	specialized				
-liquid-tab-bar	液态选中效果的 tab bar 图标填充	navigation	specialized				
-now-playing	迷你播放器连续 morph 成全屏播放器	motion-transition	specialized				
-photo-grid	照片网格 捏合缩放层级 从格子打开	media,layout-card	specialized				
-control-center	控制中心 快捷设置磁贴 morph 详情 iOS 风格	motion-transition	specialized				
-cover-flow	Cover Flow 3D 图片轨道 倒影	media,fun-3d	specialized	3d			
-activity-rings	活动圆环 Apple Watch 风格 目标进度	loading	specialized				
-bar-chart	柱状图 可擦洗查看数值	chart	foundation				
-activity-heatmap	年度活动热力图 GitHub 贡献图	chart	foundation				
-timeline	时间线 按天分组	date-time	foundation				
-stretch-refresh	下拉刷新 拉伸线提示松手	other	specialized				
-orbit-menu	长按按钮 操作项环绕弹出 径向菜单	navigation,button	specialized				
-time-dial	旋转表盘选时间 显示团队城市时区	date-time	specialized				
-booking-pill	预订胶囊 一个 pill 连续变形 人数/日期/时间/票	date-time	specialized				
-voice-recorder	录音 实时波形 回放擦洗 发送	media	specialized				
-user-menu	用户头像菜单 账号/设置/主题/登出 手机端 bottom sheet	overlay,navigation	foundation				
-data-grid	电子表格网格 区域选择 原地编辑 填充柄	table,select	foundation				
-lightbox-gallery	瀑布流+灯箱 从格子缩放进入查看器 手势	media	specialized				
-stepper	步骤条 多步流程进度	loading	foundation				
-morph-loader	形状 morph 的小 loader 完成时变成对勾/叉	loading,motion-transition	specialized				
-voice-orb	语音模式光球 听/想/说 实时字幕 AI voice	ai-ux,media	specialized				
-signature-pad	签名板 笔迹随速度变细 撤销 导出 PNG/SVG	form-input	foundation				
-date-range-picker	日期范围选择 双月 预设 从触发器展开	date-time,select	foundation				
-color-picker	取色器 格式切换 吸管 对比度	select,form-input	foundation				
-morph-select	触发器展开成列表的 select 高亮滑动	select,form-input	foundation		swipe		
-action-morph	悬浮按钮 morph 成快捷菜单再到内联表单 FAB	navigation,form-input	specialized				
-share-sheet	分享面板 复制链接 权限 渠道 联系人	overlay	specialized				
-line-chart	多系列折线图 十字准线 图例切换 路径 morph	chart,motion-transition	foundation				
-donut-chart	环形图 数据集切换弧线 morph	chart,motion-transition	foundation				
-streamgraph	流图 堆叠面积 wiggle 基线	chart	foundation				
-brush-chart	带概览刷选的时间序列图 拖拽缩放	chart,date-time	foundation		drag		
-race-bar-chart	排名竞赛条形图 bar chart race 时间轴播放	chart,date-time	foundation				
-ridgeline	山脊图 分布 joyplot 四分位	other	foundation				
-treemap	矩形树图 点击下钻	other	foundation		press		
-sunburst	旭日图 层级环 点击重心旋转	other	foundation		press		
-sankey-flow	桑基图 流动粒子	background	foundation				
-waffle-chart	华夫图 10x10 百分比单元	chart	foundation				
-funnel-chart	漏斗图 转化流失	chart	foundation				
-radar-chart	雷达图 多剖面对比 morph	chart,motion-transition	foundation				
-realtime-stream	实时流折线 60fps 滚动	other	foundation		scroll		
-slope-chart	斜率图 前后对比 排名变化	chart	foundation				
-countdown	倒计时 数字滚动 归零变 live	text-effect	foundation		scroll		
-announcement-bar	顶部公告条 轮播消息 倒计时 可关闭	marketing-section,feedback	foundation				
-json-viewer	JSON 树查看器 搜索 复制路径	search-command	foundation				
-product-gallery	商品图集 放大镜 缩略图 变体切换 电商	media	specialized				
-sheet-stack	嵌套 sheet 层叠 拖拽关闭 宽屏变对话框	ai-ux,overlay	specialized		drag		
-phone-input	手机号输入 国家选择 格式化 E.164	select,form-input	foundation				
-money-input	金额输入 千分位 滚动数字 最小单位输出	form-input	foundation		scroll		
-shortcut-recorder	快捷键录制 键帽 冲突提示 cheatsheet	form-input	foundation				
-confirm-morph	删除按钮 morph 成内联确认→spinner→结果+撤销	button,micro-interaction	foundation				
-mention-input	@提及 #频道 输入框 光标处建议	form-input,select	foundation		cursor		
-chat-thread	聊天消息线程 反应 已读 输入中 附件	ai-ux,form-input	foundation				
-rich-text-editor	轻量富文本编辑器 markdown 快捷 浮动工具栏 斜杠菜单	form-input	foundation				
-billing-toggle	月付/年付切换 节省徽章 价格滚动	pricing,toggle-slider	foundation		scroll		
-scroll-area	滚动容器 细滚动条 边缘渐隐	layout-card	foundation		scroll		
-radio-cards	单选卡片 选中环滑动 价格	pricing,toggle-slider	foundation		swipe		
-comment-thread	评论线程 回复 反应 提及 解决	other	foundation				
-dot-grid	点阵背景 光标处透镜鼓起 点击涟漪	background,cursor-effect	specialized		press,cursor	grid-background	
-slot-text	老虎机滚轮文字/数字切换	text-effect	specialized				
-page-curl	翻页卷角 杂志阅读 拖拽翻页	micro-interaction	specialized		drag		
-glass-card	玻璃拟态卡片 指针高光 倾斜 3D tilt	layout-card,fun-3d	specialized	3d,glass		glass	
-glass-tabbar	Liquid Glass 浮动 tab bar 折射 透镜 iOS 26	navigation	specialized	glass		glass	
-skeleton-morph	骨架屏逐块长成真实内容	loading,motion-transition	specialized				
-orbit-logos	集成 logo 环绕轨道展示	other	specialized				
-sand-text	沙粒标题 倾倒成字 光标挖散自愈 粒子文字	text-effect,background	specialized		cursor		
-gravity-well	重力井网格 随光标弯曲 点击冲击波	cursor-effect	specialized		press,cursor		
-data-flow	数据流示意动画 源→处理核心→目标	motion-transition	specialized				
-payment-flow	支付链路动画 刷卡→处理方→卡组织→银行 授权结算	motion-transition	specialized				
-date-reel	iOS 滚轮式 3D 日期时间选择器 惯性吸附	date-time,select	specialized	3d			
-multi-region-failover	多区域故障转移 2.5D 架构动画 负载均衡	motion-transition	specialized				
-vector-search	向量检索示意 文档嵌入平面聚类 RAG 可视化	chart,ai-ux	specialized				
-typewriter-terminal	打字机终端 脚本化 CLI 会话 语法着色	text-effect	specialized			typewriter	
-link-unfurl	粘贴链接展开为富预览卡片	layout-card	specialized				
-release-readiness	发布就绪清单 进度+最终发布按钮	loading,button	specialized				
-signup-form	注册表单 校验 密码强度 完成态	auth,form-input	specialized				
-wallet-card	钱包卡片 余额 交易 转账操作 金融	layout-card	specialized				
-logo-marquee	品牌 logo 跑马灯 可暂停	marketing-section,motion-transition	specialized			marquee	
-team-directory	团队通讯录 搜索 筛选 资料面板	search-command	specialized				
-project-board	项目看板 kanban 拖拽阶段	micro-interaction	specialized		drag		
-invoice-studio	可编辑发票 实时合计	media	specialized				
-plan-comparison	套餐对比 计费周期	pricing	specialized				
-availability-picker	多人可用时间 会议时间选择	date-time,select	specialized				
-metrics-dashboard	分析仪表盘 KPI 标签 图表 Top 页面	chart	specialized				
-media-player	音频播放器 播放列表	media	specialized				
-support-conversation	客服对话线程 快捷回复	ai-ux	specialized				
-inbox-triage	收件箱处理 归档 稍后 恢复	other	specialized				
-command-palette	命令面板 ⌘K 搜索分组 快捷键	search-command	specialized				
-notification-center	通知中心 已读状态 分组	feedback	specialized				
-file-upload	文件上传流程 约束 进度 错误	loading,upload	specialized				
-otp-input	六位验证码输入 OTP 粘贴	form-input	specialized				
-multi-step-form	多步表单 向导 保留进度	loading,form-input	specialized				
-team-showcase	图片主导的团队介绍 原地展开	media	specialized				
-testimonial-stage	用户证言 肖像 编辑风	marketing-section	specialized				
-changelog-feed	更新日志 筛选 按月滚动	other	specialized		scroll		
-usage-pricing	拖拽座位/流量的定价计算器	pricing,micro-interaction	specialized		drag		
-ai-composer	AI 助手对话 消息从输入框升起 流式回复	ai-ux,form-input	specialized				
-sign-in	登录卡片 邮箱→验证码→账号 morph	auth,form-input	specialized				
-workspace-sidebar	产品侧边栏 工作区切换 搜索 拖拽收藏	navigation,search-command	specialized		drag		
-settings-page	账号设置页 滑动导航 保存条 morph	navigation,motion-transition	specialized				
-sidebar-rail	应用外壳 侧栏折叠成图标栏 手机端 sheet	overlay,navigation	specialized				
-docs-sidebar	文档布局 导航树过滤 版本切换 页内目录	navigation,layout-card	specialized				
-integrations	集成目录 Connect→Connected	other	specialized				
-billing-overview	账单页 套餐卡 morph 选择 用量 发票	pricing,select	specialized				
-api-keys	API 密钥管理 创建表单 仅显示一次	form-input	specialized				
-inbox-sidebar	邮件侧栏 撰写按钮展开成编辑器 拖放到文件夹	navigation,button	specialized		drag		
-team-members	成员列表 邮箱变 chip 邀请	select	specialized				
-page-header	项目页头 滚动折叠成紧凑栏 tab 计数滚动	navigation,layout-card	specialized		scroll		
-revenue-explorer	SaaS 收入图 刷选缩放	other	specialized				
-journey-flow	用户旅程桑基图 按渠道 morph	motion-transition	specialized				
-empty-states	四种空状态插画 切换 morph	empty-onboarding,motion-transition	specialized	illustration			
-login-centered	居中登录卡 passkey 优先 环形背景	auth	specialized				
-login-immersive	沉浸式玻璃 magic link 登录 照片背景	auth,background	specialized			glass	
-security-settings	安全设置 两步验证 改密 会话	other	specialized				
-cancel-flow	取消订阅挽留流程 定制优惠 长按取消	button	specialized				
-login-split	左右分栏全屏登录 邮箱→密码	auth	specialized				
-cohort-retention	同期群留存三角 转留存曲线	other	specialized				
-support-widget	应用内帮助浮窗 文章搜索 聊天	ai-ux,search-command	specialized				
-usage-forecast	用量预测图 预测锥 预算线	other	specialized				
-mrr-waterfall	MRR 瀑布图 收入桥	other	specialized				
-webhooks	Webhook 控制台 投递历史 payload 检查 重试	other	specialized				
-roles-permissions	角色权限矩阵	other	specialized				
-metric-explorer	KPI 卡片展开成可擦洗图表	chart,layout-card	specialized				
-activity-terrain	3D 活动地形图 可旋转 转热力图	fun-3d	specialized	3d			
-revenue-globe	点阵地球 支付弧线 3D globe	fun-3d	specialized	3d			
-customer-galaxy	2400 客户星系 粒子聚类	background	specialized				
-semantic-zoom	无限缩放公司地图 语义缩放	other	specialized				
-layout-morph	24 卡片在网格/瀑布/列表/扇形/轮播/3D 螺旋间切换	media,layout-card	specialized	3d			
-agent-run	AI agent 运行过程 步骤流 工具调用 diff 审批	ai-ux	specialized				
-week-calendar	周日历 拖拽创建/移动/调整事件	date-time,micro-interaction	specialized		drag		
-scroll-story	滚动叙事 固定产品视图随文案步骤变化 scrollytelling	motion-transition	specialized		scroll		
-spotlight-grid	光随指针的特性网格 卡片 morph 详情	layout-card,motion-transition	specialized			glow	
-invite-people	邀请成员 角色 批量粘贴 席位	other	specialized				
-cart-drawer	购物车抽屉 商品飞入 运费进度	loading,overlay	specialized				
-pricing-calculator	定价计算器 座位滑块 推荐徽章移动	pricing,toggle-slider	specialized				
-ai-chat	完整 AI 聊天 流式 markdown 推理折叠 工具 chip 引用 模型切换	ai-ux,select	specialized				
-checkout-summary	订单摘要 优惠码 税费 支付按钮状态	button	specialized				
-site-header	网站顶栏 滚动变实心 mega menu 移动端菜单	navigation,marketing-section	specialized		scroll		
-site-footer	网站页脚 链接列 订阅	marketing-section	specialized				
-hero-section	三种全屏 SaaS hero 首屏	marketing-section	specialized				
-faq-section	FAQ 手风琴/主题栏/可搜索	search-command,marketing-section	specialized				
-contact-section	联系表单 morph 确认 办公室卡片	form-input,marketing-section	specialized				
-settings-command	设置搜索框展开成命令面板	search-command	specialized				
-usage-billing	按量计费仪表盘 预计支出 限额	pricing	specialized				
-ai-side-panel	侧边 AI 助手面板 上下文 chip 应用修改	ai-ux,select	specialized				
-kpi-drilldown	KPI 卡片展开详情图 同比 拆解表	chart,layout-card	specialized				
-blog-grid	博客列表 精选 分类 分页 阅读器	navigation,layout-card	specialized				
-comparison-table	竞品对比表 sticky 表头	marketing-section,table	specialized				
-feature-bento	六格 bento 特性展示 悬停演示	marketing-section,layout-card	specialized		hover		
-stats-band	统计数字带 进入视口计数	marketing-section	specialized				
-cta-section	行动号召 CTA 区块	marketing-section	specialized				
-newsletter-signup	邮件订阅 往期堆叠	marketing-section,form-input	specialized				
-product-listing	商品列表 筛选 排序 快速加购	other	specialized				
-product-detail	商品详情页 图集 变体 加入购物袋	other	specialized				
-hero-signup	等待列表 hero 网格渐变 邮箱校验	auth,marketing-section	specialized	gradient			
-search-results	分面搜索结果页	search-command	specialized				
-market-terminal	交易终端 K 线 canvas 下单	other	specialized	canvas			
-budget-variance	预算与实际 子弹图 差异	other	specialized				
-choropleth-explorer	分级统计地图 按州/区域着色	other	specialized				
-small-multiples	小多图 同步十字线	other	specialized				
-connected-scatter	连接散点图 CAC vs LTV	chart	specialized				
-line-replay	折线回放 播放头 关键时刻注释	other	specialized				
-template:arc-saas	SaaS 完整入门模板	template	specialized				
-template:arc-ai	AI 应用完整模板	template	specialized				
-template:arc-startup	创业公司营销站模板	template	specialized				
-glass-menu	[Pro] 毛玻璃操作菜单：触发器形变成面板，高亮胶囊在行间滑动，一层就地展开的子菜单，键盘完整可用；适合压在图片或彩色画布上的照片、文件、卡片操作 glass menu dropdown context menu	overlay,micro-interaction	specialized	glass	keyboard	glass	
-share-access	[Pro] 分享与权限面板：邮箱邀请（校验成 chip、带联想）、紧凑菜单改角色、移除可撤销、切换链接权限并复制链接，改动就地生效 share permissions invite roles copy link	form-input,overlay	specialized		keyboard		
+arc-foundation	Arc 基础包：设计 token、motion 预设、深浅色主题和 accent 色，所有 uiarc 组件都依赖它；装上后由它统一画键盘焦点描边	design-system	foundation				
+arc-skill	Arc 的 agent skill 文件（SKILL.md）：设计、动效、文案、无障碍规则，让 AI 按 uiarc 的约定写界面	design-system,motion-transition	design-spec				
+button	按钮：主操作和安静的次要状态，按压回弹，标签原地变化时宽度弹簧过渡（保存→已保存），loading 时按钮内显示 spinner	loading,button	foundation				
+action-button	紧凑操作按钮：工具栏高频操作，异步提交时在按钮上显示进行中→成功，可带尾部箭头做 CTA，成功后 resetAfterMs 自动复位	button	foundation				
+split-button	分裂按钮：一个默认主操作加下拉备选（合并 / Squash / Rebase、导出格式），复制后标签原地变成已复制	navigation,button	foundation				
+button-group	按钮组：相关操作拼成一条，细分隔线，悬停高亮在分段间滑动，末尾可接下拉菜单；卡片底部、工具栏、缩放控件	navigation,button	foundation		hover,swipe		
+floating-button-group	浮动按钮组：托盘里的独立按钮共用一个随指针 morph 的高亮；编辑器/画布浮动工具栏、选区工具栏、竖向工具栏	button,motion-transition	foundation				
+expanding-button-group	图标按钮组：指向或聚焦的按钮展开出文字标签、相邻按钮让位，操作原地确认（归档、复制链接）；空间紧的消息/文件操作栏	button	foundation		hover		
+dropdown-menu	下拉菜单：锚定在触发按钮上的操作列表（重命名、复制、删除），支持分组分隔线和末尾危险项；行或卡片的更多操作 kebab menu	navigation,select	foundation				
+context-menu	右键上下文菜单：文件、卡片、行的次要操作，Shift+F10 或菜单键也能从键盘打开，可带一个危险项	overlay,navigation	foundation				
+copy-button	复制按钮：复制 API key、安装命令、链接、代码后原地显示已复制或复制失败；密集行里可用仅图标按钮（带无障碍标签）	button	foundation				
+drawer	抽屉（侧边临时面板）：筛选、设置、记录详情或较长的表单，不离开当前页；可从任意一边滑出，拖表头关闭；sheet	overlay	foundation				
+theme-switch	深浅色主题切换 dark mode toggle：四种过渡动画（含 eclipse、split、rise），可从按钮位置发起 view transition	toggle-slider,motion-transition	foundation				
+theme-switch-eclipse	主题切换·日食式：新主题像日食一样从按钮处圆形扫过整页；展示页、营销页用，产品界面用 rise	toggle-slider,motion-transition	foundation	dark			
+theme-switch-split	主题切换·中缝展开：新主题从页面中线向两侧打开，不依赖按钮位置；适合居中布局的展示页	toggle-slider,motion-transition	foundation				
+theme-switch-rise	主题切换·升起：新主题自下而上升起，动静最小；产品界面和仪表盘顶栏的图标切换按钮，uiarc 官网顶栏也用它	toggle-slider	foundation				
+avatar	头像：人员和账号的标识，可带在线/离线状态点，没有照片时显示姓名首字母	avatar-user	foundation				
+avatar-group	头像组（叠放）：负责人、协作者列表，人员加入离开时有动画，人多时折叠成 +N	avatar-user	foundation				
+input	单行输入框：带标签，帮助文字和错误文字随输入原地改写，透传 name 和全部原生 input 属性，可直接表单提交	form-input	foundation				
+textarea	多行文本框：简介、评论、反馈等长文本，帮助行里的字数统计数字滚动变化	form-input	foundation				
+select	下拉选择（Radix）：不需要打字的短固定列表（地区、排序方式），键盘可用，通过 name 用隐藏的原生 select 提交表单	select,form-input	foundation		keyboard		
+combobox	可搜索下拉 combobox / autocomplete：长列表单选（时区、国家），在输入框里边打字边筛选，可用 keywords 匹配别名	search-command,select	foundation				
+checkbox	复选框（Radix）：独立的选中/不选中，随表单提交（同意条款）；父行用 indeterminate 半选表示部分选中	toggle-slider,form-input	foundation				
+switch	开关（Radix）：拨动即生效的设置（通知等），设置列表里一行一个偏好	toggle-slider,form-input	foundation				
+multi-select	多选下拉：从固定列表选多个值（标签、负责人），选中项以 chip 显示在字段里，超出折叠成 +N	select,form-input	foundation				
+number-field	数字输入：有上下限的数量、席位、价格，步进按钮、方向键或拖动标签调值，支持单位前后缀，数字滚动变化	form-input,button	foundation				
+password-field	密码框：带显示/隐藏切换（眼睛图标），登录和确认密码用	form-input	foundation				
+search-field	搜索框：原地过滤可见的列表或表格，一键清空；工具栏搜索	search-command,form-input	foundation				
+tag-input	标签输入：按回车或逗号把短文本变成可删除的 tag/chip，适合关键词、邮箱列表	select,form-input	foundation				
+file-dropzone	文件拖放区：拖放或点选上传一个或多个文件，onUpload 提供逐个文件的进度、重试和取消	upload,form-input	foundation		drag		
+radio-group	单选组：2–6 个互斥选项，可带说明（如套餐），原生 radio + fieldset/legend，通过 name 原生提交	toggle-slider,form-input	foundation				
+segmented-control	分段控件：2–5 个视图切换（日/周/月、布局模式），立即生效，选中胶囊滑动；aria-pressed 按钮组	toggle-slider,navigation	foundation				
+calendar	月历：内联选日期，月份一直可见（预订页），minDate/maxDate/disabledDates 屏蔽日期	date-time,form-input	foundation				
+date-picker	日期选择器：表单里的开始/截止日期，弹出日历，支持日期上下限、屏蔽日和本地化格式	date-time,select	foundation				
+time-picker	时间选择器：按固定间隔选时间（会议、提醒），显示 12 小时制、存 24 小时 HH:mm，键盘可用	date-time,select	foundation				
+accordion	手风琴（折叠展开）：FAQ 一次只开一项、设置和帮助页的长内容分组，size="lg" 做页面级 FAQ	layout-card	foundation				
+dialog	对话框 modal：必须打断的确认（删除项目）、改名或邀请这类短表单，多步时标题原地交叉淡入	overlay	foundation				
+popover	气泡弹层 popover：点击打开的锚定面板，放分享设置、小筛选表单或自定义选择器；非模态，页面其他部分仍可操作	overlay	foundation				
+tooltip	工具提示 tooltip：仅图标按钮的一行标签、被截断文字的全文，悬停或聚焦显示，密集工具栏里移到相邻图标立即显示	overlay	foundation				
+tabs	标签页 tabs：同一对象的平级视图（概览、动态、设置），面板高度不同时容器弹簧过渡，标签多时横向滚动并带边缘按钮	navigation	foundation				
+expandable-card	可展开卡片：摘要卡按需展开详情（套餐、订单、日志条目），摘要行里变化的词原地滚动	layout-card	foundation				
+breadcrumb	面包屑导航：显示页面在层级里的位置（工作区 / 设置 / 账单），可用 onClick 做客户端路径（文件浏览器），新层级滑入	navigation	foundation				
+alert	警告提示条：页面或表单里的持久消息（卡即将过期），状态变化时在不同语气间 morph，可关闭并收起下方空隙；callout	feedback	foundation				
+toast	轻提示 toast：单条成功确认（已保存），本地 state 控制，可轻扫关闭；不需要队列时用，要队列用 toast-stack	feedback	foundation				
+progress	进度条：已知总量的上传、导入、长任务，showValue 显示百分比，完成时打勾	loading	foundation				
+skeleton	骨架屏：已知形状的内容加载占位（资料卡、评论），加载完交叉淡入并弹簧调整高度	loading	foundation				
+badge	徽章/状态标签：标题旁或表格单元格里的短状态（Live、草稿、失败），数字或状态变化时 morph，一种语气色加可选图标	feedback	foundation				
+card	卡片容器：网格里可浏览的项目、房源、文章，通过 details 原地放大成快速预览对话框，支持媒体、作者署名和状态行	layout-card	foundation				
+metric-card	指标卡 KPI：单个数字加上下文（在线率、订单数），数字像里程表一样滚动，实时更新时按涨跌方向滚动	chart,layout-card	foundation				
+empty-state	空状态：空列表、零搜索结果、首次使用视图，给出下一步操作；改 props 可在空和成功等状态间 morph	empty-onboarding	foundation				
+tree-view	树形视图：文件、文件夹、嵌套分类的展开和选择，方向键完整键盘导航，可配合 code-block 或详情视图做侧栏	navigation	foundation				
+pagination	分页：服务端分页结果和长表格，页码可放在 URL 或 state 里，切页时拉取数据	navigation	foundation				
+filter-toolbar	筛选工具栏：多选分面筛选 faceted filters、可删除的筛选 chip、一键重置，先选字段再选值；配合表格、列表和分页做列表页	table,search-command	foundation				
+sortable-data-table	可排序数据表格 table：按列排序和行选择（项目、发票、用户），Shift 点击范围选择，计数行带清除	table	foundation				
+sparkline	迷你趋势图 sparkline：卡片、表格行、KPI 里的紧凑趋势，用指针或键盘拖动游标读取历史数值	chart	foundation				
+gauge	仪表盘量规 gauge：一个值在已知范围里的位置（磁盘配额、健康分），可分段标注（健康、将满、危险）	chart	foundation				
+animated-counter	数字滚动计数器：总数、价格、实时计数变化时滚动；animateOnView 让首屏统计数字进入视口时从 0 滚上来	text-effect,motion-transition	foundation		scroll		
+code-block	代码块：文档片段和安装命令，带复制按钮，长文件用 maxLines 折叠成几行加“显示全部”	other	foundation				
+text-reveal	文字揭示入场：首屏 hero 标题在页面加载时逐词出现，脚本加载慢时首帧也能显示文字	text-effect,marketing-section	specialized				
+in-view-title	滚动入场标题 scroll reveal：区块标题进入视口时逐词、模糊或擦除入场，once={false} 每次进入都重播	motion-transition	specialized		scroll		
+text-morph	文字逐字母 morph：状态词只改几个字母时平滑变化（Follow→Following），可单独用在自定义按钮、徽章、短计数上	text-effect,motion-transition	specialized				
+text-shimmer	文字流光 shimmer：AI 思考中、正在生成摘要等进行中的状态文字，完成后停下	loading,text-effect	specialized				
+hold-to-confirm	长按确认按钮 hold to delete：删除、撤销权限等危险操作要按住才触发，代替确认对话框，防止触屏误触	button	foundation				
+swipe-actions	列表行滑动操作：邮件、通知、任务行左右滑出归档、标为未读，滑到底直接执行并移除该行；同样的操作也放在菜单里	micro-interaction	foundation		swipe		
+slider	滑块 range slider：单值或双端范围（音量、透明度、价格区间），刻度标注和格式化读数，滑块跟手	toggle-slider,form-input	foundation				
+inline-edit	原地编辑：项目名这类读多改少的文字点一下变输入框且不移位，单字段自动保存，乐观更新失败时回滚	form-input	foundation				
+expanding-search	可展开搜索：图标 morph 成搜索框，下方列出分组结果和最近搜索；顶栏或工具栏放不下完整搜索框时用	search-command,form-input	foundation				
+chip-group	筛选 chip 组：话题、分类等常切换的分面筛选，选中时 chip morph；multiple={false} 做可清除单选，maxVisible 折叠成 +N	select,form-input	foundation				
+password-strength	密码强度指示：注册、改密码时随输入显示强度，密码规则逐条实时打勾	form-input	foundation				
+bottom-sheet	底部抽屉 bottom sheet：手机端次要任务（详情、筛选、分享），停在 peek 高度或接近全屏，可在档位间拖拽	overlay,micro-interaction	foundation		drag		
+hover-card	悬停卡片：指向或聚焦提及、头像、作者名时预览人物或链接，点击仍用于跳转，相邻触发器之间几乎立即切换	overlay,layout-card	foundation		hover		
+resizable-panels	可调整大小的分栏面板：拖分隔线分配编辑器、邮件、仪表盘的空间，侧栏可拖或甩向边缘折叠，onLayoutChange 保存尺寸	layout-card,micro-interaction	foundation		drag		
+toast-stack	堆叠 toast 通知（sonner 风格）：全局异步结果、错误、撤销，悬停展开；加载 toast 完成后 morph 成成功或失败，可带操作按钮	feedback,micro-interaction	foundation		hover		
+usage-meter	用量计量条：存储、席位、API 调用等配额，分段显示由什么占用、离上限多近，超额时不只靠颜色表达	feedback,chart	foundation				
+image-compare	图片前后对比 before/after：拖动分隔线比较两张图（修图、改版前后），orientation vertical 做上下对比	media,micro-interaction	foundation		drag		
+carousel	轮播：一行同级卡片，可拖拽、甩动、触控板横滑或键盘切换，相邻幻灯片露出一角；interval 自动播放并带可见暂停按钮	media	foundation		drag		
+card-stack	卡片堆 swipe cards：一次处理一张（筛选候选、审核队列、引导选择），左右滑走可撤销；tinder 式	layout-card	foundation				
+morph-nav	导航栏 morph 成富菜单、搜索和紧凑态的一体化顶栏：营销或产品站点的多分区导航，固定一个主操作（注册）；mega menu	navigation,search-command	specialized				
+dock	浮动 dock 工具栏：标签滑动、选中弹簧，同类工具共用一格并展开托盘，可拖拽或 Alt+方向键重排；画布/白板编辑器	navigation	specialized		swipe		
+wallet-stack	钱包卡片堆：几张支付卡、通行证、会员卡扇形展开，抽出一张看余额和交易；Apple Wallet 式实体卡片	layout-card	specialized				
+liquid-tab-bar	液态选中的 tab bar：透镜状选中块在标签间滑动，经过时图标填充，标签可带数字徽标；手机式底部或顶部导航	navigation	specialized				
+now-playing	正在播放：迷你播放条连续 morph 成带封面和进度拖动的完整播放器；边浏览边播放的音乐、播客、音频课	motion-transition	specialized				
+photo-grid	照片网格：捏合在不同列数间缩放，从格子直接打开带胶片条的全屏查看器，可收藏；类似 iOS 相册	media,layout-card	specialized				
+control-center	控制中心：工作区快捷设置磁贴 morph 成详情，专注时长表盘、橡皮筋式音量条、通知渠道开关；iOS 风格	motion-transition	specialized				
+cover-flow	Cover Flow：可甩动的 3D 纵深图片轨道，带落地阴影和倒影；6–12 个视觉条目（专辑、地点、合集）逐个看	media,fun-3d	specialized	3d			
+activity-rings	活动圆环：Apple Watch 式每日目标环，扫动填充、数字递增，超过 100% 画第二圈；健身或习惯仪表盘，可按周选日	loading	specialized				
+bar-chart	柱状图：按天、周、月比较一个指标，带平均线，拖动游标读数；切换范围时柱子按稳定 key morph	chart	foundation				
+activity-heatmap	年度活动热力图：一天一格看一年的节奏（贡献、锻炼），类似 GitHub 贡献图，看连续天数和空档	chart	foundation				
+timeline	时间线：按天分组、最新在前的项目历史、审计日志、部署记录，新条目从顶部滑入，行可原地展开看日志	date-time	foundation				
+stretch-refresh	下拉刷新：下拉时一条线被拉长提示何时松手，支持触摸、鼠标拖动和触控板滚动；时间线、收件箱、动态流	other	specialized				
+orbit-menu	环绕菜单 radial menu：长按按钮弹出 3–6 个环绕操作，拖到目标松手即执行，触屏优先	navigation,button	specialized				
+time-dial	时区表盘：旋转表盘选小时，同时看 2–5 个团队城市谁在工作时间；跨时区会议、发布、交接排期	date-time	specialized				
+booking-pill	预订胶囊：一个 pill 依次变形为人数、日期、时间和确认票据；餐厅订位、服务预约，手机优先	date-time	specialized				
+voice-recorder	录音：实时波形，录完回听并拖动游标回看，再发送到对话；语音消息气泡带播放和拖动定位	media	specialized				
+user-menu	用户头像菜单：账号、设置、主题、在线状态和登出都在头像后面，手机上以 bottom sheet 打开，登出可显示 spinner	overlay,navigation	foundation				
+data-grid	电子表格式数据网格：区域选择、原地编辑、填充柄、向下填充、撤销，排序有动画，可和 Excel/Google Sheets 复制粘贴	table,select	foundation				
+lightbox-gallery	瀑布流灯箱 lightbox：照片从格子位置缩放进入查看器，可滑动、捏合、拖走关闭，保留横竖图比例	media	specialized				
+stepper	步骤条：结账、开户等多步流程的当前位置和完成情况，onStepSelect 可跳回已完成步骤，支持竖向带说明和错误态	loading	foundation				
+morph-loader	形状 morph 的小 loader：按钮、行、字段里的内联进度，完成时原地折成对勾或叉（保存、发布、上传）；spinner	loading,motion-transition	specialized				
+voice-orb	语音模式光球 AI voice mode：显示助手在听、想还是说，带实时字幕和开始、静音、计时、挂断控制	ai-ux,media	specialized				
+signature-pad	签名板：笔迹随速度变细，可撤销、回放，导出裁剪好的 PNG/SVG；合同、签收、同意书上的手写签名	form-input	foundation				
+date-range-picker	日期范围选择：从触发器展开成双月日历，预设最近 7 天、本季度，范围高亮拉伸；报表筛选、预订、请假	date-time,select	foundation				
+color-picker	取色器：色块展开成取色面板，hex/RGB/HSL/OKLCH 加透明度，吸管、保存色板，实时显示和背景的对比度	select,form-input	foundation				
+morph-select	触发器展开成列表的 select：高亮滑动，输入首字母定位，可分组、带图标和附加信息；表单、属性面板、紧凑工具栏	select,form-input	foundation		swipe		
+action-morph	悬浮按钮 FAB morph 成快捷菜单，再变成内联表单，提交后打勾复原；不离开页面快速记任务、笔记、评论	navigation,form-input	specialized				
+share-sheet	分享面板：分享按钮展开成复制链接、访问权限、渠道（Slack、邮件）和最近联系人；文档、设计稿、看板的页头	overlay	specialized				
+line-chart	多系列折线图：十字准线滑动读数，图例切换系列，7/30/90 天切换时路径 morph，可加虚线对比上期或目标	chart,motion-transition	foundation				
+donut-chart	环形图：按来源、类别、文件类型看占比，切换数据集时弧线 morph，当前值滚动显示在中心；pie chart	chart,motion-transition	foundation				
+streamgraph	流图：wiggle 基线上的堆叠面积，按周看话题、渠道的占比变化，可单独突出一层逐周读数，切换范围时 morph	chart	foundation				
+brush-chart	带概览刷选的时间序列图：在概览条上拖出窗口缩放、拖手柄调范围，事件标注原地可读；一年以上的日数据	chart,date-time	foundation		drag		
+race-bar-chart	排名竞赛条形图 bar chart race：条形弹簧超车、数值递增，时间轴可播放或拖到任一期读精确值	chart,date-time	foundation				
+ridgeline	山脊图 joyplot：每组一条分布曲线，悬停抬起一条读四分位，切换数据集时所有曲线 morph；温度、响应时间分布	other	foundation				
+treemap	矩形树图：点击下钻，方块放大填满视图，面包屑返回，可同时表达面积和第二个指标	other	foundation		press		
+sunburst	旭日图：层级环，点击扇区后所有弧绕它旋转成新中心，面包屑返回、总数滚动；逐层看总量来自哪里	other	foundation		press		
+sankey-flow	桑基图：3–5 个阶段间的流量带，带漂移粒子，悬停节点或流带看它在整条路径上的占比；看漏斗在哪流失	background	foundation				
+waffle-chart	华夫图：10×10 格、每格 1%，数据变化时格子飞到新分组；比饼图更能看清小占比	chart	foundation				
+funnel-chart	漏斗图：固定步骤的转化和每步流失，按设备拆分时带状 morph，粒子流过；增长或分析页的主图	chart	foundation				
+radar-chart	雷达图：2–3 个剖面在同一张网上对比，切换时形状 morph，扫过各轴逐项比较；评分、能力对比	chart,motion-transition	foundation				
+realtime-stream	实时流折线：数据到达时以 60fps 滚动，悬停暂停读数，异常点弹出标记；监控面板、状态页、基础设施页首屏	other	foundation		scroll		
+slope-chart	斜率图：两期前后对比，线条画入、排名变化标在数值旁，切换数据集时线条滑到新斜率；可代替分组柱状图	chart	foundation				
+countdown	倒计时：数字滚动，归零后自动变成 Live now 状态；发布页、活动首屏，或表格行、横幅里的截止时间	text-effect	foundation		scroll		
+announcement-bar	顶部公告条：全站促销、上线、维护通知，2–4 条消息轮播，可带倒计时，关闭时平滑收起	marketing-section,feedback	foundation				
+json-viewer	JSON 树查看器：可折叠、可搜索，超长数组按 pageSize 分页，复制值或路径；webhook、API 日志调试面板	search-command	foundation				
+product-gallery	商品图集：悬停放大镜、缩略图滑动，颜色和尺码变体切换时照片交叉淡入，售罄变体划线而不是隐藏；电商详情页	media	specialized				
+sheet-stack	嵌套 sheet 层叠：每进一层页面带纵深叠放，可拖拽关闭，宽屏上变成层叠对话框；手机设置、嵌套选择	ai-ux,overlay	specialized		drag		
+phone-input	手机号输入：国家和区号选择，边输入边格式化，输出 E.164；注册、结账、发短信验证码前的两步验证设置	select,form-input	foundation				
+money-input	金额输入：千分位实时分组、宽度稳定、数字滚动，输出最小货币单位，可切换币种、加 +$10 快捷 chip	form-input	foundation		scroll		
+shortcut-recorder	快捷键录制：按下组合键生成键帽，冲突提示，附 Kbd 组件和可搜索的快捷键 cheatsheet；快捷键设置页	form-input	foundation				
+confirm-morph	删除按钮原地 morph 成内联确认→spinner→结果加撤销，不弹窗；表格/文件列表删除、移除成员、丢弃草稿	button,micro-interaction	foundation				
+mention-input	@提及输入框：@人和 #频道 作为整体 token，光标处弹出建议，存储值带结构化引用；评论、回复、聊天输入	form-input,select	foundation		cursor		
+chat-thread	聊天消息线程：消息分组、表情反应、已读回执、正在输入、带附件的输入框；客服或应用内私信	ai-ux,form-input	foundation				
+rich-text-editor	轻量富文本编辑器：markdown 快捷输入、选中浮动工具栏、斜杠菜单，输出 HTML 或 markdown；评论、笔记、短文档	form-input	foundation				
+billing-toggle	月付/年付切换（pricing monthly/yearly toggle）：带节省徽章，价格滚动到新金额，BillingPrice 也能单独用；定价页顶部的计费周期	pricing,toggle-slider	foundation		scroll		
+scroll-area	滚动容器：原生滚动加细的悬浮滚动条，内容溢出时才出现边缘渐隐；横向卡片条支持滚轮和吸附点	layout-card	foundation		scroll		
+radio-cards	单选卡片：带价格、说明或预估的选项卡，选中环滑动，radio 键盘行为，不可用选项显示原因；套餐、配送方式	pricing,toggle-slider	foundation		swipe		
+comment-thread	评论线程：回复、表情反应、@提及、原地编辑、标记已解决；文档、设计稿、工单、PR 的评审讨论	other	foundation				
+dot-grid	点阵背景：光标周围像透镜一样鼓起，点击处泛起涟漪；落地页首屏、空状态、登录面板的背景	background,cursor-effect	specialized		press,cursor	grid-background	
+slot-text	老虎机滚轮文字：文字和数字在错开的滚轮上转到新值；定价切换、KPI 换周期、抽奖揭晓	text-effect	specialized				
+page-curl	翻页卷角：拖动页角翻阅的小杂志，有真实折痕和光照；编辑类品牌展示、菜单、目录、纪念册	micro-interaction	specialized		drag		
+glass-card	玻璃拟态卡片：照片上的玻璃信息面板，边缘高光跟随指针、卡片 3D 倾斜，点击 morph 成详情 sheet；人物或房源卡	layout-card,fun-3d	specialized	3d,glass		glass	
+glass-tabbar	Liquid Glass 浮动 tab bar（iOS 26 风格）：折射下方内容，玻璃透镜在标签间滑动放大、可拖拽，可带搜索气泡，下滑时收起	navigation	specialized	glass		glass	
+skeleton-morph	骨架屏逐块长成真实内容，而不是整块替换；资料卡、信息流、布局已知的仪表盘	loading,motion-transition	specialized				
+orbit-logos	集成 logo 环绕轨道：品牌 logo 在倾斜轨道上绕产品标志转，悬停或聚焦一个就停下并连线说明用途；集成页首屏	other	specialized				
+sand-text	沙粒标题：沙子倒进字形组成文字，光标挖处崩散后自愈；canvas 粒子文字，适合短标题	text-effect,background	specialized		cursor		
+gravity-well	重力井网格：方块网格像时空一样被光标吸弯，点击发出冲击波；团队墙、客户 logo 墙、情绪板	cursor-effect	specialized		press,cursor		
+data-flow	数据流示意动画：左侧数据源（应用、数据库、事件）→中间带实时计数的处理核心→右侧目标（数仓、仪表盘、告警）；ETL	motion-transition	specialized				
+payment-flow	支付链路动画：刷卡→处理方→卡组织→发卡行再返回授权，然后结算，每一跳亮起状态标签，金额以 chip 移动	motion-transition	specialized				
+date-reel	iOS 滚轮式 3D 日期时间选择器：惯性滚动、吸附、弧面透视，键盘完整可用；定时发送、提醒、生日	date-time,select	specialized	3d			
+multi-region-failover	多区域故障转移 2.5D 动画：请求经全局负载均衡到两个区域，主区健康检查失败后流量切到健康区；可靠性页、文档	motion-transition	specialized				
+vector-search	向量检索示意动画：文档落到嵌入平面聚成点，查询被嵌入后沿近邻图找到结果；语义搜索、RAG 功能介绍	chart,ai-ux	specialized				
+typewriter-terminal	打字机终端：按脚本模拟真人节奏输入 CLI 命令，语法着色，输出行、进度条、spinner，可拖动、暂停、重播；开发者工具首屏	text-effect	specialized			typewriter	
+link-unfurl	粘贴链接展开为富预览卡片：链接先闪 loading，再 morph 成带标题、图片、favicon 的卡片，可收回成内联链接	layout-card	specialized				
+release-readiness	发布就绪清单：前置检查、负责人和就绪进度条，全部完成后才解锁最终发布按钮，执行时可通知相关人	loading,button	specialized				
+signup-form	注册表单：邮箱加密码注册的前端部分，字段校验、密码强度、产品更新订阅勾选，创建成功后原地显示完成面板	auth,form-input	specialized				
+wallet-card	钱包卡片：余额、近期交易和小历史图，快捷发送、充值、兑换、购买，可同时显示主账户和备用账户	layout-card	specialized				
+logo-marquee	品牌 logo 跑马灯：客户或集成 logo 条持续缓慢移动，带暂停控制；落地页社会证明区	marketing-section,motion-transition	specialized			marquee	
+team-directory	团队通讯录：搜索同事、按部门筛选，在资料面板里复制联系方式；内部人员目录	search-command	specialized				
+project-board	项目看板 kanban：在几个固定阶段间移动任务，除了拖拽也能用显式按钮移动	micro-interaction	specialized		drag		
+invoice-studio	可编辑发票：逐行填写数量和单价，小计和合计实时更新，保存流程清楚；发票、报价单	media	specialized				
+plan-comparison	套餐对比表 pricing table：两档并排的功能矩阵，月付/年付价格切换，长功能列表可只看差异	pricing	specialized				
+availability-picker	多人可用时间选择：找出几位参会人都有空的会议时间，显示几天的空档和确认步骤；calendly 式约时间	date-time,select	specialized				
+metrics-dashboard	分析仪表盘：四个 KPI 标签、一张可查看的图表、7/30/90 天切换，附热门页面和流量来源	chart	specialized				
+media-player	音频播放器：播放列表、拖动进度、上一首/下一首、音量；播客、音效包、歌单	media	specialized				
+support-conversation	客服对话线程：快捷回复、附件、正在输入提示、已解决切换；工单或在线客服	ai-ux	specialized				
+inbox-triage	收件箱处理：消息或请求的归档、稍后提醒 snooze、恢复，行可原地展开看详情和操作	other	specialized				
+command-palette	命令面板 ⌘K：全局搜索跳转页面、新建条目、执行操作，结果分组并显示快捷键；cmdk 替代	search-command	specialized				
+notification-center	通知中心：顶栏铃铛带未读徽标，近期更新收件箱，可标记已读、展开、批量清除	feedback	specialized				
+file-upload	文件上传流程：按类型和大小校验，逐个文件进度、重试、移除，移除时通过 AbortSignal 中止上传	loading,upload	specialized				
+otp-input	六位验证码输入 OTP：邮件或短信验证码、两步验证，支持粘贴和键盘导航	form-input	specialized				
+multi-step-form	多步表单向导：引导或信息收集分成几步、每步一个决定，带上一步/继续、进度和完成态，保留已填内容	loading,form-input	specialized				
+team-showcase	团队介绍区块：以肖像为主，资料原地展开，四种布局（画廊、胶片条、名录、聚光）；关于我们页	media	specialized				
+testimonial-stage	用户证言区块：肖像主导的编辑风故事，点开进入专注阅读状态，按需轮换几条引言；testimonial	marketing-section	specialized				
+changelog-feed	更新日志 changelog：按月分组滚动，按新功能/修复/改进筛选，条目原地展开，可带邮件订阅	other	specialized		scroll		
+usage-pricing	按量定价计算器：拖动席位和流量滑块时自动推荐套餐，月付/年付切换显示节省；pricing calculator	pricing,micro-interaction	specialized		drag		
+ai-composer	AI 助手对话：消息从输入框升起，回复流式出现并带思考 shimmer、停止和复制按钮，支持附件和推荐问题	ai-ux,form-input	specialized				
+sign-in	登录卡片：邮箱→六位验证码→账号确认原地 morph，免密登录，也可提供 passkey 和 SSO	auth,form-input	specialized				
+workspace-sidebar	产品侧边栏：工作区切换、实时搜索、可拖拽收藏、内联新建项目，按 [ 折叠成图标栏；多工作区应用的主导航	navigation,search-command	specialized		drag		
+settings-page	账号设置页：分区导航高亮滑动，有改动时才 morph 出保存条，Cmd/Ctrl+S 保存	navigation,motion-transition	specialized				
+sidebar-rail	应用外壳：侧栏、面包屑和内容区，嵌套导航组可折叠成图标栏，窄屏时侧栏变成滑入的 sheet	overlay,navigation	specialized				
+docs-sidebar	文档布局：导航树实时过滤、版本切换、随滚动高亮的本页目录；产品或 API 文档	navigation,layout-card	specialized				
+integrations	集成目录：搜索和分类筛选，点 Connect 后 morph 成 Connected、筛选计数随之更新，含同步设置和安全断开	other	specialized				
+billing-overview	账单页 billing：套餐卡 morph 成套餐选择器，同页显示用量、支付方式和发票，不离开页面就能改套餐	pricing,select	specialized				
+api-keys	API 密钥管理：创建按钮展开成表单，按作用域和环境建 key，密钥只显示一次，撤销防误触	form-input	specialized				
+inbox-sidebar	邮件侧栏：撰写按钮展开成编辑窗口，邮件可拖放到文件夹，行内快捷操作；邮件或消息应用外壳	navigation,button	specialized		drag		
+team-members	成员管理：输入或粘贴的邮箱变成 chip 飞入待邀请列表，席位数滚动，成员带角色和待接受状态	select	specialized				
+page-header	项目页头：面包屑、状态、成员和 tab，滚动时折叠成紧凑栏，tab 上的计数滚动；项目、仓库、记录详情页	navigation,layout-card	specialized		scroll		
+revenue-explorer	SaaS 收入图：MRR 按新增、扩展、流失拆分，概览条刷选缩放时路径、坐标轴和数字随范围滑动，可对比上期	other	specialized				
+journey-flow	用户旅程桑基图：访问→注册→激活等阶段间的流向，按获客渠道切换时 morph，悬停追踪一个群组的路径	motion-transition	specialized				
+empty-states	四种空状态插画：无结果、离线、收件箱清零、404 共用一种插画风格，切换 tab 时形状 morph，可单独取一个场景	empty-onboarding,motion-transition	specialized	illustration			
+login-centered	居中登录卡：passkey 优先，环形背景，可回退到邮箱六位验证码，登录和注册共用一张卡	auth	specialized				
+login-immersive	全屏照片背景上的玻璃 magic link 登录卡，发送后信封合上；消费类或创意品牌的登录页	auth,background	specialized			glass	
+security-settings	安全设置：引导式两步验证（扫码、验证、备用码，TOTP）、修改密码、活动会话管理	other	specialized				
+cancel-flow	取消订阅挽留流程：先问原因，再针对原因给折扣、暂停或降级方案，最后长按确认取消	button	specialized				
+login-split	左右分栏全屏登录：一侧品牌照片，邮箱优先，识别出账号后 morph 到密码步骤	auth	specialized				
+cohort-retention	同期群留存：注册群组按月留存的三角表 morph 成留存曲线，可按分群重新着色；增长和客户成功仪表盘	other	specialized				
+support-widget	应用内帮助浮窗：启动按钮展开成文章搜索、文章阅读和与团队的聊天，挂在应用根部做统一帮助入口；类似 Intercom	ai-ux,search-command	specialized				
+usage-forecast	用量预测图：计费周期内累计用量带预测区间，可拖动的预算线标出预计超出日期；提前提醒客户	other	specialized				
+mrr-waterfall	MRR 瀑布图（收入桥）：说明期初到期末 MRR 怎么变，浮动柱按期间 morph，点开看每项变动背后的客户	other	specialized				
+webhooks	Webhook 控制台：端点、投递历史、payload 和 headers 查看器，重试后成功率滚动更新	other	specialized				
+roles-permissions	角色权限矩阵 RBAC：分组开关联动，可复制角色，保存前有审查栏；工作区管理员设置	other	specialized				
+metric-explorer	指标探索：KPI 卡片展开成可拖动游标读数的图表，在几个指标和日期范围间 morph；分析或财务页顶部	chart,layout-card	specialized				
+activity-terrain	3D 活动地形图：一周 7×24 小时的活跃度做成可旋转缩放的地形，可压平成热力图；展示型仪表盘	fun-3d	specialized	3d			
+revenue-globe	点阵地球 3D globe：实时支付以弧线飞回总部，可回放一天；收入或运营总览	fun-3d	specialized	3d			
+customer-galaxy	客户星系：2400 个账户像星系一样漂移，按套餐、地区或健康度聚成星团；canvas 粒子可视化	background	specialized				
+semantic-zoom	语义缩放：可无限放大的公司地图，从全公司逐级飞入团队、项目、任务和人，每级显示不同细节	other	specialized				
+layout-morph	布局切换：同一组 24 张卡片在网格、瀑布流、列表、扇形、轮播、3D 螺旋之间飞行切换；作品集、目录	media,layout-card	specialized	3d			
+agent-run	AI agent 运行过程：步骤流式进入时间线，工具调用可展开，diff 等待人工批准后才写入，最后收成结果；human in the loop	ai-ux	specialized				
+week-calendar	周日历：拖拽新建、移动、调整事件时长，多个颜色日历、全天事件、日视图和日程视图，手机上可滑动	date-time,micro-interaction	specialized		drag		
+scroll-story	滚动叙事 scrollytelling：文案滚动时，固定住的产品视图跟着切换每一步；营销页功能讲解	motion-transition	specialized		scroll		
+spotlight-grid	特性网格：光随指针移动，卡片播放实时小演示，点击 morph 成详情；开发者工具落地页 bento	layout-card,motion-transition	specialized			glow	
+invite-people	邀请成员：按姓名或邮箱逐个设置角色，批量粘贴校验，席位计量条，头像飞入待邀请列表	other	specialized				
+cart-drawer	购物车抽屉：商品飞入购物车、数量滚动，抽屉里改数量，免运费进度、优惠码和结账	loading,overlay	specialized				
+pricing-calculator	定价计算器：席位滑块和月付/年付切换驱动套餐卡，价格滚动、推荐徽章移动，显示年付节省	pricing,toggle-slider	specialized				
+ai-chat	完整 AI 聊天：流式 markdown 回答、推理过程折叠、工具调用 chip、行内引用来源、模型切换、会话历史	ai-ux,select	specialized				
+checkout-summary	订单摘要：优惠码变成 chip，折扣和税费行，支付按钮状态；跳转 Stripe 托管结账前的最后一步	button	specialized				
+site-header	网站顶栏：滚动后变实心，当前链接高亮滑动，mega menu 面板带特性卡片，移动端菜单 sheet，一个主注册按钮	navigation,marketing-section	specialized		scroll		
+site-footer	网站页脚：链接列加邮件订阅和状态链接，也有极简单行版，底部是大号渐隐的 Arc 标志（要换成自己的）	marketing-section	specialized				
+hero-section	三种全屏 SaaS 首屏 hero：仪表盘从底边升起配漂移网格、工作流图逐节点演示事件路由、网格渐变上的编辑风大字	marketing-section	specialized				
+faq-section	FAQ 区块：手风琴、主题侧栏或可搜索列表（高亮匹配）三种形式；定价、产品、支持页	search-command,marketing-section	specialized				
+contact-section	联系区块：带校验的联系表单提交后 morph 成确认，列出支持渠道和响应时间，办公室卡片显示当地时间	form-input,marketing-section	specialized				
+settings-command	设置搜索：搜索框展开成命令面板，直接跳到任一设置项；设置项多的工作区或管理后台	search-command	specialized				
+usage-billing	按量计费仪表盘：预计支出线、用量对限额的计量条、支出告警、发票历史，升级按钮 morph 成确认 sheet	pricing	specialized				
+ai-side-panel	侧边 AI 助手面板 copilot：停靠在页面旁流式回答，从页面提取上下文 chip，批准后高亮应用修改，可切全屏	ai-ux,select	specialized				
+kpi-drilldown	KPI 下钻：卡片展开成详情图，带同期对比和拆解表，再折回；分析或财务总览	chart,layout-card	specialized				
+blog-grid	博客列表：精选文章、分类筛选、文章卡片、分页，原地打开阅读器	navigation,layout-card	specialized				
+comparison-table	竞品对比表 us vs them：sticky 表头、高亮本方列，手机上堆叠显示；3–5 列、分组的功能矩阵	marketing-section,table	specialized				
+feature-bento	六格 bento 特性展示：每格用小的真实产品 UI 在悬停时演示一个功能；落地页功能区	marketing-section,layout-card	specialized		hover		
+stats-band	统计数字带：进入视口时计数，每个数字配一个小图佐证、悬停显示上下文，平铺或细线网格两种	marketing-section	specialized				
+cta-section	行动号召 CTA 区块：居中收尾、旁边配自动完成的设置卡、或可关闭横幅三种形式；落地页末尾要试用或演示	marketing-section	specialized				
+newsletter-signup	邮件订阅 newsletter：周围堆着往期，订阅后一期写着你名字的新刊落到最前；waitlist、博客文末	marketing-section,form-input	specialized				
+product-listing	商品列表页：价格、颜色、尺码筛选和排序，悬停换图，快速加购时选尺码；几十到几百件商品的分类页	other	specialized				
+product-detail	商品详情页 PDP：可滑动图集、款式和尺码变体、加入购物袋原地确认、运费、评价摘要，缺货变体可订阅到货提醒	other	specialized				
+hero-signup	等待列表首屏 waitlist hero：漂移网格渐变背景，邮箱边输入边校验，按钮变成确认并显示排队位置	auth,marketing-section	specialized	gradient			
+search-results	分面搜索结果页：搜索建议、随查询变化的分面计数、筛选 chip，文档/人员/文件混合结果高亮匹配，键盘导航	search-command	specialized				
+market-terminal	交易终端：canvas K 线、成交量、均线、十字线 OHLC 读数，滚轮/拖拽/捏合缩放，带迷你图的自选列表，下单面板	other	specialized	canvas			
+budget-variance	预算与实际对比：按部门的子弹图，有利/不利差异，按月、季、年初至今切换；月结和预算复盘	other	specialized				
+choropleth-explorer	分级统计地图 choropleth：按州或区域用分级色显示收入、增长、渗透率，可切换国家并下钻到子区域	other	specialized				
+small-multiples	小多图：一组小折线图共用同步十字线，y 轴可共享或独立，排序时 FLIP 重排；按区域、产品、渠道比较	other	specialized				
+connected-scatter	连接散点图：每月 CAC 对 LTV 的路径自动画出，拖动游标沿曲线移动，按渠道切换时 morph；看单位经济是否接近目标	chart	specialized				
+line-replay	折线回放：播放头画出一天的流量，带数值标签、拖动条、倍速和关键时刻注释；发布复盘、事故复盘	other	specialized				
+template:arc-saas	SaaS 产品完整入门模板（starter template）	template	specialized				
+template:arc-ai	AI 应用完整入门模板（starter template）	template	specialized				
+template:arc-startup	创业公司营销站模板（startup landing template）	template	specialized				
+glass-menu	毛玻璃操作菜单：触发器 morph 成面板，高亮胶囊在行间滑动，一层原地子菜单，键盘可用；压在图片或彩色画布上的照片、文件、卡片操作	overlay,micro-interaction	specialized	glass	keyboard	glass	
+share-access	分享与权限面板：邮箱邀请（校验成 chip、带联想），紧凑菜单改角色，移除可撤销，切换链接权限并复制链接；share permissions	form-input,overlay	specialized		keyboard		

@@ -2291,6 +2291,40 @@ def source_status(s):
 
 # ---------- stats / audit ----------
 
+DESC_ALARM = {'median': 15, 'template': 0.3, 'english': 0.3}  # warning thresholds, not errors
+EN_KEYWORDS = '英文关键词'  # optional last segment of desc_zh: English search words for a translated description
+
+
+def desc_quality(rows):
+    """{source: (rows, median desc length, share of the most common template, share of mostly-English descs)}.
+    The template of a description is what is left after removing the item's own id and name, so "X 用法示例代码"
+    for every X shows up as one template. A trailing "英文关键词 ..." segment holds English search words on purpose
+    and does not count towards mostly-English."""
+    by = {}
+    for r in rows:
+        by.setdefault(r['source'], []).append(r)
+    out = {}
+    for s, rs in by.items():
+        lens = sorted(len(r['desc']) for r in rs)
+        counts = {}
+        for r in rs:
+            d = r['desc'].lower()
+            for w in sorted({r['id'].lower(), r['name'].lower()} | set(re.split(r'[\s:_/.-]+', (r['id'] + ' ' + r['name']).lower())),
+                            key=len, reverse=True):
+                if len(w) >= 2:
+                    d = d.replace(w, '')
+            t = re.sub(r'[\d\s\W_]+', '', d)
+            counts[t] = counts.get(t, 0) + 1
+        def english(d):
+            d = d.split(EN_KEYWORDS)[0]
+            letters = re.sub(r'[\s\d\W_]+', '', d)
+            return bool(letters) and len(CJK.findall(d)) < 0.25 * len(letters)
+        worded = [r for r in rs if r['layer'] != 'icons']  # icon names and tags are English by design
+        out[s] = (len(rs), lens[len(lens) // 2], max(counts.values()) / len(rs),
+                  sum(english(r['desc']) for r in worded) / len(worded) if worded else 0.0)
+    return out
+
+
 RISK_HINTS = {'marquee': r'marquee|跑马灯', 'typewriter': r'typewriter|打字机', 'glow': r'\bglow\b|光晕',
               'glass': r'glassmorphism|毛玻璃|玻璃拟态', 'gradient-text': r'渐变文字|gradient text'}
 
@@ -2311,7 +2345,25 @@ def label_warnings(rows):
     return warns
 
 
+def desc_warnings(rows):
+    warns = []
+    for s, (n, med, tpl, eng) in sorted(desc_quality(rows).items()):
+        why = [x for x, bad in (('描述中位长度 %d 字' % med, med < DESC_ALARM['median']),
+                                ('%.0f%% 的描述是同一句模板' % (100 * tpl), n > 10 and tpl > DESC_ALARM['template']),
+                                ('%.0f%% 的描述以英文为主' % (100 * eng), eng > DESC_ALARM['english'])) if bad]
+        if why:
+            warns.append('desc_zh %s: %s（中文搜索会搜不到，见 _SPEC.md 的 desc_zh 要求）' % (s, '；'.join(why)))
+    return warns
+
+
 def cmd_stats(args):
+    if '--desc' in args:
+        print('%-13s %6s %8s %9s %9s' % ('source', 'rows', 'median', 'template', 'english'))
+        for s, (n, med, tpl, eng) in sorted(desc_quality(load_rows()).items()):
+            print('%-13s %6d %8d %8.0f%% %8.0f%%' % (s, n, med, 100 * tpl, 100 * eng))
+        print('提示阈值：中位长度 < %d、同一模板 > %.0f%%、英文为主 > %.0f%%（audit 会给出 warning，不算格式错误）' % (
+            DESC_ALARM['median'], 100 * DESC_ALARM['template'], 100 * DESC_ALARM['english']))
+        return 0
     md = '--md' in args or '--write-skill' in args
     buf = []
     out = buf.append if '--write-skill' in args else print
@@ -2470,7 +2522,7 @@ def cmd_audit(args):
         missing = [t for t in TASKS if t != 'other' and not os.path.exists(os.path.join(GUIDES, t + '.md'))]
         if missing:
             warns.append('no guide yet for: ' + ' '.join(missing))
-    warns += label_warnings(load_rows())
+    warns += desc_warnings(load_rows()) + label_warnings(load_rows())
     errs += audit_claims(known)
     for e in errs[:200]:
         print(e)

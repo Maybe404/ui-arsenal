@@ -86,7 +86,7 @@
 255-gradient-animation-that-gently-reveals-a-new-model-version-on-elevenlabs	ElevenLabs：渐变扫光揭示新模型版本标签	motion-transition	reference	gradient			
 254-bottle-get-emptier-each-time-you-add-a-hydration-log-on-go-club	GO Club：记录喝水时水瓶液面下降的拟物动画	motion-transition	reference				
 253-burning-negative-stories-in-how-we-feel	How We Feel：把负面记录"烧掉"的火焰动画	motion-transition	reference				
-252-halloween-easter-egg-when-hovering-on-vercels-logo-2	Vercel：万圣节悬停 logo 彩蛋	motion-transition,micro-interaction	reference		hover		
+252-halloween-easter-egg-when-hovering-on-vercels-logo-2	Vercel：万圣节悬停 logo 彩蛋（站内 #252；和 #141 同名，差别未核对）	motion-transition,micro-interaction	reference		hover		
 251-contribution-graph-turns-orange-on-halloween-in-github	GitHub：万圣节贡献图变橙色	chart	reference				
 250-halloween-mode-toggle-in-deel	Deel：万圣节主题模式开关	toggle-slider,micro-interaction	reference				
 249-halloween-themed-loading-indicator-in-discord	Discord：万圣节主题加载动画（loading）	loading,motion-transition	reference				
@@ -197,7 +197,7 @@
 144-amps-and-stompboxes-with-interactive-knobs-and-switches-in-garage-band	GarageBand：拟物音箱和效果器旋钮开关	toggle-slider,motion-transition	reference				
 143-customizable-wallet-address-qr-code-on-family	Family：可自定义样式的钱包地址二维码	micro-interaction,media	reference				
 142-flashlight-controls-in-the-dynamic-island-on-ios	iOS：灵动岛中的手电筒光束调节	motion-transition	reference				
-141-halloween-easter-egg-when-hovering-on-vercels-logo	Vercel：万圣节悬停 logo 彩蛋	motion-transition,micro-interaction	reference		hover		
+141-halloween-easter-egg-when-hovering-on-vercels-logo	Vercel：万圣节悬停 logo 彩蛋（站内 #141；#252 是同名的另一条，差别未核对，看视频再选）	motion-transition,micro-interaction	reference		hover		
 140-keys-get-pressed-and-light-up-when-using-the-keyboard-shortcut-in-rainbow	Rainbow：使用快捷键时拟物按键按下发光	motion-transition,micro-interaction	reference		press,keyboard	glow	
 139-animation-when-toggling-between-travelling-and-hosting-mode-in-airbnb	Airbnb：切换旅客/房东模式的 3D 翻转过渡	motion-transition,fun-3d	reference	3d			
 138-cards-have-inertia-when-dragging-them-around-in-bento	Bento：拖拽卡片带惯性和倾斜	layout-card,micro-interaction	reference		drag		
