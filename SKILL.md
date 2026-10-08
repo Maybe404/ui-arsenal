@@ -177,6 +177,6 @@ $S/stats.sh                                   # 各来源统计
 - **更新流程（自动报告，人工批准）**：
   1. `$S/refresh.sh [id...]`：拉取线上清单，和本地比对，每次写一份新的 `sources/_pending/<日期>/<id>-<时分秒>.json`，**不改正式数据**；上一份还没 apply 的待审稿里补好的新条目字段会沿用过来。能发现新增、消失、元数据指纹变化，以及各来源能看到的依赖或付费标记变化（`diff.sh` 会写明每个来源看得到、看不到什么）。清单返回 0 条或报错时只记录错误；子清单没取到（比如 Lucide Lab）或清单异常缩水时状态是 degraded，相关条目不会被当成下线。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
   2. `$S/diff.sh [id...]`：查看待审变更。新条目要在待审文件里补上 `desc_zh`、`task`、`layer` 才能写入。
-  3. `$S/apply.sh <id>`：写入前先核对待审稿属于这个来源、生成后 `sources/<id>.tsv` 没被改过、没 apply 过，再校验所有新条目和变更的字段（任务、层级、风险、访问状态、取码规格），全部通过才写。机器字段写进 `sources/<id>.tsv`；新条目同时在 `.notes.tsv` 追加一行（内容来自待审稿里补的字段），已有的 notes 行不会改；两份文件一起写入，中途失败就都不变。消失的条目先标 needs-review，30 天后仍然消失才标 removed，都不删除。然后跑 `audit.sh` 并 git commit，回滚用 git revert。
+  3. `$S/apply.sh <id>`：写入前先核对待审稿属于这个来源、生成后 `sources/<id>.tsv` 没被改过、没 apply 过，再校验所有新条目和变更的字段（任务、层级、风险、访问状态、取码规格），全部通过才写。机器字段写进 `sources/<id>.tsv`；新条目同时在 `.notes.tsv` 追加一行（内容来自待审稿里补的字段），已有的 notes 行不会改；两份文件一起写入，中途失败就都不变。消失的条目先标 needs-review 并记下第一次确认消失的日期，从那天起 30 天后仍然消失才标 removed，都不删除；重新出现只清掉"消失"这个原因，新增、上游变化等待审原因要人用 `$S/review.sh --done <source:id>` 确认。`$S/review.sh` 列出全部待审条目和原因。然后跑 `audit.sh` 并 git commit，回滚用 git revert。
 - adapter（`scripts/adapters/`）只下载文本并解析，**不执行任何远程代码**。
 - 加新网站：按 `sources/_ADDING.md` 操作。

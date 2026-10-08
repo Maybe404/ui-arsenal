@@ -107,6 +107,8 @@ class Access(Harness):
         self.stack.enter_context(patch.object(ua, 'SRC', self.src))
 
     def write_source(self, rows):
+        with open(os.path.join(self.src, 'demo.md'), 'w', encoding='utf-8') as f:
+            f.write('---\nid: demo\nsource_status: active\n---\n')
         with open(os.path.join(self.src, 'demo.tsv'), 'w', encoding='utf-8') as f:
             f.write('\n'.join(tsv_line(r) for r in rows) + '\n')
         with open(os.path.join(self.src, 'demo.notes.tsv'), 'w', encoding='utf-8') as f:
@@ -196,7 +198,11 @@ class Proposals(Access):
         return d
 
     def snapshot(self):
-        return [open(os.path.join(self.src, n), encoding='utf-8').read() for n in ('demo.tsv', 'demo.notes.tsv')]
+        out = []
+        for n in ('demo.tsv', 'demo.notes.tsv'):
+            with open(os.path.join(self.src, n), encoding='utf-8') as f:
+                out.append(f.read())
+        return out
 
     def test_wrong_source_refused(self):
         self.write_source([row('house')])
@@ -236,7 +242,7 @@ class Proposals(Access):
             with self.assertRaises(OSError):
                 self.apply(self.fill(d, desc_zh='帐篷', task='icon', layer='icons'))
         self.assertEqual(self.snapshot(), before)
-        self.assertEqual(sorted(os.listdir(self.src)), ['demo.notes.tsv', 'demo.tsv'])  # no temp or backup files
+        self.assertEqual(sorted(os.listdir(self.src)), ['demo.md', 'demo.notes.tsv', 'demo.tsv'])  # no temp/backup files
 
     def test_refresh_again_keeps_human_fields_in_a_new_revision(self):
         self.write_source([row('house')])
@@ -266,6 +272,83 @@ class Proposals(Access):
         self.assertIsNone(ua.latest_pending('demo'))
         with self.assertRaises(SystemExit), redirect_stdout(StringIO()):
             ua.cmd_apply(['demo', '--file', p])
+
+
+
+class Lifecycle(Access):
+    """#4: online presence and human review are tracked apart; removal counts from the first confirmed absence;
+    removed items that come back are proposed for review, aliases resolve safely."""
+    def refresh_on(self, day, refresher, rows):
+        with patch.object(ua.time, 'strftime', side_effect=lambda fmt, *a: {
+                '%Y-%m-%d': day, '%H%M%S': '1%05d' % len(os.listdir(self.tmp)), '%Y-%m-%d %H:%M': day + ' 10:00',
+                '%Y-%m-%d %H:%M:%S': day + ' 10:00:00'}.get(fmt, day)):
+            rc, d = self.refresh('demo', refresher, rows)
+            self.apply(d)
+        return d
+
+    def only(self, *keys):
+        return lambda: ua.index({k: {} for k in keys}, lambda r: r['id'], 'h', lambda k, m: {})
+
+    def test_removal_clock_starts_at_first_confirmed_absence(self):
+        rows = [row('house', last_seen='2026-01-01'), row('tent')]  # last seen long ago: refresh did not run
+        self.write_source(rows)
+        d1 = self.refresh_on('2026-10-08', self.only('tent'), list(self.read_source().values()))
+        self.assertEqual(d1['missing'][0]['proposal'], 'needs-review')
+        self.assertEqual(self.read_source()['house']['review'], 'missing:2026-10-08')
+        d2 = self.refresh_on('2026-10-08', self.only('tent'), list(self.read_source().values()))
+        self.assertEqual(d2['missing'][0]['proposal'], 'needs-review')  # same day: not removed
+        d3 = self.refresh_on('2026-11-08', self.only('tent'), list(self.read_source().values()))
+        self.assertEqual(d3['missing'][0]['proposal'], 'removed')
+        self.assertEqual(self.read_source()['house']['status'], 'removed')
+
+    def test_seen_clears_missing_but_not_a_pending_review(self):
+        rows = [row('house', status='needs-review', review='missing:2026-10-01'),
+                row('tent', status='needs-review', review='new:2026-10-01,missing:2026-10-02')]
+        self.write_source(rows)
+        self.refresh_on('2026-10-08', self.only('house', 'tent'), rows)
+        got = self.read_source()
+        self.assertEqual((got['house']['status'], got['house']['review']), ('active', ''))
+        self.assertEqual((got['tent']['status'], got['tent']['review']), ('needs-review', 'new:2026-10-01'))
+
+    def test_removed_item_that_comes_back_is_proposed_for_review(self):
+        rows = [row('house', status='removed', review='missing:2026-08-01')]
+        self.write_source(rows)
+        d = self.refresh_on('2026-10-08', self.only('house'), rows)
+        self.assertEqual(d['seen'], [])
+        self.assertEqual([b['id'] for b in d['revived']], ['house'])
+        got = self.read_source()['house']
+        self.assertEqual((got['status'], got['review']), ('needs-review', 'back:2026-10-08'))
+
+    def test_dates_in_the_future_never_count_as_old(self):
+        self.assertEqual(ua.days_since('2026-10-08', '2026-10-01'), -7)
+        self.assertIsNone(ua.days_since('', '2026-10-01'))
+
+    def test_review_done_keeps_missing(self):
+        self.write_source([row('house', status='needs-review', review='new:2026-10-01'),
+                           row('tent', status='needs-review', review='changed:2026-10-01,missing:2026-10-02')])
+        with redirect_stdout(StringIO()):
+            ua.cmd_review(['--done', 'demo:house', 'demo:tent'])
+        got = self.read_source()
+        self.assertEqual((got['house']['status'], got['house']['review']), ('active', ''))
+        self.assertEqual((got['tent']['status'], got['tent']['review']), ('needs-review', 'missing:2026-10-02'))
+
+
+class Aliases(unittest.TestCase):
+    def rows(self, *spec):
+        return [row(i, alias_of=a, status=st) for i, a, st in spec]
+
+    def test_chain_resolves(self):
+        r, path = ua.resolve_alias(self.rows(('old', 'mid', 'removed'), ('mid', 'new', 'removed'),
+                                             ('new', '', 'active')), 'old')
+        self.assertEqual((r['id'], path), ('new', ['old', 'mid', 'new']))
+
+    def test_cycle_and_dead_ends(self):
+        with self.assertRaisesRegex(LookupError, 'cycle'):
+            ua.resolve_alias(self.rows(('a', 'b', 'removed'), ('b', 'a', 'removed')), 'a')
+        with self.assertRaisesRegex(LookupError, 'has been removed'):
+            ua.resolve_alias(self.rows(('a', 'b', 'removed'), ('b', '', 'removed')), 'a')
+        with self.assertRaisesRegex(LookupError, 'not in the catalogue'):
+            ua.resolve_alias(self.rows(('a', 'zzz', 'removed')), 'a')
 
 
 if __name__ == '__main__':

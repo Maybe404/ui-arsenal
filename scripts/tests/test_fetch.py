@@ -218,6 +218,28 @@ class ResultContract(unittest.TestCase):
         self.assertIn('HTTP 404', fail)
         self.assertNotIn('Traceback', fail)
 
+    def test_needs_review_is_announced_on_fetch(self):
+        r = row(status='needs-review', review='changed:2026-10-08')
+        with patch('builtins.print') as p, patch.object(ua, 'http', return_value=registry([{'path': 'x.tsx', 'content': '1'}])), \
+                patch.object(ua, 'load_claims', return_value=[]):
+            ua.fetch_one(r, {'out': self.out})
+        said = ' '.join(str(c.args[0]) for c in p.call_args_list if c.args)
+        self.assertIn('待审', said)
+        self.assertIn('上游元数据有变化', said)
+
+    def test_offline_source_is_not_fetched(self):
+        with patch.object(ua, 'source_status', return_value='offline'), patch.object(ua, 'load_claims', return_value=[]):
+            rc, res = self.fetch(row())
+        self.assertEqual((rc, res['status']), (2, 'broken'))
+
+    def test_needs_review_ranks_after_an_equal_clean_row(self):
+        clean, pending = row(id='button', name='Button'), row(id='button', name='Button', source='other',
+                                                               status='needs-review', review='new:2026-10-08')
+        with patch.object(ua, 'load_rows', return_value=[pending, clean]), patch.object(ua, 'load_claims', return_value=[]), \
+                patch.object(ua, 'sources', return_value=['demo', 'other']), patch.object(ua, 'source_status', return_value='active'):
+            res, _ = ua.search(['button'])
+        self.assertEqual([r['source'] for _, r in res], ['demo', 'other'])
+
     def test_source_entries_print_their_dependencies(self):
         r = row(spec='script:bencho thing', usage='source')
 

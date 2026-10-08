@@ -2,13 +2,14 @@
 """ui-arsenal catalogue tool: find / fetch / verify / refresh / stats / audit.
 
 Data model (per source, no headers, tab-separated):
-  sources/<id>.tsv        machine-managed, written only by an approved refresh/apply (15 columns):
+  sources/<id>.tsv        machine-managed, written only by an approved refresh/apply (16 columns):
     source item_id title category official_url fetch_human spec access usage
-    framework deps item_status alias_of last_seen fingerprint
+    framework deps item_status alias_of last_seen fingerprint review
   sources/<id>.notes.tsv  human-curated, never touched by refresh (8 columns):
     item_id desc_zh task layer visual_tags interaction_tags risk notes
 access: free | login | pro | broken          usage: install | source | prompt | reference
 item_status: active | needs-review | removed layer: foundation | specialized | reference | icons | design-spec
+review: why an item needs review, e.g. "new:2026-10-08,missing:2026-10-09" (see REVIEW_REASONS)
 spec:   space-separated adapter tokens, each "<adapter>:<arg>":
         registry:<url>  url:<url>  doc:<url>  prompt:<page-url>
         script:<adapter> <arg>  browser:<url>  manual  none
@@ -48,7 +49,7 @@ USAGE = ('install', 'source', 'prompt', 'reference')
 USAGE_ZH = {'install': '可安装', 'source': '取源码', 'prompt': '提示词', 'reference': '仅参考'}
 ADAPTER_KINDS = ('registry', 'url', 'doc', 'prompt', 'script', 'browser', 'manual', 'none')
 COLS = ('source', 'id', 'name', 'category', 'url', 'fetch', 'spec', 'access', 'usage',
-        'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint')
+        'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint', 'review')
 NOTE_COLS = ('id', 'desc', 'task', 'layer', 'vtags', 'itags', 'risk', 'notes')
 STATUS = ('active', 'needs-review', 'removed')
 SOURCE_STATUS = ('active', 'degraded', 'parser-broken', 'offline', 'closed')
@@ -61,6 +62,11 @@ TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table
          'empty-onboarding', 'layout-card', 'motion-transition', 'micro-interaction', 'fun-3d', 'page-inspiration',
          'other')
 RISKS = ('gradient-text', 'marquee', 'glow', 'grid-background', 'typewriter', 'bounce', 'glass', 'pulse-dot')
+# Why an item is not plainly active. Online presence (missing) is tracked apart from what still needs a human look
+# (new, changed, access, back): reappearing online clears `missing` and nothing else.
+REVIEW_REASONS = {'new': '上游新增，还没人审过', 'changed': '上游元数据有变化，还没人复核', 'access': '访问状态变了',
+                  'missing': '线上清单里找不到', 'back': '下线后又出现，还没人复核'}
+REVIEW_ITEM = re.compile(r'^(new|changed|missing|back|access)(?:\(([a-z]+>[a-z]+)\))?:(\d{4}-\d{2}-\d{2})$')
 
 
 # ---------- arguments ----------
@@ -114,6 +120,7 @@ def load_rows(source=None, include_removed=False):
             for n, line in enumerate(f, 1):
                 if line.strip():
                     r = dict(zip(COLS, line.rstrip('\n').split('\t')))
+                    r.setdefault('review', '')
                     r.update({k: v for k, v in notes.get(r['id'], {}).items() if k != 'id'})
                     for k in NOTE_COLS[1:]:
                         r.setdefault(k, '')
@@ -123,6 +130,42 @@ def load_rows(source=None, include_removed=False):
     if source and not rows:
         sys.exit('unknown source: %s (see: ua.py stats)' % source)
     return rows
+
+
+def review_items(r):
+    """[(reason, detail, date)] from the review column."""
+    out = []
+    for x in filter(None, r.get('review', '').split(',')):
+        m = REVIEW_ITEM.match(x)
+        if m:
+            out.append((m.group(1), m.group(2) or '', m.group(3)))
+    return out
+
+
+def review_set(r, reason, date, detail='', keep_first=False):
+    """Record a reason (one entry per reason; keep_first keeps the earliest date, used for `missing`)."""
+    items = review_items(r)
+    old = next((x for x in items if x[0] == reason), None)
+    if old and keep_first:
+        return
+    items = [x for x in items if x[0] != reason] + [(reason, detail, date)]
+    r['review'] = ','.join('%s%s:%s' % (k, '(%s)' % d if d else '', day) for k, d, day in items)
+
+
+def review_drop(r, *reasons):
+    r['review'] = ','.join('%s%s:%s' % (k, '(%s)' % d if d else '', day) for k, d, day in review_items(r)
+                           if k not in reasons)
+
+
+def review_text(r):
+    """'上游新增，还没人审过（2026-10-08）；线上清单里找不到（2026-10-09 起）' for output."""
+    out = []
+    for k, d, day in review_items(r):
+        if k == 'access':
+            out.append('访问状态 %s（%s）' % (d.replace('>', ' → '), day))
+        else:
+            out.append('%s（%s%s）' % (REVIEW_REASONS[k], day, ' 起' if k == 'missing' else ''))
+    return '；'.join(out) or ('待审（原因没记录）' if r.get('status') == 'needs-review' else '')
 
 
 def parse_spec(spec):
@@ -456,7 +499,8 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None, ba
     the compatibility matrix rules out for that primary base are dropped and the rest carry r['_compat']."""
     info = {} if info is None else info
     terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
-    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
+    gone = {s for s in sources() if source_status(s) in ('offline', 'closed')} if mode != 'all' else set()
+    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r) and r['source'] not in gone
             and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
     info['base_hidden'] = 0
     if base:
@@ -480,7 +524,8 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None, ba
             continue
         band = 1 if not cons or strong * 2 >= hit else 0  # at least half the matched concepts hit strongly
         primary = r['source'] in PRIMARY_BASES
-        clean = not flagged(claims, r) and not r['notes']  # known demo-only or defective rows go after equal peers
+        # known demo-only or defective rows, and rows waiting for review, go after equally relevant clean ones
+        clean = not flagged(claims, r) and not r['notes'] and r['status'] != 'needs-review'
         row = (hit, klass(r), band, clean, exact, bool(exact) and primary, tier(r), rel, primary,
                r['layer'] == 'foundation', r)
         # Icon names and tags match almost any English word, so icons only show when asked for, or when nothing
@@ -609,7 +654,10 @@ def cmd_find(args):
         ref = '%s:%s' % (r['source'], r['id'])
         flags = ['%s（%s %s）：%s' % (CLAIM_KINDS[c['kind']], CLAIM_DEPTHS[c['depth']], c['checked'], c['claim'])
                  for c in flagged(claims, r)] + (
-            ['备注：' + r['notes']] if r['notes'] else [])
+            ['备注：' + r['notes']] if r['notes'] else []) + (
+            ['待审：' + review_text(r)] if r['status'] == 'needs-review' else []) + (
+            ['%s（%s 的 source_status）' % (SOURCE_STATUS_ZH[source_status(r['source'])], r['source'])]
+            if source_status(r['source']) in SOURCE_STATUS_ZH else [])
         for f in flags:
             print('    ⚑ %s' % (f if len(f) <= 120 else f[:118] + '…'))
         if flags:
@@ -624,7 +672,8 @@ def cmd_find(args):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
     if any_flag:
-        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等），接真实业务前要改，或换同类候选；同等相关时排在没有问题的候选之后。')
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、待审状态或来源异常；接真实业务前要处理，'
+              '或换同类候选；同等相关时排在没有问题的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
         print('⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 guides/_scenes.md「质量三级」）')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
@@ -633,15 +682,47 @@ def cmd_find(args):
 
 # ---------- fetch ----------
 
+MAX_ALIAS_HOPS = 5
+
+
+def resolve_alias(rows, iid):
+    """Follow alias_of from an item id within one source. Returns (row, [ids followed]) or raises LookupError
+    with the reason: unknown id, a cycle, too many hops, or a chain that ends at a removed item."""
+    by_id = {r['id']: r for r in rows}
+    path = [iid]
+    r = by_id.get(iid)
+    if r is None:
+        raise LookupError('not found')
+    while r['alias_of']:
+        nxt = r['alias_of']
+        if nxt in path:
+            raise LookupError('alias cycle: %s' % ' → '.join(path + [nxt]))
+        if len(path) > MAX_ALIAS_HOPS:
+            raise LookupError('alias chain longer than %d: %s' % (MAX_ALIAS_HOPS, ' → '.join(path)))
+        r = by_id.get(nxt)
+        path.append(nxt)
+        if r is None:
+            raise LookupError('renamed to %s, which is not in the catalogue' % nxt)
+    if r['status'] == 'removed':
+        raise LookupError(('renamed to %s, which has been removed' % r['id']) if len(path) > 1 else 'removed')
+    return r, path
+
+
 def find_row(ref):
     if ':' not in ref:
         sys.exit('use <source>:<item_id>, e.g. bencho:magnet-select')
     source, iid = ref.split(':', 1)
-    for r in load_rows(source):
-        if r['id'] == iid:
-            return r
-    cands = [r['id'] for r in load_rows(source) if iid.lower() in r['id'].lower()][:10]
-    sys.exit('not found: %s%s' % (ref, ('  close: ' + ', '.join(cands)) if cands else ''))
+    rows = load_rows(source, include_removed=True)
+    try:
+        r, path = resolve_alias(rows, iid)
+    except LookupError as e:
+        if str(e) != 'not found':
+            sys.exit('%s: %s' % (ref, e))
+        cands = [x['id'] for x in rows if iid.lower() in x['id'].lower() and x['status'] != 'removed'][:10]
+        sys.exit('not found: %s%s' % (ref, ('  close: ' + ', '.join(cands)) if cands else ''))
+    if len(path) > 1:
+        sys.stderr.write('%s 已改名，按 %s:%s 处理（%s）\n' % (ref, source, r['id'], ' → '.join(path)))
+    return r
 
 
 class UnsafePath(ValueError):
@@ -994,6 +1075,16 @@ def fetch_one(r, opts, quiet=False):
         log('此条目已失效或为空：%s' % r['fetch'])
         opts['_result'] = {'status': 'broken'}
         return 2
+    sst = source_status(r['source'])
+    if sst in ('offline', 'closed'):
+        log('%s：sources/%s.md 的 source_status 是 %s，不再获取；从对应指南的"按场景换"里选别的候选。' % (
+            SOURCE_STATUS_ZH[sst], r['source'], sst))
+        opts['_result'] = {'status': 'broken'}
+        return 2
+    if sst in SOURCE_STATUS_ZH:
+        log('注意：%s（source_status %s），取码可能失败或不完整，见 sources/%s.md。' % (SOURCE_STATUS_ZH[sst], sst, r['source']))
+    if r['status'] == 'needs-review':
+        log('注意：这一条在待审：%s。索引里的描述和指南结论可能已经过时，接入前对照拉到的源码核对。' % review_text(r))
     ok_all, fetched, kinds = True, False, []
     staging = tempfile.mkdtemp(prefix='ui-arsenal-')  # nothing reaches `out` until every step has been checked
     try:
@@ -1427,7 +1518,7 @@ def cmd_verify(args):
 
 PENDING = os.path.join(SRC, '_pending')
 PROPOSAL_FORMAT = 2  # 2: deps null = not listed by the index, '' = known empty; changed entries carry spec/fetch
-REMOVE_AFTER_DAYS = 30  # an item missing in two refreshes at least this far apart is proposed as removed
+REMOVE_AFTER_DAYS = 30  # an item still missing this many days after a refresh first confirmed it gone is proposed as removed
 
 
 def load_state():
@@ -1694,11 +1785,12 @@ NO_REFRESH = {
 }
 
 
-def days_between(a, b):
+def days_since(a, b):
+    """Whole days from date a to date b (negative when a is later); None when either date is unreadable."""
     try:
-        return abs((time.mktime(time.strptime(a, '%Y-%m-%d')) - time.mktime(time.strptime(b, '%Y-%m-%d'))) / 86400)
-    except ValueError:
-        return 0
+        return round((time.mktime(time.strptime(b, '%Y-%m-%d')) - time.mktime(time.strptime(a, '%Y-%m-%d'))) / 86400)
+    except (TypeError, ValueError):
+        return None
 
 
 def cmd_refresh(args):
@@ -1739,8 +1831,11 @@ def cmd_refresh(args):
             k = key_of(r)
             if k:
                 local[k] = r
-        seen, init, changed, missing, added, unverified = [], [], [], [], [], []
+        seen, init, changed, missing, added, unverified, revived = [], [], [], [], [], [], []
         for k, r in local.items():
+            if k in remote and r['status'] == 'removed':
+                revived.append({'id': r['id'], 'review': r['review']})  # back online: a human decides, not seen
+                continue
             if k in remote:
                 seen.append(r['id'])
                 newfp, m = fp(remote[k]), remote[k]
@@ -1760,9 +1855,12 @@ def cmd_refresh(args):
                 if not ix['covered'](k):  # the part of the index that lists it failed to load: no conclusion
                     unverified.append(r['id'])
                     continue
-                stale = r['status'] == 'needs-review' and days_between(r['last_seen'], today) >= REMOVE_AFTER_DAYS
+                # the removal clock starts at the first refresh that confirmed the item missing, not at last_seen
+                since = next((day for reason, _, day in review_items(r) if reason == 'missing'), None)
+                gone = days_since(since, today) if since else None
                 missing.append({'id': r['id'], 'status': r['status'], 'last_seen': r['last_seen'],
-                                'proposal': 'removed' if stale else 'needs-review'})
+                                'missing_since': since or today,
+                                'proposal': 'removed' if gone is not None and gone >= REMOVE_AFTER_DAYS else 'needs-review'})
         for k in sorted(set(remote) - set(local)):
             row = new_row(k, remote[k])
             added.append(dict(row, key=k, id=kebab(k) if s == 'reactbits' else k, title=k,
@@ -1781,12 +1879,13 @@ def cmd_refresh(args):
                     blind=ix['blind'],
                     index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
-                    missing=missing, suspect_missing=suspect, unverified=unverified, added=added)
+                    missing=missing, suspect_missing=suspect, unverified=unverified, revived=revived, added=added)
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(prop, f, ensure_ascii=False, indent=1)
         update_state(lambda st: st.setdefault('refresh', {}).__setitem__(s, {'at': prop['generated_at'], 'index_sha': h}))
-        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s%s' % (
+        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s%s%s' % (
             s, len(remote), len(local), len(init), len(changed), len(missing), len(added),
+            '  back %d' % len(revived) if revived else '',
             '  （沿用上一份待审稿里补好的 %d 个新条目）' % carried if carried else '',
             ''.join('\n              DEGRADED %s' % d for d in degraded)))
     print('\n待审变更已写入 %s/（每次一份新文件，不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。'
@@ -1870,10 +1969,13 @@ def cmd_diff(args):
                 c['id'], c['deps'][0], '（未提供，保留）' if c['deps'][1] is None else repr(c['deps'][1]), *c['access'],
                 '  spec → %s' % c['spec'] if c.get('spec') else ''))
         for m in d['missing'][:20]:
-            print('  missing  %-36s %s → %s (last seen %s)' % (m['id'], m['status'], m['proposal'], m['last_seen']))
+            print('  missing  %-36s %s → %s（%s 起找不到，最后看到 %s）' % (
+                m['id'], m['status'], m['proposal'], m.get('missing_since', '?'), m['last_seen']))
+        for b in d.get('revived', [])[:20]:
+            print('  back     %-36s removed → needs-review（又出现在线上清单里）' % b['id'])
         for a in d['added'][:20]:
             print('  new      %-36s %s%s' % (a['id'], a.get('category', ''), '' if a['desc_zh'] else '  （待补 desc_zh/task/layer 才能写入）'))
-        more = sum(max(0, len(d[k]) - 20) for k in ('changed', 'missing', 'added'))
+        more = sum(max(0, len(d.get(k, [])) - 20) for k in ('changed', 'missing', 'added', 'revived'))
         if more:
             print('  ... %d more, see %s' % (more, p))
     return 0
@@ -2010,7 +2112,8 @@ def cmd_apply(args):
         r = by_id.get(i)
         if r:
             r['last_seen'] = today
-            if r['status'] == 'needs-review' and not any(c['id'] == i for c in d['changed']):
+            review_drop(r, 'missing')  # back online clears only the missing reason, never a pending human review
+            if r['status'] == 'needs-review' and not r['review'] and not any(c['id'] == i for c in d['changed']):
                 r['status'] = 'active'
             n['seen'] += 1
     for c in d['init']:
@@ -2030,20 +2133,32 @@ def cmd_apply(args):
                 r['spec'] = 'none'
             elif r['spec'] == 'none':  # left Pro: use the official route the index gave, never guess one
                 r['spec'], r['fetch'] = c['spec'], c.get('fetch') or r['fetch']
+            if c['fingerprint'][0] and c['fingerprint'][0] != c['fingerprint'][1]:
+                review_set(r, 'changed', today)
+            if old_access != r['access']:
+                review_set(r, 'access', today, '%s>%s' % (old_access, r['access']))
             r['status'] = 'needs-review'
             n['changed'] += 1
     for m in d['missing']:
         r = by_id.get(m['id'])
         if r:
+            review_set(r, 'missing', m.get('missing_since') or today, keep_first=True)
             r['status'] = m['proposal']
             n['missing'] += 1
+    for b in d.get('revived', []):
+        r = by_id.get(b['id'])
+        if r and r['status'] == 'removed':
+            review_drop(r, 'missing')
+            review_set(r, 'back', today)
+            r['status'], r['last_seen'] = 'needs-review', today
+            n['revived'] = n.get('revived', 0) + 1
     new_notes = []
     for a in ready:
         row = {k: '' for k in COLS}
         row.update(source=s, id=a['id'], name=a['title'], category=a.get('category', ''), url=a.get('url', ''),
                    fetch=a.get('fetch', ''), spec=a.get('spec', 'manual'), access=a.get('access', 'free'),
                    usage=a.get('usage', 'install'), framework=a.get('framework', ''), deps=a.get('deps', ''),
-                   status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''))
+                   status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''), review='new:' + today)
         rows.append(row)
         new_notes.append('\t'.join([a['id'], a['desc_zh'], a['task'], a['layer'], a.get('visual_tags', ''),
                                     a.get('interaction_tags', ''), a.get('risk', ''), a.get('notes', '')]))
@@ -2061,6 +2176,64 @@ def cmd_apply(args):
               '再 apply。' % (n['skipped_new'], p, s))
     print('下一步：audit.sh，确认无误后 git commit（回滚用 git revert）。')
     return 0
+
+
+def cmd_review(args):
+    """List items waiting for a human look, or mark them reviewed."""
+    if args and args[0] in ('-h', '--help'):
+        print('usage: review.sh [source...]          列出待审条目和原因（新增、上游变化、访问状态变化、线上消失、重新出现）\n'
+              '       review.sh --done <source:id>...  审过了：清掉除"线上找不到"以外的原因；没有剩余原因就改回 active\n'
+              '"线上找不到"只由 refresh 清除（条目重新出现在清单里），不能手动标记为审过。')
+        return 0
+    if args and args[0] == '--done':
+        refs = args[1:]
+        if not refs:
+            raise UsageError('--done needs at least one source:id')
+        by_source = {}
+        for ref in refs:
+            if ':' not in ref:
+                raise UsageError('use <source>:<item_id>, got %r' % ref)
+            src, iid = ref.split(':', 1)
+            if src not in sources():
+                raise UsageError('unknown source %r' % src)
+            by_source.setdefault(src, []).append(iid)
+        for src, ids in by_source.items():
+            mp = os.path.join(SRC, src + '.tsv')
+            with open(mp, encoding='utf-8') as f:
+                rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+            by_id = {r['id']: r for r in rows}
+            unknown = [i for i in ids if i not in by_id]
+            if unknown:
+                sys.exit('not in sources/%s.tsv: %s' % (src, ', '.join(unknown)))
+            for i in ids:
+                r = by_id[i]
+                review_drop(r, 'new', 'changed', 'access', 'back')
+                if r['status'] == 'needs-review' and not r['review']:
+                    r['status'] = 'active'
+                print('%s:%s → %s%s' % (src, i, r['status'], '（%s）' % review_text(r) if r['review'] else ''))
+            write_together([(mp, '\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n')])
+        print('下一步：audit.sh，确认无误后 git commit。')
+        return 0
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s' % ', '.join(unknown))
+    rows = [r for r in load_rows(include_removed=True) if (not args or r['source'] in args)
+            and (r['status'] == 'needs-review' or r['review'])]
+    if not rows:
+        print('没有待审条目。')
+        return 0
+    for r in sorted(rows, key=lambda r: (r['source'], r['review'], r['id'])):
+        print('%-12s %-40s %-13s %s' % (r['source'], r['id'][:40], r['status'], review_text(r)))
+    print('\n%d 条。审过的用 review.sh --done <source:id>...；"线上找不到"等 refresh 处理。' % len(rows))
+    return 0
+
+
+SOURCE_STATUS_ZH = {'degraded': '来源部分可用', 'parser-broken': '来源的解析器坏了', 'offline': '来源下线',
+                    'closed': '来源已关闭'}
+
+
+def source_status(s):
+    return frontmatter(s).get('source_status', 'active')
 
 
 # ---------- stats / audit ----------
@@ -2161,10 +2334,25 @@ def cmd_audit(args):
                     errs.append('%s: missing adapter %s' % (where, a))
             if r['access'] == 'pro' and r['spec'] != 'none':
                 errs.append('%s: pro row must have spec none' % where)
-        for n, line in enumerate(open(mp, encoding='utf-8'), 1):
-            c = line.rstrip('\n').split('\t')
-            if len(c) == len(COLS) and c[12] and c[12] not in ids:
-                errs.append('%s.tsv:%d: alias_of %r does not exist' % (s, n, c[12]))
+        with open(mp, encoding='utf-8') as f:
+            machine = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+        machine = [r for r in machine if len(r) == len(COLS)]
+        for r in machine:
+            where = '%s.tsv %s' % (s, r['id'])
+            for x in filter(None, r['review'].split(',')):
+                if not REVIEW_ITEM.match(x):
+                    errs.append('%s: review item %r (reason:YYYY-MM-DD, reasons: %s)' % (where, x, ' '.join(REVIEW_REASONS)))
+            if r['status'] == 'active' and r['review']:
+                errs.append('%s: active but review says %r; use review.sh --done or set needs-review' % (where, r['review']))
+            if r['status'] == 'needs-review' and not r['review']:
+                errs.append('%s: needs-review without a reason in the review column' % where)
+            if r['alias_of']:
+                if r['status'] != 'removed':
+                    errs.append('%s: an alias row (alias_of %s) must have status removed' % (where, r['alias_of']))
+                try:
+                    resolve_alias(machine, r['id'])
+                except LookupError as e:
+                    errs.append('%s: alias_of %s' % (where, e))
         seen_notes = set()
         for n, line in enumerate(open(np_, encoding='utf-8'), 1):
             if not line.strip():
@@ -2357,7 +2545,7 @@ def cmd_compat(args):
 
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
         'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
-        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims}
+        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims, 'review': cmd_review}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:

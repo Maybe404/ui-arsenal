@@ -38,7 +38,7 @@ verified: 2026-10-07
 
 刷新脚本只会写 `<id>.tsv`，并且只在人工批准之后写；`<id>.notes.tsv` 永远由人维护，刷新不会覆盖中文描述和选型判断。两个文件都无表头，制表符分隔，用 item_id 对应。
 
-### sources/<id>.tsv（机器维护，15 列）
+### sources/<id>.tsv（机器维护，16 列）
 | 列 | 含义 |
 |---|---|
 | source | 来源 id，等于文件名 |
@@ -53,9 +53,20 @@ verified: 2026-10-07
 | framework | react \| css \| multi \| any …，留空表示未知 |
 | deps | 依赖，空格分隔，留空表示未采集 |
 | item_status | `active` \| `needs-review` \| `removed`（下线但保留，默认不搜） |
-| alias_of | 改名后指向的新 item_id |
+| alias_of | 改名后指向的新 item_id（同一来源内）；有 alias_of 的旧行状态必须是 removed |
 | last_seen | 最后一次在线上清单里看到的日期 |
 | fingerprint | 元数据指纹（名称、依赖、付费标记、文件路径等算出的短 hash），用来发现内容变化 |
+| review | 待审原因，逗号分隔的 `原因:日期`：`new`（上游新增，还没人审）、`changed`（上游元数据变了）、`access(free>pro)`（访问状态变了）、`missing`（线上清单里找不到，日期是第一次确认找不到的那天）、`back`（下线后又出现）。active 的行这一列为空 |
+
+状态怎么变（refresh 生成提案，apply 写入）：
+- 新条目写入时是 needs-review + `new`；指纹变化加 `changed`，访问状态变化加 `access(旧>新)`，都改成 needs-review。
+- 清单里找不到：第一次加 `missing:<当天>` 并改成 needs-review；之后每次 refresh 都从这个日期算，满 30 天仍找不到才提议 removed。长时间没跑 refresh 的条目不会因为 last_seen 很旧就在同一天被连续标下线。
+- 又出现在清单里：只去掉 `missing`；还有别的原因（`new`、`changed`、`access`、`back`）就保持 needs-review，没有了才回到 active。上线不等于审过。
+- removed 的条目又出现：提案列在 revived 里，apply 后改成 needs-review + `back`，不会直接变回 active。
+- 人审过之后用 `review.sh --done <source:id>` 清掉 `missing` 以外的原因；`missing` 只由 refresh 清除。`review.sh` 列出全部待审条目。
+- 待审条目在 find 结果里有 ⚑ 待审行，同等相关时排在后面；fetch 会提示待审原因。
+- 来源的 `source_status` 是 offline 或 closed 时，find 默认不列它的条目（`--all` 才列），fetch 不再获取；degraded、parser-broken 时 find 和 fetch 都会提示。
+- `fetch.sh <source:旧id>` 会沿 alias_of 找到新条目并提示；链上有环、超过 5 跳、指向不存在或已下线的条目时报错，audit 也会检查这些情况。
 
 spec 由空格分隔的若干项组成，每项是 `<adapter>:<arg>`：
 - `registry:<json url>`：shadcn 风格的 registry 条目，要求返回的 files 里带 content
