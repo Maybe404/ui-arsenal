@@ -38,7 +38,7 @@ scripts/claims.sh --check                  # 重新拉取，复核组件级结�
 
 ## 维护
 
-更新清单、抽查取码、复核组件结论都是手动运行的命令（`refresh.sh` → `diff.sh` → `apply.sh`、`verify.sh`、`claims.sh --check`），仓库没有自带定时任务；要定期跑，需要自己配 cron 或 CI。`coverage.sh` 按来源列出覆盖范围和各类核对的日期，`review.sh` 列出待审条目。
+命令和流程见 [MAINTAINING.md](MAINTAINING.md)。更新清单、抽查取码、复核组件结论都是手动运行的命令（`refresh.sh` → `diff.sh` → `apply.sh`、`verify.sh`、`claims.sh --check`），仓库没有自带定时任务；要定期跑，需要自己配 cron 或 CI。`coverage.sh` 按来源列出覆盖范围和各类核对的日期，`review.sh` 列出待审条目。
 
 ## 边界
 
@@ -53,6 +53,7 @@ scripts/claims.sh --check                  # 重新拉取，复核组件级结�
 
 ```
 SKILL.md              agent 读的入口：原则、工作流、来源一览
+MAINTAINING.md        维护者用：检查、测试、更新清单和复核结论的命令
 guides/_scenes.md     页面模式、效果预算、质量三级、动效规范（所有指南共用）
 guides/<task>.md      按 UI 任务分的选型指南：默认推荐、按场景换、慎用、接入要点
 scripts/ua.py         所有命令的实现（find / fetch / verify / refresh / stats / audit / searchtest）
