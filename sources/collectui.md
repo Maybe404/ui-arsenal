@@ -24,7 +24,7 @@ Collect UI 早期是 Dribbble "Daily UI" 挑战作品集（按 challenge 分类�
 
 站点是 SvelteKit 单页应用，HTML 里没有数据，条目由前端运行时从站点的数据接口读取（只读、已发布内容）。媒体 CDN `https://cdn.collectui.com/...` 可以直接下载。
 
-**按分类取条目**：用 `scripts/fetch.sh collectui:category:<slug> [--limit N]`。adapter 会在运行时完成接口准备，输出每条的类型（image/video）、标题、媒体 URL 和原帖链接。实测 `dashboard` 返回的条目和站点页面一致（2026-10-07）。
+**按分类取条目**：用 `scripts/fetch.sh collectui:category:<slug> [--limit N]`。adapter 会在运行时完成接口准备，输出每条的类型（image/video）、标题、媒体 URL 和原帖链接。实测 `dashboard` 返回的条目和站点页面一致（2026-10-07；2026-10-08 改写为 `scripts/adapters/collectui.py` 后复测一致）。分类没有已发布条目时输出 `# 0 posts`，不算失败；失败时 stderr 写明出错的步骤：站点页面或 bundle 的 HTTP 码、key 没找到、接口拒绝（HTTP 码和返回的 message）、接口返回的不是 JSON 或不是列表、超时（每个请求 20 秒，整体 150 秒），并给出浏览器备用地址。
 
 **分类计数**：浏览器打开 `https://collectui.com/categories`，页面列出每个有内容分类的条目数；下方清单的条目数是 2026-10-07 的快照（总数 3471）。
 

@@ -12,13 +12,19 @@ usage: bencho.py <block-id> [prompt|tsx|css|meta]
 import json
 import re
 import sys
+import urllib.error
 import urllib.request
 
 UA = {'User-Agent': 'Mozilla/5.0'}
 
 
 def get(url):
-    return urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=40).read().decode('utf-8')
+    try:
+        return urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=40).read().decode('utf-8')
+    except urllib.error.HTTPError as e:
+        raise SystemExit('bencho: HTTP %d fetching %s' % (e.code, url))
+    except Exception as e:  # URLError, timeout, connection reset
+        raise SystemExit('bencho: network error fetching %s: %s' % (url, getattr(e, 'reason', e)))
 
 
 class LiteralError(ValueError):

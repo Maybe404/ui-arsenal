@@ -110,5 +110,5 @@ spec 由空格分隔的若干项组成，每项是 `<adapter>:<arg>`：
 - 先找机器可读入口：/sitemap.xml、/llms.txt、/llms-full.txt、/r/registry.json、/registry.json、/api/*、GitHub 仓库。用 curl（带浏览器 UA）和 WebFetch。站点是 SPA 抓不到时，看页面 JS bundle、__NEXT_DATA__、GitHub 仓库。
 - 不登录、不注册、不付费、不提交任何表单。
 - description 用中文，组件名/命令保持英文。
-- 只写入你负责的 sources/<id>.md 和 sources/<id>.tsv（站点需要专门处理时，另加 scripts/adapters/<id>.sh），不碰其他文件。
+- 只写入你负责的 sources/<id>.md 和 sources/<id>.tsv（站点需要专门处理时，另加 scripts/adapters/<id>.py：失败时 stderr 最后一行写明出错的步骤和 HTTP 码，非零退出；参照 bencho.py、collectui.py，并在 scripts/tests/ 里加不联网的测试），不碰其他文件。
 - 写完跑 `scripts/audit.sh`，再用 `scripts/fetch.sh <id>:<某条>` 实测。

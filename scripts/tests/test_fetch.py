@@ -126,5 +126,109 @@ class FetchOutput(unittest.TestCase):
         self.assertIn({'path': 'x.tsx', 'bytes': 5, 'sha256': ua.sha(b'hello')[:16]}, m['files'])
 
 
+
+class ResultContract(unittest.TestCase):
+    """#6: what a caller can rely on from the exit code, the status and the messages."""
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.out = os.path.join(self.tmp, 'out')
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def fetch(self, r, response=None, run=None):
+        opts = {'out': self.out}
+        with patch.object(ua, 'http', return_value=response), patch.object(ua, 'load_claims', return_value=[]):
+            if run:
+                with patch.object(ua.subprocess, 'run', side_effect=run):
+                    return ua.fetch_one(r, opts, quiet=True), opts['_result']
+            return ua.fetch_one(r, opts, quiet=True), opts['_result']
+
+    def test_html_page_is_not_saved_as_source(self):
+        r = row(spec='url:https://example.invalid/source.tsx', usage='source')
+        rc, res = self.fetch(r, (200, 'text/html; charset=utf-8', b'<!DOCTYPE html><html>Login</html>'))
+        self.assertEqual((rc, res['status'], res['files']), (1, 'failed', 0))
+
+    def test_html_without_content_type_is_still_caught(self):
+        r = row(spec='doc:https://example.invalid/DESIGN.md', usage='prompt')
+        rc, _ = self.fetch(r, (200, '', b'\n  <html><body>Sign in</body></html>'))
+        self.assertEqual(rc, 1)
+
+    def test_media_and_svg_types(self):
+        video = row(spec='url:https://example.invalid/clip.mp4', usage='reference')
+        self.assertEqual(self.fetch(video, (200, 'text/plain', b'not a video'))[0], 1)
+        self.assertEqual(self.fetch(video, (200, 'video/mp4', b'\x00\x00ftyp'))[0], 0)
+        svg = row(spec='url:https://example.invalid/icon.svg', usage='install')
+        self.assertEqual(self.fetch(svg, (200, 'text/plain', b'oops'))[0], 1)
+        self.assertEqual(self.fetch(svg, (200, 'image/svg+xml', b'<svg xmlns="x"/>'))[0], 0)
+
+    def test_browser_only_is_exit_5_without_files(self):
+        r = row(spec='browser:https://example.invalid/page', usage='reference')
+        rc, res = self.fetch(r)
+        self.assertEqual((rc, res['status'], res['files']), (5, 'browser', 0))
+
+    def test_partial_when_one_step_fails(self):
+        r = row(spec='registry:https://example.invalid/r/x.json doc:https://example.invalid/x.md')
+        responses = iter([registry([{'path': 'x.tsx', 'content': '1'}]), (404, 'text/html', b'')])
+        with patch.object(ua, 'http', side_effect=lambda *a, **k: next(responses)), \
+                patch.object(ua, 'load_claims', return_value=[]):
+            opts = {'out': self.out}
+            rc = ua.fetch_one(r, opts, quiet=True)
+        self.assertEqual((rc, opts['_result']['status'], opts['_result']['files']), (1, 'partial', 2))
+
+    def test_batch_exit_is_the_most_urgent_code_not_a_bit_or(self):
+        self.assertEqual(ua.batch_exit([1, 2]), 1)  # bit-or gave 3, which means Pro
+        self.assertEqual(ua.batch_exit([2, 4]), 4)  # bit-or gave 6, which means nothing
+        self.assertEqual(ua.batch_exit([0, 5]), 5)
+        self.assertEqual(ua.batch_exit([3, 0]), 3)
+        self.assertEqual(ua.batch_exit([0, 0]), 0)
+
+    def test_install_hint_does_not_inherit_previous_ref_url(self):
+        first = row(id='a', spec='registry:https://ui.example/r/styles/base-nova/a.json')
+        second = row(id='b', source='loadingui', spec='url:https://example.invalid/b.tsx', usage='install',
+                     fetch='npx shadcn@latest add @loading-ui/b')
+        rows = {'demo:a': first, 'loadingui:b': second}
+        printed = []
+        with patch.object(ua, 'find_row', side_effect=lambda ref: rows[ref]), \
+                patch.object(ua, 'http', side_effect=[registry([{'path': 'a.tsx', 'content': '1'}]),
+                                                     (200, 'text/plain', b'export const B = 1')]), \
+                patch.object(ua, 'load_claims', return_value=[]), \
+                patch('builtins.print', side_effect=lambda *a, **k: printed.append(' '.join(map(str, a)))):
+            ua.cmd_fetch(['demo:a', 'loadingui:b', '--style', 'radix-nova', '--out', self.out])
+        hint_b = [l for l in printed if '安装' in l][-1]
+        self.assertIn('@loading-ui/b', hint_b)
+        self.assertNotIn('/a.json', hint_b)
+
+    def test_adapter_timeout_and_error_lines(self):
+        r = row(spec='script:bencho thing', usage='source')
+
+        def timeout(*a, **k):
+            raise ua.subprocess.TimeoutExpired(a[0], ua.ADAPTER_TIMEOUT)
+        rc, res = self.fetch(r, run=timeout)
+        self.assertEqual((rc, res['status']), (1, 'failed'))
+
+        class Done:
+            returncode, stdout = 1, b''
+            stderr = b'Traceback...\nbencho: HTTP 404 fetching https://bencho.dev/\n'
+        with patch('builtins.print') as p, patch.object(ua.subprocess, 'run', return_value=Done()), \
+                patch.object(ua, 'load_claims', return_value=[]):
+            ua.fetch_one(r, {'out': self.out})
+        fail = [c.args[0] for c in p.call_args_list if c.args and str(c.args[0]).startswith('FAIL')][0]
+        self.assertIn('exit 1', fail)
+        self.assertIn('HTTP 404', fail)
+        self.assertNotIn('Traceback', fail)
+
+    def test_source_entries_print_their_dependencies(self):
+        r = row(spec='script:bencho thing', usage='source')
+
+        class Done:
+            returncode, stderr = 0, b''
+            stdout = b'--- Thing.tsx ---\ncode\n\n# deps: npm i framer-motion\n'
+        with patch('builtins.print') as p, patch.object(ua.subprocess, 'run', return_value=Done()), \
+                patch.object(ua, 'load_claims', return_value=[]):
+            ua.fetch_one(r, {'out': self.out})
+        self.assertTrue(any('npm i framer-motion' in str(c.args[0]) for c in p.call_args_list if c.args))
+
+
 if __name__ == '__main__':
     unittest.main()

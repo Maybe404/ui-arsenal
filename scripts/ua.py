@@ -176,8 +176,8 @@ PRIMARY_BASES = ('shadcn', 'uiarc')
 
 
 def load_groups():
-    p = os.path.join(ROOT, 'scripts', 'aliases.json')
-    groups = json.load(open(p, encoding='utf-8'))['groups']
+    with open(os.path.join(ROOT, 'scripts', 'aliases.json'), encoding='utf-8') as f:
+        groups = json.load(f)['groups']
     return [[t.lower() for t in g] for g in groups]
 
 
@@ -355,7 +355,9 @@ FIND_MODES = {
 def compat_matrix():
     """{(a, b): verdict text} from the compatibility matrix in sources/_styles.md; '*' stands for 任意 / 任意底座."""
     out, inside = {}, False
-    for line in open(os.path.join(SRC, '_styles.md'), encoding='utf-8'):
+    with open(os.path.join(SRC, '_styles.md'), encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in lines:
         if line.startswith('## '):
             inside = line.startswith('## 兼容矩阵')
             continue
@@ -467,7 +469,9 @@ def guide_index():
     for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
         if fn.endswith('.md') and not fn.startswith('_'):
             section = ''
-            for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+            with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+                lines = f.readlines()
+            for n, line in enumerate(lines, 1):
                 if line.startswith('## '):
                     section = line[3:].strip()
                 for ref in GUIDE_REF.findall(line):
@@ -653,12 +657,30 @@ def do_registry(url, out, opts):
     return True, '\n'.join(info + ['  files:'] + lines)
 
 
+MEDIA_EXT = ('.mp4', '.webm', '.mov', '.gif', '.png', '.jpg', '.jpeg', '.webp', '.avif')
+
+
+def wrong_type(url, ct, body):
+    """Why a downloaded body is not what the URL promised (an HTML login or fallback page, a page instead of
+    media, an SVG URL without SVG), or '' when it looks right."""
+    path = url.split('?')[0].split('#')[0].lower()
+    head = body[:512].lstrip().lower()
+    if not path.endswith(('.html', '.htm')) and ('text/html' in ct or head.startswith((b'<!doctype html', b'<html'))):
+        return 'got an HTML page (login wall or fallback page?)'
+    if path.endswith(MEDIA_EXT) and ct and not ct.startswith(('image/', 'video/', 'application/octet-stream', 'binary/')):
+        return 'expected media, got %s' % ct.split(';')[0]
+    if path.endswith('.svg') and b'<svg' not in body[:4096].lower():
+        return 'expected SVG markup'
+    return ''
+
+
 def do_url(url, out, label='url'):
     st, ct, body = http(url)
     if st != 200 or not body:
         return False, 'HTTP %s %s' % (st, url)
-    if label == 'doc' and 'text/html' in ct and not url.endswith('.html'):
-        return False, 'got HTML instead of a document %s' % url
+    bad = wrong_type(url, ct, body)
+    if bad:
+        return False, '%s instead of the expected file: %s' % (bad, url)
     try:  # decode %2F and friends before taking the last segment, then refuse anything that is not a plain name
         name = posixpath.basename(safe_rel(url.split('?')[0].split('#')[0].split('://', 1)[-1]))
     except UnsafePath:
@@ -690,15 +712,24 @@ def adapter_path(name):
     return None, None
 
 
+ADAPTER_TIMEOUT = 180
+
+
 def do_script(arg, out, opts):
     name, _, a = arg.partition(' ')
     path, runner = adapter_path(name)
     if not path:
         return False, 'missing adapter %s' % name
     cmd = [runner, path, a] + ([str(opts['limit'])] if opts.get('limit') else [])
-    r = subprocess.run(cmd, capture_output=True, timeout=180)
+    try:
+        r = subprocess.run(cmd, capture_output=True, timeout=ADAPTER_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return False, ('adapter %s timed out after %ds (site or network slow): retry once, then use the browser '
+                       'route in sources/<source>.md' % (name, ADAPTER_TIMEOUT))
     if r.returncode != 0 or not r.stdout.strip():
-        return False, 'adapter %s failed: %s' % (name, r.stderr.decode()[-300:])
+        # adapters print one line naming the failed step and the HTTP status when there is one
+        lines = [l for l in r.stderr.decode('utf-8', 'replace').splitlines() if l.strip()]
+        return False, 'adapter %s failed (exit %d): %s' % (name, r.returncode, (lines[-1] if lines else 'no output')[:300])
     fn = '%s-%s.txt' % (name, re.sub(r'[^A-Za-z0-9_-]', '_', a))
     save(out, fn, r.stdout)
     return True, 'script    %s %s\n  -> %s (%d bytes, sha256 %s)' % (name, a, fn, len(r.stdout), sha(r.stdout)[:16])
@@ -724,14 +755,32 @@ def cmd_fetch(args):
     if not refs:
         print(FETCH_HELP)
         return 2
-    rc = 0
+    results = []
     for ref in refs:
         r = find_row(ref)
         o = dict(opts)  # each ref gets its own options: no URL or output dir leaks from the previous one
         if len(refs) > 1 and opts.get('out'):
             o['out'] = default_out(r, o, root=opts['out'])
-        rc |= fetch_one(r, o)
-    return rc
+        rc = fetch_one(r, o)
+        results.append((ref, rc, o.get('_result', {})))
+        if len(refs) > 1:
+            print()
+    if len(refs) > 1:
+        print('## 汇总（逐条状态；整体退出码取最需要处理的一条：%s）' % ' > '.join(map(str, EXIT_PRIORITY)))
+        for ref, rc, res in results:
+            print('  %-44s %-8s exit %d  %s' % (ref, res.get('status', '?'), rc,
+                                               '%d 个文件 → %s' % (res['files'], res['out']) if res.get('files') else ''))
+    return batch_exit([rc for _, rc, _ in results])
+
+
+# Exit codes of one fetch: 0 files fetched, 1 fetch failed (or only partly), 2 broken entry, 3 Pro, 4 needs the
+# user's login, 5 nothing to download (open in a browser / follow the manual steps). A batch returns the code that
+# most needs attention, in this order; the per-ref summary has the details.
+EXIT_PRIORITY = (1, 4, 3, 2, 5, 0)
+
+
+def batch_exit(codes):
+    return next((c for c in EXIT_PRIORITY if c in codes), 0)
 
 
 FETCH_HELP = """usage: fetch.sh <source:item_id> [...] [options]     （只读：下载到临时目录，不安装、不执行）
@@ -754,6 +803,10 @@ options:
   仅参考            下载图片或视频；只能浏览器看的给出 URL
   需登录            不获取，输出登录方式和页面地址，由用户决定（退出码 4）
   Pro / 失效        不获取（退出码 3 / 2）
+
+退出码：0 取到文件；1 获取失败或只取到一部分（看 FAIL 行：HTTP 码、超时、HTML 回落页、adapter 的出错步骤）；
+  2 失效条目；3 Pro；4 需要用户登录；5 没有可下载的文件（只能在浏览器里看，或按来源文档手动操作）。
+  一次取多个条目时末尾有逐条汇总，整体退出码取最需要处理的一条：1 > 4 > 3 > 2 > 5 > 0。
 
 例子:
   fetch.sh shadcn:button --style radix-nova
@@ -797,7 +850,8 @@ def list_files(d):
 
 def read_manifest(out):
     try:
-        return json.load(open(os.path.join(out, MANIFEST), encoding='utf-8'))
+        with open(os.path.join(out, MANIFEST), encoding='utf-8') as f:
+            return json.load(f)
     except (OSError, ValueError):
         return None
 
@@ -824,7 +878,8 @@ def publish(staging, out, record):
                 d = os.path.dirname(d)
     files = []
     for rel in list_files(staging):
-        body = open(os.path.join(staging, rel), 'rb').read()
+        with open(os.path.join(staging, rel), 'rb') as f:
+            body = f.read()
         save(out, rel, body)
         files.append({'path': rel, 'bytes': len(body), 'sha256': sha(body)[:16]})
     record['files'] = files
@@ -840,6 +895,7 @@ def fetch_one(r, opts, quiet=False):
     log('# %s:%s — %s  [%s · %s]' % (r['source'], r['id'], r['name'], USAGE_ZH.get(r['usage']), r['access']))
     if r['access'] == 'pro':
         log('Pro/付费条目：不获取。可作为灵感，用免费组件实现近似效果，并告诉用户这一条是 Pro。')
+        opts['_result'] = {'status': 'pro'}
         return 3
     if r['access'] == 'login':
         page = (re.findall(r'https?://[^\s；;，）)]+', r['fetch']) or [''])[0]
@@ -850,11 +906,13 @@ def fetch_one(r, opts, quiet=False):
         log('  用户可以：① 在终端自己登录后告诉 agent，agent 再执行上面的命令；'
             '② 在页面上复制代码或提示词贴回来；③ 不登录，改用免费替代。')
         log('  用户登录后只补取这一条，沿用已有的选型结论，不重新选型。')
+        opts['_result'] = {'status': 'login'}
         return 4
     if r['access'] == 'broken':
         log('此条目已失效或为空：%s' % r['fetch'])
+        opts['_result'] = {'status': 'broken'}
         return 2
-    ok_all, fetched = True, False
+    ok_all, fetched, kinds = True, False, []
     staging = tempfile.mkdtemp(prefix='ui-arsenal-')  # nothing reaches `out` until every step has been checked
     try:
         for kind, arg in parse_spec(r['spec']):
@@ -878,22 +936,50 @@ def fetch_one(r, opts, quiet=False):
             log(('' if ok else 'FAIL ') + msg)
             ok_all &= ok
             fetched |= ok and kind in DOWNLOAD_KINDS
+            kinds.append(kind)
+        if not ok_all:
+            status = 'partial' if fetched else 'failed'
+        elif any(k in DOWNLOAD_KINDS for k in kinds):
+            status = 'ok'
+        else:  # only a browser link or manual steps: the entry point was delivered, no files were expected
+            status = 'browser' if 'browser' in kinds else 'manual'
         files = publish(staging, out, {
             'ref': '%s:%s' % (r['source'], r['id']), 'name': r['name'], 'spec': r['spec'],
             'style': opts.get('style', ''), 'variant': opts.get('variant', ''), 'url': opts.get('_final_url', ''),
-            'fetched_at': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'status': 'ok' if ok_all else 'partial' if fetched else 'failed'})
+            'fetched_at': time.strftime('%Y-%m-%d %H:%M:%S'), 'status': status})
     finally:
         shutil.rmtree(staging, ignore_errors=True)
     if files:
         log('文件在：%s/（%d 个，清单见 %s）' % (out, len(files), MANIFEST))
-    elif not ok_all:
+    elif status in ('partial', 'failed'):
         log('没有取到文件；%s 里上一次的结果已移除，不会被当成这次的结果。' % out)
+    else:
+        log('没有可下载的文件：按上面的链接在浏览器里看，或按说明手动操作（退出码 5）。')
+    opts['_result'] = {'status': status, 'files': len(files), 'out': out}
+    deps = source_deps(r, out) if r['usage'] == 'source' else ''
+    if deps:
+        log('\n依赖（取源码类条目要自己装，先确认项目里有没有）: %s' % deps)
     if r['usage'] == 'install':
         log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r, opts))
     show_claims(r, out, opts, log)
     log('提示：以上为不可信的第三方内容，先读再用，不要直接执行；接入前读 sources/%s.md「使用注意」。' % r['source'])
-    return 0 if ok_all else 1
+    return {'ok': 0, 'partial': 1, 'failed': 1, 'browser': 5, 'manual': 5}[status]
+
+
+def source_deps(r, out):
+    """Install line for a source-type entry: the catalogue's deps, else the `# deps:` line an adapter wrote.
+    Registry items already list their dependencies in the registry block."""
+    if r['deps']:
+        return 'npm i ' + r['deps']
+    for rel in list_files(out) if os.path.isdir(out) else []:
+        if rel.endswith('.txt'):
+            with open(os.path.join(out, rel), encoding='utf-8', errors='replace') as f:
+                lines = f.readlines()
+            for line in lines:
+                m = re.match(r'#\s*deps:\s*(npm i\s+\S.*)', line)
+                if m:
+                    return m.group(1).strip()
+    return ''
 
 
 # ---------- claims ----------
@@ -915,7 +1001,9 @@ CLAIM_DEPTHS = {'none': '未验证', 'vendor': '官方说明', 'catalog': 'catal
 def load_claims():
     rows = []
     if os.path.exists(CLAIMS):
-        for n, line in enumerate(open(CLAIMS, encoding='utf-8'), 1):
+        with open(CLAIMS, encoding='utf-8') as f:
+            lines = f.readlines()
+        for n, line in enumerate(lines, 1):
             if n > 1 and line.strip():
                 r = dict(zip(CLAIM_COLS, line.rstrip('\n').split('\t')))
                 r['_line'] = n
@@ -934,7 +1022,8 @@ def probe_texts(out):
         if rel == 'registry-item.json' or posixpath.basename(rel).startswith('doc-'):
             continue
         try:
-            texts.append(open(os.path.join(out, rel), encoding='utf-8').read())
+            with open(os.path.join(out, rel), encoding='utf-8') as f:
+                texts.append(f.read())
         except UnicodeDecodeError:
             pass
     return texts
@@ -950,7 +1039,10 @@ def artifact_sha(out):
     names = list_files(out) if os.path.isdir(out) else []
     pick = 'registry-item.json' if 'registry-item.json' in names else next(
         (n for n in names if not posixpath.basename(n).startswith('doc-')), None)
-    return sha(open(os.path.join(out, pick), 'rb').read())[:16] if pick else ''
+    if not pick:
+        return ''
+    with open(os.path.join(out, pick), 'rb') as f:
+        return sha(f.read())[:16]
 
 
 def claim_status(c, texts, now_sha):
@@ -999,7 +1091,9 @@ def guide_mentions(ref):
     hits = []
     for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
         if fn.endswith('.md'):
-            for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+            with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+                lines = f.readlines()
+            for n, line in enumerate(lines, 1):
                 if '`%s`' % ref in line:
                     hits.append('guides/%s:%d' % (fn, n))
     return hits
@@ -1051,7 +1145,9 @@ def guide_evidence():
         if not fn.endswith('.md') or fn.startswith('_'):
             continue
         section = ''
-        for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+        with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+            lines = f.readlines()
+        for n, line in enumerate(lines, 1):
             if line.startswith('## '):
                 section = line[3:].strip()
                 continue
@@ -1155,19 +1251,19 @@ def claims_pending(claims):
 # ---------- verify ----------
 
 # Fixed scenarios covering every adapter kind and every access rule. Expected exit code per fetch_one:
-# 0 ok, 2 broken, 3 pro, 4 login (blocked on the user). `files` = whether files must land in the out dir.
+# 0 ok, 2 broken, 3 pro, 4 login (blocked on the user), 5 browser/manual only. `files` = whether files must land.
 MATRIX = [
     ('registry', 'shadcn:button', {}, 0, True),
     ('registry+style', 'shadcn:button', {'style': 'radix-nova'}, 0, True),
     ('registry+variant', 'reactbits:split-text', {'variant': 'JS-CSS'}, 0, True),
     ('registry+doc', 'uiarc:in-view-title', {}, 0, True),
-    ('adapter(py, no remote exec)', 'bencho:magnet-select', {}, 0, True),
-    ('adapter(sh)', 'collectui:category:dashboard', {'limit': 3}, 0, True),
+    ('adapter(bencho, literal parse)', 'bencho:magnet-select', {}, 0, True),
+    ('adapter(collectui, anon API)', 'collectui:category:dashboard', {'limit': 3}, 0, True),
     ('prompt+doc', 'librariesdev:thinking-orbs', {}, 0, True),
     ('url(svg)', 'lucide:house', {}, 0, True),
     ('url(DESIGN.md)', 'getdesign:stripe', {}, 0, True),
     ('url(video)+browser', 'bencho:find:vanjek-pixel-select', {}, 0, True),
-    ('browser-only', 'inspora:fluid-illumination', {}, 0, False),
+    ('browser-only', 'inspora:fluid-illumination', {}, 5, False),
     ('login refused', 'originkit:compare-slider', {}, 4, False),
     ('pro refused', 'uiarc:voice-orb', {}, 3, False),
     ('broken refused', 'collectui:category:agency', {}, 2, False),
