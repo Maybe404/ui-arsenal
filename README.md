@@ -33,6 +33,7 @@ scripts/searchtest.sh                      # 搜索相关性回归测试
 scripts/test.sh                            # 离线单元测试（不联网）
 scripts/refresh.sh                         # 和线上清单比对，只报告差异
 scripts/claims.sh --check                  # 重新拉取，复核组件级结论是否对新版本仍成立
+# evals/tasks.md：真实任务评测，用 agent 跑，结果记在 evals/results/
 ```
 
 ## 维护
@@ -61,6 +62,7 @@ sources/<id>.md       每个来源的说明：获取方法、使用注意、未�
 sources/<id>.tsv      每个来源的条目清单，机器维护的字段（16 列，无表头，含待审原因）
 sources/<id>.notes.tsv  人工维护的字段：中文描述、UI 任务、层级、标签、风险（刷新不会覆盖）
 sources/_claims.tsv   组件级结论台账：缺陷、演示性质、缺失能力，带证据深度、核对日期和版本 hash
+evals/                真实任务评测：固定的项目和请求、该看到的行为、判为失败的情况
 sources/_SPEC.md      来源文件格式规范
 sources/_ADDING.md    新增来源的流程
 ```
