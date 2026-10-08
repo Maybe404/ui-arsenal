@@ -22,54 +22,54 @@ smooth-scroll	基于 Lenis 的全页平滑滚动包装器 smooth scroll	motion-t
 visitor-count	访客计数徽标，需自行实现 /api/visitors 端点 visitor counter	feedback	specialized				
 loaders-gooey-blobs	粘滞融合的 blob 加载动画 loader spinner gooey	loading,motion-transition	specialized				
 raised-button	立体凸起风格按钮，可按颜色自动生成阴影 3D button	button,fun-3d	specialized	3d			
-alert	shadcn 风格基础组件：提示框 alert（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				
-avatar	shadcn 风格基础组件：头像 avatar（支撑型 primitive，与 shadcn/ui 同构）	avatar-user	foundation				
-badge	shadcn 风格基础组件：徽章标签 badge（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				
-breadcrumb	shadcn 风格基础组件：面包屑 breadcrumb（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-button	shadcn 风格基础组件：按钮 button（支撑型 primitive，与 shadcn/ui 同构）	button	foundation				
-button-group	shadcn 风格基础组件：按钮组 button group（支撑型 primitive，与 shadcn/ui 同构）	button	foundation				
-calendar	shadcn 风格基础组件：日历日期选择 calendar react-day-picker（支撑型 primitive，与 shadcn/ui 同构）	date-time,select	foundation				
-card	shadcn 风格基础组件：卡片 card（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				
-carousel	shadcn 风格基础组件：轮播 carousel embla（支撑型 primitive，与 shadcn/ui 同构）	media	foundation				
-chart	shadcn 风格基础组件：图表封装 chart recharts（支撑型 primitive，与 shadcn/ui 同构）	chart	foundation				
-checkbox	shadcn 风格基础组件：复选框 checkbox（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
-collapsible	shadcn 风格基础组件：折叠面板 collapsible（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				
-command	shadcn 风格基础组件：命令面板/搜索 command cmdk（支撑型 primitive，与 shadcn/ui 同构）	search-command	foundation				
-context-menu	shadcn 风格基础组件：右键菜单 context menu（支撑型 primitive，与 shadcn/ui 同构）	overlay,navigation	foundation				
-dialog	shadcn 风格基础组件：对话框 modal dialog（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
-drawer	shadcn 风格基础组件：底部抽屉 drawer vaul（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
-dropdown-menu	shadcn 风格基础组件：下拉菜单 dropdown（支撑型 primitive，与 shadcn/ui 同构）	navigation,select	foundation				
-empty	shadcn 风格基础组件：空状态 empty state（支撑型 primitive，与 shadcn/ui 同构）	empty-onboarding	foundation				
-field	shadcn 风格基础组件：表单字段布局 field（支撑型 primitive，与 shadcn/ui 同构）	form-input,layout-card	foundation				
-form	shadcn 风格基础组件：表单 react-hook-form（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-hover-card	shadcn 风格基础组件：悬停卡片 hover card（支撑型 primitive，与 shadcn/ui 同构）	overlay,layout-card	foundation		hover		
-input	shadcn 风格基础组件：输入框 input（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-input-group	shadcn 风格基础组件：带前后缀的输入组 input group（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-input-otp	shadcn 风格基础组件：验证码输入 OTP（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-item	shadcn 风格基础组件：列表项 item（支撑型 primitive，与 shadcn/ui 同构）	other	foundation				
-kbd	shadcn 风格基础组件：键盘按键标识 kbd（支撑型 primitive，与 shadcn/ui 同构）	other	foundation		keyboard		
-label	shadcn 风格基础组件：表单标签 label（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-menubar	shadcn 风格基础组件：菜单栏 menubar（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-navigation-menu	shadcn 风格基础组件：导航菜单 navigation menu（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-pagination	shadcn 风格基础组件：分页 pagination（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-popover	shadcn 风格基础组件：弹出层 popover（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
-progress	shadcn 风格基础组件：进度条 progress（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				
-radio-group	shadcn 风格基础组件：单选组 radio（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
-resizable	shadcn 风格基础组件：可拖拽分栏 resizable panels（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		drag		
-scroll-area	shadcn 风格基础组件：自定义滚动区域 scroll area（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		scroll		
-select	shadcn 风格基础组件：下拉选择 select（支撑型 primitive，与 shadcn/ui 同构）	select	foundation				
-separator	shadcn 风格基础组件：分隔线 separator（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				
-sheet	shadcn 风格基础组件：侧边抽屉 sheet（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
-sidebar	shadcn 风格基础组件：应用侧边栏 sidebar（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-skeleton	shadcn 风格基础组件：骨架屏 skeleton loading（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				
-slider	shadcn 风格基础组件：滑块 slider（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
-sonner	shadcn 风格基础组件：toast 通知 sonner（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				
-spinner	shadcn 风格基础组件：加载转圈 spinner（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				
-switch	shadcn 风格基础组件：开关 switch toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				
-table	shadcn 风格基础组件：表格 table（支撑型 primitive，与 shadcn/ui 同构）	table	foundation				
-tabs	shadcn 风格基础组件：选项卡 tabs（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				
-textarea	shadcn 风格基础组件：多行文本框 textarea（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				
-toggle	shadcn 风格基础组件：切换按钮 toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				
-toggle-group	shadcn 风格基础组件：切换按钮组 toggle group（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				
-tooltip	shadcn 风格基础组件：工具提示 tooltip（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				
+alert	shadcn 风格基础组件：提示框 alert（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				与 shadcn:alert 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:alert；装 obsidianui block 时 CLI 提示覆盖 ui/alert.tsx 一律跳过
+avatar	shadcn 风格基础组件：头像 avatar（支撑型 primitive，与 shadcn/ui 同构）	avatar-user	foundation				与 shadcn:avatar 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:avatar；装 obsidianui block 时 CLI 提示覆盖 ui/avatar.tsx 一律跳过
+badge	shadcn 风格基础组件：徽章标签 badge（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				与 shadcn:badge 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:badge；装 obsidianui block 时 CLI 提示覆盖 ui/badge.tsx 一律跳过
+breadcrumb	shadcn 风格基础组件：面包屑 breadcrumb（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:breadcrumb 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:breadcrumb；装 obsidianui block 时 CLI 提示覆盖 ui/breadcrumb.tsx 一律跳过
+button	shadcn 风格基础组件：按钮 button（支撑型 primitive，与 shadcn/ui 同构）	button	foundation				与 shadcn:button 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:button；装 obsidianui block 时 CLI 提示覆盖 ui/button.tsx 一律跳过
+button-group	shadcn 风格基础组件：按钮组 button group（支撑型 primitive，与 shadcn/ui 同构）	button	foundation				与 shadcn:button-group 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:button-group；装 obsidianui block 时 CLI 提示覆盖 ui/button-group.tsx 一律跳过
+calendar	shadcn 风格基础组件：日历日期选择 calendar react-day-picker（支撑型 primitive，与 shadcn/ui 同构）	date-time,select	foundation				与 shadcn:calendar 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:calendar；装 obsidianui block 时 CLI 提示覆盖 ui/calendar.tsx 一律跳过
+card	shadcn 风格基础组件：卡片 card（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				与 shadcn:card 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:card；装 obsidianui block 时 CLI 提示覆盖 ui/card.tsx 一律跳过
+carousel	shadcn 风格基础组件：轮播 carousel embla（支撑型 primitive，与 shadcn/ui 同构）	media	foundation				与 shadcn:carousel 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:carousel；装 obsidianui block 时 CLI 提示覆盖 ui/carousel.tsx 一律跳过
+chart	shadcn 风格基础组件：图表封装 chart recharts（支撑型 primitive，与 shadcn/ui 同构）	chart	foundation				与 shadcn:chart 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:chart；装 obsidianui block 时 CLI 提示覆盖 ui/chart.tsx 一律跳过
+checkbox	shadcn 风格基础组件：复选框 checkbox（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				与 shadcn:checkbox 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:checkbox；装 obsidianui block 时 CLI 提示覆盖 ui/checkbox.tsx 一律跳过
+collapsible	shadcn 风格基础组件：折叠面板 collapsible（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				与 shadcn:collapsible 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:collapsible；装 obsidianui block 时 CLI 提示覆盖 ui/collapsible.tsx 一律跳过
+command	shadcn 风格基础组件：命令面板/搜索 command cmdk（支撑型 primitive，与 shadcn/ui 同构）	search-command	foundation				与 shadcn:command 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:command；装 obsidianui block 时 CLI 提示覆盖 ui/command.tsx 一律跳过
+context-menu	shadcn 风格基础组件：右键菜单 context menu（支撑型 primitive，与 shadcn/ui 同构）	overlay,navigation	foundation				与 shadcn:context-menu 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:context-menu；装 obsidianui block 时 CLI 提示覆盖 ui/context-menu.tsx 一律跳过
+dialog	shadcn 风格基础组件：对话框 modal dialog（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				与 shadcn:dialog 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:dialog；装 obsidianui block 时 CLI 提示覆盖 ui/dialog.tsx 一律跳过
+drawer	shadcn 风格基础组件：底部抽屉 drawer vaul（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				与 shadcn:drawer 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:drawer；装 obsidianui block 时 CLI 提示覆盖 ui/drawer.tsx 一律跳过
+dropdown-menu	shadcn 风格基础组件：下拉菜单 dropdown（支撑型 primitive，与 shadcn/ui 同构）	navigation,select	foundation				与 shadcn:dropdown-menu 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:dropdown-menu；装 obsidianui block 时 CLI 提示覆盖 ui/dropdown-menu.tsx 一律跳过
+empty	shadcn 风格基础组件：空状态 empty state（支撑型 primitive，与 shadcn/ui 同构）	empty-onboarding	foundation				与 shadcn:empty 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:empty；装 obsidianui block 时 CLI 提示覆盖 ui/empty.tsx 一律跳过
+field	shadcn 风格基础组件：表单字段布局 field（支撑型 primitive，与 shadcn/ui 同构）	form-input,layout-card	foundation				与 shadcn:field 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:field；装 obsidianui block 时 CLI 提示覆盖 ui/field.tsx 一律跳过
+form	shadcn 风格基础组件：表单 react-hook-form（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:form 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:form；装 obsidianui block 时 CLI 提示覆盖 ui/form.tsx 一律跳过
+hover-card	shadcn 风格基础组件：悬停卡片 hover card（支撑型 primitive，与 shadcn/ui 同构）	overlay,layout-card	foundation		hover		与 shadcn:hover-card 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:hover-card；装 obsidianui block 时 CLI 提示覆盖 ui/hover-card.tsx 一律跳过
+input	shadcn 风格基础组件：输入框 input（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:input 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:input；装 obsidianui block 时 CLI 提示覆盖 ui/input.tsx 一律跳过
+input-group	shadcn 风格基础组件：带前后缀的输入组 input group（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:input-group 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:input-group；装 obsidianui block 时 CLI 提示覆盖 ui/input-group.tsx 一律跳过
+input-otp	shadcn 风格基础组件：验证码输入 OTP（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:input-otp 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:input-otp；装 obsidianui block 时 CLI 提示覆盖 ui/input-otp.tsx 一律跳过
+item	shadcn 风格基础组件：列表项 item（支撑型 primitive，与 shadcn/ui 同构）	other	foundation				与 shadcn:item 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:item；装 obsidianui block 时 CLI 提示覆盖 ui/item.tsx 一律跳过
+kbd	shadcn 风格基础组件：键盘按键标识 kbd（支撑型 primitive，与 shadcn/ui 同构）	other	foundation		keyboard		与 shadcn:kbd 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:kbd；装 obsidianui block 时 CLI 提示覆盖 ui/kbd.tsx 一律跳过
+label	shadcn 风格基础组件：表单标签 label（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:label 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:label；装 obsidianui block 时 CLI 提示覆盖 ui/label.tsx 一律跳过
+menubar	shadcn 风格基础组件：菜单栏 menubar（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:menubar 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:menubar；装 obsidianui block 时 CLI 提示覆盖 ui/menubar.tsx 一律跳过
+navigation-menu	shadcn 风格基础组件：导航菜单 navigation menu（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:navigation-menu 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:navigation-menu；装 obsidianui block 时 CLI 提示覆盖 ui/navigation-menu.tsx 一律跳过
+pagination	shadcn 风格基础组件：分页 pagination（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:pagination 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:pagination；装 obsidianui block 时 CLI 提示覆盖 ui/pagination.tsx 一律跳过
+popover	shadcn 风格基础组件：弹出层 popover（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				与 shadcn:popover 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:popover；装 obsidianui block 时 CLI 提示覆盖 ui/popover.tsx 一律跳过
+progress	shadcn 风格基础组件：进度条 progress（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				与 shadcn:progress 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:progress；装 obsidianui block 时 CLI 提示覆盖 ui/progress.tsx 一律跳过
+radio-group	shadcn 风格基础组件：单选组 radio（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				与 shadcn:radio-group 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:radio-group；装 obsidianui block 时 CLI 提示覆盖 ui/radio-group.tsx 一律跳过
+resizable	shadcn 风格基础组件：可拖拽分栏 resizable panels（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		drag		与 shadcn:resizable 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:resizable；装 obsidianui block 时 CLI 提示覆盖 ui/resizable.tsx 一律跳过
+scroll-area	shadcn 风格基础组件：自定义滚动区域 scroll area（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation		scroll		与 shadcn:scroll-area 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:scroll-area；装 obsidianui block 时 CLI 提示覆盖 ui/scroll-area.tsx 一律跳过
+select	shadcn 风格基础组件：下拉选择 select（支撑型 primitive，与 shadcn/ui 同构）	select	foundation				与 shadcn:select 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:select；装 obsidianui block 时 CLI 提示覆盖 ui/select.tsx 一律跳过
+separator	shadcn 风格基础组件：分隔线 separator（支撑型 primitive，与 shadcn/ui 同构）	layout-card	foundation				与 shadcn:separator 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:separator；装 obsidianui block 时 CLI 提示覆盖 ui/separator.tsx 一律跳过
+sheet	shadcn 风格基础组件：侧边抽屉 sheet（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				与 shadcn:sheet 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:sheet；装 obsidianui block 时 CLI 提示覆盖 ui/sheet.tsx 一律跳过
+sidebar	shadcn 风格基础组件：应用侧边栏 sidebar（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:sidebar 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:sidebar；装 obsidianui block 时 CLI 提示覆盖 ui/sidebar.tsx 一律跳过
+skeleton	shadcn 风格基础组件：骨架屏 skeleton loading（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				与 shadcn:skeleton 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:skeleton；装 obsidianui block 时 CLI 提示覆盖 ui/skeleton.tsx 一律跳过
+slider	shadcn 风格基础组件：滑块 slider（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				与 shadcn:slider 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:slider；装 obsidianui block 时 CLI 提示覆盖 ui/slider.tsx 一律跳过
+sonner	shadcn 风格基础组件：toast 通知 sonner（支撑型 primitive，与 shadcn/ui 同构）	feedback	foundation				与 shadcn:sonner 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:sonner；装 obsidianui block 时 CLI 提示覆盖 ui/sonner.tsx 一律跳过
+spinner	shadcn 风格基础组件：加载转圈 spinner（支撑型 primitive，与 shadcn/ui 同构）	loading	foundation				与 shadcn:spinner 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:spinner；装 obsidianui block 时 CLI 提示覆盖 ui/spinner.tsx 一律跳过
+switch	shadcn 风格基础组件：开关 switch toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider	foundation				与 shadcn:switch 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:switch；装 obsidianui block 时 CLI 提示覆盖 ui/switch.tsx 一律跳过
+table	shadcn 风格基础组件：表格 table（支撑型 primitive，与 shadcn/ui 同构）	table	foundation				与 shadcn:table 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:table；装 obsidianui block 时 CLI 提示覆盖 ui/table.tsx 一律跳过
+tabs	shadcn 风格基础组件：选项卡 tabs（支撑型 primitive，与 shadcn/ui 同构）	navigation	foundation				与 shadcn:tabs 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:tabs；装 obsidianui block 时 CLI 提示覆盖 ui/tabs.tsx 一律跳过
+textarea	shadcn 风格基础组件：多行文本框 textarea（支撑型 primitive，与 shadcn/ui 同构）	form-input	foundation				与 shadcn:textarea 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:textarea；装 obsidianui block 时 CLI 提示覆盖 ui/textarea.tsx 一律跳过
+toggle	shadcn 风格基础组件：切换按钮 toggle（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				与 shadcn:toggle 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:toggle；装 obsidianui block 时 CLI 提示覆盖 ui/toggle.tsx 一律跳过
+toggle-group	shadcn 风格基础组件：切换按钮组 toggle group（支撑型 primitive，与 shadcn/ui 同构）	toggle-slider,button	foundation				与 shadcn:toggle-group 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:toggle-group；装 obsidianui block 时 CLI 提示覆盖 ui/toggle-group.tsx 一律跳过
+tooltip	shadcn 风格基础组件：工具提示 tooltip（支撑型 primitive，与 shadcn/ui 同构）	overlay	foundation				与 shadcn:tooltip 同构（Radix 版 new-york 写法）：shadcn 项目直接用 shadcn:tooltip；装 obsidianui block 时 CLI 提示覆盖 ui/tooltip.tsx 一律跳过
 template:project-one	创作者经济主题未来感落地页模板，React+TS+Tailwind+Motion+Next.js landing page template	template	specialized				

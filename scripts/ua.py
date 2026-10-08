@@ -693,8 +693,8 @@ def cmd_find(args):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
     if any_flag:
-        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、待审状态或来源异常；接真实业务前要处理，'
-              '或换同类候选；同等相关时排在没有问题的候选之后。')
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
+              '接真实业务前要处理，或换同类候选；同等相关时排在没有备注的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
         print('⚠ = 场景化审美风险：Persuade/Experience 写清场景可以用，Operate/Read 不用（用户明确要求时作为例外写明），见 guides/_scenes.md「质量三级」')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')

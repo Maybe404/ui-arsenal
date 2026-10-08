@@ -8,7 +8,7 @@
 
 shadcn/ui、React Bits、OriginKit、Bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lucide Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik。
 
-每个来源的条目数和访问状态见 [SKILL.md](SKILL.md) 的「来源一览」，获取方法和注意事项见 `sources/<id>.md`。
+每个来源的条目数和访问状态见 [SKILL.md](SKILL.md) 的「来源一览」，获取方法和注意事项见 `sources/<id>.md`。这是个人收藏，不是完整的组件目录；没收录的常用库和其他已知缺口写在 SKILL.md「来源一览」开头。
 
 ## 安装
 

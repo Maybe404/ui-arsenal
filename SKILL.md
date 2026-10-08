@@ -146,6 +146,13 @@ $S/stats.sh                                   # 各来源统计
 
 ## 八、来源一览
 
+**收录原则**：这是用户自己收藏的来源，不是全市场的组件目录。`find.sh` 找不到合适候选，可能只是没收录，不代表生态里没有。已知缺口：
+- 只收了 React 生态的组件库；Vue、Svelte、Angular 没有组件库（见第三节第 1 步的短路径）。
+- 图标只有 Lucide；Heroicons、Phosphor、Tabler、Hugeicons 没收录（项目已经在用的照样用）。
+- shadcn 官方 registry 目录里的一批常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Magic UI（动效组件，约 250 项）、Animate UI（带动画的基础件，约 580 项）、AI Elements（Vercel 的 AI 界面件，约 77 项）、Aceternity（约 295 项）、Tailark（营销区块，约 476 项）、Motion Primitives、Kibo UI、Cult UI。
+- 收藏库没有合适候选、但上面某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
+- OriginKit 占条目的约 11%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
+
 由 `$S/stats.sh --write-skill` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
 <!-- STATS:BEGIN -->
