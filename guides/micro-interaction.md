@@ -16,9 +16,9 @@
 |---|---|---|
 | 行内删除，带撤销 | `uiarc:confirm-morph` | 按钮原地变成确认，完成后提供 Undo；比弹窗轻 |
 | 防误触的危险操作 | `reactbits:hold-button` | 按住填充，键盘也能完成；`holdTime` 建议 1–1.5 秒 |
-| 移动端列表行滑动删除/归档 | `uiarc:swipe-actions`；shadcn 项目用 `reactbits:swipe-row` | swipe-row 有减弱动效和 ARIA，但图标用 hugeicons，要换成 lucide |
+| 移动端列表行滑动删除/归档 | `uiarc:swipe-actions`；shadcn 项目用 `reactbits:swipe-row` | swipe-row 有减弱动效和 ARIA，但图标用 hugeicons，要换成项目在用的图标库（项目还没定就用 lucide） |
 | AI agent 任务状态 | `reactbits:status-mark` | 状态之间形态过渡，减弱动效时直接切换 |
-| 点赞、收藏 | `reactbits:pulse-heart` | 有键盘和减弱动效处理；hugeicons 换成 lucide。Operate 页面去掉脉冲，只保留填充切换 |
+| 点赞、收藏 | `reactbits:pulse-heart` | 有键盘和减弱动效处理；hugeicons 换成项目在用的图标库（项目还没定就用 lucide）。Operate 页面去掉脉冲，只保留填充切换 |
 | 链接"了解更多"悬停 | `jakubantalik:transition:learn-more-hover` | 箭头小位移，纯 CSS，有减弱动效守卫 |
 | 表单校验错误 | `jakubantalik:transition:error-state-shake` | 抖动表达"被拒绝"，自动恢复；必须同时有文字错误信息（本次未 fetch） |
 | 复制成功、保存成功 | `jakubantalik:transition:success-check` + 文字状态 | 对勾描绘 + 文字（"Copied"），只在真的成功后播放（本次未 fetch） |

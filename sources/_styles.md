@@ -33,7 +33,7 @@
 
 ## 可以当主底座的
 
-主底座要能撑起整页的基础组件：按钮、输入、选择、弹层（dialog / popover / dropdown / tooltip）、表格、tabs、toast，并且有一套完整的颜色、圆角、字体、阴影 token 和明暗切换。
+主底座要能撑起整页的基础组件：按钮、输入、选择、弹层（dialog / popover / dropdown / tooltip）、表格、tabs、toast，并且有一套完整的颜色、圆角、字体、阴影 token 和明暗切换。本节只说明收藏库里哪些来源能当**新项目**的底座；已有项目用的组件库（Ant Design、MUI、自研等）就是它的主底座，下面的映射规则照样适用，只是映射目标换成它的变量。
 
 - **shadcn（首选）**：63 个基础组件、表单、浮层、表格、侧边栏、图表都有；token 是业界事实标准，reactbits、obsidianui、loadingui 等第三方 registry 都按它的变量写；Tailwind v4 + `.dark`。默认选它。
 - **uiarc（可以，但要整站用）**：免费部分就有 button、input、textarea、select、combobox、checkbox、switch、dialog、popover、tooltip、tabs、toast、sortable-data-table、date-picker、command-palette 和十几种图表，够撑一个完整产品；token 也完整（颜色、间距、字号、圆角、阴影、时长、缓动、8 种 accent）。限制：CSS Modules，不用 Tailwind；暗色是 `data-theme`；风格规范很严（无渐变光晕、只用 regular/medium 字重）。选它就整站用它，不要和 shadcn 并列当底座。
@@ -51,10 +51,10 @@
 
 | 组合 | 结论 | 原因 | 条件 / 做法 |
 |---|---|---|---|
-| shadcn + reactbits | 可以 | reactbits 不带 token，颜色、明暗都走 props（如 Aurora 的 `colorStops`、`lightMode`），在 shadcn 官方 registry 目录里 | 颜色从 shadcn 变量取值传入（如 `getComputedStyle` 读 `--primary`，或直接用主题色值）；明暗切换时同步改 props；一页最多一个 WebGL 背景；Micro 类的 hugeicons 换成 lucide |
+| shadcn + reactbits | 可以 | reactbits 不带 token，颜色、明暗都走 props（如 Aurora 的 `colorStops`、`lightMode`），在 shadcn 官方 registry 目录里 | 颜色从 shadcn 变量取值传入（如 `getComputedStyle` 读 `--primary`，或直接用主题色值）；明暗切换时同步改 props；一页最多一个 WebGL 背景；Micro 类的 hugeicons 换成项目在用的图标库（项目还没定就用 lucide） |
 | shadcn + loadingui | 可以 | 46/47 个组件只用 currentColor，skeleton 用的 `bg-muted` 正是 shadcn 变量；都是 Tailwind v4 + `cn` | 用 `text-*` 改色；7 个 motion 组件装 `motion` 包；注意新版 shadcn 用 `cn` 包，loadingui 用 `@/lib/utils`，两个都要有 |
 | shadcn + obsidianui | 可以 | primitive 与 shadcn 同构，同为 Tailwind v4 + `.dark` | 装 block 时 CLI 提示覆盖 `ui/button.tsx` 等文件一律跳过（新版 shadcn 默认 Base UI，obsidianui 是 Radix，`asChild` 和 `render` 写法不同）；dashboard-shell 等 block 的 `--obsidian-*` 色板改成引用 `--background`、`--sidebar`、`--border`、`--foreground`、`--muted-foreground`、`--primary` |
-| shadcn + beautifului | 有条件 | 两边都是 Tailwind v4 + `.dark`，暗色策略一致；但 foundation.css 会重复 `@import "tailwindcss"`、改 body 背景（斜纹）和字号 14px、在 `@theme` 里重定义 `--color-accent`、`--font-sans` | 不要整份 `@import` foundation.css；只复制组件用到的 `@theme inline` 条目和 keyframes，并把值改成 shadcn 变量：`--ink`→`--foreground`，`--ink-2`/`--ink-3`→`--muted-foreground`，`--canvas`/`--page`→`--background`，`--surface`→`--card`，`--line`→`--border`，`--accent-tint`→`--primary` 降透明度，`--radius-control`/`--radius-card`/`--radius-window`→基于 `--radius` 的 calc。`--accent` 两边同名不同义（beautifului 是品牌蓝，shadcn 是浅色 hover 底）：**不要**在 `:root` 或 `@theme` 里把 `--accent`、`--color-accent` 改成 `--primary`，那会改掉 shadcn 所有菜单、按钮的 hover 底色；要改的是复制来的组件代码，把其中的 `bg-accent`、`text-accent`、`var(--accent)` 换成 `primary`；图标换成 lucide |
+| shadcn + beautifului | 有条件 | 两边都是 Tailwind v4 + `.dark`，暗色策略一致；但 foundation.css 会重复 `@import "tailwindcss"`、改 body 背景（斜纹）和字号 14px、在 `@theme` 里重定义 `--color-accent`、`--font-sans` | 不要整份 `@import` foundation.css；只复制组件用到的 `@theme inline` 条目和 keyframes，并把值改成 shadcn 变量：`--ink`→`--foreground`，`--ink-2`/`--ink-3`→`--muted-foreground`，`--canvas`/`--page`→`--background`，`--surface`→`--card`，`--line`→`--border`，`--accent-tint`→`--primary` 降透明度，`--radius-control`/`--radius-card`/`--radius-window`→基于 `--radius` 的 calc。`--accent` 两边同名不同义（beautifului 是品牌蓝，shadcn 是浅色 hover 底）：**不要**在 `:root` 或 `@theme` 里把 `--accent`、`--color-accent` 改成 `--primary`，那会改掉 shadcn 所有菜单、按钮的 hover 底色；要改的是复制来的组件代码，把其中的 `bg-accent`、`text-accent`、`var(--accent)` 换成 `primary`；图标换成项目在用的图标库（项目还没定就用 lucide） |
 | shadcn + bencho | 有条件 | bencho block 只引用自己命名的 token，不带定义；用 framer-motion；8 个 block 的暗色写成 `[data-theme="dark"]` | 在包住 bencho block 的作用域类上定义映射（例如 `.bencho { … }`），不写到 `:root`：`--ink: var(--foreground)`、`--fill-slab: var(--card)`、`--fill-on: var(--primary)`、`--on-ink: var(--background)`（它是压在 `--ink` 底色上的文字色）、`--pane-edge: var(--border)`、`--signal: var(--ring)`、`--font-ui: var(--font-sans)`。`--card` 是 bencho 63 个 block 里唯一和 shadcn 同名的 token，含义也相同（卡片底色，也用作 `--ink` 底上的反色字），直接沿用 shadcn 的定义，**不要再声明**：`--card: var(--card)` 是自引用循环，会让 `--card` 失效，卡片背景随之消失。写在作用域类上的原因：别名在声明它的元素上就解析成具体颜色再往下继承，写在 `:root` 而 `.dark` 加在 body 或更深的元素上时，暗色不会生效；block 用 portal 渲染到 body 时，portal 容器也要带这个类。`--ink-rgb`、`--fill-on-rgb` 要用逗号分隔的 RGB 三元组按明暗各写一份（shadcn 是 oklch，不能直接引用）；切暗色时 `.dark` 和 `data-theme="dark"` 同时设；按 meta 的 tokens 列表逐个补齐，补不齐的 block 不用 |
 | shadcn + uiarc | 不建议 | 两个主底座。arc-foundation（`registry/foundation.css`）在 `:root` 定义 `--background`、`--foreground`、`--border`、`--accent`、`--surface`，和 shadcn 同名不同义（uiarc 的 `--accent` 是强调色，shadcn 的是浅色 hover 底），谁后加载谁覆盖；它的全局 `:focus-visible` 描边带 `!important`，会给 shadcn 组件（自带 `outline-none` + `focus-visible:ring`）再叠一圈描边；暗色用 `data-theme`，shadcn 用 `.dark`；视觉语言（大圆角 18–34px、Geist 标题）也不同 | 只想借一个 uiarc 组件时：不导入 arc-foundation，在组件外包一层作用域类，把它需要的非颜色 token（`--space-*`、`--text-*`、`--control-height-*`、`--duration-*`、`--ease-*`、`--radius-control`）复制进来，颜色映射到 shadcn（`--accent`→`--primary`、`--surface`→`--card`、`--text-secondary`→`--muted-foreground`、`--danger`→`--destructive`），`--radius-control` 改成 shadcn 的 `--radius`；不装 foundation 时组件没有焦点描边，要在作用域里补（见 `sources/uiarc.md`「焦点」）；做不到就换 shadcn 生态里的同类组件 |
 | uiarc + beautifului | 不建议 | 两套自带 token 互相覆盖（都定义 `--accent`、`--surface`、`--radius-control`、`--shadow-raised`）；暗色一个 `data-theme` 一个 `.dark`；beautifului 需要 Tailwind v4，uiarc 不用 Tailwind | 以 uiarc 为底座时，beautifului 组件要改写成 CSS Modules 并把 `--ink`→`--foreground`、`--canvas`→`--background`、`--line`→`--border` 逐个映射（`--accent` 两边都是品牌强调色，保持原名即可，不要写成 `--accent: var(--accent)` 这种自引用），工作量接近重写，通常直接用 uiarc 的 chat-thread、text-shimmer 等替代 |
@@ -65,7 +65,7 @@
 | reactbits + originkit | 有条件 | 都是强视觉特效，同页容易各说各话 | 每个区块只放一个特效来源；同一页的特效用同一组颜色（来自主底座）；WebGL 组件总数控制在 1–2 个 |
 | 任意 + librariesdev | 可以 | 自包含，inline 样式和 canvas，不读也不写任何全局 token | 按作者规则：等待不足 2 秒不加效果，同一元素或相邻元素不叠两个效果；站点手动切明暗时显式传 `theme`（border-beam 默认 `dark`，`auto` 只看系统设置）；颜色变体选和主底座强调色接近的 |
 | 任意 + loadingui | 可以（Tailwind 项目） | currentColor，keyframes 名带 `loading-ui-` 前缀，不易冲突 | 非 Tailwind 项目见上面 uiarc + loadingui 的条件 |
-| 任意 + lucide | 可以 | 只用 currentColor，不带样式 | 一页只用一套图标；beautifului 的 Central Icons、iconoir，reactbits Micro 的 hugeicons 换成 lucide |
+| 任意 + lucide | 可以 | 只用 currentColor，不带样式 | 一页只用一套图标；beautifului 的 Central Icons、iconoir，reactbits Micro 的 hugeicons 换成项目在用的图标库（项目还没定就用 lucide） |
 | 任意 + jakubantalik（Transitions.dev） | 可以；uiarc 底座有条件 | 纯 CSS，`t-*` 类名前缀，没有颜色 | 和 uiarc 同页时，`_root.css` 里的 `--duration-fast`（250ms，uiarc 是 160ms）、`--ease-in-out` 与 arc-foundation 同名不同值，不要粘 `_root.css` 的公共块，只用每个过渡自己的变量（如 `--resize-dur`） |
 | 任意底座 + getdesign | 可以 | DESIGN.md 只提供 token 值和规则 | 一个项目只用一份 DESIGN.md，把它的颜色、字号、圆角填进主底座的变量；不要同时用 DESIGN.md 和 uiarc/beautifului 自带的取值 |
 | 任意 + collectui / inspora / designspells | 可以 | 只是参考 | 只借鉴结构、层级、动效节奏，视觉取值全部来自主底座 |
@@ -77,7 +77,7 @@
 
 ## 混用规则
 
-1. 一页只能有一个主底座（shadcn 或 uiarc）。整个项目最好也只有一个。
+1. 一页只能有一个主底座。已有项目的主底座就是它现在的组件库或设计系统（不为了用收藏库而换）；新的 React 项目从 shadcn、uiarc 里选，本库里只有这两家能撑起整页基础件。整个项目最好也只有一个。
 2. 从其他来源引入的组件，行为和结构（DOM、交互、动画时序、可访问性）保留；颜色、圆角、字体、阴影全部映射到主底座的 token，不保留来源自带的取值。
 3. 映射不了就不用：组件依赖的 token 在主底座里找不到语义对应、或者要改动全局样式（`:root`、`body`、全局 outline、重复 `@import "tailwindcss"`）才能工作时，换别的来源或自己写。
 4. 不整份导入其他来源的 foundation / theme CSS（uiarc 的 arc-foundation、beautifului 的 foundation.css、Transitions.dev 的 `_root.css`）。需要它的非颜色 token 时，只复制用得到的变量，放进组件作用域，并确认不和主底座同名。
@@ -85,7 +85,7 @@
 6. 映射怎么写：别名（如 `--ink: var(--foreground)`）写在包住引入组件的作用域类上，不写 `:root`，这样不会多出第二套全局 theme，暗色切换也能传到组件里。同名且同义的 token（如 bencho 和 shadcn 的 `--card`）直接沿用，不要写 `--x: var(--x)`：自引用是循环，变量会失效。同名不同义的（各家 `--accent`）改组件代码里的引用，不要重定义全局变量。
 7. 明暗切换只有一个开关。主底座用 `.dark` 时，引入用 `data-theme` 的组件（uiarc、bencho 部分 block）要同步设置；只认 props 的组件（reactbits、librariesdev）要在切换时传新值。
 8. 动效库全站统一：motion 和 framer-motion 只留一个（新代码用 `motion/react`）；gsap、three、ogl 只在确实需要的组件里引入，并按需懒加载。
-9. 图标全站一套（默认 lucide）。引入的组件自带别的图标库时替换掉。
+9. 图标全站一套：已有项目用它现在的那套，还没定时默认 lucide。引入的组件自带别的图标库时，换成项目这一套。
 10. 特效有预算：一页最多一个 WebGL / 全屏背景，同一元素或相邻元素不叠两个特效，带光晕、渐变字、跑马灯的组件按各来源 notes 里的 risk 标签写明理由再用。
 11. 灵感来源（collectui、inspora、designspells）和 DESIGN.md 只影响结构与取值，不引入第二套设计语言。
 

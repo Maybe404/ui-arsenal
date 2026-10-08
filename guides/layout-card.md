@@ -26,7 +26,7 @@ impeccable 的三条规则在这里最常被违反：
 | 落地页功能区要一处"有分量"的展示 | `reactbits:magic-bento`（⚠ glow，见慎用）或 `obsidianui:split-showcase` | 只在 Persuade 页面、作为该屏唯一的主导效果；split-showcase 已拉源码（2026-10-08），用 `useReducedMotion` 处理减弱动效，hover 时卡片弹簧位移 |
 
 ## 慎用
-- `shadcn:dashboard-01` 的 `section-cards.tsx`：四张等大卡片，每张是"小标签 + 大号 `text-3xl` 数字 + 涨跌徽章"，背景 `bg-linear-to-t from-primary/5`。这正是 impeccable 拒绝的英雄数据模板加等大卡片堆叠。用 dashboard-01 时把这部分改成一行紧凑指标（数字 + 对比期 + 迷你趋势），或删掉。
+- `shadcn:dashboard-01` 的 `section-cards.tsx`：四张等大卡片，每张是"小标签 + 大号 `text-3xl` 数字 + 涨跌徽章"，背景 `bg-linear-to-t from-primary/5`。这个样式接近 impeccable 拒绝的英雄数据模板，但要不要改看它在页面上做什么：用户进来就要扫这几个数、每个数有对比期或目标、分组有意义（比如收入、活跃、留存），就保留卡片，只把样式统一到设计基线；只是示例数字、没有对比对象、占着首屏却不帮用户做决定，就改成一行紧凑指标（数字 + 对比期 + 迷你趋势），或者删掉。不按卡片数量或"像模板"来决定。
 - `reactbits:magic-bento`（⚠ glow）：已拉源码，860 行，依赖 gsap，粒子 + 聚光 + 倾斜，约 28 处写死颜色，源码里没有 `prefers-reduced-motion` 处理，也没有任何 ARIA。只用于 Persuade 页面一处，接入时自己补减弱动效（关闭粒子和倾斜），颜色改为主底座变量。
 - `reactbits:spotlight-card`（⚠ glow）：已拉源码，73 行，跟随光标的渐变光斑，无减弱动效处理；触屏没有效果。Operate 页面不用。
 - `reactbits:border-glow`、`reactbits:chroma-grid`、`reactbits:cursor-grid`（均 ⚠ glow）、`reactbits:bounce-cards`（⚠ bounce）、`reactbits:tilted-card`、`reactbits:reflective-card`（会申请摄像头权限，reactbits.md）：表现型卡片，未逐个拉源码；只在 Persuade / Experience 页面，且同一屏不叠两个。

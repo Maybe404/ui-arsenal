@@ -43,7 +43,7 @@
 ## 接入要点
 - **先拆再用**：拿到模板先列清单：依赖（动效库、图标库、数据库、第三方服务）、全局 CSS、字体、图片资源、环境变量、接口路由。把不需要的整块删掉，再开始改样式。
 - **统一底座**：模板自带的 token 要和项目底座合并成一套（shadcn 项目就落到 shadcn 变量上）；`.dark` 与 `data-theme` 只留一个开关。
-- **统一动效库和图标**：motion / framer-motion 只留一个；gsap、three、lenis 只在真正用到的页面引入；图标统一 lucide。
+- **统一动效库和图标**：motion / framer-motion 只留一个；gsap、three、lenis 只在真正用到的页面引入；图标统一成一套（项目已有的优先，没有就用 lucide）。
 - **替换所有演示资源**：文案、头像、logo、统计数字、图片 CDN 地址（如 obsidianui 的 `cdn-new.obsidianui.dev`）。
 - **可访问性回归**：模板的平滑滚动（Lenis）会影响键盘翻页和锚点跳转，要测；所有自动动画要遵守 `prefers-reduced-motion`。
 - **许可证**：originkit 和 reactbits 都禁止把组件或模板本身再分发；不要把改过的模板公开成"自己的模板"。

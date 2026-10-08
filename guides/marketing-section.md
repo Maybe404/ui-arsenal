@@ -29,7 +29,7 @@
 | 用户评价 | 自己写：一段大号引文 + 姓名职位 + 真实头像，最多 2–3 条 | 免费来源里没有成熟的评价区块（`uiarc:testimonial-stage` 是 Pro，reactbits 的 social-proof 是 Pro）。不要用等大卡片网格堆评价 |
 
 ## 慎用
-- 等大卡片堆结构：用 `card` 排出"图标 + 标题 + 一段话"的三列或六格网格，是 `_scenes.md` 第 6 节点名的 AI 味做法。功能介绍改用：一个主功能大图 + 两三个次要功能文字说明；或交互 tabs；或真实截图配一句话。`uiarc:feature-bento` 是 Pro，也不必追。
+- 等大卡片堆结构：用 `card` 排出"图标 + 标题 + 一段话"的三列或六格网格，是 `_scenes.md` 第 6 节点名的 AI 味做法（几项功能真的平行、同等重要时例外）。功能介绍改用：一个主功能大图 + 两三个次要功能文字说明；或交互 tabs；或真实截图配一句话。`uiarc:feature-bento` 是 Pro，也不必追。
 - 眉标（kicker）：标题上方的小号大写标签。`obsidianui:footer` 就有一个 `uppercase tracking-[0.2em]` 的胶囊标签和全大写列标题；用时删掉。uiarc 的规范明确不用 eyebrow，`hero-section` 的 `announcement` 是一个可点的公告链接，只在真有发布消息时用。
 - 英雄数据模板：大数字配小标签的统计带。`uiarc:stats-band` 就是这个模式（进入视口从 0 数到目标值）。只有数字真实、可核实、并且是论点本身时才用，而且一页一次；不要拿来填空。数字从 0 动画计数时，未进入视口前要显示最终值或保留宽度，不能出现"数字没跑完就看不清"。
 - `obsidianui:footer`：`bg-black text-white` 写死、不跟随主题；用嵌套的 `<section id="light-one">` 做装饰光效（语义错误，屏幕阅读器会读到一串空 section），光效所需的 CSS 不在这个文件里；文案也是 ObsidianUI 自己的宣传语。要用只借布局。

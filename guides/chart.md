@@ -25,7 +25,7 @@
 | 话题或渠道的份额随时间变化，重在讲故事 | `uiarc:streamgraph` | 只用于叙事型看板；要读准确值时换折线或堆叠柱 |
 
 ## 慎用
-- `uiarc:metric-card`：已拉源码，"标签 + 滚动计数大数字 + 上下文一行"，计数器 `animateOnView`。这接近 impeccable 拒绝的英雄数据模板；只在数字确实是页面主角、且上下文那行写清对比对象时用，并且不要四张等大排一排。catalog 也写明它不播报更新，实时变化要自己包 live region。
+- `uiarc:metric-card`：已拉源码，"标签 + 滚动计数大数字 + 上下文一行"，计数器 `animateOnView`。这接近 impeccable 拒绝的英雄数据模板；只在数字确实是页面主角、且上下文那行写清对比对象时用；几张并排时先确认每张都有对比对象和含义，凑数的合并成一行紧凑指标。catalog 也写明它不播报更新，实时变化要自己包 live region。
 - `shadcn:dashboard-01` 的指标卡（`section-cards.tsx`）：同上，见 layout-card 指南。
 - `shadcn:chart-radar-*`（14 个变体）：雷达图只适合 5–8 个维度、最多 2–3 组数据的画像对比；读者要精确比较时换分组柱状图。变体多不代表常用。
 - `shadcn:chart-pie-*`：分类超过 5 个、或份额差小于 5 个百分点时看不出差别，换横向柱状图或 `uiarc:waffle-chart`。

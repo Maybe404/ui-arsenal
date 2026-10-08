@@ -29,14 +29,14 @@
 - `reactbits:magnet`、`originkit:liquid-carve-button`、`originkit:radial-reveal-button`：光标驱动效果，触屏没有效果，Operate 页面不用；Persuade 页面最多一个 CTA。
 - `reactbits:star-border`、`librariesdev:border-beam-sm`、`librariesdev:border-beam-pulse-inner`、`originkit:neon-border`、`originkit:orbit-border-button`、`originkit:moving-gradient-button`、`originkit:crystal-glow`：⚠ glow，第 3 级风险。只用在 Persuade 页面唯一的主 CTA 上，并确认光晕不拉低文字对比度；librariesdev 的 border-beam 按作者规则不和别的效果叠加。
 - `librariesdev:metal-fx-button`、`librariesdev:metal-fx-circle`：液态金属描边，适合定价页 Upgrade 这类单点 CTA，不进 Operate 页面。
-- `reactbits:fuse-button`、`reactbits:sling-button`、`reactbits:pulse-heart`、`reactbits:voice-pill`：依赖 hugeicons，接入时换成 lucide；都是单点微交互，Operate 页面里只在它表达的状态确实存在时用（如撤销倒计时、发送）。
+- `reactbits:fuse-button`、`reactbits:sling-button`、`reactbits:pulse-heart`、`reactbits:voice-pill`：依赖 hugeicons，接入时换成项目在用的图标库（项目还没定就用 lucide）；都是单点微交互，Operate 页面里只在它表达的状态确实存在时用（如撤销倒计时、发送）。
 - `reactbits:hold-button`：有 `onKeyDown` 和 `aria-describedby`，但颜色全靠 hex props（`backgroundColor`、`fillColor` 等），要从主底座变量取值传入；同等需求优先 `uiarc:hold-to-confirm`。
 - `obsidianui:button`、`obsidianui:button-group`：Radix 版 shadcn 同构件。shadcn 项目直接用 `shadcn:button`，装 obsidianui block 时 CLI 提示覆盖 `ui/button.tsx` 一律跳过。
 - `beautifului:button`：beautifului 内部共享的原子件，只在已经引入 beautifului AI 组件的区域里跟着用，不当通用按钮。
 - Pro 条目（`originkit:magnetic-hover-button`、`originkit:neon-glow-button`、`originkit:encrypt-button`、`jakubantalik:transition:get-pro-button`、`uiarc:cancel-flow` 等）：不推荐，只能当灵感，用免费组件做近似效果。
 
 ## 页面模式约束
-- **Operate**：只用主底座按钮。装饰动效为 0；允许的动效只有按下反馈（100–150ms）、加载、成功/失败状态。一屏只有一个 default/primary 按钮，其余用 outline、ghost、secondary。
+- **Operate**：只用主底座按钮。装饰动效为 0；允许的动效只有按下反馈（100–150ms）、加载、成功/失败状态。同一个任务区块（一张表单、一个对话框、一条工具栏）里只有一个 default/primary 按钮，其余用 outline、ghost、secondary；一屏里并列的几个独立任务区块可以各有一个。
 - **Persuade**：首屏主 CTA 可以用一个有表现力的按钮（discover-button、border-beam、metal-fx 三选一），但它算这一屏的"每屏 1 处装饰动效"；如果首屏已经有 WebGL 背景这类主导效果，CTA 用普通按钮。
 - **Read**：用 `link` 或 `ghost` variant，基本不用动效。
 - **Experience**：按钮退后，用 ghost/outline，不要和作品抢注意力。
@@ -45,7 +45,7 @@
 - **token**：shadcn 的 `--accent` 是浅色 hover 底，不是品牌色；品牌色按钮用 default variant（`--primary`）。uiarc 的 primary 是 `--foreground` 底 + `--background` 字（黑底白字），想要彩色主按钮要改 `.primary` 的取值，不要改 `--foreground`。
 - **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **触控目标**：`shadcn:button` 默认高 32px（`h-8`），`lg` 36px，`icon` 32×32，在触屏为主的页面低于 44px 建议值。移动端用 `size="lg"` 并加 `min-h-11`，或给图标按钮加 `after:absolute after:-inset-2` 扩大点击区（shadcn 的 switch、slider 就是这么做的）。uiarc 默认 44px（`--control-height-md`）。
-- **图标按钮**必须有 `aria-label`；图标统一用 lucide。
+- **图标按钮**必须有 `aria-label`；图标沿用项目在用的那一套，项目还没定图标库时用 lucide。
 - **加载态**：shadcn 的写法通常是 `disabled` + spinner，会让键盘焦点掉到 body。表单提交按钮建议改成 `aria-disabled` + 吞点击（uiarc 的做法），并在 `aria-busy` 期间保留文字宽度，避免布局跳动。
 - **减弱动效**：shadcn 按钮只有 `transition-all` 的颜色过渡和 1px 位移，可接受；uiarc 已处理（减弱时标签只做淡入淡出，spinner 停转）。uiarc 按钮在标签变化时会弹簧动画宽度，这是有意的"标签变形"，在长表格的行内按钮上可以关掉（不改 children 的 key 即可）。
 - **常见坑**：shadcn 新版默认 Base UI，按钮包链接用 `render={<a href="…" />}`，不是 Radix 的 `asChild`；网上旧示例 `shadcn:button-as-child` 是 Radix 写法。

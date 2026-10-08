@@ -27,7 +27,7 @@
 ## 慎用
 - `bencho:label-input`：浮动标签（placeholder 上浮成 label）。浮动标签在空输入时把 label 当 placeholder，可读性和对比度常出问题，还要映射 token。Operate 表单默认用常驻 label；Persuade 页的单个邮箱框可以用，先确认上浮后的 label 对比度 ≥ 4.5:1。
 - `bencho:one-time-code`：实现思路好（一个隐藏 input 覆盖六格，`autoComplete="one-time-code"`），但 props 只有 `length`、`answer`（Accept/Reject 演示开关）、`corner`，**没有 `onComplete` 或 value 回调**，接真实校验要改代码；还用了 blur+threshold 的 goo 滤镜。要接真实验证用 `shadcn:input-otp` 或 `reactbits:code-slots`。
-- `reactbits:code-slots`：有 `onComplete`、`status`、`aria-invalid`、`aria-live` 计数，比 bencho 版好接，但依赖 motion + hugeicons（换成 lucide），颜色走 hex props。只在验证码是页面主角（如独立的验证页）时考虑。
+- `reactbits:code-slots`：有 `onComplete`、`status`、`aria-invalid`、`aria-live` 计数，比 bencho 版好接，但依赖 motion + hugeicons（换成项目在用的图标库（项目还没定就用 lucide）），颜色走 hex props。只在验证码是页面主角（如独立的验证页）时考虑。
 - `reactbits:scrub-field`：拖拽调数值，适合设计工具类面板；普通表单用 number-field，未拉源码。
 - `reactbits:stepper`：分步表单的进度指示，未拉源码；Operate 页面优先用主底座组件自己拼步骤条。
 - `librariesdev:border-beam`、`librariesdev:border-beam-pulse-outside`、`librariesdev:voice-glow`：⚠ glow，只在 AI 输入框表达"正在处理/在听"时用，等待不足 2 秒不加（作者规则）；普通表单不用。

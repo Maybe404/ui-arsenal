@@ -22,7 +22,7 @@
 | shadcn | 工具调用状态图标：`reactbits:status-mark`（受控 `status` / `progress`，只依赖 motion） | shadcn 没有现成的工具状态图标件；status-mark 不带底座、颜色走参数，容易映射到 shadcn token |
 | shadcn | `shadcn:questionnaire` | 审批、追问、多选确认。底层是真实 `<input type=radio/checkbox>`，焦点环、`min-h-11` 触控目标都在；比 beautifului 的审批卡更好接真实状态（源码已看） |
 | uiarc | `uiarc:chat-thread` + `uiarc:text-shimmer` | chat-thread 免费，列表 `role="log" aria-live="polite"`，消息有 `sending / sent / delivered / read / failed` 状态和重试，自带输入框（Enter 发送、粘贴附件）。text-shimmer 是看过的流光里实现最好的：`active` 受控，结束时光带滑出、文字变实，减弱动效、离屏、标签页隐藏都会停，设 `aria-busy`。AI 专用的 `ai-chat`、`agent-run`、`ai-composer` 都是 Pro，不推荐 |
-| 没有底座或其他 | `reactbits:thought-line` + `reactbits:status-mark` | 思考过程标题行和工具调用状态图标，都是受控 props（`working`、`elapsed`、`status`、`progress`），有 `useReducedMotion`、`sr-only role="status"`。依赖 motion 和 hugeicons，接入时把图标换成 lucide |
+| 没有底座或其他 | `reactbits:thought-line` + `reactbits:status-mark` | 思考过程标题行和工具调用状态图标，都是受控 props（`working`、`elapsed`、`status`、`progress`），有 `useReducedMotion`、`sr-only role="status"`。依赖 motion 和 hugeicons，接入时把图标换成项目在用的图标库（项目还没定就用 lucide） |
 
 ## 按场景换
 | 场景 | 推荐 | 理由 |
@@ -40,7 +40,7 @@
 ## 慎用
 - `beautifului:stream-text`、`beautifului:streaming-text`：拿到**完整字符串**后用 `setInterval` / `setTimeout` 逐字放出来，是演示用的假流式。更严重的是 stream-text 在 `text` 变化时 `setCount(0)`，真流式下每来一个 token 都会从头重播。要用它的模糊边缘视觉，必须改成"已显示长度 = 已收到长度"。另外它带打字机光标（`typewriter` 风险）。
 - `beautifului:loading-state`：有一个 Surfer 变体会从 Vercel Blob 拉 mp4（地铁跑酷视频），生产环境别用这个变体；计时器是组件内部 `setInterval` 从挂载算起，不等于真实耗时，要显示耗时请传入后端时间。
-- `beautifului:*` 整体：foundation.css 不能整份导入 shadcn 项目（见 `_styles.md` 的 shadcn + beautifului），所有组件都有冰淇淋店演示数据；Central Icons、iconoir 要换成 lucide。
+- `beautifului:*` 整体：foundation.css 不能整份导入 shadcn 项目（见 `_styles.md` 的 shadcn + beautifului），所有组件都有冰淇淋店演示数据；Central Icons、iconoir 要换成项目在用的图标库（项目还没定就用 lucide）。
 - `loadingui:text-shimmer`：效果可以，但没有处理减弱动效（motion 默认不读系统设置，除非外层包 `MotionConfig reducedMotion="user"`），而且每次渲染 `motion.create(Component)` 会重建组件。shadcn 项目直接用 `shimmer` 工具类。
 - `loadingui:pulse-dot`、`loadingui:typing`、`loadingui:dots`：类 ChatGPT 的"正在输入"，可以用，但只在"已发请求、未收到首个 token"这段时间出现，收到第一段内容就撤掉，不要和流式文字同时显示。
 - `shadcn:helpers-ai-sdk`、`shadcn:helpers-tanstack-ai`：假会话 transport，只用于原型和 Storybook，**上线前必须换成真实 transport**，否则就是假状态。
@@ -62,7 +62,7 @@
 - **键盘与输入法**：Enter 发送、Shift+Enter 换行，判断 `event.nativeEvent.isComposing`，中文输入法选词时的 Enter 不能发送。@ / 斜杠菜单用 combobox + listbox 语义，或直接用 `shadcn:command`。
 - **减弱动效**：流光、orb、流式模糊边缘都要在 `prefers-reduced-motion` 下停；文字直接显示。
 - **滚动**：只有读者在底部时才自动跟随（message-scroller 的 `autoScroll`），用户往上翻就不要拉回去，给一个"回到最新"按钮。
-- **混用**：beautifului 进 shadcn 项目只复制 `@theme inline` 映射和用到的 keyframes，`--accent` 映射到 `--primary`；动效库统一用 `motion/react`；图标统一 lucide。
+- **混用**：beautifului 进 shadcn 项目只复制用到的 `@theme inline` 条目和 keyframes，组件代码里的 `accent` 引用改成 `primary`（不要在全局重定义 `--accent`，见 `_styles.md`）；动效库统一用 `motion/react`；图标换成项目在用的图标库（项目还没定就用 lucide）。
 - **最常见的坑**：把演示组件原样上线，结果动画按自己的时间轴跑，和后端真实进度对不上。每接一个组件，先搜源码里的 `setTimeout` / `setInterval` / `STAGES` / `STEP_MS`，确认已全部替换成外部状态。
 
 ## 候选清单

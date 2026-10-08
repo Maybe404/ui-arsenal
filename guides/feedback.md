@@ -29,7 +29,7 @@
 ## 慎用
 - 用 toast 报错并要求用户处理：toast 会自己消失，错误还没被处理信息就没了。需要操作的错误用 alert 放在出错位置附近。
 - toast 自动消失时间太短：含操作按钮的 toast 至少 6–8 秒，并在悬停、聚焦时暂停（sonner 和 uiarc toast-stack 已处理，`uiarc:toast` 没有）。
-- `reactbits:swipe-toast`：依赖 motion 和 `@hugeicons/*`，要换成 lucide（`_styles.md` 混用规则「图标全站一套」）；源码里有 4 处写死颜色，要改成主底座变量。只在移动端为主、需要滑动关闭时用。
+- `reactbits:swipe-toast`：依赖 motion 和 `@hugeicons/*`，要换成项目在用的图标库（项目还没定就用 lucide）（`_styles.md` 混用规则「图标全站一套」）；源码里有 4 处写死颜色，要改成主底座变量。只在移动端为主、需要滑动关闭时用。
 - `reactbits:bell-toggle`：同样依赖 hugeicons；铃铛摇动是装饰动效，Operate 页面不用。
 - `librariesdev:metal-fx-badge`：WebGL 液态金属徽章，只用于落地页的 "New / Beta" 标记，一页一个；状态徽章不用它。
 - `jakubantalik:transition:notification-badge`：描述为"斜向滑入 + 弹簧 pop"，有回弹；Operate 页面的未读数变化用简单的淡入或缩放即可。未拉源码。
