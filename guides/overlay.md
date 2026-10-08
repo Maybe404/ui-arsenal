@@ -43,7 +43,7 @@
 - Experience：作品大图查看可以用全屏 dialog，退出路径（Esc、关闭按钮）必须明显。
 
 ## 接入要点
-- **减弱动效（shadcn）**：dialog、popover 的进出场靠 tw-animate-css 的 `animate-in/out`，sheet 靠 CSS transition；tw-animate-css 1.4.0 源码里没有任何 `prefers-reduced-motion` 规则（已核对）。在全局加一条，或给 Content 加 `motion-reduce:animate-none motion-reduce:transition-none`：
+- **减弱动效（shadcn）**：dialog、popover 的进出场靠 tw-animate-css 的 `animate-in/out`，sheet 靠 CSS transition；tw-animate-css 1.4.0 源码里没有任何 `prefers-reduced-motion` 规则，shadcn 4.21.4 的 `tailwind.css` 也只给 shimmer 加了守卫（2026-10-08 核对，见 `sources/_claims.tsv`）。在全局加一条，或给 Content 加 `motion-reduce:animate-none motion-reduce:transition-none`：
   ```css
   @media (prefers-reduced-motion: reduce) {
     [data-slot$="-content"], [data-slot$="-overlay"], [data-slot$="-popup"] {
@@ -54,10 +54,7 @@
   已核对的 slot 名：`dialog-content/overlay`、`alert-dialog-content/overlay`、`sheet-content/overlay`、`popover-content`、`drawer-content/overlay/popup`。
 - **遮罩**：shadcn dialog 遮罩是 `bg-black/10` + `backdrop-blur-xs`，属于轻度毛玻璃；Operate 页面可以去掉 blur，只留半透明遮罩。
 - **标题必填**：dialog、sheet、drawer 都要有 Title（可 sr-only）和 Description，否则读屏只念出 "dialog"。
-- **uiarc 焦点**：arc-foundation 全局去掉了焦点框，弹层里的按钮和输入框会看不到焦点。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **关闭方式**：Esc、关闭按钮、点遮罩三条都要有；危险确认（alert dialog）不允许点遮罩关闭，默认焦点放在"取消"上。
 - **移动端**：dialog 宽度 `max-w-[calc(100%-2rem)]` 已处理；长内容改用 drawer，避免 dialog 内部滚动套页面滚动。
 - **层级**：toast 要在 dialog 之上，否则确认后的结果提示被遮住。

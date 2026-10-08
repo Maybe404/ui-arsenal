@@ -14,7 +14,7 @@ foundation: own-tokens
 styling: css-modules
 motion_lib: motion
 dark_mode: data-theme
-mixing_notes: arc-foundation.css 在 :root 定义 --background/--foreground/--border/--accent/--surface（与 shadcn 同名不同义）并全局 outline: none !important，和 shadcn 同页会互相覆盖；暗色靠 data-theme 而不是 .dark
+mixing_notes: arc-foundation（registry 文件 registry/foundation.css）在 :root 定义 --background/--foreground/--border/--accent/--surface（与 shadcn 同名不同义），和 shadcn 同页会互相覆盖；它的全局 :focus-visible 描边带 !important，会作用到整页；暗色靠 data-theme 而不是 .dark
 ---
 ## 是什么 / 什么时候用
 Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克制、动效讲究（spring、morph、共享高亮），每个条目都附带机器可读的 when to use / when not / a11y / motion / responsive 说明。适合：需要质感好的基础控件（按钮、输入、菜单、toast、tabs 等）、数据可视化（折线、treemap、heatmap 等）、以及完整页面区块（登录、command palette、hero、FAQ、定价）的 React 项目。因为是 CSS Modules + 自带 token，和 Tailwind 项目并存不冲突，但风格自成体系，混用 shadcn/ui 时注意视觉一致性。Pro 项（大量炫技交互和 SaaS 页面区块）不能获取源码。
@@ -46,7 +46,12 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 依赖：`motion`（125 项）、`lucide-react`（81 项）、少量 `@radix-ui/react-*`（dropdown-menu、dialog、popover、tooltip、tabs、select、checkbox、switch、accordion），shadcn CLI 会自动装。
 
 ## 使用注意
-- **可访问性硬伤（必须处理）**：`arc-foundation.css` 第 179 行对全站写了 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`（注释写着"产品决策"），会让键盘用户看不到焦点。用 uiarc 时要删掉这条，或在项目样式里用更高优先级补回 `:focus-visible` 样式。2026-10-07 核实。
+- **焦点**（各任务指南都引用这里。2026-10-08 核对 `uiarc:arc-foundation`，registry 文件 `registry/foundation.css`，fetch 输出的 sha256 前缀 `164a06f61891430f`；结论登记在 `sources/_claims.tsv`，fetch 时会对照版本提示是否仍成立）：
+  - 键盘焦点由 foundation 统一处理：`:focus-visible` 画描边，颜色 `--focus-outline`（默认 `--accent-strong` 的 72%），宽度和偏移是 `--focus-outline-width`、`--focus-outline-offset`，在 `:root` 或任意元素上覆盖即可，不需要 `!important`。鼠标点击产生的焦点不画。
+  - 有意不画描边的：文本框（input、textarea、contenteditable）靠边框变色（`uiarc:input`、`uiarc:password-field`、`uiarc:search-field`、`uiarc:number-field` 变 `--foreground`，`uiarc:combobox` 变 `--accent`）；菜单项、listbox 选项靠高亮底色（`uiarc:user-menu`、`uiarc:command-palette` 的结果行）；`tabindex="-1"` 的弹层面板只由脚本聚焦。
+  - **旧版本曾对全站写 `outline: none !important`，现在已经没有了**。不要再删 foundation 的焦点规则，也不要补 `html body :focus-visible { … !important }` 这类全局覆盖，否则会和自带描边叠加或打架。`--focus-ring` 仍是 `transparent`，已不是焦点机制（combobox、textarea 的那圈 `--focus-ring` 光圈因此不显示，焦点靠边框表示）。
+  - 只借单个组件、不装 arc-foundation 时（比如 shadcn 底座按 `_styles.md` 做作用域映射），组件模块 CSS 多数没有焦点样式（`uiarc:button` 没有；`uiarc:switch` 还写了 `.switch:focus-visible { outline: none; }`），要在作用域里自己补，例如 `.arc-scope :focus-visible { outline: 2px solid var(--ring) !important; outline-offset: 2px; }`，`!important` 用来盖过组件里的 `outline: none`。
+  - 接入后用键盘把 Tab、方向键走一遍，确认每个可交互元素都看得见焦点；描边被裁切的密集区域（日历格子、表格单元格）在容器上设 `--focus-outline-offset: -2px`。
 - 用 CSS Modules + CSS 变量，不是 Tailwind 类；Tailwind v3/v4 都不冲突。语义 token：`--background --surface --foreground --text-secondary --border --accent --success --warning --danger`。
 - 暗色：`<html data-theme="dark">`；强调色：`data-accent` = neutral/violet/blue/green/amber/orange/coral/rose。不是 `class="dark"`，与 shadcn/next-themes 默认的 class 策略不同，需要同步设置。
 - 动效库是 `motion`（import from `motion/react`），不是 `framer-motion`；项目里已有 framer-motion 也能共存，但别重复装两份。

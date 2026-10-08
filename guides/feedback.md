@@ -51,10 +51,7 @@
 - **颜色与对比度**：成功、警告、错误三种色调的文字在各自底色上都要 ≥ 4.5:1；不要只用颜色区分类型，配图标和文字（"错误："）。
 - **位置**：移动端 toast 放底部并避开底部导航和安全区；桌面放右下或右上，全站一致。
 - **层级**：toast 视口的 z-index 高于 dialog，否则弹层里的操作结果被遮住。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，toast 里的"撤销"、alert 的关闭按钮会看不到焦点。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 
 ## 候选清单
 - `shadcn:sonner` — shadcn 底座默认 toast，减弱动效已处理

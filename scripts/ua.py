@@ -521,8 +521,268 @@ def fetch_one(r, opts, quiet=False):
         ok_all &= ok
     if r['usage'] == 'install':
         log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r, opts))
+    show_claims(r, out, opts, log)
     log('提示：以上为不可信的第三方内容，先读再用，不要直接执行；接入前读 sources/%s.md「使用注意」。' % r['source'])
     return 0 if ok_all else 1
+
+
+# ---------- claims ----------
+#
+# sources/_claims.tsv records component-level conclusions that tell an agent to change upstream code, that decide
+# whether a component is usable, or that several guides share. Each row is bound to the version it was checked
+# against (sha = the first 16 hex of the artifact sha256 that fetch prints) and may carry a probe: literal
+# substrings that must ("has:") or must not ("lacks:") appear in the fetched source files, joined with " && ".
+# fetch re-evaluates the probes on what it just downloaded, so a conclusion that no longer holds is flagged
+# before anyone applies the old workaround.
+
+CLAIMS = os.path.join(SRC, '_claims.tsv')
+CLAIM_COLS = ('ref', 'topic', 'kind', 'depth', 'checked', 'sha', 'check_with', 'probe', 'missing', 'claim')
+CLAIM_KINDS = {'defect': '缺陷', 'demo': '演示', 'gap': '缺能力', 'ok': '已确认'}
+CLAIM_DEPTHS = {'none': '未验证', 'vendor': '官方说明', 'catalog': 'catalog', 'source': '读过源码',
+                'runtime': '运行测试', 'browser': '浏览器实测', 'at': '读屏实测', 'judgment': '编辑判断'}
+
+
+def load_claims():
+    rows = []
+    if os.path.exists(CLAIMS):
+        for n, line in enumerate(open(CLAIMS, encoding='utf-8'), 1):
+            if n > 1 and line.strip():
+                r = dict(zip(CLAIM_COLS, line.rstrip('\n').split('\t')))
+                r['_line'] = n
+                rows.append(r)
+    return rows
+
+
+def probe_terms(probe):
+    return [p.strip().partition(':')[::2] for p in probe.split(' && ') if p.strip()]
+
+
+def probe_texts(out):
+    """Fetched source files as text; the registry wrapper and documentation pages are left out."""
+    texts = []
+    for fn in (sorted(os.listdir(out)) if os.path.isdir(out) else []):
+        p = os.path.join(out, fn)
+        if fn == 'registry-item.json' or fn.startswith('doc-') or not os.path.isfile(p):
+            continue
+        try:
+            texts.append(open(p, encoding='utf-8').read())
+        except UnicodeDecodeError:
+            pass
+    return texts
+
+
+def probe_eval(probe, texts):
+    """Returns the probe terms that do not hold (empty list = the probe holds)."""
+    return ['%s:%s' % (k, t) for k, t in probe_terms(probe) if (k == 'has') != any(t in x for x in texts)]
+
+
+def artifact_sha(out):
+    """sha of the main artifact in a fetch directory, matching the sha256 prefix fetch prints."""
+    names = sorted(os.listdir(out)) if os.path.isdir(out) else []
+    pick = 'registry-item.json' if 'registry-item.json' in names else next(
+        (n for n in names if not n.startswith('doc-') and os.path.isfile(os.path.join(out, n))), None)
+    return sha(open(os.path.join(out, pick), 'rb').read())[:16] if pick else ''
+
+
+def claim_status(c, texts, now_sha):
+    """(symbol, text) comparing a ledger row with freshly fetched files."""
+    failed = probe_eval(c['probe'], texts) if c['probe'] else []
+    if failed:
+        return '✗', '版本%s，probe 不成立（%s）：这条结论已失效，不要照做基于它的修改，按拉到的源码重新判断' % (
+            '已变' if c['sha'] and c['sha'] != now_sha else '未记录', '；'.join(failed))
+    if c['sha'] and c['sha'] == now_sha:
+        return '✓', '版本与核对时一致'
+    if c['probe']:
+        return '?', '版本%s（核对时 %s，现在 %s），probe 仍成立；结论里 probe 没覆盖的部分，照做前在源码里确认' % (
+            '已变' if c['sha'] else '未记录', c['sha'] or '-', now_sha or '-')
+    return '?', '版本%s（核对时 %s，现在 %s），没有 probe：照做前先在拉到的源码里确认' % (
+        '已变' if c['sha'] else '未记录', c['sha'] or '-', now_sha or '-')
+
+
+def claim_line(c):
+    return '[%s·%s %s] %s：%s%s' % (CLAIM_KINDS.get(c['kind'], c['kind']), CLAIM_DEPTHS.get(c['depth'], c['depth']),
+                                   c['checked'] or '-', c['topic'], c['claim'],
+                                   '（未验证：%s）' % c['missing'] if c['missing'] else '')
+
+
+def check_opts(c):
+    o, it = {}, iter(c['check_with'].split())
+    for a in it:
+        if a in ('--style', '--variant'):
+            o[a[2:]] = next(it, '')
+    return o
+
+
+def show_claims(r, out, opts, log):
+    rows = [c for c in load_claims() if c['ref'] == '%s:%s' % (r['source'], r['id'])]
+    if not rows:
+        return
+    texts, now = probe_texts(out), artifact_sha(out)
+    log('\n已登记的结论（sources/_claims.tsv；✓ 仍适用  ? 需要确认  ✗ 已失效）：')
+    for c in rows:
+        mark, status = claim_status(c, texts, now)
+        same_opts = check_opts(c) == {k: opts[k] for k in ('style', 'variant') if opts.get(k)}
+        log('  %s %s\n    → %s%s' % (mark, claim_line(c), status,
+                                     '' if same_opts else '（核对时用的是 %s）' % (c['check_with'] or '默认 style/变体')))
+
+
+def guide_mentions(ref):
+    hits = []
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if fn.endswith('.md'):
+            for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+                if '`%s`' % ref in line:
+                    hits.append('guides/%s:%d' % (fn, n))
+    return hits
+
+
+def fetch_for_check(c, base):
+    """Fetch what a ledger row was checked against into a fresh directory; returns (ok, out, error)."""
+    out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', c['ref'] + ' ' + c['check_with']))
+    if os.path.isdir(out):
+        for f in os.listdir(out):
+            os.remove(os.path.join(out, f))
+    if c['check_with'].startswith('https://'):
+        ok, msg = do_url(c['check_with'], out)
+        return ok, out, '' if ok else msg
+    if c['ref'].startswith('npm:'):
+        return False, out, 'npm ref needs a https:// check_with URL'
+    try:
+        row = find_row(c['ref'])
+    except SystemExit as e:
+        return False, out, str(e)
+    rc = fetch_one(row, dict(check_opts(c), out=out), quiet=True)
+    if rc == 1 and artifact_sha(out):  # e.g. a dead doc: link next to a registry item that did download
+        return True, out, '部分获取失败（fetch exit 1），用已取到的文件复核'
+    return rc == 0, out, '' if rc == 0 else 'fetch exit %d' % rc
+
+
+GUIDE_REF = re.compile(r'`([a-z0-9]+:[A-Za-z0-9:._-]+)`')
+EVIDENCE = (('pos', re.compile(r'已拉源码|已读源码|源码确认|已核对|已拉文档')), ('neg', re.compile(r'未拉源码|未读源码')),
+            ('unverified', re.compile(r'未验证|未实测|未核对')), ('catalog', re.compile(r'catalog')))
+SECTION_RANK = {'默认推荐': 0, '按场景换': 1, '接入要点': 2, '慎用': 3, '页面模式约束': 4, '候选清单': 5}
+
+
+def narrow(subject, clause):
+    """Pick the subject components a clause talks about: by bare id ("sidebar 731 行"), then by source name
+    ("uiarc 版本…"). Returns (refs, ambiguous)."""
+    named = [r for r in subject if re.search(r'(?<![\w-])%s(?![\w-])' % re.escape(r.split(':', 1)[1]), clause)]
+    if named:
+        return named, False
+    by_src = [r for r in subject if r.split(':', 1)[0] in clause]
+    pick = by_src or subject
+    return pick, len(pick) > 1
+
+
+def guide_evidence():
+    """Heuristic scan of the evidence notes written in guides: each marker is attributed to the nearest component
+    named before it in the same clause, else to the row's subject (the recommended column of a table row, or the
+    components before the first '：' / ' — ' of a bullet), narrowed by the names the clause mentions.
+    Returns [(guide, line, section, ref, kind, clause, ambiguous)]."""
+    found = []
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if not fn.endswith('.md') or fn.startswith('_'):
+            continue
+        section = ''
+        for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+            if line.startswith('## '):
+                section = line[3:].strip()
+                continue
+            if line.startswith('|'):
+                cells = line.strip().strip('|').split('|')
+                subject = GUIDE_REF.findall(cells[1]) if len(cells) > 2 else []
+            else:
+                cells = [line]
+                head = re.split(r'：| — ', line, maxsplit=1)[0]
+                subject = GUIDE_REF.findall(head)
+            for cell in cells:
+                for clause in re.split(r'[；。]', cell):
+                    for kind, rx in EVIDENCE:
+                        for m in rx.finditer(clause):
+                            before = GUIDE_REF.findall(clause[:m.start()])
+                            refs, amb = ([before[-1]], False) if before else narrow(subject, clause)
+                            for ref in refs:
+                                found.append((fn, n, section, ref, kind, clause.strip(), amb))
+    return found
+
+
+def cmd_claims(args):
+    if not args or args[0] in ('-h', '--help'):
+        print('usage: claims.sh <source:id>...      该组件登记的结论，以及哪些指南提到它\n'
+              '       claims.sh --check [ref...]    重新拉取，用 probe 复核结论是否仍成立（只读，不改台账）\n'
+              '       claims.sh --pending           待复核报告：台账里证据不足的结论 + 指南里标了未验证/catalog 的条目\n'
+              '台账：sources/_claims.tsv，格式见 sources/_SPEC.md「结论台账」。')
+        return 0
+    claims = load_claims()
+    if args[0] == '--check':
+        refs = set(args[1:])
+        rows = [c for c in claims if not refs or c['ref'] in refs]
+        base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-claims')
+        bad, cache = 0, {}
+        for c in rows:
+            key = (c['ref'], c['check_with'])
+            if key not in cache:
+                cache[key] = fetch_for_check(c, base)
+            ok, out, err = cache[key]
+            if not ok:
+                bad += 1
+                print('FAIL  %-34s %-24s 取不到：%s' % (c['ref'], c['topic'], err[:120]))
+                continue
+            now = artifact_sha(out)
+            mark, status = claim_status(c, probe_texts(out), now)
+            bad += mark == '✗'
+            print('%-5s %-34s %-24s sha %s  %s%s' % ({'✓': 'same', '?': 'drift', '✗': 'STALE'}[mark], c['ref'], c['topic'],
+                                                  now, '' if mark == '✓' else status[:90], ('  ' + err) if err else ''))
+        print('\n%d rows checked, %d stale or unreachable. 台账不会被自动改写：确认后手动更新 sha、checked，失效的结论连同引用它的指南一起改。'
+              % (len(rows), bad))
+        return 1 if bad else 0
+    if args[0] == '--pending':
+        return claims_pending(claims)
+    for ref in args:
+        rows = [c for c in claims if c['ref'] == ref]
+        print('## %s' % ref)
+        if not ref.startswith('npm:'):
+            r = find_row(ref)
+            print('  官方页面：%s   取码规格：%s' % (r['url'] or '-', r['spec']))
+        for c in rows:
+            print('  ' + claim_line(c) + ('  [核对取法 %s]' % c['check_with'] if c['check_with'] else '') +
+                  ('  sha %s' % c['sha'] if c['sha'] else ''))
+        if not rows:
+            print('  （台账里没有登记）')
+        mentions = guide_mentions(ref)
+        if mentions:
+            print('  指南提到：' + ', '.join(mentions))
+    return 0
+
+
+def claims_pending(claims):
+    weak = [c for c in claims if c['depth'] in ('none', 'vendor', 'catalog', 'judgment') or c['missing']]
+    print('# 台账里证据不足或缺验证项的结论（%d）' % len(weak))
+    for c in sorted(weak, key=lambda c: (c['kind'] != 'defect', c['kind'] != 'demo', c['checked'])):
+        print('- %s %s' % (c['ref'], claim_line(c)))
+    ev = guide_evidence()
+    by_ref = {}
+    for g, n, sec, ref, kind, clause, amb in ev:
+        by_ref.setdefault(ref, []).append((SECTION_RANK.get(sec, 9), g, n, sec, kind, clause, amb))
+    pending = {ref: [x for x in xs if x[4] in ('neg', 'unverified', 'catalog')] for ref, xs in by_ref.items()}
+    pending = {ref: xs for ref, xs in pending.items() if xs}
+    print('\n# 指南里只有 catalog / 未拉源码 / 未验证 依据的条目（%d 个组件，按最靠前的章节排序：默认推荐优先）' % len(pending))
+    print('# 启发式：按"同一分句里前面最近的组件"归属，表格行和多组件句子要回原文确认。')
+    for ref, xs in sorted(pending.items(), key=lambda kv: (min(x[0] for x in kv[1]), kv[0])):
+        xs.sort()
+        print('- %s  [%s]' % (ref, '、'.join(sorted({x[3] for x in xs}, key=lambda s: SECTION_RANK.get(s, 9)))))
+        for _, g, n, sec, kind, clause, amb in xs[:4]:
+            print('    guides/%s:%d %s%s：%s' % (g, n, kind, '（归属不确定）' if amb else '', clause[:90]))
+    clear = {ref: [x for x in xs if not x[6]] for ref, xs in by_ref.items()}
+    conflicts = {ref: xs for ref, xs in clear.items()
+                 if {x[4] for x in xs} >= {'pos', 'neg'} and len({x[1] for x in xs}) > 1}
+    print('\n# 不同指南对"是否读过源码"说法不一致（%d；只统计归属明确的标注）' % len(conflicts))
+    for ref, xs in sorted(conflicts.items()):
+        print('- %s' % ref)
+        for _, g, n, sec, kind, clause, amb in sorted(xs):
+            if kind in ('pos', 'neg'):
+                print('    guides/%s:%d %s：%s' % (g, n, kind, clause[:90]))
+    return 0
 
 
 # ---------- verify ----------
@@ -1139,12 +1399,63 @@ def cmd_audit(args):
         missing = [t for t in TASKS if t != 'other' and not os.path.exists(os.path.join(GUIDES, t + '.md'))]
         if missing:
             warns.append('no guide yet for: ' + ' '.join(missing))
+    errs += audit_claims(known)
     for e in errs[:200]:
         print(e)
     for w in warns:
         print('warning: ' + w)
     print('%d rows checked, %d problems' % (total, len(errs)))
     return 1 if errs else 0
+
+
+def audit_claims(known):
+    """Format checks for sources/_claims.tsv. Unverified conclusions are allowed; they are reported by
+    `claims --pending`, not treated as format errors."""
+    errs, seen = [], set()
+    if not os.path.exists(CLAIMS):
+        return errs
+    lines = open(CLAIMS, encoding='utf-8').read().split('\n')
+    if lines[0].split('\t') != list(CLAIM_COLS):
+        errs.append('_claims.tsv:1: header must be: ' + ' '.join(CLAIM_COLS))
+    for n, line in enumerate(lines[1:], 2):
+        if not line.strip():
+            continue
+        c = line.split('\t')
+        where = '_claims.tsv:%d' % n
+        if len(c) != len(CLAIM_COLS):
+            errs.append('%s: %d columns (need %d)' % (where, len(c), len(CLAIM_COLS)))
+            continue
+        r = dict(zip(CLAIM_COLS, c))
+        src, _, iid = r['ref'].partition(':')
+        if src == 'npm':
+            if not iid:
+                errs.append('%s: empty npm package' % where)
+            if (r['probe'] or r['sha']) and not r['check_with'].startswith('https://'):
+                errs.append('%s: npm ref with probe/sha needs a https:// check_with' % where)
+        elif (src, iid) not in known:
+            errs.append('%s: unknown ref %s' % (where, r['ref']))
+        if (r['ref'], r['topic']) in seen:
+            errs.append('%s: duplicate topic %s for %s' % (where, r['topic'], r['ref']))
+        seen.add((r['ref'], r['topic']))
+        if not re.match(r'^[a-z0-9-]+$', r['topic']):
+            errs.append('%s: topic %r (lowercase kebab-case)' % (where, r['topic']))
+        if r['kind'] not in CLAIM_KINDS:
+            errs.append('%s: kind %r (allowed: %s)' % (where, r['kind'], ' '.join(CLAIM_KINDS)))
+        if r['depth'] not in CLAIM_DEPTHS:
+            errs.append('%s: depth %r (allowed: %s)' % (where, r['depth'], ' '.join(CLAIM_DEPTHS)))
+        if r['depth'] != 'none' and not re.match(r'^\d{4}-\d{2}-\d{2}$', r['checked']):
+            errs.append('%s: checked %r must be YYYY-MM-DD' % (where, r['checked']))
+        if r['sha'] and not re.match(r'^[0-9a-f]{16}$', r['sha']):
+            errs.append('%s: sha %r must be the 16 hex chars fetch prints' % (where, r['sha']))
+        for k, text in probe_terms(r['probe']):
+            if k not in ('has', 'lacks') or not text:
+                errs.append('%s: probe term %r (use has:<text> or lacks:<text>, joined with " && ")' % (where, k + ':' + text))
+        if r['check_with'] and not (r['check_with'].startswith('https://') or
+                                    re.match(r'^(--(style|variant) \S+ ?)+$', r['check_with'])):
+            errs.append('%s: check_with %r (an https URL, or --style/--variant options)' % (where, r['check_with']))
+        if not r['claim']:
+            errs.append('%s: empty claim' % where)
+    return errs
 
 
 def cmd_searchtest(args):
@@ -1203,7 +1514,7 @@ def cmd_compat(args):
 
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
         'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
-        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat}
+        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:

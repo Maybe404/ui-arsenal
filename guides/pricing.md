@@ -39,10 +39,7 @@
 - **数字**：价格用 `tabular-nums`，切换时宽度不跳。
 - **对比表**：功能对比用真正的 `<table>`，"包含 / 不包含"用图标 + 文字（或 sr-only 文字），不只靠勾和叉的颜色。
 - **移动端**：三档卡片在窄屏纵向排列时把推荐档放第一；功能对比表在窄屏改成按套餐分组的列表，或第一列 sticky 横向滚动。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，billing-toggle 和 radio-cards 的键盘位置会看不到。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **按钮文案**：每档按钮写清动作（"开始 14 天试用"、"联系销售"），不要三个都叫"选择"。
 
 ## 候选清单

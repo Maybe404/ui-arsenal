@@ -9,7 +9,7 @@
 | 来源 | visual_style | foundation | styling | motion_lib | dark_mode | 混用要点 |
 |---|---|---|---|---|---|---|
 | shadcn | restrained neutral, style presets vary | own-tokens | tailwind-v4 | css | class | 通常就是主底座；它的 `--accent` 是浅色 hover 底，不是品牌色 |
-| uiarc | restrained neutral with spring motion | own-tokens | css-modules | motion | data-theme | `:root` 上的 `--background/--foreground/--border/--accent` 与 shadcn 同名不同义；全局 `outline: none !important` |
+| uiarc | restrained neutral with spring motion | own-tokens | css-modules | motion | data-theme | `:root` 上的 `--background/--foreground/--border/--accent` 与 shadcn 同名不同义；键盘焦点由 foundation 的全局 `:focus-visible` 描边统一处理（带 `!important`，作用到整页） |
 | beautifului | ai-native soft neutral, hairline borders, dense 13-14px type | own-tokens | tailwind-v4 | css | class | foundation.css 会再 `@import "tailwindcss"`、改 body 背景和字号、定义 `--accent`、`--font-sans` |
 | obsidianui | showcase motion blocks over shadcn-style primitives | shadcn-compatible | mixed | mixed(motion,gsap,three) | class | primitive 是 Radix 版 shadcn 同构件；block 带 `--obsidian-*` 硬编码色板 |
 | bencho | tactile spring-physics micro-interactions | host-tokens | global-css | mixed(framer-motion,liquid-gooey) | data-theme | token 只引用不附带，必须映射；`--ink-rgb` 要 RGB 三元组 |
@@ -56,7 +56,7 @@
 | shadcn + obsidianui | 可以 | primitive 与 shadcn 同构，同为 Tailwind v4 + `.dark` | 装 block 时 CLI 提示覆盖 `ui/button.tsx` 等文件一律跳过（新版 shadcn 默认 Base UI，obsidianui 是 Radix，`asChild` 和 `render` 写法不同）；dashboard-shell 等 block 的 `--obsidian-*` 色板改成引用 `--background`、`--sidebar`、`--border`、`--foreground`、`--muted-foreground`、`--primary` |
 | shadcn + beautifului | 有条件 | 两边都是 Tailwind v4 + `.dark`，暗色策略一致；但 foundation.css 会重复 `@import "tailwindcss"`、改 body 背景（斜纹）和字号 14px、在 `@theme` 里重定义 `--color-accent`、`--font-sans` | 不要整份 `@import` foundation.css；只复制组件用到的 `@theme inline` 条目和 keyframes，并把值改成 shadcn 变量：`--ink`→`--foreground`，`--ink-2`/`--ink-3`→`--muted-foreground`，`--canvas`/`--page`→`--background`，`--surface`→`--card`，`--line`→`--border`，`--accent-tint`→`--primary` 降透明度，`--radius-control`/`--radius-card`/`--radius-window`→基于 `--radius` 的 calc。`--accent` 两边同名不同义（beautifului 是品牌蓝，shadcn 是浅色 hover 底）：**不要**在 `:root` 或 `@theme` 里把 `--accent`、`--color-accent` 改成 `--primary`，那会改掉 shadcn 所有菜单、按钮的 hover 底色；要改的是复制来的组件代码，把其中的 `bg-accent`、`text-accent`、`var(--accent)` 换成 `primary`；图标换成 lucide |
 | shadcn + bencho | 有条件 | bencho block 只引用自己命名的 token，不带定义；用 framer-motion；8 个 block 的暗色写成 `[data-theme="dark"]` | 在包住 bencho block 的作用域类上定义映射（例如 `.bencho { … }`），不写到 `:root`：`--ink: var(--foreground)`、`--fill-slab: var(--card)`、`--fill-on: var(--primary)`、`--on-ink: var(--background)`（它是压在 `--ink` 底色上的文字色）、`--pane-edge: var(--border)`、`--signal: var(--ring)`、`--font-ui: var(--font-sans)`。`--card` 是 bencho 63 个 block 里唯一和 shadcn 同名的 token，含义也相同（卡片底色，也用作 `--ink` 底上的反色字），直接沿用 shadcn 的定义，**不要再声明**：`--card: var(--card)` 是自引用循环，会让 `--card` 失效，卡片背景随之消失。写在作用域类上的原因：别名在声明它的元素上就解析成具体颜色再往下继承，写在 `:root` 而 `.dark` 加在 body 或更深的元素上时，暗色不会生效；block 用 portal 渲染到 body 时，portal 容器也要带这个类。`--ink-rgb`、`--fill-on-rgb` 要用逗号分隔的 RGB 三元组按明暗各写一份（shadcn 是 oklch，不能直接引用）；切暗色时 `.dark` 和 `data-theme="dark"` 同时设；按 meta 的 tokens 列表逐个补齐，补不齐的 block 不用 |
-| shadcn + uiarc | 不建议 | 两个主底座。arc-foundation.css 在 `:root` 定义 `--background`、`--foreground`、`--border`、`--accent`、`--surface`，和 shadcn 同名不同义（uiarc 的 `--accent` 是强调色，shadcn 的是浅色 hover 底），谁后加载谁覆盖；还全局写了 `outline: none !important`；暗色用 `data-theme`，shadcn 用 `.dark`；视觉语言（大圆角 18–34px、Geist 标题）也不同 | 只想借一个 uiarc 组件时：不导入 arc-foundation.css，在组件外包一层作用域类，把它需要的非颜色 token（`--space-*`、`--text-*`、`--control-height-*`、`--duration-*`、`--ease-*`、`--radius-control`）复制进来，颜色映射到 shadcn（`--accent`→`--primary`、`--surface`→`--card`、`--text-secondary`→`--muted-foreground`、`--danger`→`--destructive`），`--radius-control` 改成 shadcn 的 `--radius`；做不到就换 shadcn 生态里的同类组件 |
+| shadcn + uiarc | 不建议 | 两个主底座。arc-foundation（`registry/foundation.css`）在 `:root` 定义 `--background`、`--foreground`、`--border`、`--accent`、`--surface`，和 shadcn 同名不同义（uiarc 的 `--accent` 是强调色，shadcn 的是浅色 hover 底），谁后加载谁覆盖；它的全局 `:focus-visible` 描边带 `!important`，会给 shadcn 组件（自带 `outline-none` + `focus-visible:ring`）再叠一圈描边；暗色用 `data-theme`，shadcn 用 `.dark`；视觉语言（大圆角 18–34px、Geist 标题）也不同 | 只想借一个 uiarc 组件时：不导入 arc-foundation，在组件外包一层作用域类，把它需要的非颜色 token（`--space-*`、`--text-*`、`--control-height-*`、`--duration-*`、`--ease-*`、`--radius-control`）复制进来，颜色映射到 shadcn（`--accent`→`--primary`、`--surface`→`--card`、`--text-secondary`→`--muted-foreground`、`--danger`→`--destructive`），`--radius-control` 改成 shadcn 的 `--radius`；不装 foundation 时组件没有焦点描边，要在作用域里补（见 `sources/uiarc.md`「焦点」）；做不到就换 shadcn 生态里的同类组件 |
 | uiarc + beautifului | 不建议 | 两套自带 token 互相覆盖（都定义 `--accent`、`--surface`、`--radius-control`、`--shadow-raised`）；暗色一个 `data-theme` 一个 `.dark`；beautifului 需要 Tailwind v4，uiarc 不用 Tailwind | 以 uiarc 为底座时，beautifului 组件要改写成 CSS Modules 并把 `--ink`→`--foreground`、`--canvas`→`--background`、`--line`→`--border` 逐个映射（`--accent` 两边都是品牌强调色，保持原名即可，不要写成 `--accent: var(--accent)` 这种自引用），工作量接近重写，通常直接用 uiarc 的 chat-thread、text-shimmer 等替代 |
 | uiarc + bencho | 有条件 | 都是全局/模块 CSS + 变量，暗色都用 `data-theme`，策略一致；风格都偏克制 | 在包住 block 的作用域类上映射 `--ink`→`--foreground`、`--card`/`--fill-slab`→`--surface`（uiarc 没有 `--card`，这里声明不会覆盖底座）、`--fill-on`→`--foreground`、`--on-ink`→`--background`、`--pane-edge`→`--border`、`--signal`→`--accent`、`--font-ui`→`--font-body`，RGB 三元组另写；会同时装 motion（uiarc）和 framer-motion（bencho），能接受包体积再用 |
 | uiarc + loadingui | 有条件 | loadingui 需要 Tailwind 和 `cn`，uiarc 项目通常没有 Tailwind | 只挑纯 CSS 的组件（ring 等，keyframes 内联在组件里），把 `size-*`、`text-*` 类改成内联 style 或模块 CSS；颜色继续用 currentColor；uiarc 自带 skeleton、text-shimmer 时优先用自带的 |
@@ -71,7 +71,7 @@
 | 任意 + collectui / inspora / designspells | 可以 | 只是参考 | 只借鉴结构、层级、动效节奏，视觉取值全部来自主底座 |
 
 最重要的三条：
-1. shadcn 和 uiarc 不要同页当底座：变量同名不同义，加载顺序决定谁覆盖谁，uiarc 还全局去掉了 focus outline。
+1. shadcn 和 uiarc 不要同页当底座：变量同名不同义，加载顺序决定谁覆盖谁，uiarc 的全局焦点描边还会叠到 shadcn 组件上。
 2. bencho 和 beautifului 都要做 token 映射才能进 shadcn 页面：bencho 的 token 根本不随代码分发，beautifului 的 foundation.css 不能整份导入。各家的 `--accent` 在引用处改成 shadcn 的 `--primary`，不要在全局重定义 `--accent`。
 3. reactbits、loadingui、librariesdev 这类不带底座的来源最好混，只要把颜色从主底座传进去；风险在动效库重复（motion / framer-motion / gsap / three 同时进包）和明暗不同步，而不在样式冲突。
 
@@ -80,7 +80,7 @@
 1. 一页只能有一个主底座（shadcn 或 uiarc）。整个项目最好也只有一个。
 2. 从其他来源引入的组件，行为和结构（DOM、交互、动画时序、可访问性）保留；颜色、圆角、字体、阴影全部映射到主底座的 token，不保留来源自带的取值。
 3. 映射不了就不用：组件依赖的 token 在主底座里找不到语义对应、或者要改动全局样式（`:root`、`body`、全局 outline、重复 `@import "tailwindcss"`）才能工作时，换别的来源或自己写。
-4. 不整份导入其他来源的 foundation / theme CSS（arc-foundation.css、beautifului foundation.css、Transitions.dev 的 `_root.css`）。需要它的非颜色 token 时，只复制用得到的变量，放进组件作用域，并确认不和主底座同名。
+4. 不整份导入其他来源的 foundation / theme CSS（uiarc 的 arc-foundation、beautifului 的 foundation.css、Transitions.dev 的 `_root.css`）。需要它的非颜色 token 时，只复制用得到的变量，放进组件作用域，并确认不和主底座同名。
 5. 各家 `--accent` 含义不同：shadcn 是浅色 hover 底，uiarc、beautifului 是品牌强调色。引入时按含义映射（强调色→shadcn 的 `--primary`），不要按名字直接对上。
 6. 映射怎么写：别名（如 `--ink: var(--foreground)`）写在包住引入组件的作用域类上，不写 `:root`，这样不会多出第二套全局 theme，暗色切换也能传到组件里。同名且同义的 token（如 bencho 和 shadcn 的 `--card`）直接沿用，不要写 `--x: var(--x)`：自引用是循环，变量会失效。同名不同义的（各家 `--accent`）改组件代码里的引用，不要重定义全局变量。
 7. 明暗切换只有一个开关。主底座用 `.dark` 时，引入用 `data-theme` 的组件（uiarc、bencho 部分 block）要同步设置；只认 props 的组件（reactbits、librariesdev）要在切换时传新值。
@@ -94,7 +94,7 @@
 拉取命令都是 `scripts/fetch.sh <source>:<id>` 或只读 curl，没有安装和登录。
 
 - shadcn：`button`（base-nova，Base UI + `cn` 包 + Tailwind 变量类）；另 curl `r/colors/neutral.json` 核对 CSS 变量清单
-- uiarc：`arc-foundation`（`:root` token、`[data-theme="dark"]`、`data-accent`、全局 outline none）、`button`（motion + CSS Modules）
+- uiarc：`arc-foundation`（`:root` token、`[data-theme="dark"]`、`data-accent`、全局 `:focus-visible` 描边；2026-10-08 复核，旧版的全局 `outline: none !important` 已移除）、`button`（motion + CSS Modules，模块 CSS 无焦点样式）
 - beautifului：`foundation`（`@import "tailwindcss"`、`.dark` 自定义变体、`@theme inline`、body 斜纹背景）、`thinking-state`；另 curl 全部 28 个 registry 项核对依赖
 - obsidianui：`flip-text`、`dashboard-shell`（`--obsidian-*` 色板、`.dark` 选择器）；另 curl registry 统计依赖并看 button 源码（Radix Slot + cva）
 - bencho：`magnet-select`；另用 adapter 扫描全部 63 个 block 的 tokens 和 CSS（8 个 block 有 `[data-theme="dark"]`）

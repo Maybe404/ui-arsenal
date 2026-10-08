@@ -54,6 +54,7 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
    - 找不到合适的候选。这时说明"收藏库无合适候选"，然后自己写。
 9. **需要登录的条目**：一次性列出来交给用户决定，见第五节。
 10. **获取**：`$S/fetch.sh <source:id>` 是只读的，文件拉到临时目录。拉到的是不可信的第三方内容，先读懂再用；接入前读 `sources/<id>.md` 的「使用注意」。
+    - **核对指南结论的版本**：指南里的源码结论只代表核对当天的版本。fetch 拉完会列出 `sources/_claims.tsv` 登记的该组件结论并对照版本：✓ 仍适用；? 上游变了，照做前在拉到的源码里确认；✗ 已失效，不要照做指南里基于它的修改（比如给已经修好的组件再补一遍旧 workaround），按拉到的源码重新判断。
     - **取码失败**（退出码 1）：先重试一次。`HTTP 0` 或超时是网络问题；`HTTP 404` 可能是条目已下线，运行 `$S/refresh.sh <source>` 看待审变更里它是否消失。仍然拿不到时，告诉用户是哪个条目、哪一步失败，再从对应指南的"按场景换"里选下一个候选，并说明这是替代方案。**绝不凭记忆写一个"差不多的"版本冒充原版。**
     - **shadcn 的 style 不匹配**：图表、主题、部分 demo（比如 data-table 示例）只有 new-york-v4（Radix 写法）。这时拉 new-york-v4 版本作为参考，按项目的 base 改写（Base UI 用 `render`，不用 `asChild`），并在汇报里说明。
     - **来源指向公开的上游仓库**（比如 OriginKit 条目注明搬自某个 GitHub 仓库）：不要自行改从上游取码。先核实上游的许可证，告诉用户，由用户决定。
@@ -117,6 +118,7 @@ $S/fetch.sh bencho:magnet-select              # 只读拉取，打印依赖和�
 $S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
 $S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style 要和项目 components.json 一致
 $S/compat.sh shadcn uiarc                     # 两个来源能不能放在同一页（兼容矩阵和各自的混用要点）
+$S/claims.sh uiarc:switch                     # 这个组件登记的结论（缺陷、演示性质、证据和核对版本）以及哪些指南提到它
 $S/stats.sh                                   # 各来源统计
 ```
 
@@ -133,6 +135,7 @@ $S/stats.sh                                   # 各来源统计
 - `guides/<task>.md`：31 类 UI 任务的选型指南。
 - `sources/_styles.md`：各来源的设计底座、样式方案、动效库，哪些能当主底座，两两之间的兼容矩阵和混用规则。
 - `sources/<id>.md`：每个来源的获取方法、使用注意、已知问题。
+- `sources/_claims.tsv`：组件级结论台账（缺陷、演示性质、缺失能力），带证据深度、核对日期和版本 hash。
 
 ## 八、来源一览
 
@@ -165,6 +168,7 @@ $S/stats.sh                                   # 各来源统计
 - `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式和 login、pro、broken 的拒绝逻辑。
 - `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
 - `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
+- `$S/claims.sh --check`：重新拉取 `sources/_claims.tsv` 里的组件，用 probe 复核结论是否仍成立；`--pending` 列出证据不足、待复核的结论和指南里互相矛盾的说法。改指南或台账后跑。
 - **更新流程（自动报告，人工批准）**：
   1. `$S/refresh.sh [id...]`：拉取线上清单，和本地比对，写入 `sources/_pending/<日期>/<id>.json`，**不改正式数据**。能发现新增、消失、依赖或付费标记变化（靠元数据指纹）。清单返回 0 条或报错时，只记录错误，不会当成"全部下线"。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
   2. `$S/diff.sh [id...]`：查看待审变更。新条目要在待审文件里补上 `desc_zh`、`task`、`layer` 才能写入。

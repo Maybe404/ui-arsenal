@@ -16,7 +16,7 @@
 | 设置页里一行一个开关 | `shadcn:switch` + `shadcn:field`（`orientation="horizontal"`，参考 `shadcn:field-switch`）；uiarc 用 `uiarc:switch` | 整行 label 可点击，焦点样式在 field label 上统一处理 |
 | 选项要带描述或价格（套餐、配送方式） | `uiarc:radio-cards`；shadcn 用 `shadcn:radio-group` + `shadcn:field` 的 choice card 写法（参考 `shadcn:field-radio`） | radio-cards 是 `role="radiogroup"`，选中用 ring + 圆点表示，不只靠颜色，不可用选项有可见原因（catalog） |
 | 2–5 个视图切换（日/周/月、列表/网格） | `shadcn:toggle-group`（`type="single"`）；uiarc 用 `uiarc:segmented-control` | 切换的是视图而不是内容面板；切内容面板用 tabs |
-| 定价页月付/年付切换 | `uiarc:billing-toggle`；shadcn 用 `shadcn:toggle-group` | 未拉 billing-toggle 源码，用前 fetch 确认键盘 |
+| 定价页月付/年付切换 | `uiarc:billing-toggle`；shadcn 用 `shadcn:toggle-group` | 已拉源码（2026-10-08）：`role="radiogroup"` + `role="radio"`、`aria-checked`，roving tabindex，方向键切换，有减弱动效分支；详见 `pricing.md` |
 | 亮/暗主题切换 | `uiarc:theme-switch-rise`（产品界面）；shadcn 用 `shadcn:mode-toggle` 示例 | uiarc catalog 自己建议安静的产品界面用 rise、展示页才用 eclipse；按钮带 `aria-pressed` 和"Switch to dark mode"标签 |
 | 价格、日期等双端区间 | `shadcn:slider`（`defaultValue` 传两个值）；uiarc 用 `uiarc:slider` | 两个滑块各自可聚焦；uiarc 版支持刻度和格式化读数 |
 | 前后对比图 | `bencho:image-compare` 或 `originkit:compare-slider`（**需登录**） | 都未拉源码；用前 fetch 确认滑块有 `role="slider"` 和键盘方向键，做不到就用 `shadcn:slider` 控制裁剪宽度自己拼 |
@@ -41,12 +41,8 @@
 ## 接入要点
 - **语义**：switch = 立即生效；checkbox = 随表单提交；radio = 互斥且选项可见；toggle-group single = 视图模式。每个控件都要有可见 label（或 `aria-label`），点击 label 能切换。
 - **触控目标**：shadcn 的小尺寸控件靠 `after:` 伪元素扩大点击区，自己改样式时别删掉这些类；`size="sm"` 的 switch 只有 14×24，触屏页面不要用。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，把 `--focus-ring` 从 `transparent` 改成可见色，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, input, [role="switch"], [role="checkbox"], [role="radio"], [role="slider"], [tabindex]):focus-visible { outline: 2px solid var(--foreground) !important; outline-offset: 2px; }
-  ```
-  uiarc:switch 的模块 CSS 自己写了 `.switch:focus-visible { outline: none; }`，所以这里的 `!important` 不能省。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  `uiarc:switch` 的模块 CSS 写了 `.switch:focus-visible { outline: none; }`：装了 foundation 时会被它带 `!important` 的描边盖过，焦点可见；不装 foundation 时它没有任何焦点样式，必须自己补。
 - **token**：shadcn switch 开启色 `--primary`、关闭色 `--input`；slider 轨道 `--muted`、已选段 `--primary`、滑块边框 `--ring`、滑块底色写死 `bg-white`（暗色主题下仍是白色，需要时改成 `bg-background`）。
 - **减弱动效**：shadcn 的过渡只有颜色和 transform，时长很短；uiarc 和 reactbits 的弹簧都有 `useReducedMotion` 分支。自写回弹、拉伸动画必须加减弱分支。
 - **常见坑**：slider 的值要有文字读数（`aria-valuetext` 或旁边的数字），不能只靠滑块位置；区间滑块两个 thumb 都要有名字（"最低价""最高价"）；暗色主题下检查 switch 关闭态和背景的对比度（非文字元素至少 3:1）。
@@ -58,7 +54,7 @@
 - `shadcn:toggle-group` — 分段控件、工具栏按下态
 - `shadcn:toggle` — 单个按下态按钮（加粗、静音）
 - `shadcn:slider` — 单值或区间滑块
-- `uiarc:switch` — uiarc 开关（补焦点后用）
+- `uiarc:switch` — uiarc 开关
 - `uiarc:checkbox` — uiarc 勾选，支持 indeterminate
 - `uiarc:radio-group` — uiarc 单选
 - `uiarc:segmented-control` — 视图切换

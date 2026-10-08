@@ -40,12 +40,8 @@
 - **时区和存储**：存 ISO 字符串（日期 `YYYY-MM-DD`，时间 `HH:mm`，时间点存 UTC），显示时再按用户时区和 locale 格式化。uiarc time-picker 显示 12 小时制、存 24 小时 `HH:mm`（catalog）。
 - **locale**：shadcn Calendar 支持 react-day-picker 的 `locale`（date-fns locale），中文界面传 `zhCN`，并设置每周第一天；uiarc 按 locale 格式化显示值。
 - **键盘**：日历网格内方向键移动、PageUp/PageDown 换月、Enter 选中、Esc 关闭并把焦点还给触发器。接入后实测一遍。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，把 `--focus-ring` 从 `transparent` 改成可见色，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, [role="gridcell"], [role="option"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
-  日历格子很密，outline-offset 可以改成 `-2px` 画在格子内侧。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  日历格子很密，在日历容器上设 `--focus-outline-offset: -2px`，描边画在格子内侧。
 - **token**：shadcn Calendar 的格子尺寸是 `--cell-size`（默认 `--spacing(7)` = 28px）、圆角 `--cell-radius`；触屏页面把 `--cell-size` 调到 36–44px。今天和区间中段用 `--muted`，选中日期和区间两端用 `--primary`，键盘焦点用 `--ring`。
 - **减弱动效**：react-day-picker 本身没有动画；popover 的进出动画见 `select.md` 的说明。uiarc 有 `useReducedMotion` 分支。
 - **常见坑**：日期区间要明确"结束日是否包含"；`disabled` 日期要有原因（tooltip 或说明文字）；表单提交时日期选择器的值要进隐藏 input 或受控状态，Popover 触发器本身不带 `name`。
@@ -56,7 +52,7 @@
 - `shadcn:date-picker-with-range` — 区间示例
 - `shadcn:date-picker-with-presets` — 预设示例
 - `shadcn:input` — `type="time"` 作时间输入
-- `uiarc:date-picker` — uiarc 单日选择（补焦点后用）
+- `uiarc:date-picker` — uiarc 单日选择
 - `uiarc:date-range-picker` — uiarc 区间 + 预设
 - `uiarc:time-picker` — uiarc 时间列表
 - `uiarc:calendar` — uiarc 常驻月历

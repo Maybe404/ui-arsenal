@@ -35,7 +35,7 @@
 - `obsidianui:footer`：`bg-black text-white` 写死、不跟随主题；用嵌套的 `<section id="light-one">` 做装饰光效（语义错误，屏幕阅读器会读到一串空 section），光效所需的 CSS 不在这个文件里；文案也是 ObsidianUI 自己的宣传语。要用只借布局。
 - `obsidianui:v-prism`：three + postprocessing 的 WebGL 背景，带毛玻璃（`glass`），演示图片走 obsidianui CDN。只做首屏唯一主导效果，上线前换图。
 - `obsidianui:flip-text`：registry 只给了 `flip-text.tsx` 和 `utils.ts`，`.flip-char` 用到的 keyframes 没有随包分发，装上不会动；还把标题拆成逐字 `<span>` 且没有 `aria-label`，默认无限循环、没有减弱动效分支。要做标题文字动效，用 `find.sh --task text-effect` 另挑。
-- `uiarc:cta-section`、`uiarc:hero-section` 的按钮：`action` 既没有 `href` 也没有 `onClick` 时，点击会在原地显示"已确认"（演示用）；`doneLabel` 也是按下就显示、2.4 秒后复原，不等真实结果。上线时一律传 `href`，或者在 `onClick` 的真实请求成功后再显示完成态，否则是第 1 级的状态虚假。
+- `uiarc:cta-section`、`uiarc:hero-section` 的按钮（2026-10-08 核对源码）：cta-section 的 `action` 既没有 `href` 也没有 `onClick` 时，点击只在原地切换成 `confirmedLabel`，什么也没发生（演示用）；hero-section 只要传了 `doneLabel`，点击就立刻显示完成态、2.4 秒后复原，不等 `onClick` 的真实结果。上线时一律传 `href`；要显示完成态就自己在真实请求成功后切换，不要依赖 `doneLabel`，否则是第 1 级的状态虚假。
 - `uiarc:hero-section` 的 `centered` 演示：图片来自 `media.ts` 的 `/media/people/*.jpg` 等路径，registry 不附带这些文件，直接用演示会坏图。传 `title` 走自己的内容。
 - originkit 免费 hero 的 `hero-01`、`hero-17`、`hero-24`、`hero-32`：registry 描述只是占位文字（"Hero 01 component."），没有依赖、标签只有 next.js / tailwind，看不出差异，未验证。选之前在官网看预览视频。
 - originkit 背景类 component（`ribbon-glow`、`fibre-arc`、`glowing-sphere` 等，多数带 `glow`）：大量 three.js 全屏背景，一页只能一个；Pro 的 hero（hero-03、05、08… 共 36 个）和 `cta-01`、`cta-02`、`footer-02` 不推荐。

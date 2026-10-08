@@ -7,7 +7,7 @@
 | 主底座 | 推荐 | 理由 |
 |---|---|---|
 | shadcn | `shadcn:button` | Base UI `Button` + cva，依赖只有 `cn`；6 个 variant（default / outline / secondary / ghost / destructive / link）和 8 个 size（含 icon 尺寸）；自带 `focus-visible:ring-3 ring-ring/50`、`aria-invalid` 样式、disabled 态；按下只有 `translate-y-px`，不抢注意力。颜色全部走 `--primary` `--secondary` `--destructive` `--muted` 等变量（2026-10-07 拉取 base-nova 源码确认） |
-| uiarc | `uiarc:button` | 原生 `<button>` + motion；`loading` 用 `aria-busy` + `aria-disabled` 而不是 `disabled`，加载中键盘焦点不丢；按下 0.96–0.985 的弹簧缩放，作为弹层触发器（`aria-haspopup`/`data-state`）时自动不缩放；有 `useReducedMotion` 分支和 CSS `prefers-reduced-motion`。**它本身没有任何焦点样式**，必须按「接入要点」补焦点 |
+| uiarc | `uiarc:button` | 原生 `<button>` + motion；`loading` 用 `aria-busy` + `aria-disabled` 而不是 `disabled`，加载中键盘焦点不丢；按下 0.96–0.985 的弹簧缩放，作为弹层触发器（`aria-haspopup`/`data-state`）时自动不缩放；有 `useReducedMotion` 分支和 CSS `prefers-reduced-motion`。模块 CSS 里没有焦点样式，键盘焦点靠 arc-foundation 的全局描边（见「接入要点」） |
 | 没有底座或其他 | 原生 `<button>` + 项目 token | 非 Tailwind、非 React 的项目不必为按钮引入整个底座。行为照 `uiarc:button` 的做法：加载时 `aria-busy="true"` + `aria-disabled="true"` 并吞掉点击，而不是 `disabled` |
 
 ## 按场景换
@@ -43,12 +43,7 @@
 
 ## 接入要点
 - **token**：shadcn 的 `--accent` 是浅色 hover 底，不是品牌色；品牌色按钮用 default variant（`--primary`）。uiarc 的 primary 是 `--foreground` 底 + `--background` 字（黑底白字），想要彩色主按钮要改 `.primary` 的取值，不要改 `--foreground`。
-- **uiarc 焦点（必须做）**：`arc-foundation.css` 末尾写了 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，而且 `--focus-ring` 在亮暗两套主题里都是 `transparent`；`uiarc:button` 的 CSS Module 里没有任何焦点样式。接入时删掉那一行，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, a, [role="button"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
-  删不掉那一行时，上面的 `outline` 也要加 `!important`。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **触控目标**：`shadcn:button` 默认高 32px（`h-8`），`lg` 36px，`icon` 32×32，在触屏为主的页面低于 44px 建议值。移动端用 `size="lg"` 并加 `min-h-11`，或给图标按钮加 `after:absolute after:-inset-2` 扩大点击区（shadcn 的 switch、slider 就是这么做的）。uiarc 默认 44px（`--control-height-md`）。
 - **图标按钮**必须有 `aria-label`；图标统一用 lucide。
 - **加载态**：shadcn 的写法通常是 `disabled` + spinner，会让键盘焦点掉到 body。表单提交按钮建议改成 `aria-disabled` + 吞点击（uiarc 的做法），并在 `aria-busy` 期间保留文字宽度，避免布局跳动。
@@ -57,7 +52,7 @@
 
 ## 候选清单
 - `shadcn:button` — shadcn 底座的默认按钮，所有页面模式
-- `uiarc:button` — uiarc 底座的默认按钮，带 loading 和标签变形（补焦点后用）
+- `uiarc:button` — uiarc 底座的默认按钮，带 loading 和标签变形
 - `shadcn:button-group` — 分段、拼接、split button 的容器
 - `uiarc:button-group` — uiarc 的按钮组，悬停高亮在分段间滑动
 - `uiarc:split-button` — 默认动作 + 下拉备选

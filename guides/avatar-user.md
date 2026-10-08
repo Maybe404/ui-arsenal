@@ -22,7 +22,7 @@
 
 ## 慎用
 - `bencho:picker`：已拉源码，触发器是带 `aria-expanded` 的 button，列表有 `role="listbox"` / `role="option"`，但源码里没有任何键盘处理（无 `onKeyDown`、方向键、Esc），选项不是按钮，键盘用户选不了人，属于第 1 级问题；另外依赖 framer-motion，`AVATARS` 被清空（bencho.md：图片不随授权），要填自己的图片并映射 token。只借鉴"选中的人在胶囊里堆成头像组"这个反馈方式。
-- `uiarc:user-menu`：catalog 写明"No focus rings are drawn"，靠高亮表示键盘位置；加上 arc-foundation 全局去焦点框，触发器本身也看不到焦点，必须补焦点样式。
+- `uiarc:user-menu`（只在不装 arc-foundation、单独借用时）：触发器要自己补焦点样式。装了 foundation 时，触发器是原生按钮，有它画的焦点描边；菜单项是 `role="menuitem"` + `tabIndex=-1`，靠高亮表示键盘位置，catalog 写的 "No focus rings are drawn" 指的是这一点（2026-10-08 核对源码）。
 - `jakubantalik:transition:avatar-group-hover`：文档写明回位是带过冲的弹簧（"bouncy ease-out on return"），属于 ⚠ bounce 一类；Operate 页面去掉过冲，只保留轻微抬起。
 - `reactbits:profile-card`：3D 悬停和反光的个人资料卡，只适合作品集或个人主页（Experience），未拉源码。
 - 随机色首字母头像：颜色要从主底座的有限色板里按用户 id 稳定取值，并检查首字母和底色对比度 ≥ 4.5:1；不要每次渲染随机变色。
@@ -41,10 +41,7 @@
 - **图片失败**：shadcn 用 Base UI 的加载状态自动切到 Fallback；uiarc 在 `onError` 后切首字母。自己写时也要处理 404 和慢网（先显示首字母，图片加载完再替换，不要空白框）。
 - **`next/image`**：uiarc avatar 用 `next/image` 的 `fill`，外部头像域名要在 `next.config` 的 `images.remotePatterns` 里放行；非 Next 项目改成 `<img>`，保留 `sizes` 的思路。
 - **触控目标**：作为按钮的头像（账号菜单入口）点击区域至少 44×44 px，可以比头像本身大。
-- **uiarc 焦点**：arc-foundation 全局 `outline: none !important`。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **bot-avatars 尺寸**：只针对 96 / 64 / 32 px 调过；用 `size` 设尺寸，不要用 CSS 改宽高；画布会画到尺寸的 1.5 倍做跳跃，父元素 `overflow: hidden` 会裁掉（librariesdev 文档）。
 
 ## 候选清单
@@ -53,7 +50,7 @@
 - `shadcn:dropdown-menu` — 账号菜单
 - `uiarc:avatar` — uiarc 头像，名字和状态进入标签，依赖 next/image
 - `uiarc:avatar-group` — uiarc 头像组，`+N` 有标签
-- `uiarc:user-menu` — 账号菜单，手机端底部 sheet，需补焦点样式
+- `uiarc:user-menu` — 账号菜单，手机端底部 sheet
 - `librariesdev:bot-avatars` — AI 代理头像
 - `shadcn:combobox` — 选人组合件的选择部分
 - `shadcn:hover-card` / `uiarc:hover-card` — 人物预览

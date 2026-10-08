@@ -47,10 +47,7 @@
 - **数字列**：右对齐，`tabular-nums`；单位放表头而不是每个单元格。
 - **移动端**：shadcn table 外层已有 `overflow-x-auto`；把第一列（名称）设为 sticky，其余横向滚动；或者窄屏改成卡片列表。
 - **大数据量**：几百行以上用服务端分页或虚拟滚动；uiarc sortable-data-table 是纯客户端排序，不适合上千行。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，排序按钮、复选框会看不到焦点。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **状态不靠颜色**：状态列用 badge 文字（"失败"、"进行中"），不要只用红绿点。
 
 ## 候选清单

@@ -30,7 +30,7 @@
 - `shadcn:chart-radar-*`（14 个变体）：雷达图只适合 5–8 个维度、最多 2–3 组数据的画像对比；读者要精确比较时换分组柱状图。变体多不代表常用。
 - `shadcn:chart-pie-*`：分类超过 5 个、或份额差小于 5 个百分点时看不出差别，换横向柱状图或 `uiarc:waffle-chart`。
 - `shadcn:chart-area-gradient`：渐变填充本身没问题，但别再叠发光描边；多系列面积图用堆叠或改折线，避免互相遮挡。
-- `uiarc:donut-chart`：catalog 明写 "No focus rings are drawn"，键盘焦点只在环上做预览高亮；再加上 arc-foundation 全局去焦点框，必须补焦点样式。
+- `uiarc:donut-chart`（只在不装 arc-foundation、单独借用时）：组件自身不画焦点（catalog 写明 "No focus rings are drawn"），要自己补。装了 foundation 时由它的全局描边显示焦点：无图例时环是 `tabIndex=0` 的 `role="group"`，方向键预览扇区；有图例时每行是按钮（2026-10-08 核对源码）。
 - `originkit:gabriel-graph`、`originkit:star-burst-graph`（需登录）：装饰性图形，不是数据图表，不要用来展示真实数据。
 - `reactbits:radar`：WebGL 雷达扫描背景，标在 chart 任务下但不是图表，按 background 指南处理。
 - 参考类 `designspells:054-*`、`designspells:149-*`（Shopify / Vercel 实时大屏）：活动页的展示型可视化，只借鉴节奏，不当成后台图表的样板。
@@ -47,10 +47,7 @@
 - **颜色**：用 `--chart-1`…`--chart-5`（shadcn）或 `--accent` + 中性色阶（uiarc），不要在组件里写十六进制；明暗各配一份。系列多于 5 个时先考虑合并成"其他"或拆图，而不是加颜色。
 - **不只靠颜色**：多系列折线加线型（实线、虚线）或直接在线尾标注名称；涨跌用正负号和箭头，不只用红绿。
 - **数据表兜底**：uiarc 图表自带视觉隐藏的数据表；shadcn 图表没有，重要图表在旁边给一个"查看数据"切换到 `shadcn:table`，或至少写一句文字摘要。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，slider 游标聚焦后看不到。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **加载**：Operate 页面用和图表同尺寸的骨架块（`shadcn:skeleton` / `uiarc:skeleton`），不要在图表区域中央转圈；uiarc line-chart 有 `loading` 属性并会播报 "Loading"。
 - **性能**：SVG 图表几千个点以内没问题；更多时先在服务端聚合或降采样。`ResponsiveContainer` 放在没有确定高度的父元素里会塌成 0，给容器定高或 `aspect-*`。
 

@@ -81,6 +81,31 @@ spec 由空格分隔的若干项组成，每项是 `<adapter>:<arg>`：
 
 条目极多时，可以每个分类一行，item_id 写 `category:<分类>`，用 `script:` 或 md 写清楚运行时怎么列出该分类的全部条目。
 
+## 3. 结论台账 sources/_claims.tsv
+
+登记组件级的技术结论：要求接入方改上游代码的（缺陷、必须补的东西）、决定能不能直接上线的（演示数据、定时器假进度、键盘无法操作），以及几份指南共用的。指南正文写选型理由并引用这里，同一事实只在这里和对应的 `sources/<id>.md` 展开。普通的能力描述（"有 aria-checked"）留在指南里，不必都登记。
+
+制表符分隔，**第一行是表头**，列顺序固定：
+
+| 列 | 含义 |
+|---|---|
+| ref | `source:item_id`；不是索引条目的 npm 包写 `npm:<包名>` |
+| topic | 同一组件内唯一的短名，小写短横线，如 `focus-style` |
+| kind | `defect`（缺陷，接入要改或不能直接用）\| `demo`（演示性质：写死数据、定时器推进、没有业务回调）\| `gap`（缺某项能力，视场景补）\| `ok`（已确认具备，写进来是为了纠正旧说法或供多处引用） |
+| depth | 证据深度：`none`（未验证）\| `vendor`（官网或文档声明）\| `catalog`（目录或 registry 元数据）\| `source`（读过源码）\| `runtime`（脚本或单元测试跑过）\| `browser`（浏览器里手动操作过）\| `at`（读屏等辅助技术实测过）\| `judgment`（编辑的设计判断）。读过源码不等于键盘或读屏实测过，缺的写进 missing |
+| checked | 最后核对日期 `YYYY-MM-DD`（depth 为 none 时可空） |
+| sha | 核对时拉到的主文件 sha256 前 16 位，即 fetch 输出的 `sha256` 值；用来判断上游是否变了 |
+| check_with | 核对时的取法：空 = 默认 style/变体；`--style radix-nova`、`--variant JS-CSS`；`npm:` 条目写要下载的 https 地址 |
+| probe | 可选的机器检查，在拉到的源码文件里找字面字符串：`has:<文本>` 必须出现，`lacks:<文本>` 必须不出现，多项用 ` && ` 连接。只能覆盖结论里能机器判断的部分 |
+| missing | 还没做的验证，比如"读屏实测""触屏实测" |
+| claim | 结论本身，一句中文，写清条件 |
+
+怎么用：
+- `fetch.sh <ref>` 拉完会列出这个组件登记的结论，并对照版本：✓ 版本与核对时一致；? 版本变了但 probe 仍成立（或没有 probe），照做前在源码里确认；✗ probe 不成立，结论已失效，不要照做基于它的修改。
+- `claims.sh --check [ref...]`：重新拉取并复核，只读，不改台账。确认无误后手动更新 sha 和 checked；失效的结论连同引用它的指南一起改。
+- `claims.sh --pending`：待复核报告。列出台账里证据不足的结论，以及指南里只有 catalog、未拉源码、未验证依据的组件（默认推荐优先），并报告不同指南对"是否读过源码"说法不一致的组件。指南部分是按文字标注做的启发式归属，要回原文确认。
+- 写进台账前用 `fetch.sh` 实际拉一次，sha 填 fetch 输出的值；能写 probe 就写，上游一改就能被发现。
+
 ## 通用要求
 - 先找机器可读入口：/sitemap.xml、/llms.txt、/llms-full.txt、/r/registry.json、/registry.json、/api/*、GitHub 仓库。用 curl（带浏览器 UA）和 WebFetch。站点是 SPA 抓不到时，看页面 JS bundle、__NEXT_DATA__、GitHub 仓库。
 - 不登录、不注册、不付费、不提交任何表单。
