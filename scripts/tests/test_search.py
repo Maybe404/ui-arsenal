@@ -112,5 +112,31 @@ class Relevance(unittest.TestCase):
         self.assertEqual((hit, strong), (1, 1))
 
 
+
+class CompatMatrix(unittest.TestCase):
+    """Reads the real matrix in sources/_styles.md (a repository file, no network)."""
+    def setUp(self):
+        self.m = ua.compat_matrix()
+
+    def verdict(self, base, source):
+        return ua.compat_verdict(base, source, self.m)
+
+    def test_pairs_both_directions(self):
+        self.assertEqual(self.verdict('shadcn', 'uiarc'), 'no')
+        self.assertEqual(self.verdict('uiarc', 'shadcn'), 'no')
+        self.assertEqual(self.verdict('shadcn', 'reactbits'), 'ok')
+        self.assertEqual(self.verdict('shadcn', 'bencho'), 'conditional')
+
+    def test_wildcards_and_base_specific_conditions(self):
+        self.assertEqual(self.verdict('shadcn', 'lucide'), 'ok')
+        self.assertEqual(self.verdict('shadcn', 'jakubantalik'), 'ok')
+        self.assertEqual(self.verdict('uiarc', 'jakubantalik'), 'conditional')
+        self.assertEqual(self.verdict('uiarc', 'inspora'), 'ok')
+
+    def test_same_and_unknown(self):
+        self.assertEqual(self.verdict('shadcn', 'shadcn'), 'same')
+        self.assertEqual(self.verdict('uiarc', 'obsidianui'), 'unknown')
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -349,13 +349,63 @@ FIND_MODES = {
 }
 
 
-def search(terms, src=None, mode='default', task=None, layer=None, info=None):
+def compat_matrix():
+    """{(a, b): verdict text} from the compatibility matrix in sources/_styles.md; '*' stands for 任意 / 任意底座."""
+    out, inside = {}, False
+    for line in open(os.path.join(SRC, '_styles.md'), encoding='utf-8'):
+        if line.startswith('## '):
+            inside = line.startswith('## 兼容矩阵')
+            continue
+        cells = [c.strip() for c in line.strip().strip('|').split('|')] if inside and line.startswith('|') else []
+        if len(cells) < 2 or '+' not in cells[0]:
+            continue
+        left, right = (re.sub(r'（[^）]*）', '', s).strip() for s in cells[0].split('+', 1))
+        for a in left.split('/'):
+            for b in right.split('/'):
+                out[('*' if a.strip().startswith('任意') else a.strip(), b.strip())] = cells[1]
+    return out
+
+
+def compat_verdict(base, source, matrix):
+    """same | ok | conditional | no | unknown, for putting `source` on a page whose primary base is `base`."""
+    if source == base:
+        return 'same'
+    v = matrix.get((base, source)) or matrix.get((source, base)) or matrix.get(('*', source))
+    if v is None:
+        return 'unknown'
+    if '不建议' in v:
+        return 'no'
+    if '有条件' in v and ('；' not in v or base in v.split('；', 1)[1]):  # "可以；uiarc 底座有条件"
+        return 'conditional'
+    return 'ok'
+
+
+def flagged(claims, r):
+    """Engineering problems recorded for a row: ledger rows of kind defect/demo, plus the human note."""
+    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in ('defect', 'demo')]
+
+
+def claims_by_ref():
+    out = {}
+    for c in load_claims():
+        out.setdefault(c['ref'], []).append(c)
+    return out
+
+
+def search(terms, src=None, mode='default', task=None, layer=None, info=None, base=None):
     """Rank catalogue rows for a query. Returns ([(score, row)], note); `info`, if given, receives details
-    (hidden_icons, low_confidence) for callers that need more than the note text."""
+    (hidden_icons, base_hidden, low_confidence) for callers that need more than the note text. With `base`, rows
+    the compatibility matrix rules out for that primary base are dropped and the rest carry r['_compat']."""
     info = {} if info is None else info
     terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
     rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
             and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
+    info['base_hidden'] = 0
+    if base:
+        matrix = compat_matrix()
+        for r in rows:
+            r['_compat'] = compat_verdict(base, r['source'], matrix)
+    claims = claims_by_ref()
     groups = load_groups()
     corpus = [' '.join((r['id'], r['name'], r['category'], r['task'], r['desc'], r['vtags'], r['itags'])).lower()
               for r in rows]
@@ -367,9 +417,14 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None):
         rel, hit, strong, exact = relevance(r, cons) if cons else (0.0, 0, 0, 0)
         if cons and not hit:
             continue
+        if r.get('_compat') == 'no':  # the matrix says not on the same page as this base
+            info['base_hidden'] += 1
+            continue
         band = 1 if not cons or strong * 2 >= hit else 0  # at least half the matched concepts hit strongly
-        base = r['source'] in PRIMARY_BASES
-        row = (hit, klass(r), band, exact, bool(exact) and base, tier(r), rel, base, r['layer'] == 'foundation', r)
+        primary = r['source'] in PRIMARY_BASES
+        clean = not flagged(claims, r) and not r['notes']  # known demo-only or defective rows go after equal peers
+        row = (hit, klass(r), band, clean, exact, bool(exact) and primary, tier(r), rel, primary,
+               r['layer'] == 'foundation', r)
         # Icon names and tags match almost any English word, so icons only show when asked for, or when nothing
         # else matched (a query like "avocado").
         (icons if r['source'] == 'lucide' and not icon_query else scored).append(row)
@@ -381,7 +436,7 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None):
         if top < len(cons):
             note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
         scored = [x for x in scored if x[0] == top]
-    ranked = sorted(scored, key=lambda x: tuple(-v for v in x[:9]))
+    ranked = sorted(scored, key=lambda x: tuple(-v for v in x[:10]))
     info['hidden_icons'] = hidden_icons
     info['low_confidence'] = bool(cons and ranked and (ranked[0][2] == 0 or ranked[0][0] < len(cons)))
     if info['low_confidence']:
@@ -389,7 +444,7 @@ def search(terms, src=None, mode='default', task=None, layer=None, info=None):
                  '仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
     if ranked and not any(x[1] == 3 for x in ranked):
         note += '\n没有现在就能取码的免费候选：以下只有需登录、灵感参考或 Pro / 失效条目。'
-    return [(x[6], x[9]) for x in ranked], note
+    return [(x[7], x[10]) for x in ranked], note
 
 
 def guide_task(scored):
@@ -403,12 +458,31 @@ def guide_task(scored):
     return max(counts, key=counts.get) if counts else None
 
 
+def guide_index():
+    """{ref: [(guide file, line, section)]} for every `source:id` written in the guides."""
+    out = {}
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if fn.endswith('.md') and not fn.startswith('_'):
+            section = ''
+            for n, line in enumerate(open(os.path.join(GUIDES, fn), encoding='utf-8'), 1):
+                if line.startswith('## '):
+                    section = line[3:].strip()
+                for ref in GUIDE_REF.findall(line):
+                    out.setdefault(ref, []).append((fn, n, section))
+    return out
+
+
+COMPAT_ZH = {'conditional': '有条件', 'unknown': '兼容性未登记'}
+
+
 def cmd_find(args):
-    src, limit, mode, terms, task, layer = None, 25, 'default', [], None, None
+    src, limit, mode, terms, task, layer, base = None, 25, 'default', [], None, None, None
     it = iter(args)
     for a in it:
         if a == '-s':
             src = next(it)
+        elif a == '--base':
+            base = next(it)
         elif a == '--task':
             task = next(it)
         elif a == '--layer':
@@ -416,7 +490,8 @@ def cmd_find(args):
         elif a == '--limit':
             limit = int(next(it))
         elif a in ('-h', '--help'):
-            print('usage: find.sh [-s source] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+            print('usage: find.sh [-s source] [--base B] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+            print('  --base   项目的主底座（如 shadcn、uiarc）：按 sources/_styles.md 的兼容矩阵去掉"不建议"同页的来源，标出"有条件"的')
             print('  --task   UI 任务：' + ' '.join(TASKS))
             print('  --layer  层级：' + ' '.join(LAYERS))
             for k, (d, _) in FIND_MODES.items():
@@ -433,10 +508,15 @@ def cmd_find(args):
         sys.exit('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
     if layer and layer not in LAYERS:
         sys.exit('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
+    if base and base not in sources():
+        sys.exit('unknown base %r. choose from: %s' % (base, ' '.join(sources())))
     info = {}
-    scored, note = search(terms, src, mode, task, layer, info)
+    scored, note = search(terms, src, mode, task, layer, info, base)
     icons = ('（另有 %d 个 Lucide 图标也匹配，默认不显示：查询里加 icon / 图标，或用 --task icon）' % info['hidden_icons']
              if info.get('hidden_icons') else '')
+    if info.get('base_hidden'):
+        icons += ('\n' if icons else '') + '（按 %s 底座去掉了 %d 个兼容矩阵里"不建议"同页的来源的条目，见 compat.sh %s）' % (
+            base, info['base_hidden'], base)
     if not scored:
         print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。'
               + ('\n' + icons if icons else ''))
@@ -446,18 +526,34 @@ def cmd_find(args):
         by_src[r['source']] = by_src.get(r['source'], 0) + 1
     print('%d matches (%s)  filter=%s %s%s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])),
                                               mode, note, ('\n' + icons) if icons else ''))
+    claims, guides, any_flag = claims_by_ref(), guide_index(), False
     for s, r in scored[:limit]:
         tag = label(r)
-        print('[%s] %s:%s — %s  (%s · %s)%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
-                                               '  ⚠ ' + r['risk'] if r['risk'] else ''))
+        compat = COMPAT_ZH.get(r.get('_compat'))
+        print('[%s] %s:%s — %s  (%s · %s)%s%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
+                                                 '  ⚠ ' + r['risk'] if r['risk'] else '',
+                                                 '  · 与 %s：%s' % (base, compat) if compat else ''))
         print('    %s' % r['desc'][:160])
+        ref = '%s:%s' % (r['source'], r['id'])
+        flags = ['%s：%s' % (CLAIM_KINDS[c['kind']], c['claim']) for c in flagged(claims, r)] + (
+            ['备注：' + r['notes']] if r['notes'] else [])
+        for f in flags:
+            print('    ⚑ %s' % (f if len(f) <= 120 else f[:118] + '…'))
+        if flags:
+            any_flag = True
+            where = guides.get(ref, [])
+            where = [w for w in where if w[2] == '慎用'] or where
+            print('      详情：claims.sh %s%s' % (ref, '；guides/%s:%d' % where[0][:2] if where else ''))
     if len(scored) > limit:
         print('... %d more (--limit N)' % (len(scored) - limit))
     shown_task = task or guide_task(scored)
     if shown_task and os.path.exists(os.path.join(GUIDES, shown_task + '.md')):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
+    print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
+    if any_flag:
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等），接真实业务前要改，或换同类候选；同等相关时排在没有问题的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
-        print('\n⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
+        print('⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
     return 0
 
@@ -1608,7 +1704,7 @@ def cmd_searchtest(args):
     fails = 0
     for c in cases:
         info = {}
-        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info)
+        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info, base=c.get('base'))
         ids = ['%s:%s' % (r['source'], r['id']) for _, r in res]
         k = c.get('k', 1)
         top = [r for _, r in res[:k]]
@@ -1641,11 +1737,13 @@ def cmd_searchtest(args):
             checks.append(bool(res) and info['low_confidence'] != c['confident'])
         if 'guide' in c:
             checks.append(guide_task(res) == c['guide'])
+        if 'top1_clean' in c:
+            checks.append(bool(res) and (not flagged(claims_by_ref(), res[0][1]) and not res[0][1]['notes']) == c['top1_clean'])
         ok = bool(checks) and all(checks)
         fails += not ok
         print('%-4s %-34s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + ''.join(
-            ' --%s' % c[x] if x == 'mode' else ' -s %s' % c[x] if x == 'src' else ' --task %s' % c[x]
-            for x in ('mode', 'src', 'task') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
+            {'mode': ' --%s', 'src': ' -s %s', 'task': ' --task %s', 'base': ' --base %s'}[x] % c[x]
+            for x in ('mode', 'src', 'task', 'base') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
     print('\n%d/%d passed' % (len(cases) - fails, len(cases)))
     return 1 if fails else 0
 

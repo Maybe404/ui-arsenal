@@ -21,9 +21,7 @@
    "思考",
    "推理",
    "thinking",
-   "reasoning",
-   "orb",
-   "光球"
+   "reasoning"
   ],
   [
    "按钮",
@@ -599,6 +597,11 @@
    "圆环图",
    "pie",
    "donut"
+  ],
+  [
+   "光球",
+   "orb",
+   "orbs"
   ]
  ]
 }
