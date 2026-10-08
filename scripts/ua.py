@@ -20,10 +20,13 @@ import hashlib
 import html
 import json
 import os
+import posixpath
 import random
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -572,12 +575,42 @@ def find_row(ref):
     sys.exit('not found: %s%s' % (ref, ('  close: ' + ', '.join(cands)) if cands else ''))
 
 
+class UnsafePath(ValueError):
+    pass
+
+
+def safe_rel(path):
+    """A remote file path as a relative path that stays inside the output directory, or UnsafePath."""
+    rel = posixpath.normpath(urllib.request.unquote(path).replace('\\', '/')).lstrip('/')
+    if rel in ('', '.') or rel == '..' or rel.startswith('../') or '\0' in rel:
+        raise UnsafePath('unsafe file path %r' % path)
+    return rel
+
+
 def save(out, name, body):
-    os.makedirs(out, exist_ok=True)
-    p = os.path.join(out, name)
+    """Write a file under `out`; `name` may contain sub-directories but must not leave `out`."""
+    root = os.path.realpath(out)
+    p = os.path.realpath(os.path.join(root, name))
+    if not p.startswith(root + os.sep):
+        raise UnsafePath('refusing to write outside %s: %r' % (out, name))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, 'wb') as f:
         f.write(body)
     return p
+
+
+def registry_paths(files):
+    """Relative output paths for registry files: the directory part all of them share is dropped, the rest is kept,
+    so a/index.tsx and b/index.tsx stay apart while a single-folder item lands flat as before."""
+    rels = [safe_rel(f.get('path') or 'file') for f in files]
+    dirs = [r.split('/')[:-1] for r in rels]
+    common = 0
+    while dirs and all(len(d) > common for d in dirs) and len({d[common] for d in dirs}) == 1:
+        common += 1
+    out = ['/'.join(r.split('/')[common:]) for r in rels]
+    if len(set(out)) != len(out):
+        raise UnsafePath('registry lists the same file path twice: %s' % ', '.join(rels))
+    return out
 
 
 def do_registry(url, out, opts):
@@ -596,18 +629,25 @@ def do_registry(url, out, opts):
     files = d.get('files') or []
     if not files and d.get('type') not in ('registry:style', 'registry:theme', 'registry:font', 'registry:base'):
         return False, 'registry item has no files %s' % url
+    missing = [f.get('path') for f in files if f.get('content') is None]
+    if missing:  # validate everything before writing anything
+        return False, 'file without content: %s (%s)' % (', '.join(map(str, missing)), url)
+    try:
+        rels = registry_paths(files)
+    except UnsafePath as e:
+        return False, '%s (%s)' % (e, url)
     save(out, 'registry-item.json', body)
     lines = []
-    for f in files:
-        content = f.get('content')
-        if content is None:
-            return False, 'file without content: %s (%s)' % (f.get('path'), url)
-        p = save(out, os.path.basename(f.get('path') or 'file'), content.encode())
-        lines.append('    %s (%d lines) <- %s' % (p, content.count('\n') + 1, f.get('path')))
+    for f, rel in zip(files, rels):
+        save(out, rel, f['content'].encode())
+        lines.append('    %s (%d lines) <- %s' % (rel, f['content'].count('\n') + 1, f.get('path')))
     info = ['registry  %s' % url, '  sha256 %s' % sha(body)[:16]]
     for k in ('dependencies', 'devDependencies', 'registryDependencies'):
         if d.get(k):
             info.append('  %s: %s' % (k, ' '.join(d[k])))
+    if d.get('registryDependencies'):
+        info.append('  （只取了这一项本身；registryDependencies 没有一起下载，需要时用 fetch.sh 分别取，'
+                    '或用安装命令让 shadcn CLI 解析）')
     if d.get('cssVars') or d.get('css'):
         info.append('  注意: 含 cssVars/css，需要合并进全局样式（见 registry-item.json）')
     return True, '\n'.join(info + ['  files:'] + lines)
@@ -619,12 +659,17 @@ def do_url(url, out, label='url'):
         return False, 'HTTP %s %s' % (st, url)
     if label == 'doc' and 'text/html' in ct and not url.endswith('.html'):
         return False, 'got HTML instead of a document %s' % url
-    name = os.path.basename(url.split('?')[0]) or 'index'
-    name = urllib.request.unquote(name)
+    try:  # decode %2F and friends before taking the last segment, then refuse anything that is not a plain name
+        name = posixpath.basename(safe_rel(url.split('?')[0].split('#')[0].split('://', 1)[-1]))
+    except UnsafePath:
+        name = ''
+    if not name or name in ('.', '..'):
+        name = 'index'
     if label == 'doc' and '.' not in name:
         name += '.md'
-    p = save(out, ('doc-' if label == 'doc' else '') + name, body)
-    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)' % (label, url, p, len(body), sha(body)[:16])
+    save(out, ('doc-' if label == 'doc' else '') + name, body)
+    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)' % (label, url, ('doc-' if label == 'doc' else '') + name,
+                                                            len(body), sha(body)[:16])
 
 
 def do_prompt(url, out):
@@ -633,8 +678,8 @@ def do_prompt(url, out):
     if not m:
         return False, 'prompt block not found (HTTP %s) %s' % (st, url)
     txt = html.unescape(m.group(1)).strip()
-    p = save(out, 'prompt.md', txt.encode())
-    return True, 'prompt    %s\n  -> %s (%d chars)' % (url, p, len(txt))
+    save(out, 'prompt.md', txt.encode())
+    return True, 'prompt    %s\n  -> prompt.md (%d chars)' % (url, len(txt))
 
 
 def adapter_path(name):
@@ -654,8 +699,9 @@ def do_script(arg, out, opts):
     r = subprocess.run(cmd, capture_output=True, timeout=180)
     if r.returncode != 0 or not r.stdout.strip():
         return False, 'adapter %s failed: %s' % (name, r.stderr.decode()[-300:])
-    p = save(out, '%s-%s.txt' % (name, re.sub(r'[^A-Za-z0-9_-]', '_', a)), r.stdout)
-    return True, 'script    %s %s\n  -> %s (%d bytes, sha256 %s)' % (name, a, p, len(r.stdout), sha(r.stdout)[:16])
+    fn = '%s-%s.txt' % (name, re.sub(r'[^A-Za-z0-9_-]', '_', a))
+    save(out, fn, r.stdout)
+    return True, 'script    %s %s\n  -> %s (%d bytes, sha256 %s)' % (name, a, fn, len(r.stdout), sha(r.stdout)[:16])
 
 
 def cmd_fetch(args):
@@ -680,18 +726,27 @@ def cmd_fetch(args):
         return 2
     rc = 0
     for ref in refs:
-        rc |= fetch_one(find_row(ref), opts)
+        r = find_row(ref)
+        o = dict(opts)  # each ref gets its own options: no URL or output dir leaks from the previous one
+        if len(refs) > 1 and opts.get('out'):
+            o['out'] = default_out(r, o, root=opts['out'])
+        rc |= fetch_one(r, o)
     return rc
 
 
 FETCH_HELP = """usage: fetch.sh <source:item_id> [...] [options]     （只读：下载到临时目录，不安装、不执行）
 
 options:
-  --out DIR          输出目录（默认 $TMPDIR/ui-arsenal/<source>/<id>/）
+  --out DIR          输出目录。默认 $TMPDIR/ui-arsenal/<source>/<id>[@style][@变体]/，不同 style、变体分开放；
+                     一次取多个条目时，每条放在 DIR/<source>/<id>…/ 下
   --variant V        React Bits 变体：TS-TW（默认）| TS-CSS | JS-TW | JS-CSS
   --style S          shadcn style，要和项目 components.json 一致：
                      {base,radix,aria}-{vega,nova,maia,lyra,mira,luma,rhea,sera}，图表/主题只有 new-york-v4
   --limit N          列表类 adapter 的条数（collectui）
+
+输出目录：先下载到临时暂存目录，全部校验通过才放进输出目录；目录里的 .ui-arsenal.json 记录这次取到的文件、
+  来源和 hash。再次获取同一条目时只替换上一次写入的文件，上游删掉的文件不会残留；获取失败时上一次的结果也会移除，
+  不会被当成新结果。registry 文件保留相对目录（去掉公共前缀），同名文件不会互相覆盖。
 
 不同条目的输出：
   可安装 / 取源码   源码文件 + 依赖 + 安装命令（安装会改动项目，先确认项目栈）
@@ -721,9 +776,66 @@ def install_hint(r, opts=None):
     return re.split(r'\s*(?:；|; |#|\s文档|\s或\s)', r['fetch'])[0].strip()
 
 
+MANIFEST = '.ui-arsenal.json'
+DOWNLOAD_KINDS = ('registry', 'url', 'doc', 'prompt', 'script')
+
+
+def default_out(r, opts, root=None):
+    """<root>/<source>/<id>[@style][@variant]: different styles and variants never share a directory."""
+    root = root or os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal')
+    name = re.sub(r'[^A-Za-z0-9_.-]', '_', r['id']) + ''.join(
+        '@' + re.sub(r'[^A-Za-z0-9_.-]', '_', opts[k]) for k in ('style', 'variant') if opts.get(k))
+    return os.path.join(root, r['source'], name)
+
+
+def list_files(d):
+    out = []
+    for dp, _, fns in os.walk(d):
+        out += [os.path.relpath(os.path.join(dp, f), d).replace(os.sep, '/') for f in fns]
+    return sorted(x for x in out if posixpath.basename(x) != MANIFEST)
+
+
+def read_manifest(out):
+    try:
+        return json.load(open(os.path.join(out, MANIFEST), encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+
+
+def publish(staging, out, record):
+    """Swap the previous result in `out` for the staged files and write the manifest. Only paths listed in the
+    previous manifest are removed, so a user-chosen --out keeps whatever else it contains. A directory under the
+    default root without a manifest was written by an older version of this tool and is cleared as a whole."""
+    root = os.path.realpath(out)
+    previous = (read_manifest(out) or {}).get('files', [])
+    default_root = os.path.realpath(os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal'))
+    if not previous and root.startswith(default_root + os.sep) and os.path.isdir(root):
+        previous = [{'path': rel} for rel in list_files(root)]
+    for f in previous:
+        try:
+            p = os.path.realpath(os.path.join(root, safe_rel(f.get('path', ''))))
+        except UnsafePath:
+            continue
+        if p.startswith(root + os.sep) and os.path.isfile(p):
+            os.remove(p)
+            d = os.path.dirname(p)
+            while d != root and d.startswith(root + os.sep) and not os.listdir(d):
+                os.rmdir(d)
+                d = os.path.dirname(d)
+    files = []
+    for rel in list_files(staging):
+        body = open(os.path.join(staging, rel), 'rb').read()
+        save(out, rel, body)
+        files.append({'path': rel, 'bytes': len(body), 'sha256': sha(body)[:16]})
+    record['files'] = files
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, MANIFEST), 'w', encoding='utf-8') as f:
+        json.dump(record, f, ensure_ascii=False, indent=1)
+    return files
+
+
 def fetch_one(r, opts, quiet=False):
-    base = os.environ.get('TMPDIR', '/tmp')
-    out = opts.get('out') or os.path.join(base, 'ui-arsenal', r['source'], re.sub(r'[^A-Za-z0-9_.-]', '_', r['id']))
+    out = opts.get('out') or default_out(r, opts)
     log = (lambda *a: None) if quiet else print
     log('# %s:%s — %s  [%s · %s]' % (r['source'], r['id'], r['name'], USAGE_ZH.get(r['usage']), r['access']))
     if r['access'] == 'pro':
@@ -742,24 +854,41 @@ def fetch_one(r, opts, quiet=False):
     if r['access'] == 'broken':
         log('此条目已失效或为空：%s' % r['fetch'])
         return 2
-    ok_all = True
-    for kind, arg in parse_spec(r['spec']):
-        if kind == 'registry':
-            ok, msg = do_registry(arg, out, opts)
-        elif kind in ('url', 'doc'):
-            ok, msg = do_url(arg, out, kind)
-        elif kind == 'prompt':
-            ok, msg = do_prompt(arg, out)
-        elif kind == 'script':
-            ok, msg = do_script(arg, out, opts)
-        elif kind == 'browser':
-            ok, msg = True, 'browser   需在浏览器里打开（内置浏览器 get_page_text / read_page）：%s' % arg
-        elif kind == 'manual':
-            ok, msg = True, 'manual    按 sources/%s.md「按需获取方法」操作：\n  %s' % (r['source'], r['fetch'])
-        else:
-            ok, msg = False, 'unknown adapter %s' % kind
-        log(('' if ok else 'FAIL ') + msg)
-        ok_all &= ok
+    ok_all, fetched = True, False
+    staging = tempfile.mkdtemp(prefix='ui-arsenal-')  # nothing reaches `out` until every step has been checked
+    try:
+        for kind, arg in parse_spec(r['spec']):
+            try:
+                if kind == 'registry':
+                    ok, msg = do_registry(arg, staging, opts)
+                elif kind in ('url', 'doc'):
+                    ok, msg = do_url(arg, staging, kind)
+                elif kind == 'prompt':
+                    ok, msg = do_prompt(arg, staging)
+                elif kind == 'script':
+                    ok, msg = do_script(arg, staging, opts)
+                elif kind == 'browser':
+                    ok, msg = True, 'browser   需在浏览器里打开（内置浏览器 get_page_text / read_page）：%s' % arg
+                elif kind == 'manual':
+                    ok, msg = True, 'manual    按 sources/%s.md「按需获取方法」操作：\n  %s' % (r['source'], r['fetch'])
+                else:
+                    ok, msg = False, 'unknown adapter %s' % kind
+            except UnsafePath as e:
+                ok, msg = False, str(e)
+            log(('' if ok else 'FAIL ') + msg)
+            ok_all &= ok
+            fetched |= ok and kind in DOWNLOAD_KINDS
+        files = publish(staging, out, {
+            'ref': '%s:%s' % (r['source'], r['id']), 'name': r['name'], 'spec': r['spec'],
+            'style': opts.get('style', ''), 'variant': opts.get('variant', ''), 'url': opts.get('_final_url', ''),
+            'fetched_at': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'status': 'ok' if ok_all else 'partial' if fetched else 'failed'})
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+    if files:
+        log('文件在：%s/（%d 个，清单见 %s）' % (out, len(files), MANIFEST))
+    elif not ok_all:
+        log('没有取到文件；%s 里上一次的结果已移除，不会被当成这次的结果。' % out)
     if r['usage'] == 'install':
         log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r, opts))
     show_claims(r, out, opts, log)
@@ -799,14 +928,13 @@ def probe_terms(probe):
 
 
 def probe_texts(out):
-    """Fetched source files as text; the registry wrapper and documentation pages are left out."""
+    """Fetched source files as text; the registry wrapper, documentation pages and the manifest are left out."""
     texts = []
-    for fn in (sorted(os.listdir(out)) if os.path.isdir(out) else []):
-        p = os.path.join(out, fn)
-        if fn == 'registry-item.json' or fn.startswith('doc-') or not os.path.isfile(p):
+    for rel in (list_files(out) if os.path.isdir(out) else []):
+        if rel == 'registry-item.json' or posixpath.basename(rel).startswith('doc-'):
             continue
         try:
-            texts.append(open(p, encoding='utf-8').read())
+            texts.append(open(os.path.join(out, rel), encoding='utf-8').read())
         except UnicodeDecodeError:
             pass
     return texts
@@ -819,9 +947,9 @@ def probe_eval(probe, texts):
 
 def artifact_sha(out):
     """sha of the main artifact in a fetch directory, matching the sha256 prefix fetch prints."""
-    names = sorted(os.listdir(out)) if os.path.isdir(out) else []
+    names = list_files(out) if os.path.isdir(out) else []
     pick = 'registry-item.json' if 'registry-item.json' in names else next(
-        (n for n in names if not n.startswith('doc-') and os.path.isfile(os.path.join(out, n))), None)
+        (n for n in names if not posixpath.basename(n).startswith('doc-')), None)
     return sha(open(os.path.join(out, pick), 'rb').read())[:16] if pick else ''
 
 
@@ -880,9 +1008,7 @@ def guide_mentions(ref):
 def fetch_for_check(c, base):
     """Fetch what a ledger row was checked against into a fresh directory; returns (ok, out, error)."""
     out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', c['ref'] + ' ' + c['check_with']))
-    if os.path.isdir(out):
-        for f in os.listdir(out):
-            os.remove(os.path.join(out, f))
+    shutil.rmtree(out, ignore_errors=True)  # our own scratch directory under $TMPDIR
     if c['check_with'].startswith('https://'):
         ok, msg = do_url(c['check_with'], out)
         return ok, out, '' if ok else msg
@@ -1050,13 +1176,9 @@ MATRIX = [
 
 def run_case(ref, opts, base):
     out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', ref))
-    if os.path.isdir(out):
-        for f in os.listdir(out):
-            os.remove(os.path.join(out, f))
-    o = dict(opts, out=out)
-    rc = fetch_one(find_row(ref), o, quiet=True)
-    files = os.listdir(out) if os.path.isdir(out) else []
-    return rc, files
+    shutil.rmtree(out, ignore_errors=True)  # our own scratch directory under $TMPDIR
+    rc = fetch_one(find_row(ref), dict(opts, out=out), quiet=True)
+    return rc, [f['path'] for f in (read_manifest(out) or {}).get('files', [])]
 
 
 def cmd_verify(args):
