@@ -7,8 +7,8 @@
 
 | UI 元素 | 必须绑定的真实状态 | 不允许 |
 |---|---|---|
-| 思考中文字 / 光球 / 流光 | 已发出请求、还没有收到第一个 token 或 reasoning 分片 | 收到结果后仍在播；固定时长后自动"完成" |
-| "思考了 N 秒" | 第一个 reasoning 分片到 reasoning 结束的真实时间差，或服务端返回的耗时 | 组件内部计时器自己停在某个数 |
+| 等待中文字 / 光球 / 流光 | 已发出请求、还没有收到第一个 token 或 reasoning 分片。这段时间包括网络和排队，文字写"等待回复""处理中"；收到 reasoning 分片后才写"思考中" | 收到结果后仍在播；固定时长后自动"完成" |
+| 推理用时 | 服务端返回了推理耗时字段时，可以写"思考了 N 秒"；只能在客户端测时，测到的是从第一个到最后一个 reasoning 分片的接收时间，里面有网络和缓冲，写"推理过程约 N 秒"或"已用时 N 秒"，不说成模型真实思考了多久 | 组件内部计时器自己停在某个数 |
 | 步骤列表、工具调用行 | 每个 `tool-call` 事件新增一行；`tool-result` 到达才打勾；出错显示失败和重试 | 预先写好的步骤按时间轴依次点亮 |
 | 流式文字 | 按收到的增量追加；网络停了文字就停 | 拿到全文后用 `setInterval` 逐字放出来 |
 | 审批 / 追问 | 后端真的在等待用户输入（agent 已暂停） | 演示用的"自动批准" |
@@ -29,7 +29,7 @@
 |---|---|---|
 | 想要更"AI 产品感"的思考轨迹（步骤、搜索、代码四种变体） | `beautifului:thinking-state` | 视觉和信息结构都好，结束后折叠成"Thought for Ns"。但**内部用 `STAGES` 定时器自己推进**，没有 `working` / `status` prop，`Thought for 4 seconds` 也是写死的，必须改成受控（把 `useSequence` 换成外部传入的阶段和耗时）才能上线 |
 | 工具调用、代码编辑的紧凑展示 | `beautifului:tool-chips` | 可展开看 diff，按钮有 `aria-expanded`、`aria-label`；同样内置 `STEP_MS` 演示时间线，要改成按 `tool-call` 事件渲染 |
-| 带 @ 引用、/ 命令、模型选择的输入框 | `beautifului:prompt-bar` 或 `reactbits:prompt-bar` | 功能全。beautifului 版处理了输入法组合（`isComposing`），但 @ 和 / 菜单项是 `div role="button"`，没有 listbox / combobox 语义，要补；还依赖 `glimm` 做切换模型时的彩虹扫光（第 3 级，Operate 页面去掉）。reactbits 版依赖 hugeicons，要换 lucide。只要普通输入框时用 shadcn `input-group` + `textarea` |
+| 带 @ 引用、/ 命令、模型选择的输入框 | `beautifului:prompt-bar` 或 `reactbits:prompt-bar` | 功能全。beautifului 版处理了输入法组合（`isComposing`），但 @ 和 / 菜单项是 `div role="button"`，没有 listbox / combobox 语义，要补；还依赖 `glimm` 做切换模型时的彩虹扫光（第 3 级，Operate 页面去掉）。reactbits 版依赖 hugeicons，要换成项目在用的图标库（项目还没定就用 lucide）。只要普通输入框时用 shadcn `input-group` + `textarea` |
 | agent 正在做什么的小图标（搜索、写作、连接、规划） | `librariesdev:thinking-orbs` | 2D canvas，零依赖，九种状态各对应一种真实活动；作者规则：等待不足 2 秒不显示、长列表里一次只显示一个；减弱动效降为静帧，离屏暂停。`state` 必须跟着后端当前步骤切换，不要固定一个状态循环 |
 | 多个并行任务的状态行 | `beautifului:task-rows` 或 `reactbits:lattice-loader` | task-rows 有运行中 / 失败 / 完成和子项；lattice-loader 有 `status`、`elapsed`、`role="status"`。前者同样是定时器演示，要改受控 |
 | 回答里的 markdown | `shadcn:typeset` | prose 替代，按 `--font-heading`、`--font-mono` 取值；流式追加内容时不会因为样式重算闪烁 |
@@ -63,7 +63,7 @@
 - **减弱动效**：流光、orb、流式模糊边缘都要在 `prefers-reduced-motion` 下停；文字直接显示。
 - **滚动**：只有读者在底部时才自动跟随（message-scroller 的 `autoScroll`），用户往上翻就不要拉回去，给一个"回到最新"按钮。
 - **混用**：beautifului 进 shadcn 项目只复制用到的 `@theme inline` 条目和 keyframes，组件代码里的 `accent` 引用改成 `primary`（不要在全局重定义 `--accent`，见 `_styles.md`）；动效库统一用 `motion/react`；图标换成项目在用的图标库（项目还没定就用 lucide）。
-- **最常见的坑**：把演示组件原样上线，结果动画按自己的时间轴跑，和后端真实进度对不上。每接一个组件，先搜源码里的 `setTimeout` / `setInterval` / `STAGES` / `STEP_MS`，确认已全部替换成外部状态。
+- **最常见的坑**：把演示组件原样上线，结果动画按自己的时间轴跑，和后端真实进度对不上。每接一个组件，先搜源码里的 `setTimeout` / `setInterval` / `STAGES` / `STEP_MS`，逐个看用途：推进阶段、伪造进度、自己数耗时、到点就显示完成的，换成外部状态；debounce、延迟显示加载态、按真实开始时间刷新"已用时"、退出动画计时这些合法用途保留，不要一概删掉。
 
 ## 候选清单
 - `shadcn:message-scroller` — 聊天滚动容器，跟随与释放、`role="log"`，默认首选

@@ -5,6 +5,8 @@
 
 不需要的情况：每个标题、每个列表项前都放一个图标做装饰（这是 `_scenes.md` 第 6 节"图标 + 标题 + 一段话"卡片的来源）；用 emoji 或 Unicode 字符（✓ ★ → ⚙）代替图标，这是第 2 级设计系统偏差。
 
+项目已经有图标库（Heroicons、Phosphor、Material Symbols、自研 SVG……）就继续用它，不为了用收藏库而换；这份指南用于项目还没定图标库，或者要补一个现有库里没有的物件图标（补的那个要和现有库的网格、描边对齐）。
+
 这个收藏库里的图标只有一个来源：Lucide（1866 个正式图标 + Lucide Lab 357 个已发布的实验图标）。`find.sh --task icon` 的 2249 条全部来自它。图标只有英文名和英文 tags，搜要用英文：`find.sh icon calendar`、`find.sh avocado`。
 
 ## 默认推荐
@@ -24,7 +26,7 @@
 
 ## 慎用
 - 一页混用两套图标库：描边粗细、端点、网格不同，一眼能看出来。需要替换的常见来源：
-  - shadcn 的 maia、mira 预设（hugeicons）、lyra 预设（tabler）：init 时选 lucide 预设，或用 `npx shadcn@latest migrate icons` 切换；
+  - shadcn 的 maia、mira 预设（hugeicons）、lyra 预设（tabler）：init 时选和项目现有图标库一致的预设（项目还没定就选 lucide 的），或用 `npx shadcn@latest migrate icons` 切换；
   - `reactbits:prompt-bar`、`reactbits:thought-line`、`reactbits:refine-frame` 等（依赖 `@hugeicons/react`、`@hugeicons/core-free-icons`）；
   - `beautifului:selection-actions`（`iconoir-react`）、`beautifului:sidebar-nav`（Central Icons，商业图标集，授权要单独确认）；beautifului 多数组件把图标写成内联 SVG，也要逐个换；
   - `obsidianui:dashboard-shell` 的示例（`@duo-icons/react`）、`obsidianui:template:project-one`（同时装了 `lucide-react` 和 `react-icons`）。

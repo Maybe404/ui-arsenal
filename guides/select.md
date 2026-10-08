@@ -24,7 +24,7 @@
 
 ## 慎用
 - `bencho:magnet-select`：磁吸手感好，但选项来自被清空的图片数组 `MARKS`，不填自己的图片就一个选项都没有（`sources/bencho.md`）；要映射 token；用 framer-motion。只适合 Persuade/Experience 页里"选头像、选样式"这类视觉选择，不进表单。
-- `reactbits:glide-select`：ARIA 写得不错（`role="combobox"`、`aria-activedescendant`、`role="listbox"`，Tailwind `motion-reduce:` 分支都有），但依赖 hugeicons（换 lucide），颜色全走 hex props（`accentColor`、`surfaceColor` 等），要从主底座变量取值。主底座的 select 能满足时不用它。
+- `reactbits:glide-select`：ARIA 写得不错（`role="combobox"`、`aria-activedescendant`、`role="listbox"`，Tailwind `motion-reduce:` 分支都有），但依赖 hugeicons（换成项目在用的图标库，项目还没定就用 lucide），颜色全走 hex props（`accentColor`、`surfaceColor` 等），要从主底座变量取值。主底座的 select 能满足时不用它。
 - `bencho:picker`、`bencho:roster`、`bencho:aspect`、`bencho:asset-swap`：场景很具体的选择交互（指派人、多选列表、画幅），未拉源码；要用时先 fetch 看键盘和 ARIA，再映射 token。
 - `reactbits:option-wheel`、`reactbits:infinite-menu`：滚轮/3D 球面选择，属于展示效果，不进 Operate 表单；infinite-menu 依赖 gl-matrix 和 WebGL。
 - `beautifului:entity-chip`、`beautifului:tool-chips`、`beautifului:prompt-bar`：AI 场景件，只在 AI 输入区里用。

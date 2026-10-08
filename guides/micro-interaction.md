@@ -46,7 +46,7 @@
 - **触控目标**：最小 44×44px；滑动操作要有可见的按钮替代（uiarc:swipe-actions 的菜单）。
 - **减弱动效**：保留状态切换（图标、颜色、文字），去掉位移、缩放、粒子。
 - **优先只动 transform、opacity**：bencho 的 confirm、slide-confirm 动画 width/left，会触发布局；用在单个元素上可以接受，用在列表每一行就要实测或换 transform 方案（条件见 `_scenes.md`「动效规范」）。
-- **图标统一**：reactbits Micro 类默认 hugeicons，bencho 用 lucide；全站统一成主底座的图标库。
+- **图标统一**：reactbits Micro 类默认 hugeicons，bencho 用 lucide；全站统一成项目在用的那套（项目还没定就用 lucide）。
 - **动效库**：uiarc 和 reactbits Micro 用 `motion`，bencho 用 `framer-motion`；同一项目统一一个。
 
 ## 候选清单

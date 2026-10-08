@@ -8,7 +8,7 @@
 |---|---|---|
 | shadcn | `shadcn:button` | Base UI `Button` + cva，依赖只有 `cn`；6 个 variant（default / outline / secondary / ghost / destructive / link）和 8 个 size（含 icon 尺寸）；自带 `focus-visible:ring-3 ring-ring/50`、`aria-invalid` 样式、disabled 态；按下只有 `translate-y-px`，不抢注意力。颜色全部走 `--primary` `--secondary` `--destructive` `--muted` 等变量（2026-10-07 拉取 base-nova 源码确认） |
 | uiarc | `uiarc:button` | 原生 `<button>` + motion；`loading` 用 `aria-busy` + `aria-disabled` 而不是 `disabled`，加载中键盘焦点不丢；按下 0.96–0.985 的弹簧缩放，作为弹层触发器（`aria-haspopup`/`data-state`）时自动不缩放；有 `useReducedMotion` 分支和 CSS `prefers-reduced-motion`。模块 CSS 里没有焦点样式，键盘焦点靠 arc-foundation 的全局描边（见「接入要点」） |
-| 没有底座或其他 | 原生 `<button>` + 项目 token | 非 Tailwind、非 React 的项目不必为按钮引入整个底座。行为照 `uiarc:button` 的做法：加载时 `aria-busy="true"` + `aria-disabled="true"` 并吞掉点击，而不是 `disabled` |
+| 没有底座或其他 | 原生 `<button>` + 项目 token | 非 Tailwind、非 React 的项目不必为按钮引入整个底座。加载时按「接入要点」的加载态处理：表单层防重复提交，按钮显示状态并保住焦点 |
 
 ## 按场景换
 | 场景 | 推荐 | 理由 |
@@ -46,7 +46,7 @@
 - **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **触控目标**：`shadcn:button` 默认高 32px（`h-8`），`lg` 36px，`icon` 32×32，在触屏为主的页面低于 44px 建议值。移动端用 `size="lg"` 并加 `min-h-11`，或给图标按钮加 `after:absolute after:-inset-2` 扩大点击区（shadcn 的 switch、slider 就是这么做的）。uiarc 默认 44px（`--control-height-md`）。
 - **图标按钮**必须有 `aria-label`；图标沿用项目在用的那一套，项目还没定图标库时用 lucide。
-- **加载态**：shadcn 的写法通常是 `disabled` + spinner，会让键盘焦点掉到 body。表单提交按钮建议改成 `aria-disabled` + 吞点击（uiarc 的做法），并在 `aria-busy` 期间保留文字宽度，避免布局跳动。
+- **加载态**：要同时做到三件事。① 防重复提交放在表单层：在 `onSubmit` 或业务入口用一个"进行中"标志拒绝第二次提交，鼠标点击、键盘回车、程序触发都走这里，不能只靠按钮。② 按钮显示状态：spinner + 保留文字（"Saving…"），容器设 `aria-busy`。③ 焦点不丢：`disabled` 写法（shadcn 示例、`loading.md` 的按钮内联写法）简单，但按钮会变得不可聚焦；在 Chromium 152 里实测，键盘回车提交后把按钮设成 `disabled`，焦点随即落到 body（其他浏览器未测），键盘用户要重新找位置。需要保住焦点时用 `aria-disabled="true"`（uiarc:button 的做法），但它只表达状态、不会阻止点击，处理函数里要自己直接返回。加载中时保留文字宽度，避免布局跳动。
 - **减弱动效**：shadcn 按钮只有 `transition-all` 的颜色过渡和 1px 位移，可接受；uiarc 已处理（减弱时标签只做淡入淡出，spinner 停转）。uiarc 按钮在标签变化时会弹簧动画宽度，这是有意的"标签变形"，在长表格的行内按钮上可以关掉（不改 children 的 key 即可）。
 - **常见坑**：shadcn 新版默认 Base UI，按钮包链接用 `render={<a href="…" />}`，不是 Radix 的 `asChild`；网上旧示例 `shadcn:button-as-child` 是 Radix 写法。
 
