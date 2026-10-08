@@ -230,5 +230,71 @@ class ResultContract(unittest.TestCase):
         self.assertTrue(any('npm i framer-motion' in str(c.args[0]) for c in p.call_args_list if c.args))
 
 
+
+class Robustness(unittest.TestCase):
+    """#24: size limits, @latest versions, state file writes."""
+    class Resp:
+        def __init__(self, body, length=None, url='https://example.invalid/x', ct='text/plain'):
+            self.body, self.status, self._url = body, 200, url
+            self.headers = {'content-type': ct, 'content-length': str(length if length is not None else len(body))}
+
+        def read(self, n=-1):
+            return self.body[:n] if n and n > 0 else self.body
+
+        def geturl(self):
+            return self._url
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def test_declared_size_over_limit_is_not_read(self):
+        with patch.object(ua.urllib.request, 'urlopen', return_value=self.Resp(b'x', length=ua.MAX_TEXT + 1)):
+            st, ct, body = ua.http('https://example.invalid/big.json')
+        self.assertEqual(st, -1)
+        self.assertIn('response too large', ua.http_fail(st, body, 'u'))
+
+    def test_undeclared_size_over_limit_is_cut(self):
+        with patch.object(ua.urllib.request, 'urlopen', return_value=self.Resp(b'x' * 11, length='')):
+            st, ct, body = ua.http('https://example.invalid/stream.txt', max_bytes=10)
+        self.assertEqual(st, -1)
+
+    def test_media_gets_a_larger_limit(self):
+        resp = self.Resp(b'x', length=ua.MAX_TEXT + 1, ct='video/mp4')
+        with patch.object(ua.urllib.request, 'urlopen', return_value=resp):
+            st, ct, body = ua.http('https://example.invalid/clip.mp4')
+        self.assertEqual(st, 200)
+
+    def test_latest_url_reports_resolved_version(self):
+        url = 'https://unpkg.com/lucide-static@latest/icons/house.svg'
+        resp = self.Resp(b'<svg/>', url='https://unpkg.com/lucide-static@1.52.0/icons/house.svg', ct='image/svg+xml')
+        tmp = tempfile.mkdtemp()
+        try:
+            opts = {}
+            with patch.object(ua.urllib.request, 'urlopen', return_value=resp):
+                ok, msg = ua.do_url(url, tmp, 'url', opts)
+            self.assertTrue(ok)
+            self.assertIn('lucide-static@1.52.0', msg)
+            self.assertEqual(opts['_resolved'], 'lucide-static@1.52.0')
+            r = row(source='lucide', id='house', name='House')
+            self.assertIn('lucide-static@1.52.0', ua.install_hint(r, opts))
+        finally:
+            shutil.rmtree(tmp)
+
+    def test_state_updates_merge_and_write_atomically(self):
+        tmp = tempfile.mkdtemp()
+        try:
+            with patch.object(ua, 'STATE', os.path.join(tmp, '_state.json')):
+                ua.update_state(lambda s: s.setdefault('verify', {}).update({'a': 1}))
+                ua.update_state(lambda s: s.setdefault('refresh', {}).update({'b': 2}))
+                ua.update_state(lambda s: s.setdefault('verify', {}).update({'c': 3}))
+                self.assertEqual(ua.load_state(), {'verify': {'a': 1, 'c': 3}, 'refresh': {'b': 2}})
+            self.assertEqual(sorted(os.listdir(tmp)), ['_state.json', '_state.json.lock'])  # no temp file left
+        finally:
+            shutil.rmtree(tmp)
+
+
 if __name__ == '__main__':
     unittest.main()

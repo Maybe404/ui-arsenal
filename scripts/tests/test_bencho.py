@@ -52,6 +52,15 @@ class RefusesCode(unittest.TestCase):
                     parse(src)
                 self.assertRegex(str(ctx.exception), r'at \d+')
 
+    def test_deep_nesting_is_refused_not_recursed(self):
+        with self.assertRaises(bencho.LiteralError) as ctx:
+            parse('[' * 500 + ']' * 500)
+        self.assertIn('nesting deeper than', str(ctx.exception))
+        want = 1
+        for _ in range(50):
+            want = [want]
+        self.assertEqual(parse('[' * 50 + '1' + ']' * 50), want)
+
     def test_truncated_input_reports_position(self):
         p = bencho.Parser('{a:[1,2', 0)
         with self.assertRaises(IndexError):

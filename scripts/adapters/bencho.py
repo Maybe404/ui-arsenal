@@ -39,8 +39,15 @@ class Parser:
     KEYWORD = re.compile(r'(?:!0|!1|true|false|null|void 0)(?![\w$])')
     NUMBER = re.compile(r'-?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?(?![\w$.])')  # minifiers also write .5
 
+    MAX_DEPTH = 100  # the BLOCKS literal nests a few levels; anything deeper is refused, not recursed into
+
     def __init__(self, s, i):
-        self.s, self.i = s, i
+        self.s, self.i, self.depth = s, i, 0
+
+    def enter(self):
+        self.depth += 1
+        if self.depth > self.MAX_DEPTH:
+            raise LiteralError('nesting deeper than %d levels at %d' % (self.MAX_DEPTH, self.i))
 
     def ws(self):
         while self.i < len(self.s) and self.s[self.i] in ' \t\r\n':
@@ -78,11 +85,13 @@ class Parser:
 
     def obj(self):
         out = {}
+        self.enter()
         self.i += 1
         while True:
             self.ws()
             if self.s[self.i] == '}':
                 self.i += 1
+                self.depth -= 1
                 return out
             k = self.key()
             self.ws()
@@ -96,11 +105,13 @@ class Parser:
 
     def arr(self):
         out = []
+        self.enter()
         self.i += 1
         while True:
             self.ws()
             if self.s[self.i] == ']':
                 self.i += 1
+                self.depth -= 1
                 return out
             out.append(self.value())
             self.ws()
@@ -164,6 +175,8 @@ def load_blocks():
         raise SystemExit('bencho: cannot parse BLOCKS as a pure literal: %s' % e)
     except IndexError:
         raise SystemExit('bencho: cannot parse BLOCKS as a pure literal: unexpected end of input at %d' % p.i)
+    except RecursionError:
+        raise SystemExit('bencho: cannot parse BLOCKS as a pure literal: nesting too deep at %d' % p.i)
 
 
 def main():

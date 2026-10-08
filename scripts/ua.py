@@ -16,6 +16,7 @@ Every fetch is read-only: files go to an output directory and nothing is install
 Remote content is never executed: adapters in scripts/adapters/ (*.py or *.sh) only download
 text and parse it (bencho.py parses the site bundle as a pure literal and refuses anything else).
 """
+import contextlib
 import hashlib
 import html
 import json
@@ -30,6 +31,11 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+
+try:
+    import fcntl  # POSIX file locks for sources/_state.json; without it (Windows) writes are still atomic
+except ImportError:
+    fcntl = None
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'sources')
@@ -129,20 +135,43 @@ def sources():
 
 # ---------- http ----------
 
-def http(url, data_limit=None, tries=2, timeout=40):
+MAX_TEXT, MAX_MEDIA = 8 << 20, 100 << 20  # bytes; registry JSON and source files are far below the first
+FINAL_URL = {}  # requested URL -> URL after redirects, to report the version an @latest URL resolved to
+
+
+def http(url, max_bytes=None, tries=2, timeout=40):
+    """GET a URL: (status, content type, body). Status 0 = network error (body holds the reason), -1 = the
+    response is larger than the limit (8 MB, or 100 MB for media URLs) and was not read in full."""
+    limit = max_bytes or (MAX_MEDIA if url.split('?')[0].lower().endswith(MEDIA_EXT) else MAX_TEXT)
     last = None
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': '*/*'})
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                body = r.read(data_limit) if data_limit else r.read()
-                return r.status, r.headers.get('content-type', ''), body
+                FINAL_URL[url] = r.geturl()
+                ct = r.headers.get('content-type', '')
+                size = r.headers.get('content-length', '')
+                if size.isdigit() and int(size) > limit:
+                    return -1, ct, ('%s bytes, over the %d MB limit' % (size, limit >> 20)).encode()
+                body = r.read(limit + 1)
+                if len(body) > limit:
+                    return -1, ct, ('more than the %d MB limit' % (limit >> 20)).encode()
+                return r.status, ct, body
         except urllib.error.HTTPError as e:
             return e.code, e.headers.get('content-type', '') if e.headers else '', b''
         except Exception as e:  # network error: retry once
             last = e
             time.sleep(1.5)
     return 0, '', str(last).encode()
+
+
+def http_fail(st, body, url):
+    """One-line reason for a failed http() call."""
+    if st == -1:
+        return 'response too large (%s) %s' % (body.decode('utf-8', 'replace'), url)
+    if st == 0:
+        return 'network error (%s) %s' % (body.decode('utf-8', 'replace')[:160] or 'no response', url)
+    return 'HTTP %s %s' % (st, url)
 
 
 def sha(b):
@@ -625,7 +654,7 @@ def do_registry(url, out, opts):
     opts['_final_url'] = url
     st, ct, body = http(url)
     if st != 200:
-        return False, 'HTTP %s %s' % (st, url)
+        return False, http_fail(st, body, url)
     try:
         d = json.loads(body)
     except ValueError:
@@ -674,10 +703,17 @@ def wrong_type(url, ct, body):
     return ''
 
 
-def do_url(url, out, label='url'):
+def resolved_version(url):
+    """'lucide-static@1.52.0' when an @latest URL was redirected to a concrete version, else ''."""
+    m = re.search(r'/((?:@[^/@]+/)?[^/@]+)@latest/', url)
+    v = re.search(r'@(\d+\.\d+\.\d+[\w.-]*)/', FINAL_URL.get(url, '')) if m else None
+    return '%s@%s' % (m.group(1), v.group(1)) if v else ''
+
+
+def do_url(url, out, label='url', opts=None):
     st, ct, body = http(url)
     if st != 200 or not body:
-        return False, 'HTTP %s %s' % (st, url)
+        return False, http_fail(st, body, url) if st != 200 else 'empty response %s' % url
     bad = wrong_type(url, ct, body)
     if bad:
         return False, '%s instead of the expected file: %s' % (bad, url)
@@ -690,15 +726,21 @@ def do_url(url, out, label='url'):
     if label == 'doc' and '.' not in name:
         name += '.md'
     save(out, ('doc-' if label == 'doc' else '') + name, body)
-    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)' % (label, url, ('doc-' if label == 'doc' else '') + name,
-                                                            len(body), sha(body)[:16])
+    version = resolved_version(url)
+    if version and opts is not None:
+        opts['_resolved'] = version
+    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)%s' % (
+        label, url, ('doc-' if label == 'doc' else '') + name, len(body), sha(body)[:16],
+        '\n  version %s（@latest 这次解析到的版本，换个时间再取可能不同）' % version if version else '')
 
 
 def do_prompt(url, out):
     st, ct, body = http(url)
-    m = re.search(r'<pre id="agent-prompt"[^>]*>(.*?)</pre>', body.decode('utf-8', 'replace'), re.S) if st == 200 else None
+    if st != 200:
+        return False, http_fail(st, body, url)
+    m = re.search(r'<pre id="agent-prompt"[^>]*>(.*?)</pre>', body.decode('utf-8', 'replace'), re.S)
     if not m:
-        return False, 'prompt block not found (HTTP %s) %s' % (st, url)
+        return False, 'prompt block not found on the page (HTTP 200) %s' % url
     txt = html.unescape(m.group(1)).strip()
     save(out, 'prompt.md', txt.encode())
     return True, 'prompt    %s\n  -> prompt.md (%d chars)' % (url, len(txt))
@@ -820,7 +862,9 @@ def install_hint(r, opts=None):
     if r['source'] == 'lucide' and r['id'].startswith('lab:'):
         return r['fetch']
     if r['source'] == 'lucide':
-        return "npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）" % r['name']
+        return ("npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）%s" % (
+            r['name'], '\n  （这次取到的 SVG 来自 %s；项目里已装的 lucide-react 较旧时可能还没有这个图标，先核对版本）'
+            % opts['_resolved'] if opts.get('_resolved') else ''))
     if r['source'] == 'shadcn' and r['category'].startswith(('util', 'headless', 'helper')):
         return r['fetch'] + '\n  （项目已装 shadcn 时，先确认版本里是否已包含这个工具类或包，再决定是否升级）'
     if (opts.get('style') or opts.get('variant')) and opts.get('_final_url'):
@@ -920,7 +964,7 @@ def fetch_one(r, opts, quiet=False):
                 if kind == 'registry':
                     ok, msg = do_registry(arg, staging, opts)
                 elif kind in ('url', 'doc'):
-                    ok, msg = do_url(arg, staging, kind)
+                    ok, msg = do_url(arg, staging, kind, opts)
                 elif kind == 'prompt':
                     ok, msg = do_prompt(arg, staging)
                 elif kind == 'script':
@@ -1296,8 +1340,7 @@ def cmd_verify(args):
                   '说明：verify 通过只代表"现在能取到"（验证层级③），不代表组件成熟或适合项目。')
             return 0
     base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-verify')
-    state, now, fails = load_state(), time.strftime('%Y-%m-%d %H:%M'), 0
-    vs = state.setdefault('verify', {})
+    now, fails, vs = time.strftime('%Y-%m-%d %H:%M'), 0, {}  # merged into _state.json at the end, under the lock
     if matrix:
         rows = []
         for name, ref, opts, want_rc, want_files in MATRIX:
@@ -1328,7 +1371,7 @@ def cmd_verify(args):
                 res.append([r['id'], ok, 'rc=%s files=%d' % (rc, len(files))])
                 print('%-4s %-13s %-40s %s' % ('ok' if ok else 'FAIL', s, r['id'][:40], res[-1][2]))
             vs[s] = {'at': now, 'fails': sum(not x[1] for x in res), 'results': res}
-    save_state(state)
+    update_state(lambda st: st.setdefault('verify', {}).update(vs))
     print('\n%d failed. 结果按来源保存在 sources/_state.json 的 verify 下（不覆盖其他来源的记录）。' % fails)
     return 1 if fails else 0
 
@@ -1347,12 +1390,39 @@ REMOVE_AFTER_DAYS = 30  # an item missing in two refreshes at least this far apa
 
 
 def load_state():
-    return json.load(open(STATE, encoding='utf-8')) if os.path.exists(STATE) else {}
+    if not os.path.exists(STATE):
+        return {}
+    with open(STATE, encoding='utf-8') as f:
+        return json.load(f)
 
 
 def save_state(s):
-    with open(STATE, 'w', encoding='utf-8') as f:
+    """Atomic write: a reader never sees half a file."""
+    tmp = '%s.tmp-%d' % (STATE, os.getpid())
+    with open(tmp, 'w', encoding='utf-8') as f:
         json.dump(s, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, STATE)
+
+
+@contextlib.contextmanager
+def state_lock():
+    with open(STATE + '.lock', 'w') as f:
+        if fcntl:
+            fcntl.flock(f, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl:
+                fcntl.flock(f, fcntl.LOCK_UN)
+
+
+def update_state(change):
+    """Read, change and write sources/_state.json under a lock, so verify and refresh running at the same time
+    keep each other's results."""
+    with state_lock():
+        s = load_state()
+        change(s)
+        save_state(s)
 
 
 def fp(meta):
@@ -1363,7 +1433,7 @@ def fp(meta):
 def get_json(url):
     st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s %s' % (st, url))
+        raise RuntimeError(http_fail(st, body, url))
     return json.loads(body), body
 
 
@@ -1599,9 +1669,7 @@ def cmd_refresh(args):
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
                     missing=missing, added=added)
         json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        st = load_state()
-        st.setdefault('refresh', {})[s] = {'at': prop['generated_at'], 'index_sha': h}
-        save_state(st)
+        update_state(lambda st: st.setdefault('refresh', {}).__setitem__(s, {'at': prop['generated_at'], 'index_sha': h}))
         print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d' % (
             s, len(remote), len(local), len(init), len(changed), len(missing), len(added)))
     print('\n待审变更已写入 %s/（不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。' % outdir)

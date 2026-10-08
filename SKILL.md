@@ -170,7 +170,7 @@ $S/stats.sh                                   # 各来源统计
 
 - `$S/audit.sh`：检查格式，包括两份文件的列数和 id 对应、枚举值（访问状态、用法、UI 任务、层级、风险）、别名、取码规格和 adapter 是否存在。改完 TSV 后必须跑。
 - `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式（含两个 adapter）、只能在浏览器看的条目，以及 login、pro、broken 的拒绝逻辑。
-- `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
+- `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖；这个文件的读改写有文件锁、写入是原子的，verify 和 refresh 同时跑也不会互相覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
 - `$S/test.sh`：离线单元测试（解析器、取码、刷新和 apply 的状态转换），不联网。改了 `scripts/` 下的代码后跑。
 - `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
 - `$S/claims.sh --check`：重新拉取 `sources/_claims.tsv` 里的组件，用 probe 复核结论是否仍成立；`--pending` 列出证据不足、待复核的结论和指南里互相矛盾的说法。改指南或台账后跑。
