@@ -20,7 +20,7 @@
 | 危险操作要防误触（删除、吊销） | `uiarc:hold-to-confirm` | 键盘可以长按 Space/Enter 完成，`aria-describedby` 指向操作提示，完成后播报（catalog）。shadcn 底座下按「混用规则」做作用域映射后借用；做不到就用 `shadcn:alert-dialog` 二次确认 |
 | 删除后原地给撤销 | `uiarc:confirm-morph` | 先给 Cancel 焦点，回车不会误确认；焦点跟着形态切换；鼠标悬停和标签页隐藏时暂停倒计时（catalog） |
 | Persuade 页的主 CTA 想要一点表现力 | `obsidianui:discover-button` | 悬停/聚焦时填充层展开、箭头圈覆盖文字；有 `:focus-visible` 描边和减弱动效分支，颜色是 `--obsidian-discover-*` 变量带硬编码兜底，映射到 `--primary` / `--secondary` 即可。注意它动画的是 `width`（480ms），只适合单个 CTA |
-| Persuade 页想要"标签滑动替换"类 CTA | `originkit:label-slide-button` 或 `originkit:arrow-reveal-button`（**需登录**） | 用户自己登录取码；免费替代 `obsidianui:interactive-hover-button`（未拉源码，未验证）或 `obsidianui:discover-button` |
+| Persuade 页想要"标签滑动替换"类 CTA | `obsidianui:discover-button`；或 `obsidianui:interactive-hover-button`（未拉源码，未验证） | 免费、现在就能取。登录后可换：`originkit:label-slide-button`、`originkit:arrow-reveal-button`（用户自己登录取码） |
 
 ## 慎用
 - `bencho:slide-confirm`：手柄是 `<button>` 但没有 `onClick`/`onKeyDown`，**键盘用户无法完成确认**（第 1 级）；组件也没有 `onConfirm` 回调，props 只有外观参数；还要映射 8 个 token（含两个 RGB 三元组）。要"滑动确认"的手感，改用 `uiarc:hold-to-confirm` 或 `reactbits:slide-commit`（后者未拉源码，未验证键盘）。

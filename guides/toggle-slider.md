@@ -19,7 +19,7 @@
 | 定价页月付/年付切换 | `uiarc:billing-toggle`；shadcn 用 `shadcn:toggle-group` | 已拉源码（2026-10-08）：`role="radiogroup"` + `role="radio"`、`aria-checked`，roving tabindex，方向键切换，有减弱动效分支；详见 `pricing.md` |
 | 亮/暗主题切换 | `uiarc:theme-switch-rise`（产品界面）；shadcn 用 `shadcn:mode-toggle` 示例 | uiarc catalog 自己建议安静的产品界面用 rise、展示页才用 eclipse；按钮带 `aria-pressed` 和"Switch to dark mode"标签 |
 | 价格、日期等双端区间 | `shadcn:slider`（`defaultValue` 传两个值）；uiarc 用 `uiarc:slider` | 两个滑块各自可聚焦；uiarc 版支持刻度和格式化读数 |
-| 前后对比图 | `bencho:image-compare` 或 `originkit:compare-slider`（**需登录**） | 都未拉源码；用前 fetch 确认滑块有 `role="slider"` 和键盘方向键，做不到就用 `shadcn:slider` 控制裁剪宽度自己拼 |
+| 前后对比图 | `bencho:image-compare` | 未拉源码；用前 fetch 确认滑块有 `role="slider"` 和键盘方向键，做不到就用 `shadcn:slider` 控制裁剪宽度自己拼。登录后可换：`originkit:compare-slider`（同样未拉源码） |
 | Persuade/Experience 页想让开关有手感 | `reactbits:squish-switch` | `role="switch"`、`aria-checked`、`useReducedMotion` 都有，按住会拉伸；**但 `outline-none` 且没有任何焦点样式**，颜色默认 hex（`#27272a` 等），接入时必须补 `focus-visible` ring 并把颜色换成主底座变量 |
 
 ## 慎用

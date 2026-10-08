@@ -33,7 +33,7 @@
 - `reactbits:bell-toggle`：同样依赖 hugeicons；铃铛摇动是装饰动效，Operate 页面不用。
 - `librariesdev:metal-fx-badge`：WebGL 液态金属徽章，只用于落地页的 "New / Beta" 标记，一页一个；状态徽章不用它。
 - `jakubantalik:transition:notification-badge`：描述为"斜向滑入 + 弹簧 pop"，有回弹；Operate 页面的未读数变化用简单的淡入或缩放即可。未拉源码。
-- 脉冲圆点（⚠ pulse-dot）表示"在线"、"实时"：Operate 页面默认不用；确实需要时遵守减弱动效，并配文字。
+- 脉冲圆点（⚠ pulse-dot）表示"在线"、"实时"：Operate 页面用静态圆点加文字表示状态，不用脉冲动画，除非用户明确要求（在汇报里写明例外，并遵守减弱动效）。
 - `shadcn:toast` 和 `shadcn:sonner` 同时装：一个项目只留一套 toast，否则会出现两个视口、两套播报。
 - `bencho:toasts`：其实是"通知我"按钮（铃铛摆动 + 文案替换），不是 toast 组件，按 button 任务看待。
 

@@ -5,28 +5,32 @@
 
 不需要的情况：后台、设置页、文档页不要套营销区块；只有一句话加一个按钮的页面，用主底座的排版和 `button` 就够了。
 
+**默认不加主导效果。** 背景特效、大型文字动效这类主导效果只在有明确论点时加一个，和 `background.md` 的默认值一致。什么算明确论点：效果本身在演示产品是什么（实时协作产品的多人光标、数据产品的流动曲线、图形工具的画布），或者首屏没有产品截图可放、需要一个和品牌相关的视觉锚点。"看起来更高级""别人都有"不算。
+
 先确认一件事：**shadcn 官方没有营销区块。** 它的 blocks 只有 sidebar、login、signup、dashboard 预览（`block/sidebar`、`block/login`、`block/signup`、`block/preview`）。shadcn 底座的落地页要么用 shadcn 基础组件自己排，要么从 obsidianui、originkit 拿区块再映射 token。
 
 ## 默认推荐
 | 主底座 | 推荐 | 理由 |
 |---|---|---|
-| shadcn | 自己用 `shadcn:button`、`shadcn:navigation-menu`、`shadcn:accordion`（FAQ）、`shadcn:carousel` 排版，主导效果从 `reactbits` 免费背景或文字动效里挑一个 | 官方没有营销 block；基础件 + 一个效果是最不容易出 AI 味的组合，token 不用映射。reactbits 颜色走 props，按 `_styles.md` 的 shadcn + reactbits 条件传主题色 |
+| shadcn | 自己用 `shadcn:button`、`shadcn:navigation-menu`、`shadcn:accordion`（FAQ）、`shadcn:carousel` 排版，**默认不加主导效果**；首屏有明确论点需要一个效果时（见下方"什么算明确论点"），再从 `reactbits` 免费背景或文字动效里挑一个 | 官方没有营销 block；基础件排版、真实文案和截图先把论点讲清楚，token 不用映射。要加效果时 reactbits 颜色走 props，按 `_styles.md` 的 shadcn + reactbits 条件传主题色 |
 | uiarc | `uiarc:hero-section` + `uiarc:cta-section` + `uiarc:site-footer` + `uiarc:site-header` + `uiarc:faq-section` | 全部免费，同一套 token 和动效预设。hero-section 传 `title` 就渲染自己的内容（centered / split / minimal 三种布局），不传才显示演示；背景 mesh 是 WebGL，离屏和标签页隐藏时停，减弱动效只画一帧，没有 WebGL 时回落到 CSS 静态版（源码已看）。uiarc 风格规范本身就禁止眉标和装饰渐变 |
 | 没有底座或其他 | `obsidianui:split-showcase`、`obsidianui:draggable-marquee` 这类 obsidianui block，放在 shadcn 底座上 | obsidianui 的 primitive 和 shadcn 同构，block 可以直接进 shadcn 项目；split-showcase 用 `useReducedMotion`，draggable-marquee 用 gsap `matchMedia` 处理减弱动效。装 block 时 CLI 提示覆盖 `ui/button.tsx` 一律跳过 |
 
 ## 按场景换
-| 场景 | 推荐 | 理由 |
-|---|---|---|
-| logo 墙 / 客户墙 | `uiarc:logo-marquee` | 免费里实现最完整：有暂停 / 播放按钮（带 `aria-label` 和 `aria-live` 提示）、精细指针悬停暂停、`prefers-reduced-motion` 停止、复制的一组 `aria-hidden`。跑马灯是第 3 级风险，这几条正好是它过关的条件 |
-| logo 墙，shadcn 底座 | `obsidianui:draggable-marquee` | 可拖拽，gsap 驱动，减弱动效时不滚。默认 `pauseOnHover = false`，要打开，并补一个可见的暂停按钮 |
-| 首屏需要一个"有记忆点"的主导效果 | `originkit:hero-26`（点阵背景）、`originkit:hero-14`（需登录） | originkit 免费 hero 里视觉完成度高的两个。需登录：由用户自己 `npx originkit add`。免费替代：uiarc `hero-section` 的 mesh 背景，或 shadcn 布局 + reactbits 一个背景 |
-| 功能介绍，想用交互代替一排卡片 | `originkit:features-01`（需登录） | 竖向 tabs 切换功能和截图，registry 标签写了 keyboard-navigation。免费替代：`shadcn:tabs` 竖排 + 截图，自己做 |
-| 移动 app 落地页 | `originkit:hero-02`、`originkit:footer-01`（需登录） | 手机 mockup、商店下载按钮、社交链接；hero-02 依赖 motion |
-| 产品发布前的预约 | `originkit:hero-07`（需登录） | waitlist 首屏带邮箱表单。免费替代：`uiarc:newsletter-signup`，或 shadcn `input-group` + `button` |
-| AI 产品首屏 | `originkit:hero-42`（需登录） | 产品 mockup + 对话预览。免费替代：shadcn `message` + `bubble` 编一段真实感的对话放在 hero 右侧 |
-| FAQ | `uiarc:faq-section` 或 `shadcn:accordion` | uiarc 版有手风琴、主题栏、可搜索三种；shadcn 只要 accordion |
-| 页脚 | `uiarc:site-footer` | 链接列 + 订阅，token 统一。shadcn 底座自己用 `separator` + 链接列排，比引入带硬编码黑底的页脚更省事 |
-| 用户评价 | 自己写：一段大号引文 + 姓名职位 + 真实头像，最多 2–3 条 | 免费来源里没有成熟的评价区块（`uiarc:testimonial-stage` 是 Pro，reactbits 的 social-proof 是 Pro）。不要用等大卡片网格堆评价 |
+"推荐"列都是现在就能免费取码的；"登录后可换"列是 originkit 的需登录条目，按 SKILL.md 第五节交给用户决定，无人值守时直接用推荐列。
+
+| 场景 | 推荐 | 理由 | 登录后可换 |
+|---|---|---|---|
+| logo 墙 / 客户墙 | `uiarc:logo-marquee` | 免费里实现最完整：有暂停 / 播放按钮（带 `aria-label` 和 `aria-live` 提示）、精细指针悬停暂停、`prefers-reduced-motion` 停止、复制的一组 `aria-hidden`。跑马灯是第 3 级风险，这几条正好是它过关的条件 | — |
+| logo 墙，shadcn 底座 | `obsidianui:draggable-marquee` | 可拖拽，gsap 驱动，减弱动效时不滚。默认 `pauseOnHover = false`，要打开，并补一个可见的暂停按钮 | — |
+| 首屏有明确论点，需要一个主导效果 | uiarc 底座用 `uiarc:hero-section` 的 mesh 背景；shadcn 底座用自己的布局 + `reactbits:grainient` | 两者都处理了离屏暂停；先确认符合上面"明确论点"的条件 | `originkit:hero-26`（点阵背景）、`originkit:hero-14`：originkit 免费 hero 里视觉完成度高的两个，用户自己 `npx originkit add` |
+| 功能介绍，想用交互代替一排卡片 | `shadcn:tabs` 竖排 + 真实截图，自己排 | 用 tabs 切换功能和截图，键盘和焦点由 tabs 处理 | `originkit:features-01`：竖向 tabs，registry 标签写了 keyboard-navigation |
+| 移动 app 落地页 | 主底座基础件 + 真实的手机截图和商店按钮，自己排 | 免费来源里没有现成的 app 首屏 | `originkit:hero-02`、`originkit:footer-01`：手机 mockup、商店下载按钮、社交链接；hero-02 依赖 motion |
+| 产品发布前的预约 | `uiarc:newsletter-signup`，或 shadcn `input-group` + `button` | 邮箱表单接真实接口，成功和错误都要有反馈 | `originkit:hero-07`：waitlist 首屏带邮箱表单 |
+| AI 产品首屏 | shadcn `message` + `bubble` 做一段**示例对话**，放在 hero 右侧 | 按 `ai-ux.md` 的规则：对话旁边有可见的"示例"标注；不用真人姓名、头像冒充用户，不显示像实时的时间戳、在线状态、计数；内容展示产品真实能做的事 | `originkit:hero-42`：产品 mockup + 对话预览 |
+| FAQ | `uiarc:faq-section` 或 `shadcn:accordion` | uiarc 版有手风琴、主题栏、可搜索三种；shadcn 只要 accordion | — |
+| 页脚 | `uiarc:site-footer` | 链接列 + 订阅，token 统一。shadcn 底座自己用 `separator` + 链接列排，比引入带硬编码黑底的页脚更省事 | — |
+| 用户评价 | 自己写：一段大号引文 + 姓名职位 + 真实头像，最多 2–3 条 | 免费来源里没有成熟的评价区块（`uiarc:testimonial-stage` 是 Pro，reactbits 的 social-proof 是 Pro）。不要用等大卡片网格堆评价 | — |
 
 ## 慎用
 - 等大卡片堆结构：用 `card` 排出"图标 + 标题 + 一段话"的三列或六格网格，是 `_scenes.md` 第 6 节点名的 AI 味做法（几项功能真的平行、同等重要时例外）。功能介绍改用：一个主功能大图 + 两三个次要功能文字说明；或交互 tabs；或真实截图配一句话。`uiarc:feature-bento` 是 Pro，也不必追。
@@ -43,7 +47,7 @@
 - 渐变按钮、彩色光晕按钮（`originkit:moving-gradient-button`、`originkit:crystal-glow`、`librariesdev:border-beam-pulse-inner`）：主 CTA 已经在首屏有主导效果时不要再叠一个会动的按钮。
 
 ## 页面模式约束
-- Persuade（本任务的主场景）：首屏最多 1 个主导效果，整页最多 2 个且不在同一屏；装饰动效每屏最多 1 处并且要有含义；动效强度 4–7，密度 3–5。常见合格组合：首屏一个背景或一段文字动效 + 静态排版的其余区块；或首屏静态 + 中段一个交互演示。
+- Persuade（本任务的主场景）：默认 0 个主导效果；有明确论点时首屏最多 1 个，整页最多 2 个且不在同一屏；装饰动效每屏最多 1 处并且要有含义；动效强度 4–7，密度 3–5（刻度见 `_scenes.md`）。常见合格组合：首屏静态（好标题 + 真实截图）+ 中段一个交互演示；或者有明确论点时首屏一个背景或一段文字动效 + 静态排版的其余区块。
 - Experience（作品集首页）：效果服务于作品，hero 让位给作品图；logo 墙、统计带一般不需要。
 - Operate、Read：不用营销区块。产品内的升级提示用主底座的 `alert` 或 `card`。
 
@@ -75,7 +79,7 @@
 - `originkit:features-02` — 可拖拽地球 + 指标（需登录；含英雄数据，慎用）
 - `originkit:hero-02`、`originkit:footer-01` — app 落地页首屏与页脚（需登录）
 - `originkit:hero-07` — waitlist 首屏（需登录；免费替代 uiarc newsletter-signup）
-- `originkit:hero-42` — AI 产品首屏（需登录；免费替代 shadcn message 编排）
+- `originkit:hero-42` — AI 产品首屏（需登录；免费替代：shadcn message 编排的示例对话，要标明是示例）
 - `uiarc:stats-band` — 统计带（只在数字真实且是论点时用）
 - `uiarc:newsletter-signup` — 邮件订阅
 - `uiarc:announcement-bar` — 顶部公告条

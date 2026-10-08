@@ -675,7 +675,7 @@ def cmd_find(args):
         print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、待审状态或来源异常；接真实业务前要处理，'
               '或换同类候选；同等相关时排在没有问题的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
-        print('⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 guides/_scenes.md「质量三级」）')
+        print('⚠ = 场景化审美风险：Persuade/Experience 写清场景可以用，Operate/Read 不用（用户明确要求时作为例外写明），见 guides/_scenes.md「质量三级」')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
     return 0
 

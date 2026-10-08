@@ -8,7 +8,7 @@
 |---|---|---|
 | shadcn | 组合：`shadcn:card`（每档一张）+ `shadcn:toggle-group` 或 `shadcn:tabs`（月付 / 年付）+ `shadcn:badge`（推荐档）+ `shadcn:table`（功能对比） | 索引里 shadcn 没有定价 block。已拉源码：card、toggle-group、badge、table 都只依赖 `cn`，Base UI 实现；用基础件组合比引入第二个设计语言的定价区块更稳 |
 | uiarc | `uiarc:billing-toggle` + `uiarc:plan-comparison`；产品内选套餐用 `uiarc:radio-cards` | 已拉源码：billing-toggle 是 `role="radiogroup"` + `role="radio"`、`aria-checked`，节省徽章写在选项文字里一起被读出，旧价格用 `<del>`；plan-comparison 用 table / row / columnheader 角色，价格区 `aria-live` + `aria-atomic`，选中结果走 `role="status"`。都有减弱动效分支，没有写死颜色 |
-| 没有底座或其他 | `originkit:pricing-03`（**需登录**）；免费替代是上面任一底座的组合 | 含月付年付切换、多档套餐和 enterprise 档。取码要用户自己 `originkit login` 后执行 `npx originkit add pricing-03`，agent 不登录；**未看到源码，质量未验证**。`originkit:pricing-01`、`originkit:pricing-02` 同理 |
+| 没有底座或其他 | 上面任一底座的组合（shadcn 的 card + toggle-group + badge + table，或 uiarc 的 billing-toggle + plan-comparison） | 现在就能免费取码。登录后可换：`originkit:pricing-03`，含月付年付切换、多档套餐和 enterprise 档；取码要用户自己 `originkit login` 后执行 `npx originkit add pricing-03`，agent 不登录；**未看到源码，质量未验证**。`originkit:pricing-01`、`originkit:pricing-02` 同理 |
 
 ## 按场景换
 | 场景 | 推荐 | 理由 |

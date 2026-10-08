@@ -23,9 +23,9 @@
 | 个人作品集 | `reactbits:pro-template-portfolio-template` | React Bits Pro 里唯一免费的模板，官方页写明可用于个人和商业项目。Next.js 16 + Tailwind v4 + motion + Lenis + Matter.js + next-themes，WebGL 流体 shader 背景 + 磁吸人像，黑白配色。获取方式：文档页没有直接的仓库链接，可能要登录 React Bits Pro 账号下载，未验证 |
 | 后台 / 管理端起点 | `shadcn:dashboard-01` | 侧栏 + 指标卡 + 交互面积图 + 可拖拽数据表，全部是 shadcn 组件，依赖 `@tanstack/react-table`、`@dnd-kit/*`、`zod`（registry 已看）。演示数据在 `data.json`，要换 |
 | 后台外壳，想要更强的交互 | `obsidianui:dashboard-shell` | 可拖拽缩放侧栏、窄屏变抽屉。`--obsidian-*` 色板要改成 shadcn 变量（见 `_styles.md`） |
-| 工作室 / agency 官网 | `originkit:loaded`、`originkit:gency`（需登录） | 作品、评价、流程、FAQ 齐全。免费账号每天只能取 1 个模板。gency 在索引里标的是"Framer 制作"，能不能拿到可维护的 React 源码未验证。免费替代：uiarc 免费 block 自己拼 |
-| SaaS / 多页营销站 | `originkit:clever`、`originkit:landfree`（需登录） | 多页营销站模板。未看到源码（取码要登录，条款禁止抓取）。免费替代：`shadcn:templates` 骨架 + `guides/marketing-section.md` 的区块 |
-| 深色个人作品集 | `originkit:darkmate`（需登录） | 索引标注"Framer 静态导出"，源码形态未验证。免费替代：React Bits 的 Portfolio 模板 |
+| 工作室 / agency 官网 | uiarc 免费 block 自己拼 | 现在就能取码。登录后可换：`originkit:loaded`、`originkit:gency`，作品、评价、流程、FAQ 齐全；免费账号每天只能取 1 个模板；gency 在索引里标的是"Framer 制作"，能不能拿到可维护的 React 源码未验证 |
+| SaaS / 多页营销站 | `shadcn:templates` 骨架 + `guides/marketing-section.md` 的区块 | 现在就能取码。登录后可换：`originkit:clever`、`originkit:landfree`，多页营销站模板，未看到源码（取码要登录，条款禁止抓取） |
+| 深色个人作品集 | `reactbits:pro-template-portfolio-template`（免费，获取方式见上一行） | 换成深色主题即可。登录后可换：`originkit:darkmate`，索引标注"Framer 静态导出"，源码形态未验证 |
 
 ## 慎用
 - `obsidianui:template:project-one`：不只是落地页，是一个"创作者经济"产品的完整应用：Prisma + Neon 数据库、`@opennextjs/cloudflare` 部署、reCAPTCHA v3、`/api/waitlist` 和 `/api/newsletter` 接口、登录后的 dashboard / ipos / market / portfolio 页面。`build` 脚本先跑 `prisma generate`，没有数据库配置会失败。另外同时装了 `lucide-react` 和 `react-icons`，违反"一页一套图标"。只想要营销页，就只拷 `components/landing-page/` 并把图标统一成 lucide；features 下有 `feature-card`、`mini-card` 网格，注意等大卡片堆结构的问题。

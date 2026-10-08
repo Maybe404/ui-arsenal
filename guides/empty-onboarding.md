@@ -24,7 +24,7 @@
 | 分步向导页面之间的前进后退 | `jakubantalik:transition:page-side-by-side` | 已拉文档：横向滑动切换，纯 CSS，有减弱动效守卫；只管过渡，切换后要把焦点移到新步骤的标题 |
 | AI 产品的空状态或"代理正在处理" | `librariesdev:bot-avatars` 作为小吉祥物 | 已读文档：canvas，`role="img"` + 按状态的 `aria-label`，减弱动效下画静帧，离屏和标签页隐藏时暂停 |
 | 空状态里放一个默认头像组提示"邀请成员" | `shadcn:empty-avatar-group`（示例） | 已拉源码：空状态 + 头像组 + 邀请按钮的写法 |
-| 404 页加一个小游戏彩蛋 | `originkit:pixel-run-game`、`originkit:flap`（**需登录**） | 用户自己登录取码；免费替代是普通 404 + 搜索框 + 常用入口，或 `reactbits:fuzzy-text` 做标题（见慎用） |
+| 404 页加一个小游戏彩蛋 | 普通 404 + 搜索框 + 常用入口；标题可以用 `reactbits:fuzzy-text`（见慎用） | 先让迷路的用户回到正路，小游戏是彩蛋不是需求。登录后可换：`originkit:pixel-run-game`、`originkit:flap`（用户自己登录取码） |
 
 ## 慎用
 - 只有插画没有操作的空状态：插画不能代替说明和主按钮。

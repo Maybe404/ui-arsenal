@@ -19,7 +19,7 @@
 | passkey 优先 | `uiarc:login-centered` | catalog 写明 passkey 为主、邮箱验证码兜底、busy 按钮用 `aria-busy`；同样是"simulated requests"，未拉源码，接入时按 sign-in 的方式改成真实接口 |
 | 验证码那一步 | `shadcn:input-otp` 或 `uiarc:otp-input` | 见 `form-input.md` |
 | 注册时的密码强度 | `uiarc:password-strength` | 见 `form-input.md` |
-| 产品发布前的 waitlist 首屏 | `originkit:hero-07`（**需登录**） | 用户自己登录取码；免费替代：`shadcn:input-group` + `shadcn:button` 拼一行邮箱表单，或 uiarc 的 `uiarc:newsletter-signup`（catalog 写明它的可访问性很完整：可见性隐藏的 label、`autocomplete="email"`、失焦后才校验、提交中 `aria-busy`） |
+| 产品发布前的 waitlist 首屏 | `uiarc:newsletter-signup`，或 `shadcn:input-group` + `shadcn:button` 拼一行邮箱表单 | uiarc 版 catalog 写明它的可访问性很完整：可见性隐藏的 label、`autocomplete="email"`、失焦后才校验、提交中 `aria-busy`。登录后可换：`originkit:hero-07`（waitlist 首屏，用户自己登录取码） |
 
 ## 慎用
 - 直接上线 shadcn login/signup block：骨架里 `href="#"`、没有 `onSubmit`、没有错误展示，原样上线就是坏链和无反馈（第 1 级）。
