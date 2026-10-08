@@ -122,10 +122,13 @@ $S/claims.sh uiarc:switch                     # 这个组件登记的结论（�
 $S/stats.sh                                   # 各来源统计
 ```
 
+- **查询怎么写**：1–3 个核心词，空格分开，比如 `侧边栏 折叠`、`date picker`、`toast`；不要贴整句需求。中文长词会按同义词表拆开（`侧边栏可折叠` → 侧边栏 + 折叠），表里没有的词只在索引里确实出现时才保留。
+- **怎么匹配**：英文按整词匹配，不分大小写，带规则复数（plan 命中 plans，不命中 plane；tab 不命中 table）；中文按子串匹配；相邻的词能组成同义词短语时合在一起（`dark mode`、`tool call`）。规则细节在 `scripts/aliases.json` 的说明里。
+- **排序**：先列现在就能取码的免费条目，再列需登录的，最后是灵感参考；同样相关时，名称正好是这个词的、shadcn 和 uiarc 的基础件排在前面。
 - 搜索结果的标签：可安装、取源码、提示词、仅参考、需登录、Pro·不获取、失效；⚠ 表示场景化审美风险。
-- 搜索结果标"低置信度"或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
+- 搜索结果标"低置信度"（最靠前的结果只在描述里沾边，或只命中了部分词）或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
 - fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获取），4 需要用户登录。
-- 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。
+- 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。普通搜索默认不列图标（表头会提示"另有 N 个图标也匹配"），查询里带 icon / 图标，或用 `--task icon`、`-s lucide` 才列出。Lucide 的命名偏实物（home 对应 house），找不到时换同义的英文词。
 - 仅参考类素材的处理：视频抽帧用 `ffmpeg -i x.mp4 -vf fps=1/2,scale=960:-1,tile=2x2 -frames:v 1 grid.png`；avif、webp 图片先转 png：`sips -s format png x.avif --out x.png`。完整流程见 `guides/page-inspiration.md`。
 - 拉取失败要明说：哪个来源的哪个条目、哪一步出的错。不要凭记忆写一个"差不多的"组件冒充原版。
 

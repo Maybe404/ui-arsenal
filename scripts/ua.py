@@ -147,6 +147,30 @@ def sha(b):
 
 
 # ---------- find ----------
+#
+# Matching contract (summarised in scripts/aliases.json and `find.sh --help`; tests in scripts/tests/test_search.py):
+# - ASCII words, typed or coming from an alias group, match whole words in ids, names, categories, descriptions
+#   and tags, ignoring case. Hyphens and punctuation separate words ("table" hits "data-table"). A regular
+#   English plural also matches (plan→plans, bus→buses, gallery→galleries), but a longer word with the same
+#   start does not: "plan" does not hit "plane", "tab" does not hit "table", "ai" does not hit "detail".
+# - Chinese terms match as substrings. A Chinese token that is not itself an alias term is split greedily into
+#   the longest alias terms it contains; leftover runs of two or more characters are kept as their own concepts
+#   when they occur in the catalogue and are not filler words, so 侧边栏可折叠 becomes 侧边栏 + 折叠.
+# - Adjacent words that form an alias phrase ("dark mode" → dark-mode, "tool call") are read as one concept.
+# - A concept matches when its own term or any term of its alias groups matches; concepts from the same group
+#   are merged. Results keep the rows that match the most concepts.
+
+CJK = re.compile(r'[㐀-鿿豈-﫿]')
+# single characters that only glue a Chinese request together, and words too generic to search for
+FUNC_CHARS = set('的地得了着和与及或在把被给让带用个一我你要想做加请帮将')
+FILLER = {'一个', '一些', '一下', '一种', '这个', '那个', '这种', '那种', '可以', '需要', '我要', '我想', '想要', '怎么',
+          '如何', '什么', '页面', '效果', '组件', '样式', '功能', '实现', '使用', '支持', '带有', '具有', '以及', '还有',
+          '类似', '能够', '用于', '适合', '东西', '部分', '区域', '地方', '时候', '界面', '风格', '好看', '漂亮', '简单',
+          '现代', '高级', '合适', '一点', '喜欢', '可能', '应该', '进行', '输出', '显示', '展示', '内容', '模式', '整个',
+          '所有', '各种', '多个'}
+ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
+PRIMARY_BASES = ('shadcn', 'uiarc')
+
 
 def load_groups():
     p = os.path.join(ROOT, 'scripts', 'aliases.json')
@@ -154,64 +178,160 @@ def load_groups():
     return [[t.lower() for t in g] for g in groups]
 
 
-def concepts(token, groups, corpus):
-    """Turn one query token into concepts: [(original_term, {alias terms})]."""
-    t = token.lower()
-    if any(t in c for c in corpus):
+def term_re(term):
+    """Whole-word matcher for ASCII terms (with a regular English plural); substring matcher otherwise."""
+    if not re.match(r'^[a-z0-9 ._+#/-]+$', term):
+        return re.compile(re.escape(term))
+    if re.search(r'(?:s|x|z|ch|sh)$', term):
+        stem, plural = term, '(?:es)?'
+    elif re.search(r'[^aeiou]y$', term):
+        stem, plural = term[:-1], '(?:y|ies)'
+    else:
+        stem, plural = term, 's?'
+    return re.compile(r'(?<![a-z0-9])' + re.escape(stem) + plural + r'(?![a-z0-9])')
+
+
+def singular(term, vocab, corpus_text):
+    """A typed English plural becomes its singular (buttons→button, boxes→box, galleries→gallery) when the singular
+    is an alias term or a word of at least four letters in the catalogue; the singular's matcher covers both forms.
+    Words that only look plural stay as typed (glass, status, canvas)."""
+    if not re.match(r'^[a-z]{4,}$', term) or not term.endswith('s'):
+        return term
+    cands = ([term[:-3] + 'y'] if term.endswith('ies') else []) + (
+        [term[:-2]] if re.search(r'(?:s|x|z|ch|sh)es$', term) else []) + [term[:-1]]
+    for c in cands:
+        if term_re(c).fullmatch(term) and (c in vocab or (len(c) >= 4 and re.search(
+                r'(?<![a-z0-9])%s(?![a-z0-9])' % re.escape(c), corpus_text))):
+            return c
+    return term
+
+
+def split_cjk(token, groups, corpus):
+    """Greedy longest-match split of a Chinese token into alias terms plus meaningful leftover runs."""
+    terms = sorted({m for g in groups for m in g if len(m) >= 2}, key=len, reverse=True)
+    segs, run, i = [], '', 0
+
+    def flush(run):
+        for piece in re.split('[%s]' % ''.join(FUNC_CHARS), run):
+            start = 0
+            while len(piece) - start >= 2:
+                # longest substring starting here that the catalogue actually contains
+                end = next((e for e in range(len(piece), start + 1, -1)
+                            if piece[start:e] not in FILLER and piece[start:e] in corpus_text), None)
+                if end:
+                    segs.append(piece[start:end])
+                    start = end
+                else:
+                    start += 1
+
+    corpus_text = '\n'.join(corpus)
+    while i < len(token):
+        m = next((t for t in terms if token.startswith(t, i)), None)
+        if m:
+            flush(run)
+            run = ''
+            segs.append(m)
+            i += len(m)
+        else:
+            run += token[i]
+            i += 1
+    flush(run)
+    return segs
+
+
+def concepts(tokens, groups, corpus):
+    """Turn query tokens into concepts: [(term, {alias terms})], merging concepts that share an alias group."""
+    vocab = {t for g in groups for t in g}
+    toks = [t.lower().strip('.,;:!?，。；：！？、"\'“”‘’()（）') for t in tokens]
+    toks = [t for t in toks if t]
+    merged, i = [], 0
+    while i < len(toks):  # adjacent words that form an alias phrase: "dark mode" -> dark-mode, "tool call"
+        for j in range(min(len(toks), i + 3), i + 1, -1):
+            phrase = next((p for p in (' '.join(toks[i:j]), '-'.join(toks[i:j])) if p in vocab), None)
+            if phrase:
+                merged.append(phrase)
+                i = j
+                break
+        else:
+            merged.append(toks[i])
+            i += 1
+    terms, corpus_text = [], '\n'.join(corpus)
+    for t in merged:
+        if t in vocab or not CJK.search(t):
+            terms.append(singular(t, vocab, corpus_text))
+        else:
+            terms.extend(split_cjk(t, groups, corpus) or [t])
+    out = []
+    for t in terms:
         alts = set()
         for g in groups:
             if t in g:
                 alts.update(g)
         alts.discard(t)
-        return [(t, alts)]
-    # Compound Chinese like "磁吸选择": split into the group terms it contains.
-    found = []
-    for g in groups:
-        hits = [m for m in g if len(m) >= 2 and m in t]
-        if hits:
-            found.append((max(hits, key=len), set(g) - {max(hits, key=len)}))
-    return found or [(t, set())]
+        for c in out:
+            if t == c[0] or t in c[1] or c[0] in alts:  # same group as an earlier concept: one concept
+                c[1].update(alts | {t})
+                c[1].discard(c[0])
+                break
+        else:
+            out.append((t, alts))
+    return out
 
 
-def term_re(term):
-    # ASCII alias terms match whole words (plus plural), so "plan" does not hit "plane".
-    if re.match(r'^[a-z0-9 -]+$', term):
-        return re.compile(r'(?<![a-z0-9])' + re.escape(term) + r'(?:e?s)?(?![a-z0-9])')
-    return re.compile(re.escape(term))
+def compile_concepts(cons):
+    """[(term, matcher, aliases, alias matchers in sorted(aliases) order)]"""
+    return [(t, term_re(t), alts, [term_re(a) for a in sorted(alts)]) for t, alts in cons]
 
 
-ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
+
+def norm(s):
+    return re.sub(r'[\s_-]+', '', s.lower())
+
+
+def specific(term):
+    """Terms precise enough that a match in a description alone is a real hit, not a coincidence."""
+    return len(term) >= 3 if CJK.search(term) else (' ' in term or '-' in term or len(term) >= 6)
 
 
 def relevance(r, cons):
-    """Field-weighted match score; returns (score, concepts hit)."""
+    """Field-weighted match. Returns (score, concepts hit, concepts hit strongly, exact name hits); a concept hits
+    strongly at name or category level, or in the description through a specific term (工具调用, confetti)."""
     primary, _, secondary = r['task'].partition(',')
     fields = ((3, (r['id'] + ' ' + r['name']).lower()), (2, (r['category'] + ' ' + primary).lower()),
               (1, ' '.join((r['desc'], secondary, r['vtags'], r['itags'])).lower()))
-    s, hit = 0.0, 0
-    for orig, alts in cons:
-        scores = []
+    names = {norm(r['id']), norm(r['id'].rsplit(':', 1)[-1]), norm(r['name'])}
+    s, hit, strong, exact = 0.0, 0, 0, 0
+    for term, rx, alts, alt_rxs in cons:
+        scores, sure = [], False
         for w, text in fields:
-            if orig in text:
+            if rx.search(text):
                 scores.append(w + 1.0)
-            elif any(rx.search(text) for rx in alts):
-                scores.append(w * 0.6)
+                sure = sure or w >= 2 or specific(term)
+            else:
+                matched = next((a for a, arx in zip(sorted(alts), alt_rxs) if arx.search(text)), None)
+                if matched is None:
+                    continue
+                scores.append(w * 0.6)  # a typed word in the description outranks an alias in the name
+                sure = sure or w >= 2 or specific(matched)
         if scores:
             hit += 1
+            strong += sure
+            exact += bool(names & {norm(x) for x in alts | {term}})
             # Best field counts fully; corroborating fields (e.g. category "Backgrounds" + desc "背景") add a bonus.
             s += max(scores) + 0.5 * (len(scores) - 1)
-    return s, hit
+    return s, hit, strong, exact
 
 
-def tier(r, icon_query):
-    """Availability tier: directly obtainable code first, inspiration and gated items later."""
-    if r['source'] == 'lucide' and not icon_query:
-        return 0.5
+def klass(r):
+    """What an agent can do with a row now: 3 take code or prompt, 2 needs the user's login, 1 look only, 0 none."""
     if r['access'] == 'free':
-        if r['category'].startswith('example'):  # demo variants of a component rank below the components themselves
-            return 3
-        return {'install': 4, 'source': 4, 'prompt': 3, 'reference': 1}.get(r['usage'], 1)
-    return {'login': 2, 'pro': 0.2, 'broken': 0}.get(r['access'], 0)
+        return 1 if r['usage'] == 'reference' else 3
+    return 2 if r['access'] == 'login' else 0
+
+
+def tier(r):
+    """Within the same class, components before their demo variants and prompts."""
+    return 1 if r['category'].startswith('example') or r['usage'] == 'prompt' else 2
 
 
 def label(r):
@@ -229,36 +349,58 @@ FIND_MODES = {
 }
 
 
-def search(terms, src=None, mode='default', task=None, layer=None):
-    """Rank catalogue rows for a query. Returns ([(score, row)], note)."""
+def search(terms, src=None, mode='default', task=None, layer=None, info=None):
+    """Rank catalogue rows for a query. Returns ([(score, row)], note); `info`, if given, receives details
+    (hidden_icons, low_confidence) for callers that need more than the note text."""
+    info = {} if info is None else info
     terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
     rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
             and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
     groups = load_groups()
     corpus = [' '.join((r['id'], r['name'], r['category'], r['task'], r['desc'], r['vtags'], r['itags'])).lower()
               for r in rows]
-    cons = [(o, [term_re(a) for a in alts]) for t in terms for o, alts in concepts(t, groups, corpus)]
-    icon_query = any(o in ICON_TERMS or ICON_TERMS & {a.pattern for a in alts} for o, alts in cons) or any(
-        t.lower() in ICON_TERMS for t in terms)
-    scored = []
+    cons = compile_concepts(concepts(terms, groups, corpus))
+    icon_query = (src == 'lucide' or task == 'icon' or layer == 'icons'
+                  or any(ICON_TERMS & ({t} | alts) for t, _, alts, _ in cons))
+    scored, icons = [], []
     for r in rows:
-        rel, hit = relevance(r, cons) if cons else (0.0, 0)
+        rel, hit, strong, exact = relevance(r, cons) if cons else (0.0, 0, 0, 0)
         if cons and not hit:
             continue
-        # Strong = matched concepts average a name/category-level hit; weak = description-level only.
-        band = 1 if not cons or rel >= 2.5 * hit else 0
-        scored.append((hit, band, tier(r, icon_query), rel, r))
+        band = 1 if not cons or strong * 2 >= hit else 0  # at least half the matched concepts hit strongly
+        base = r['source'] in PRIMARY_BASES
+        row = (hit, klass(r), band, exact, bool(exact) and base, tier(r), rel, base, r['layer'] == 'foundation', r)
+        # Icon names and tags match almost any English word, so icons only show when asked for, or when nothing
+        # else matched (a query like "avocado").
+        (icons if r['source'] == 'lucide' and not icon_query else scored).append(row)
+    hidden_icons = len(icons) if scored else 0
+    scored = scored or icons
     note = ''
     if cons and scored:
         top = max(x[0] for x in scored)
         if top < len(cons):
             note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
         scored = [x for x in scored if x[0] == top]
-    ranked = sorted(scored, key=lambda x: (-x[0], -x[1], -x[2], -x[3]))
-    if cons and ranked and (ranked[0][1] == 0 or ranked[0][0] < len(cons)):
-        note += ('\n低置信度：没有名称或分类级的强相关候选（只有描述沾边或只命中部分词）。'
-                 '先换词或用 --task 再搜；仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
-    return [(x[3], x[4]) for x in ranked], note
+    ranked = sorted(scored, key=lambda x: tuple(-v for v in x[:9]))
+    info['hidden_icons'] = hidden_icons
+    info['low_confidence'] = bool(cons and ranked and (ranked[0][2] == 0 or ranked[0][0] < len(cons)))
+    if info['low_confidence']:
+        note += ('\n低置信度：最靠前的结果只在描述里沾边，或只命中了部分词。先换更具体的词或用 --task 再搜；'
+                 '仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
+    if ranked and not any(x[1] == 3 for x in ranked):
+        note += '\n没有现在就能取码的免费候选：以下只有需登录、灵感参考或 Pro / 失效条目。'
+    return [(x[6], x[9]) for x in ranked], note
+
+
+def guide_task(scored):
+    """Guess the guide from what an agent would actually use: the main task of the top obtainable rows, or of the
+    top rows when nothing obtainable matched. Hidden icons never take part."""
+    pool = [r for _, r in scored if klass(r) == 3][:10] or [r for _, r in scored][:10]
+    counts = {}
+    for r in pool:
+        t = r['task'].split(',')[0]
+        counts[t] = counts.get(t, 0) + 1
+    return max(counts, key=counts.get) if counts else None
 
 
 def cmd_find(args):
@@ -279,6 +421,9 @@ def cmd_find(args):
             print('  --layer  层级：' + ' '.join(LAYERS))
             for k, (d, _) in FIND_MODES.items():
                 print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
+            print('匹配：英文按整词（不分大小写，带规则复数：plan 命中 plans，不命中 plane）；中文按子串，长词按同义词表拆开；\n'
+                  '      相邻词能组成同义词短语时合在一起（dark mode）。同义词表：scripts/aliases.json。\n'
+                  '排序：能直接取码的免费条目 → 需登录 → 灵感参考；Lucide 图标只在查询带 icon/图标、--task icon 或 -s lucide 时列出。')
             return 0
         elif a.startswith('--') and a[2:] in FIND_MODES:
             mode = a[2:]
@@ -288,14 +433,19 @@ def cmd_find(args):
         sys.exit('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
     if layer and layer not in LAYERS:
         sys.exit('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
-    scored, note = search(terms, src, mode, task, layer)
+    info = {}
+    scored, note = search(terms, src, mode, task, layer, info)
+    icons = ('（另有 %d 个 Lucide 图标也匹配，默认不显示：查询里加 icon / 图标，或用 --task icon）' % info['hidden_icons']
+             if info.get('hidden_icons') else '')
     if not scored:
-        print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。')
+        print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。'
+              + ('\n' + icons if icons else ''))
         return 1
     by_src = {}
     for _, r in scored:
         by_src[r['source']] = by_src.get(r['source'], 0) + 1
-    print('%d matches (%s)  filter=%s %s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])), mode, note))
+    print('%d matches (%s)  filter=%s %s%s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])),
+                                              mode, note, ('\n' + icons) if icons else ''))
     for s, r in scored[:limit]:
         tag = label(r)
         print('[%s] %s:%s — %s  (%s · %s)%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
@@ -303,13 +453,7 @@ def cmd_find(args):
         print('    %s' % r['desc'][:160])
     if len(scored) > limit:
         print('... %d more (--limit N)' % (len(scored) - limit))
-    shown_task = task
-    if not shown_task:
-        counts = {}
-        for _, r in scored[:10]:
-            t = r['task'].split(',')[0]
-            counts[t] = counts.get(t, 0) + 1
-        shown_task = max(counts, key=counts.get) if counts else None
+    shown_task = task or guide_task(scored)
     if shown_task and os.path.exists(os.path.join(GUIDES, shown_task + '.md')):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     if any(r['risk'] for _, r in scored[:limit]):
@@ -1463,29 +1607,45 @@ def cmd_searchtest(args):
     cases = json.load(open(os.path.join(ROOT, 'scripts', 'search_cases.json'), encoding='utf-8'))['cases']
     fails = 0
     for c in cases:
-        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'))
+        info = {}
+        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info)
         ids = ['%s:%s' % (r['source'], r['id']) for _, r in res]
         k = c.get('k', 1)
         top = [r for _, r in res[:k]]
+        checks = []  # every assertion present in the case must hold
         if c.get('empty'):
-            ok = not res
-        elif 'top1' in c:
-            ok = bool(ids) and ids[0] == c['top1']
-        elif 'topk_any' in c:
-            ok = any(i in ids[:k] for i in c['topk_any'])
-        elif 'topk_all_category' in c:
-            ok = bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top)
-        elif 'topk_all_id' in c:
-            ok = bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top)
-        elif 'topk_all_task_primary' in c:
-            ok = bool(top) and all(r['task'].split(',')[0] == c['topk_all_task_primary'] for r in top)
-        elif 'topk_no_usage' in c:
-            ok = bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top)
-        else:
-            ok = False
+            checks.append(not res)
+        if 'top1' in c:
+            checks.append(bool(ids) and ids[0] == c['top1'])
+        if 'topk_any' in c:
+            checks.append(any(i in ids[:k] for i in c['topk_any']))
+        if 'topk_any_id' in c:
+            checks.append(any(re.search(c['topk_any_id'], r['id']) for r in top))
+        if 'topk_all_category' in c:
+            checks.append(bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top))
+        if 'topk_all_id' in c:
+            checks.append(bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top))
+        if 'topk_all_task_primary' in c:
+            checks.append(bool(top) and all(r['task'].split(',')[0] == c['topk_all_task_primary'] for r in top))
+        if 'topk_no_usage' in c:
+            checks.append(bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top))
+        if 'topk_any_obtainable' in c:
+            checks.append(any(klass(r) == 3 for r in top))
+        if 'topk_all_access' in c:
+            checks.append(bool(top) and all(r['access'] == c['topk_all_access'] for r in top))
+        if 'none_id' in c:
+            checks.append(not any(re.search(c['none_id'], r['id']) for _, r in res))
+        if 'none_source' in c:
+            checks.append(bool(res) and not any(r['source'] == c['none_source'] for _, r in res))
+        if 'confident' in c:
+            checks.append(bool(res) and info['low_confidence'] != c['confident'])
+        if 'guide' in c:
+            checks.append(guide_task(res) == c['guide'])
+        ok = bool(checks) and all(checks)
         fails += not ok
-        print('%-4s %-28s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + (' --' + c['mode'] if c.get('mode') else ''),
-                                 ', '.join(ids[:k]) or '(empty)'))
+        print('%-4s %-34s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + ''.join(
+            ' --%s' % c[x] if x == 'mode' else ' -s %s' % c[x] if x == 'src' else ' --task %s' % c[x]
+            for x in ('mode', 'src', 'task') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
     print('\n%d/%d passed' % (len(cases) - fails, len(cases)))
     return 1 if fails else 0
 
