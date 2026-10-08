@@ -63,6 +63,30 @@ TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table
 RISKS = ('gradient-text', 'marquee', 'glow', 'grid-background', 'typewriter', 'bounce', 'glass', 'pulse-dot')
 
 
+# ---------- arguments ----------
+
+class UsageError(Exception):
+    """Bad command-line arguments: reported as one line plus a pointer to --help, exit code 2."""
+
+
+def take(it, flag):
+    v = next(it, None)
+    if v is None or (v.startswith('-') and len(v) > 1):
+        raise UsageError('%s needs a value' % flag)
+    return v
+
+
+def take_int(it, flag, low=1):
+    v = take(it, flag)
+    if not v.isdigit() or int(v) < low:
+        raise UsageError('%s needs a whole number >= %d, got %r' % (flag, low, v))
+    return int(v)
+
+
+def unknown_option(a):
+    raise UsageError('unknown argument %s' % a)
+
+
 # ---------- data ----------
 
 def load_notes(source):
@@ -511,41 +535,53 @@ def guide_index():
 COMPAT_ZH = {'conditional': '有条件', 'unknown': '兼容性未登记'}
 
 
+def find_help():
+    print('usage: find.sh [-s source] [--base B] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+    print('  -s       只搜一个来源：' + ' '.join(sources()))
+    print('  --base   项目的主底座（如 shadcn、uiarc）：按 sources/_styles.md 的兼容矩阵去掉"不建议"同页的来源，标出"有条件"的')
+    print('  --task   UI 任务：' + ' '.join(TASKS))
+    print('  --layer  层级：' + ' '.join(LAYERS))
+    for k, (d, _) in FIND_MODES.items():
+        print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
+    print('匹配：英文按整词（不分大小写，带规则复数：plan 命中 plans，不命中 plane）；中文按子串，长词按同义词表拆开；\n'
+          '      相邻词能组成同义词短语时合在一起（dark mode）。同义词表：scripts/aliases.json。\n'
+          '排序：能直接取码的免费条目 → 需登录 → 灵感参考；Lucide 图标只在查询带 icon/图标、--task icon 或 -s lucide 时列出。\n'
+          '标签：可安装、取源码、提示词、仅参考；需登录的写成"需登录·可安装"这类组合；Pro、失效默认不列，--all 才列。')
+
+
 def cmd_find(args):
     src, limit, mode, terms, task, layer, base = None, 25, 'default', [], None, None, None
     it = iter(args)
     for a in it:
         if a == '-s':
-            src = next(it)
+            src = take(it, a)
         elif a == '--base':
-            base = next(it)
+            base = take(it, a)
         elif a == '--task':
-            task = next(it)
+            task = take(it, a)
         elif a == '--layer':
-            layer = next(it)
+            layer = take(it, a)
         elif a == '--limit':
-            limit = int(next(it))
+            limit = take_int(it, a)
         elif a in ('-h', '--help'):
-            print('usage: find.sh [-s source] [--base B] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
-            print('  --base   项目的主底座（如 shadcn、uiarc）：按 sources/_styles.md 的兼容矩阵去掉"不建议"同页的来源，标出"有条件"的')
-            print('  --task   UI 任务：' + ' '.join(TASKS))
-            print('  --layer  层级：' + ' '.join(LAYERS))
-            for k, (d, _) in FIND_MODES.items():
-                print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
-            print('匹配：英文按整词（不分大小写，带规则复数：plan 命中 plans，不命中 plane）；中文按子串，长词按同义词表拆开；\n'
-                  '      相邻词能组成同义词短语时合在一起（dark mode）。同义词表：scripts/aliases.json。\n'
-                  '排序：能直接取码的免费条目 → 需登录 → 灵感参考；Lucide 图标只在查询带 icon/图标、--task icon 或 -s lucide 时列出。')
+            find_help()
             return 0
         elif a.startswith('--') and a[2:] in FIND_MODES:
             mode = a[2:]
+        elif a.startswith('-') and len(a) > 1:
+            unknown_option(a)
         else:
             terms.append(a)
+    if not (terms or src or task or layer or base):
+        find_help()
+        return 2
     if task and task not in TASKS:
-        sys.exit('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
+        raise UsageError('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
     if layer and layer not in LAYERS:
-        sys.exit('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
-    if base and base not in sources():
-        sys.exit('unknown base %r. choose from: %s' % (base, ' '.join(sources())))
+        raise UsageError('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
+    for name, v in (('source', src), ('base', base)):
+        if v and v not in sources():
+            raise UsageError('unknown %s %r. choose from: %s' % (name, v, ' '.join(sources())))
     info = {}
     scored, note = search(terms, src, mode, task, layer, info, base)
     icons = ('（另有 %d 个 Lucide 图标也匹配，默认不显示：查询里加 icon / 图标，或用 --task icon）' % info['hidden_icons']
@@ -590,7 +626,7 @@ def cmd_find(args):
     if any_flag:
         print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等），接真实业务前要改，或换同类候选；同等相关时排在没有问题的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
-        print('⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
+        print('⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 guides/_scenes.md「质量三级」）')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
     return 0
 
@@ -782,16 +818,18 @@ def cmd_fetch(args):
     it = iter(args)
     for a in it:
         if a == '--out':
-            opts['out'] = next(it)
+            opts['out'] = take(it, a)
         elif a == '--variant':
-            opts['variant'] = next(it)
+            opts['variant'] = take(it, a)
         elif a == '--style':
-            opts['style'] = next(it)
+            opts['style'] = take(it, a)
         elif a == '--limit':
-            opts['limit'] = int(next(it))
+            opts['limit'] = take_int(it, a)
         elif a in ('-h', '--help'):
             print(FETCH_HELP)
             return 0
+        elif a.startswith('-') and len(a) > 1:
+            unknown_option(a)
         else:
             refs.append(a)
     if not refs:
@@ -1326,11 +1364,11 @@ def cmd_verify(args):
     it = iter(args)
     for a in it:
         if a == '-n':
-            n = int(next(it))
+            n = take_int(it, a)
         elif a == '-s':
-            src = next(it)
+            src = take(it, a)
         elif a == '--seed':
-            seed = int(next(it))
+            seed = take_int(it, a, low=0)
         elif a == '--matrix':
             matrix = True
         elif a in ('-h', '--help'):
@@ -1339,6 +1377,8 @@ def cmd_verify(args):
                   '  默认      每个来源随机抽 n 条免费、可机器获取的条目实取一次\n'
                   '说明：verify 通过只代表"现在能取到"（验证层级③），不代表组件成熟或适合项目。')
             return 0
+        else:
+            unknown_option(a)
     base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-verify')
     now, fails, vs = time.strftime('%Y-%m-%d %H:%M'), 0, {}  # merged into _state.json at the end, under the lock
     if matrix:
@@ -1715,6 +1755,8 @@ def cmd_apply(args):
         print('usage: apply.sh <source> [--file pending.json]   把已审的待审变更写入 sources/<source>.tsv（只写机器字段）')
         return 0
     s = args[0]
+    if '--file' in args and args.index('--file') + 1 >= len(args):
+        raise UsageError('--file needs a value')
     p = args[args.index('--file') + 1] if '--file' in args else latest_pending(s)
     if not p:
         sys.exit('no pending proposal for %s; run refresh.sh %s first' % (s, s))
@@ -2040,15 +2082,31 @@ def cmd_compat(args):
     if not args or args[0] in ('-h', '--help'):
         print('usage: compat.sh <source> [source...]   例：compat.sh shadcn uiarc；只给一个来源时列出它的全部组合')
         return 0
-    p = os.path.join(SRC, '_styles.md')
-    lines = open(p, encoding='utf-8').read().splitlines()
-    names = [a.lower() for a in args]
-    hits = [l for l in lines if l.startswith('|') and all(n in l.lower() for n in names) and ('+' in l or len(names) == 1)]
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s. choose from: %s' % (', '.join(unknown), ' '.join(sources())))
+    with open(os.path.join(SRC, '_styles.md'), encoding='utf-8') as f:
+        lines = f.read().splitlines()
+    names, hits, wild = set(args), [], []
+    for l in lines:
+        if not l.startswith('|'):
+            continue
+        first = l.strip('|').split('|', 1)[0]
+        # only the first column decides: "shadcn" (summary table) or "shadcn + uiarc" (matrix), never the notes
+        cell = {re.sub(r'（[^）]*）', '', x).strip() for x in re.split(r'[+/]', first)}
+        if names <= cell and ('+' in first or len(names) == 1):
+            hits.append(l)
+        elif len(names) == 1 and '+' in first and any(x.startswith('任意') for x in cell):
+            wild.append(l)
     if not hits:
-        print('兼容矩阵里没有同时提到 %s 的行；看 sources/_styles.md 的「混用规则」。' % ' + '.join(args))
+        print('兼容矩阵里没有 %s 这一组；看 sources/_styles.md 的「混用规则」。' % ' + '.join(args))
         return 1
     for l in hits:
         print(l)
+    if wild:
+        print('\n任意底座都适用的组合：')
+        for l in wild:
+            print(l)
     for a in args:
         fm = frontmatter(a)
         if fm:
@@ -2066,4 +2124,8 @@ if __name__ == '__main__':
         print(__doc__)
         print('commands: ' + ' '.join(CMDS))
         sys.exit(2)
-    sys.exit(CMDS[sys.argv[1]](sys.argv[2:]))
+    try:
+        sys.exit(CMDS[sys.argv[1]](sys.argv[2:]))
+    except UsageError as e:
+        sys.stderr.write('usage error: %s（看 %s.sh --help）\n' % (e, sys.argv[1]))
+        sys.exit(2)

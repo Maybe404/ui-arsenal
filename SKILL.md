@@ -114,7 +114,7 @@ $S/find.sh --task loading --layer foundation  # 按统一 UI 任务和层级筛�
 $S/find.sh 背景 --code                        # 只要现在就能直接拿到代码或提示词的
 $S/find.sh dashboard --ref                    # 只要灵感参考
 $S/find.sh 按钮 --base shadcn                 # 已定主底座：去掉兼容矩阵里"不建议"同页的来源，标出"有条件"的
-$S/find.sh --help                             # 全部筛选参数、任务和层级取值
+$S/find.sh --help                             # 全部筛选参数、任务和层级取值（不带任何参数时也打印它）
 $S/fetch.sh bencho:magnet-select              # 只读拉取，打印依赖和安装命令；--help 看全部选项
 $S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
 $S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style 要和项目 components.json 一致
@@ -126,7 +126,7 @@ $S/stats.sh                                   # 各来源统计
 - **查询怎么写**：1–3 个核心词，空格分开，比如 `侧边栏 折叠`、`date picker`、`toast`；不要贴整句需求。中文长词会按同义词表拆开（`侧边栏可折叠` → 侧边栏 + 折叠），表里没有的词只在索引里确实出现时才保留。
 - **怎么匹配**：英文按整词匹配，不分大小写，带规则复数（plan 命中 plans，不命中 plane；tab 不命中 table）；中文按子串匹配；相邻的词能组成同义词短语时合在一起（`dark mode`、`tool call`）。规则细节在 `scripts/aliases.json` 的说明里。
 - **排序**：先列现在就能取码的免费条目，再列需登录的，最后是灵感参考；同样相关时，名称正好是这个词的、shadcn 和 uiarc 的基础件排在前面。
-- 搜索结果的标签：可安装、取源码、提示词、仅参考、需登录、Pro·不获取、失效；⚠ 表示场景化审美风险；⚑ 表示已登记的工程问题（来自 `sources/_claims.tsv` 的演示、缺陷结论和人工备注，附指南位置），同样相关时排在没有问题的候选之后。排序只反映相关度和能不能现在取码，不代表成熟度。
+- 搜索结果的标签：可安装、取源码、提示词、仅参考；需登录的条目是组合标签（`需登录·可安装`、`需登录·取源码`）；`Pro·不获取` 和 `失效` 默认不显示，加 `--all` 才列出。⚠ 表示场景化审美风险；⚑ 表示已登记的工程问题（来自 `sources/_claims.tsv` 的演示、缺陷结论和人工备注，附指南位置），同样相关时排在没有问题的候选之后。排序只反映相关度和能不能现在取码，不代表成熟度。
 - 搜索结果标"低置信度"（最靠前的结果只在描述里沾边，或只命中了部分词）或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
 - fetch 的退出码：0 取到文件，1 获取失败或只取到一部分，2 失效条目，3 Pro（不获取），4 需要用户登录，5 没有可下载的文件（只能在浏览器里看，或按来源文档手动操作）。一次取多个条目时末尾有逐条汇总，整体退出码取最需要处理的一条（1 > 4 > 3 > 2 > 5 > 0）。取源码类条目（bencho 等）会单独打印要装的依赖。
 - 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。普通搜索默认不列图标（表头会提示"另有 N 个图标也匹配"），查询里带 icon / 图标，或用 `--task icon`、`-s lucide` 才列出。Lucide 的命名偏实物（home 对应 house），找不到时换同义的英文词。
