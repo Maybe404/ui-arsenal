@@ -68,3 +68,4 @@
 - `jakubantalik:transition:checkbox-check` — 只借勾选描边的过渡节奏
 - `inspora:1-20` — 仅参考：切换到高级套餐的动效
 - `collectui:category:range-slider` — 仅参考：区间滑块样式
+- `animateui:components-radix-switch`、`animateui:components-base-switch` 等 — 带弹簧动画的开关、复选框、单选（条目待人审）

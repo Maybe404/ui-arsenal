@@ -31,6 +31,9 @@
 | FAQ | `uiarc:faq-section` 或 `shadcn:accordion` | uiarc 版有手风琴、主题栏、可搜索三种；shadcn 只要 accordion | — |
 | 页脚 | `uiarc:site-footer` | 链接列 + 订阅，token 统一。shadcn 底座自己用 `separator` + 链接列排，比引入带硬编码黑底的页脚更省事 | — |
 | 用户评价 | 自己写：一段大号引文 + 姓名职位 + 真实头像，最多 2–3 条 | 免费来源里没有成熟的评价区块（`uiarc:testimonial-stage` 是 Pro，reactbits 的 social-proof 是 Pro）。不要用等大卡片网格堆评价 | — |
+| 免费拼一整页（hero、功能、FAQ、定价、团队、页脚），shadcn 底座 | `tailark:oss-<kit>-<分类>-<n>`，例如 `tailark:oss-dusk-hero-section-1`、`tailark:oss-mist-features-3` | Tailark 开源版（MIT，dusk / mist / veil 三套，2026-10-08 收录、条目待人审）：同一套 kit 的区块视觉一致，可以直接取源码；区块引用 kit 自带的 button、card，取码后改成引用项目的 shadcn 组件；示例文案、客户 logo 换成真实内容 | Tailark 付费区块（`tailark:<分类>-<n>`）只当灵感，截图见 fetch 列 |
+| 设备外框（展示截图或录屏） | `magicui:safari`、`magicui:iphone`、`magicui:android` | 纯外框组件，不带特效；截图放真实产品画面 | — |
+| 功能 bento 网格 | `magicui:bento-grid` | 结构简单，颜色走 shadcn 变量；每格要有真实内容，不要凑满 | — |
 
 ## 慎用
 - 等大卡片堆结构：用 `card` 排出"图标 + 标题 + 一段话"的三列或六格网格，是 `_scenes.md` 第 6 节点名的 AI 味做法（几项功能真的平行、同等重要时例外）。功能介绍改用：一个主功能大图 + 两三个次要功能文字说明；或交互 tabs；或真实截图配一句话。`uiarc:feature-bento` 是 Pro，也不必追。
@@ -84,4 +87,9 @@
 - `uiarc:newsletter-signup` — 邮件订阅
 - `uiarc:announcement-bar` — 顶部公告条
 - `obsidianui:footer` — 只借布局，颜色和语义要改
+- `tailark:oss-*` — Tailark 开源区块（144 个，MIT），整页拼装用，同页只用一套 kit
+- `tailark:<分类>-<n>` — Tailark 付费区块（264 个），只当灵感
+- `magicui:marquee` — 跑马灯（第 3 级，自己补暂停和减弱动效）
+- `magicui:bento-grid`、`magicui:safari`、`magicui:iphone`、`magicui:android` — bento 和设备外框
+- `magicui:animated-beam`、`magicui:orbiting-circles` — 集成展示的光束和环绕图标（主导效果，一页一个）
 - 仅参考：`collectui` 的落地页类分类、`inspora` 的 website 类条目、`getdesign` 网站目录里的品牌落地页（见 `guides/page-inspiration.md`）

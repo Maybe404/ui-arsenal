@@ -426,6 +426,48 @@
    ],
    "k": 10,
    "topk_none_id": "^helpers-"
+  },
+  {
+   "q": [
+    "工具调用"
+   ],
+   "src": "aielements",
+   "top1": "aielements:tool"
+  },
+  {
+   "q": [
+    "跑马灯"
+   ],
+   "src": "magicui",
+   "top1": "magicui:marquee"
+  },
+  {
+   "q": [
+    "定价"
+   ],
+   "src": "tailark",
+   "k": 3,
+   "topk_any_obtainable": true,
+   "topk_all_id": "pricing"
+  },
+  {
+   "q": [
+    "mockup"
+   ],
+   "k": 3,
+   "topk_any": [
+    "magicui:safari",
+    "magicui:iphone",
+    "magicui:android"
+   ]
+  },
+  {
+   "q": [
+    "动画图标",
+    "复制"
+   ],
+   "src": "animateui",
+   "top1": "animateui:icons-copy"
   }
  ]
 }

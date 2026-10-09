@@ -5,7 +5,7 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
 
 # UI Arsenal：先评估成熟组件，合理选用
 
-本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。收录的来源：shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik（详见文末「来源一览」）。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
+本 skill 是用户收藏的 UI 来源的**索引和选型协议**，不存第三方源码。收录的来源：shadcn/ui、React Bits、OriginKit、bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik、Magic UI、AI Elements、Animate UI、Tailark（详见文末「来源一览」）。先查索引和选型指南，选定后再用 `fetch` 现场拉取最新代码、提示词或参考素材。
 
 下文 `$S` 指本 skill 的 `scripts/` 目录，比如 `~/.claude/skills/ui-arsenal/scripts`；`guides/`、`sources/` 都在本 skill 目录下。
 
@@ -47,7 +47,7 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
 3. **写设计基线**：配色、字体、圆角、阴影、密度、图标系统、动效强度。项目已有设计就照着写；新项目可以从 getdesign 的免费 DESIGN.md 挑一份作为方向（见 `guides/design-system.md`），只借方向，不复制品牌资产。
 4. **定一个主底座**：已有项目就是它现在用的组件库或设计系统，不为了用收藏库而换；新的 React 项目从 shadcn、uiarc 里选。一页只有一个，见 `sources/_styles.md`。再列出本页允许的专项来源，不超过 2–3 个。参考类来源只影响方向，不能直接当生产组件。
 5. **拆需求**：每个组件都要回答"为什么需要"。没有需求就不加组件，不能先看到好看的组件再往页面里塞。
-6. **找候选**：`$S/find.sh --task <task>` 或关键词搜索，已定主底座时加 `--base <底座>`（按兼容矩阵去掉不该同页的来源）。然后**读 `guides/<task>.md`**，它给出默认推荐、按场景换和慎用。搜索结果里带 ⚑ 的条目有已登记的工程问题（演示数据、定时器假进度、缺回调、键盘不可用），选它就要在汇报里写清改造工作量，或换同类候选。
+6. **找候选**：`$S/find.sh --task <task>` 或关键词搜索，已定主底座时加 `--base <底座>`（按兼容矩阵去掉不该同页的来源）。然后**读 `guides/<task>.md`**，它给出默认推荐、按场景换和慎用。搜索结果里带 ⚑ 的条目有已登记的工程问题（演示数据、定时器假进度、缺回调、键盘不可用、没有减弱动效处理），选它就要在汇报里写清改造工作量，或换同类候选。
 7. **比较**：适用场景、优点、风险、依赖、可访问性、响应式、动效、AI 味级别、访问状态（免费、需登录、Pro）。
 8. **决定**：写清采用和淘汰的理由。以下情况允许"不使用"：
    - 项目已有组件更合适；
@@ -129,7 +129,7 @@ $S/stats.sh                                   # 各来源统计
 - **查询怎么写**：1–3 个核心词，空格分开，比如 `侧边栏 折叠`、`date picker`、`toast`；不要贴整句需求。中文长词会按同义词表拆开（`侧边栏可折叠` → 侧边栏 + 折叠），表里没有的词只在索引里确实出现时才保留。
 - **怎么匹配**：英文按整词匹配，不分大小写，带规则复数（plan 命中 plans，不命中 plane；tab 不命中 table）；中文按子串匹配；相邻的词能组成同义词短语时合在一起（`dark mode`、`tool call`）。规则细节在 `scripts/aliases.json` 的说明里。
 - **排序**：先列现在就能取码的免费条目，再列需登录的，最后是灵感参考；同样相关时，名称正好是这个词的、shadcn 和 uiarc 的基础件排在前面。
-- 搜索结果的标签：可安装、取源码、提示词、仅参考；需登录的条目是组合标签（`需登录·可安装`、`需登录·取源码`）；`Pro·不获取` 和 `失效` 默认不显示，加 `--all` 才列出。⚠ 表示场景化审美风险；⚑ 表示已登记的工程问题（来自 `sources/_claims.tsv` 的演示、缺陷结论和人工备注，附指南位置），同样相关时排在没有问题的候选之后。排序只反映相关度和能不能现在取码，不代表成熟度。
+- 搜索结果的标签：可安装、取源码、提示词、仅参考；需登录的条目是组合标签（`需登录·可安装`、`需登录·取源码`）；`Pro·不获取` 和 `失效` 默认不显示，加 `--all` 才列出。⚠ 表示场景化审美风险；⚑ 表示已登记的工程问题（来自 `sources/_claims.tsv` 的演示、缺陷、缺能力结论和人工备注，附指南位置）；演示和缺陷同样相关时排在没有问题的候选之后，缺能力（如没有减弱动效处理）只提示、不影响排序。排序只反映相关度和能不能现在取码，不代表成熟度。
 - 搜索结果标"低置信度"（最靠前的结果只在描述里沾边，或只命中了部分词）或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
 - fetch 的退出码：0 取到文件，1 获取失败或只取到一部分，2 失效条目，3 Pro（不获取），4 需要用户登录，5 没有可下载的文件（只能在浏览器里看，或按来源文档手动操作）。一次取多个条目时末尾有逐条汇总，整体退出码取最需要处理的一条（1 > 4 > 3 > 2 > 5 > 0）。取源码类条目（bencho 等）会单独打印要装的依赖。
 - 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。普通搜索默认不列图标（表头会提示"另有 N 个图标也匹配"），查询里带 icon / 图标，或用 `--task icon`、`-s lucide` 才列出。Lucide 的命名偏实物（home 对应 house），找不到时换同义的英文词。
@@ -149,15 +149,17 @@ $S/stats.sh                                   # 各来源统计
 **收录原则**：这是用户自己收藏的来源，不是全市场的组件目录。`find.sh` 找不到合适候选，可能只是没收录，不代表生态里没有。已知缺口：
 - 只收了 React 生态的组件库；Vue、Svelte、Angular 没有组件库（见第三节第 1 步的短路径）。
 - 图标只有 Lucide；Heroicons、Phosphor、Tabler、Hugeicons 没收录（项目已经在用的照样用）。
-- shadcn 官方 registry 目录里的一批常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Magic UI（动效组件，约 250 项）、Animate UI（带动画的基础件，约 580 项）、AI Elements（Vercel 的 AI 界面件，约 77 项）、Aceternity（约 295 项）、Tailark（营销区块，约 476 项）、Motion Primitives、Kibo UI、Cult UI。
-- 收藏库没有合适候选、但上面某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
-- OriginKit 占条目的约 11%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
+- shadcn 官方 registry 目录里还有一些常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Aceternity（约 295 项）、Motion Primitives（Tailark 开源区块里带了其中 4 个）、Kibo UI、Cult UI。Magic UI、AI Elements、Animate UI、Tailark 已于 2026-10-08 收录。
+- 收藏库没有合适候选、但上面没收录的某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
+- OriginKit 占条目的约 10%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
 
 由 `$S/stats.sh --write-skill` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
 <!-- STATS:BEGIN -->
 | 来源 | 名称 | 类型 | 条目 | 分类行 | 免费可装 | 免费取源码 | 免费提示词 | 仅参考 | 需登录 | Pro | 失效 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| aielements | [AI Elements](https://ai-sdk.dev/elements) | component-library | 77 |  | 77 |  |  |  |  |  |  |
+| animateui | [Animate UI](https://animate-ui.com/) | component-library | 414 |  | 414 |  |  |  |  |  |  |
 | beautifului | [Beautiful UI](https://www.beautifului.dev/) | component-library | 28 |  | 27 | 1 |  |  |  |  |  |
 | bencho | [Bencho](https://bencho.dev/) | blocks | 214 | 1 |  | 63 |  | 152 |  |  |  |
 | collectui | [Collect UI](https://collectui.com/) | inspiration |  | 220 |  |  |  | 170 |  |  | 50 |
@@ -168,12 +170,14 @@ $S/stats.sh                                   # 各来源统计
 | librariesdev | [Libraries.dev](https://libraries.dev) | effects | 51 |  | 41 |  |  |  |  | 10 |  |
 | loadingui | [loading-ui](https://www.loading-ui.com/) | component-library | 47 |  | 47 |  |  |  |  |  |  |
 | lucide | [Lucide](https://lucide.dev) | icons | 2249 |  | 2223 |  |  |  |  |  | 26 |
+| magicui | [Magic UI](https://magicui.design/) | effects | 78 |  | 78 |  |  |  |  |  |  |
 | obsidianui | [ObsidianUI](https://www.obsidianui.dev/) | component-library | 75 |  | 75 |  |  |  |  |  |  |
 | originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
 | reactbits | [React Bits](https://reactbits.dev/) | effects | 399 | 60 | 216 |  |  |  |  | 243 |  |
 | shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
+| tailark | [Tailark](https://tailark.com/) | blocks | 539 |  | 8 | 144 |  |  |  | 387 |  |
 | uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 245 |  | 131 |  |  |  |  | 114 |  |
-| **合计** | | | **5940** | **284** | **3009** | **417** | **76** | **1543** | **383** | **719** | **77** |
+| **合计** | | | **7048** | **284** | **3586** | **561** | **76** | **1543** | **383** | **1106** | **77** |
 <!-- STATS:END -->
 
 ## 维护

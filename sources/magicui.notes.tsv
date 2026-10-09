@@ -1,0 +1,78 @@
+android	Android 手机外框 mockup，用来展示应用截图或视频	media,marketing-section	specialized				
+animated-beam	连接光束：一道光沿路径在两个元素间流动，常用来展示集成、数据流向	marketing-section	specialized			glow	
+animated-circular-progress-bar	环形进度条：带百分比数字的动画圆环仪表	loading,chart	specialized				
+animated-gradient-text	动画渐变文字：文字背景色在多种颜色间过渡	text-effect	specialized	gradient		gradient-text	
+animated-grid-pattern	动画网格背景：方格随机亮起熄灭	background	specialized			grid-background	
+animated-list	动画列表：条目按顺序依次出现，适合展示通知、事件流	feedback,marketing-section	specialized				
+animated-shiny-text	文字流光：一道高光横扫文字	text-effect	specialized	gradient		gradient-text	
+animated-theme-toggler	动画主题切换按钮：用 View Transitions 和 clip-path 遮罩（圆形、多边形、星形）切换深浅色	toggle-slider,motion-transition	specialized		press		
+aurora-text	极光渐变文字：多色渐变在文字里流动	text-effect	specialized	gradient		gradient-text	
+avatar-circles	叠放头像组，末尾显示 +N	avatar-user	specialized				
+backlight	背光：给视频、图片、SVG 加一圈取自自身颜色的模糊光晕	media	specialized			glow	
+bento-grid	Bento 网格布局：大小不一的卡片展示产品功能	marketing-section,layout-card	specialized				
+blur-fade	模糊淡入：内容进入视口时从模糊到清晰淡入，可错峰	motion-transition	specialized		scroll		
+border-beam	边框光束：一段光沿容器边框循环移动	layout-card	specialized			glow	
+client-tweet-card	推文卡片的客户端版本：浏览器里加载并显示一条推文	marketing-section,layout-card	specialized				
+code-comparison	代码前后对比：左右两段代码并排高亮（shiki），适合展示改动	marketing-section,layout-card	specialized				
+comic-text	漫画风文字：粗描边、半调网点的漫画标题入场	text-effect	specialized	illustration			
+confetti	撒花：canvas-confetti 封装，可由按钮触发	feedback,micro-interaction	specialized	canvas	press		
+cool-mode	点击喷粒子：在按钮或链接上点击时喷出粒子（可用自定义图片）	micro-interaction	specialized		press		
+dia-text-reveal	色带扫过揭示文字：横向色带扫过后显出渐变光泽再回到原色，有减弱动效处理	text-effect	specialized	gradient		gradient-text	
+dock	macOS 风格 dock：图标在鼠标靠近时放大	navigation,micro-interaction	specialized		hover,cursor		
+dot-pattern	SVG 点阵背景图案，可选发光	background	specialized				
+dotted-map	点阵世界地图（svg-dotted-map），可标注位置	background,chart	specialized				
+file-tree	文件树：展示目录和文件结构，可展开折叠	navigation,layout-card	specialized				
+flickering-grid	闪烁方格背景：canvas 绘制、随机明暗闪烁的像素格	background	specialized	canvas,pixel		grid-background	
+floating-3d-particles	伪 3D 粒子场：canvas 透视投影的粒子缓慢旋转漂浮，有减弱动效处理	background	specialized	canvas,3d			
+glare-hover	悬停斜向反光：伪元素渐变扫过卡片，角度、大小、时长可调	micro-interaction	specialized	gradient	hover		
+globe	可自转、可拖拽的 WebGL 地球仪（cobe），适合展示全球分布	fun-3d,marketing-section	specialized	webgl,canvas,3d	drag		
+glyph-matrix	字符矩阵背景：canvas 上的字符网格缓慢变化并渐隐，支持主题色	background	specialized	canvas			
+grid-pattern	SVG 网格背景图案，可高亮部分方格	background	specialized			grid-background	
+hero-video-dialog	首屏视频封面：点击缩略图在对话框里播放视频，多种弹出动画	media,marketing-section	specialized		press		
+hexagon-pattern	SVG 六边形网格背景图案	background	specialized			grid-background	
+highlighter	手绘荧光笔：用 rough-notation 给文字加手绘下划线、圈注、高亮	text-effect	specialized				
+hyper-text	乱码解码文字：字母先随机变换再定格成最终文字	text-effect	specialized				
+icon-cloud	3D 图标云：canvas 球面排列的图标随拖拽旋转，有减弱动效处理	fun-3d,marketing-section	specialized	canvas,3d	drag		
+interactive-grid-pattern	可交互网格背景：鼠标经过的方格高亮	background,cursor-effect	specialized		hover,cursor	grid-background	
+interactive-hover-button	悬停变形按钮：悬停时圆点扩散填满按钮、文字换成箭头	button	specialized		hover		
+iphone	iPhone 外框 mockup，用来展示应用截图或视频	media,marketing-section	specialized				
+kinetic-text	字重动画文字：鼠标悬停时字母的字重随位置变化	text-effect	specialized		hover		
+lens	放大镜：悬停时在图片、视频等元素上放大局部，可固定位置	media,micro-interaction	specialized		hover,cursor		
+light-rays	光线背景：从上方照下的动画光束	background	specialized	gradient		glow	
+line-shadow-text	带移动斜线阴影的标题文字效果	text-effect	specialized				
+magic-card	聚光卡片：光斑跟随鼠标，悬停时卡片边框被照亮；spotlight card，依赖 next-themes 取暗色	layout-card,cursor-effect	specialized	gradient	cursor,hover	glow	
+marquee	跑马灯：文字、图片、卡片横向或纵向无限滚动，可悬停暂停；logo 墙、评价墙	marketing-section	specialized			marquee	
+meteors	流星雨背景：斜向划过的流星线条	background	specialized				
+morphing-text	文字变形轮播：几个词之间用模糊渐变互相变形切换	text-effect	specialized				
+neon-gradient-card	霓虹渐变边框卡片：边框外发光	layout-card	specialized	gradient		glow	
+noise-texture	SVG 分形噪点纹理叠层（feTurbulence），可调去色和对比度，给背景加颗粒感	background	specialized				
+number-ticker	数字滚动：数字递增或递减到目标值	text-effect,chart	specialized				
+orbiting-circles	轨道环绕：图标沿圆形轨道绕中心转动，常用来展示集成	marketing-section	specialized				
+particles	粒子背景：canvas 浮动粒子，跟随鼠标微动	background	specialized	canvas	cursor		
+pixel-image	像素化图片：图片从像素块逐步变清晰，复古感	media	specialized	pixel			
+pointer	自定义指针：鼠标进入元素时用自定义图形替换系统光标	cursor-effect	specialized		cursor		
+progressive-blur	渐进模糊遮罩：滚动容器边缘逐级模糊，提示还有更多内容	layout-card,background	specialized		scroll		
+pulsating-button	脉冲按钮：外圈持续向外扩散的波纹吸引注意	button	specialized			pulse-dot	
+rainbow-button	彩虹渐变按钮：底部有流动的彩虹光晕	button	specialized	gradient		glow	
+retro-grid	复古透视网格背景：向远处滚动的地面网格（合成波风格），有减弱动效处理	background	specialized	3d		grid-background	
+ripple	同心圆波纹背景：从中心向外扩散，用来突出中间的元素	background	specialized				
+ripple-button	点击波纹按钮：按下处扩散出水波纹	button	specialized		press		
+safari	Safari 浏览器窗口外框 mockup，用来展示网站截图	media,marketing-section	specialized				
+scroll-based-velocity	随滚动速度变化的滚动文字带，有减弱动效处理	text-effect,marketing-section	specialized		scroll	marquee	
+scroll-progress	页面顶部阅读进度条，随滚动填充	navigation,loading	specialized		scroll		
+shimmer-button	流光按钮：一道光沿按钮边缘循环移动	button	specialized			glow	
+shine-border	流光边框：彩色光沿边框流动的背景边框效果	layout-card	specialized	gradient		glow	
+shiny-button	光泽按钮：一道高光扫过，适配亮暗模式	button	specialized				
+smooth-cursor	物理弹簧平滑光标：跟随鼠标的自定义光标，带旋转和弹簧延迟	cursor-effect	specialized		cursor		
+sparkles-text	闪光文字：文字周围不断冒出小星星	text-effect	specialized				
+spinning-text	环形旋转文字：文字沿圆周排列并旋转	text-effect	specialized				
+striped-pattern	SVG 斜条纹背景图案	background	specialized				
+terminal	终端窗口：命令和输出按顺序逐行打出，适合展示 CLI 用法	marketing-section,text-effect	specialized	dark		typewriter	
+text-3d-flip	3D 翻转文字：悬停时每个字母错峰 3D 翻转	text-effect	specialized	3d	hover		
+text-animate	文字动画合集：按字、词、行做淡入、模糊、滑入、缩放等多种入场	text-effect	specialized				
+text-reveal	滚动揭示文字：随页面滚动逐词从淡到实	text-effect	specialized		scroll		
+tweet-card	推文卡片：服务端渲染一条 Twitter/X 推文（作者、头像、正文），react-tweet	marketing-section,layout-card	specialized				
+typing-animation	打字机效果：字符逐个打出，可带光标	text-effect	specialized			typewriter	
+video-text	视频文字：文字镂空，里面播放视频	text-effect,media	specialized				
+warp-background	时空扭曲背景卡片：卡片周围的网格光束向中心流动，适合突出单个卖点	background	specialized			grid-background	
+word-rotate	单词轮换：一个词位置上的词纵向滚动切换	text-effect	specialized				

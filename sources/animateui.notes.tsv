@@ -1,0 +1,414 @@
+components-animate-avatar-group	头像组：叠放头像，悬停时被指向的头像前移并显示提示	avatar-user	specialized		hover		
+components-animate-code	代码打字动画：代码像在被逐字写出，带亮暗主题	text-effect	specialized			typewriter	
+components-animate-code-tabs	多语言代码标签页：按语言切换代码（shiki 高亮），带复制	layout-card	specialized				
+components-animate-cursor	自定义光标：替换系统光标并带跟随标签，弹簧平滑	cursor-effect	specialized		cursor		
+components-animate-github-stars-wheel	GitHub star 数滚轮：数字像滚轮一样滚动显示 star 数	text-effect,button	specialized				
+components-animate-tabs	带样式的动画标签页：选中指示滑动、面板切换动画	navigation	foundation				
+components-animate-tooltip	带样式的动画工具提示：在相邻元素间滑动跟随	overlay	foundation		hover		
+components-backgrounds-bubble	渐变气泡背景：彩色模糊气泡缓慢漂浮并跟随鼠标	background	specialized	gradient	cursor		
+components-backgrounds-fireworks	烟花背景：canvas 绘制的连续或点击触发的烟花	background,fun-3d	specialized	canvas	press		
+components-backgrounds-gradient	动画渐变背景：颜色缓慢流动过渡	background	specialized	gradient			
+components-backgrounds-gravity-stars	引力星点背景：canvas 星点受鼠标吸引聚散	background	specialized	canvas	cursor		
+components-backgrounds-hexagon	可交互六边形网格背景：鼠标经过的格子高亮	background	specialized		hover,cursor	grid-background	
+components-backgrounds-hole	黑洞网格背景：canvas 线条向中心深处坍缩的动画	background	specialized	canvas			
+components-backgrounds-stars	星空背景：大小、速度不一的星点移动，随鼠标视差	background	specialized		cursor		
+components-base-accordion	手风琴折叠面板：带样式的 Base UI 版（shadcn 风格）	overlay	foundation				
+components-base-alert-dialog	确认对话框：带样式的 Base UI 版（shadcn 风格）	overlay	foundation				
+components-base-checkbox	复选框（勾选描边动画）：带样式的 Base UI 版（shadcn 风格）	toggle-slider	foundation				
+components-base-dialog	对话框（弹性缩放进出）：带样式的 Base UI 版（shadcn 风格）	overlay	foundation				
+components-base-files	文件树（展开收起动画）：带样式的 Base UI 版（shadcn 风格）	navigation	foundation				
+components-base-menu	菜单（高亮滑动）：带样式的 Base UI 版（shadcn 风格）	overlay	foundation				
+components-base-popover	气泡弹层：带样式的 Base UI 版（shadcn 风格）	overlay	foundation				
+components-base-preview-card	悬停预览卡片：带样式的 Base UI 版（shadcn 风格）	overlay	foundation		hover		
+components-base-preview-link-card	链接悬停预览卡片（显示网页截图）：带样式的 Base UI 版（shadcn 风格）	overlay	foundation		hover		
+components-base-progress	进度条：带样式的 Base UI 版（shadcn 风格）	loading	foundation				
+components-base-radio	单选组：带样式的 Base UI 版（shadcn 风格）	toggle-slider	foundation				
+components-base-switch	开关（滑块弹簧）：带样式的 Base UI 版（shadcn 风格）	toggle-slider	foundation				
+components-base-tabs	标签页（选中指示滑动、内容切换动画）：带样式的 Base UI 版（shadcn 风格）	navigation	foundation				
+components-base-toggle	切换按钮：带样式的 Base UI 版（shadcn 风格）	toggle-slider	foundation		press		
+components-base-toggle-group	切换按钮组（选中高亮滑动）：带样式的 Base UI 版（shadcn 风格）	toggle-slider	foundation				
+components-base-tooltip	工具提示（在相邻元素间滑动）：带样式的 Base UI 版（shadcn 风格）	overlay	foundation		hover		
+components-buttons-button	带样式的动画按钮：多种 variant，悬停和按下有缩放反馈	button	foundation		hover,press		
+components-buttons-copy	复制按钮：复制后图标切换成对勾，多种样式	button,micro-interaction	foundation		press		
+components-buttons-flip	翻转按钮：悬停时在正反两面文字间翻转	button	specialized	3d	hover		
+components-buttons-github-stars	GitHub star 按钮：链接到仓库并滚动显示 star 数	button	specialized				
+components-buttons-icon	图标按钮：多种样式，点击时有粒子或缩放反馈	button	foundation		press		
+components-buttons-liquid	液体填充按钮：悬停时颜色像液体一样填满	button	specialized		hover		
+components-buttons-ripple	点击波纹按钮：按下处扩散水波纹	button	specialized		press		
+components-buttons-theme-toggler	主题切换按钮：用 View Transitions 渐进切换深浅色（next-themes）	toggle-slider	specialized		press		
+components-community-flip-card	3D 翻转卡片：点击或悬停翻到背面显示更多内容	layout-card,micro-interaction	specialized	3d	hover,press		
+components-community-management-bar	管理操作条：分页、选中计数和批量操作按钮的紧凑工具条	table,navigation	specialized				
+components-community-motion-carousel	动效轮播：基于 Embla，滑块随位置缩放	media	specialized		drag,swipe		
+components-community-notification-list	通知列表：卡片叠放，悬停展开成列表	feedback	specialized		hover		
+components-community-pin-list	置顶列表：条目在置顶和普通分组间移动时有动画	layout-card,micro-interaction	specialized		press		
+components-community-playful-todolist	待办清单：完成时画上波浪删除线	micro-interaction,form-input	specialized		press		
+components-community-radial-intro	环形入场：元素从中心展开排到圆周轨道上	motion-transition	specialized				
+components-community-radial-menu	径向右键菜单：操作环形排开，Base UI 实现，完整键盘支持	overlay,navigation	specialized		keyboard,press		
+components-community-radial-nav	环形导航：指针转向当前项，按钮展开	navigation	specialized		press		
+components-community-share-button	分享按钮：悬停展开出各社交平台图标	button,micro-interaction	specialized		hover		
+components-community-user-presence-avatar	在线状态头像组：用户上线下线时头像平滑进出	avatar-user	specialized				
+components-headless-accordion	手风琴折叠面板：带样式的 Headless UI 版（shadcn 风格）	overlay	foundation				
+components-headless-checkbox	复选框（勾选描边动画）：带样式的 Headless UI 版（shadcn 风格）	toggle-slider	foundation				
+components-headless-dialog	对话框（弹性缩放进出）：带样式的 Headless UI 版（shadcn 风格）	overlay	foundation				
+components-headless-popover	气泡弹层：带样式的 Headless UI 版（shadcn 风格）	overlay	foundation				
+components-headless-switch	开关（滑块弹簧）：带样式的 Headless UI 版（shadcn 风格）	toggle-slider	foundation				
+components-headless-tabs	标签页（选中指示滑动、内容切换动画）：带样式的 Headless UI 版（shadcn 风格）	navigation	foundation				
+components-radix-accordion	手风琴折叠面板：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-alert-dialog	确认对话框：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-checkbox	复选框（勾选描边动画）：带样式的 Radix 版（shadcn 风格）	toggle-slider	foundation				
+components-radix-dialog	对话框（弹性缩放进出）：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-dropdown-menu	下拉菜单（高亮滑动）：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-files	文件树（展开收起动画）：带样式的 Radix 版（shadcn 风格）	navigation	foundation				
+components-radix-hover-card	悬停卡片：带样式的 Radix 版（shadcn 风格）	overlay	foundation		hover		
+components-radix-popover	气泡弹层：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-preview-link-card	链接悬停预览卡片（显示网页截图）：带样式的 Radix 版（shadcn 风格）	overlay	foundation		hover		
+components-radix-progress	进度条：带样式的 Radix 版（shadcn 风格）	loading	foundation				
+components-radix-radio-group	单选组：带样式的 Radix 版（shadcn 风格）	toggle-slider	foundation				
+components-radix-sheet	侧边抽屉 sheet：带样式的 Radix 版（shadcn 风格）	overlay	foundation				
+components-radix-sidebar	侧边栏（可折叠，图标栏）：带样式的 Radix 版（shadcn 风格）	navigation	foundation				
+components-radix-switch	开关（滑块弹簧）：带样式的 Radix 版（shadcn 风格）	toggle-slider	foundation				
+components-radix-tabs	标签页（选中指示滑动、内容切换动画）：带样式的 Radix 版（shadcn 风格）	navigation	foundation				
+components-radix-toggle	切换按钮：带样式的 Radix 版（shadcn 风格）	toggle-slider	foundation		press		
+components-radix-toggle-group	切换按钮组（选中高亮滑动）：带样式的 Radix 版（shadcn 风格）	toggle-slider	foundation				
+components-radix-tooltip	工具提示（在相邻元素间滑动）：带样式的 Radix 版（shadcn 风格）	overlay	foundation		hover		
+icons-accessibility	动画图标：无障碍（accessibility）	icon	icons		hover		
+icons-activity	动画图标：活动/心电波形（activity）	icon	icons		hover		
+icons-airplay	动画图标：隔空播放/投屏（airplay）	icon	icons		hover		
+icons-alarm-clock	动画图标：闹钟（alarm clock）	icon	icons		hover		
+icons-arrow-down	动画图标：向下箭头（arrow down）	icon	icons		hover		
+icons-arrow-left	动画图标：向左箭头（arrow left）	icon	icons		hover		
+icons-arrow-right	动画图标：向右箭头（arrow right）	icon	icons		hover		
+icons-arrow-up	动画图标：向上箭头（arrow up）	icon	icons		hover		
+icons-arrow-up-down	动画图标：上下箭头/排序切换（arrow up down）	icon	icons		hover		
+icons-audio-lines	动画图标：音频波形/语音（audio lines）	icon	icons		hover		
+icons-axe	动画图标：斧头（axe）	icon	icons		hover		
+icons-axis-3d	动画图标：三维坐标轴（axis 3d）	icon	icons		hover		
+icons-badge-check	动画图标：认证徽章/已认证（badge check）	icon	icons		hover		
+icons-battery-charging	动画图标：充电中（battery charging）	icon	icons		hover		
+icons-battery-full	动画图标：满电电池（battery full）	icon	icons		hover		
+icons-battery-low	动画图标：低电量（battery low）	icon	icons		hover		
+icons-battery-medium	动画图标：半电电池（battery medium）	icon	icons		hover		
+icons-bell	动画图标：通知铃铛（bell）	icon	icons		hover		
+icons-bell-off	动画图标：关闭通知/静音铃铛（bell off）	icon	icons		hover		
+icons-bell-ring	动画图标：响铃通知（bell ring）	icon	icons		hover		
+icons-between-horizontal-end	动画图标：水平等距分布/末端对齐（between horizontal end）	icon	icons		hover		
+icons-between-horizontal-start	动画图标：水平等距分布/起始对齐（between horizontal start）	icon	icons		hover		
+icons-between-vertical-end	动画图标：垂直等距分布/末端对齐（between vertical end）	icon	icons		hover		
+icons-between-vertical-start	动画图标：垂直等距分布/起始对齐（between vertical start）	icon	icons		hover		
+icons-binary	动画图标：二进制（binary）	icon	icons		hover		
+icons-blend	动画图标：混合/融合（blend）	icon	icons		hover		
+icons-blocks	动画图标：积木/模块（blocks）	icon	icons		hover		
+icons-bot	动画图标：机器人/AI 助手（bot）	icon	icons		hover		
+icons-bot-message-square	动画图标：AI 对话/机器人聊天（bot message square）	icon	icons		hover		
+icons-bot-off	动画图标：关闭 AI 助手（bot off）	icon	icons		hover		
+icons-brush	动画图标：画刷（brush）	icon	icons		hover		
+icons-brush-cleaning	动画图标：清扫刷/清理（brush cleaning）	icon	icons		hover		
+icons-cast	动画图标：投屏（cast）	icon	icons		hover		
+icons-cctv	动画图标：监控摄像头（cctv）	icon	icons		hover		
+icons-chart-bar	动画图标：柱状图（chart bar）	icon	icons		hover		
+icons-chart-bar-decreasing	动画图标：下降柱状图（chart bar decreasing）	icon	icons		hover		
+icons-chart-bar-increasing	动画图标：上升柱状图（chart bar increasing）	icon	icons		hover		
+icons-chart-column	动画图标：竖向柱状图（chart column）	icon	icons		hover		
+icons-chart-column-decreasing	动画图标：下降竖向柱状图（chart column decreasing）	icon	icons		hover		
+icons-chart-column-increasing	动画图标：上升竖向柱状图（chart column increasing）	icon	icons		hover		
+icons-chart-line	动画图标：折线图（chart line）	icon	icons		hover		
+icons-chart-no-axes-column	动画图标：无坐标轴柱状图（chart no axes column）	icon	icons		hover		
+icons-chart-no-axes-column-decreasing	动画图标：无坐标轴下降柱图（chart no axes column decreasing）	icon	icons		hover		
+icons-chart-no-axes-column-increasing	动画图标：无坐标轴上升柱图（chart no axes column increasing）	icon	icons		hover		
+icons-chart-scatter	动画图标：散点图（chart scatter）	icon	icons		hover		
+icons-chart-spline	动画图标：平滑曲线图（chart spline）	icon	icons		hover		
+icons-check	动画图标：对勾/完成（check）	icon	icons		hover		
+icons-check-check	动画图标：双对勾/已读（check check）	icon	icons		hover		
+icons-check-line	动画图标：勾选确认（check line）	icon	icons		hover		
+icons-cherry	动画图标：樱桃（cherry）	icon	icons		hover		
+icons-chevron-down	动画图标：向下展开/下拉（chevron down）	icon	icons		hover		
+icons-chevron-left	动画图标：向左展开/返回（chevron left）	icon	icons		hover		
+icons-chevron-left-right	动画图标：左右展开（chevron left right）	icon	icons		hover		
+icons-chevron-right	动画图标：向右展开/前进（chevron right）	icon	icons		hover		
+icons-chevron-up	动画图标：向上折叠（chevron up）	icon	icons		hover		
+icons-chevron-up-down	动画图标：上下展开/下拉选择（chevron up down）	icon	icons		hover		
+icons-circle-check	动画图标：圆形对勾/成功（circle check）	icon	icons		hover		
+icons-circle-check-big	动画图标：大圆形对勾/完成（circle check big）	icon	icons		hover		
+icons-circle-plus	动画图标：圆形加号/添加（circle plus）	icon	icons		hover		
+icons-circle-x	动画图标：圆形叉号/关闭（circle x）	icon	icons		hover		
+icons-circuit-board	动画图标：电路板（circuit board）	icon	icons		hover		
+icons-clapperboard	动画图标：场记板/影视（clapperboard）	icon	icons		hover		
+icons-clipboard	动画图标：剪贴板（clipboard）	icon	icons		hover		
+icons-clipboard-check	动画图标：已勾选的剪贴板/完成清单（clipboard check）	icon	icons		hover		
+icons-clipboard-list	动画图标：剪贴板列表/清单（clipboard list）	icon	icons		hover		
+icons-clock	动画图标：时钟（clock）	icon	icons		hover		
+icons-clock-1	动画图标：时钟，指针位于 1 点（clock 1）	icon	icons		hover		
+icons-clock-10	动画图标：时钟，指针位于 10 点（clock 10）	icon	icons		hover		
+icons-clock-11	动画图标：时钟，指针位于 11 点（clock 11）	icon	icons		hover		
+icons-clock-12	动画图标：时钟，指针位于 12 点（clock 12）	icon	icons		hover		
+icons-clock-2	动画图标：时钟，指针位于 2 点（clock 2）	icon	icons		hover		
+icons-clock-3	动画图标：时钟，指针位于 3 点（clock 3）	icon	icons		hover		
+icons-clock-4	动画图标：时钟，指针位于 4 点（clock 4）	icon	icons		hover		
+icons-clock-5	动画图标：时钟，指针位于 5 点（clock 5）	icon	icons		hover		
+icons-clock-6	动画图标：时钟，指针位于 6 点（clock 6）	icon	icons		hover		
+icons-clock-7	动画图标：时钟，指针位于 7 点（clock 7）	icon	icons		hover		
+icons-clock-8	动画图标：时钟，指针位于 8 点（clock 8）	icon	icons		hover		
+icons-clock-9	动画图标：时钟，指针位于 9 点（clock 9）	icon	icons		hover		
+icons-cloud-download	动画图标：云端下载（cloud download）	icon	icons		hover		
+icons-cloud-drizzle	动画图标：毛毛雨天气（cloud drizzle）	icon	icons		hover		
+icons-cloud-hail	动画图标：冰雹天气（cloud hail）	icon	icons		hover		
+icons-cloud-lightning	动画图标：雷暴天气/闪电云（cloud lightning）	icon	icons		hover		
+icons-cloud-moon	动画图标：夜间多云（cloud moon）	icon	icons		hover		
+icons-cloud-moon-rain	动画图标：夜间阵雨（cloud moon rain）	icon	icons		hover		
+icons-cloud-rain	动画图标：下雨天气（cloud rain）	icon	icons		hover		
+icons-cloud-rain-wind	动画图标：风雨天气（cloud rain wind）	icon	icons		hover		
+icons-cloud-snow	动画图标：下雪天气（cloud snow）	icon	icons		hover		
+icons-cloud-sun	动画图标：晴间多云（cloud sun）	icon	icons		hover		
+icons-cloud-sun-rain	动画图标：太阳雨/阴晴间雨（cloud sun rain）	icon	icons		hover		
+icons-cloud-upload	动画图标：云端上传（cloud upload）	icon	icons		hover		
+icons-cog	动画图标：齿轮/设置（cog）	icon	icons		hover		
+icons-compass	动画图标：指南针（compass）	icon	icons		hover		
+icons-contrast	动画图标：对比度/明暗调节（contrast）	icon	icons		hover		
+icons-copy	动画图标：复制（copy）	icon	icons		hover		
+icons-crop	动画图标：裁剪（crop）	icon	icons		hover		
+icons-cross	动画图标：十字/关闭（cross）	icon	icons		hover		
+icons-disc-3	动画图标：光盘/唱片（disc 3）	icon	icons		hover		
+icons-download	动画图标：下载（download）	icon	icons		hover		
+icons-ellipsis	动画图标：更多/省略号（ellipsis）	icon	icons		hover		
+icons-ellipsis-vertical	动画图标：竖向更多菜单（ellipsis vertical）	icon	icons		hover		
+icons-equal-not	动画图标：不等于（equal not）	icon	icons		hover		
+icons-ev-charger	动画图标：电动车充电桩（ev charger）	icon	icons		hover		
+icons-expand	动画图标：展开/放大（expand）	icon	icons		hover		
+icons-external-link	动画图标：外部链接/新窗口打开（external link）	icon	icons		hover		
+icons-fan	动画图标：风扇（fan）	icon	icons		hover		
+icons-fingerprint	动画图标：指纹（fingerprint）	icon	icons		hover		
+icons-forklift	动画图标：叉车（forklift）	icon	icons		hover		
+icons-frame	动画图标：画框/框架（frame）	icon	icons		hover		
+icons-gallery-horizontal	动画图标：水平图库/图片轮播（gallery horizontal）	icon	icons		hover		
+icons-gallery-horizontal-end	动画图标：水平图库/末端对齐（gallery horizontal end）	icon	icons		hover		
+icons-gallery-vertical	动画图标：竖向图库（gallery vertical）	icon	icons		hover		
+icons-gallery-vertical-end	动画图标：竖向图库/末端对齐（gallery vertical end）	icon	icons		hover		
+icons-gauge	动画图标：仪表盘/速度计（gauge）	icon	icons		hover		
+icons-gavel	动画图标：法槌/裁决（gavel）	icon	icons		hover		
+icons-hammer	动画图标：锤子（hammer）	icon	icons		hover		
+icons-heart	动画图标：心形/收藏点赞（heart）	icon	icons		hover		
+icons-house-wifi	动画图标：家庭 Wi-Fi/家居网络（house wifi）	icon	icons		hover		
+icons-icon	动画图标基础组件：其他动画图标都依赖它，提供悬停或进入视口时触发动画（icon）	icon	icons		hover		
+icons-kanban	动画图标：看板（kanban）	icon	icons		hover		
+icons-key	动画图标：钥匙（key）	icon	icons		hover		
+icons-layers	动画图标：图层（layers）	icon	icons		hover		
+icons-layers-2	动画图标：图层（layers 2）	icon	icons		hover		
+icons-layout-dashboard	动画图标：仪表盘布局（layout dashboard）	icon	icons		hover		
+icons-lightbulb	动画图标：灯泡/提示（lightbulb）	icon	icons		hover		
+icons-lightbulb-off	动画图标：关闭灯泡（lightbulb off）	icon	icons		hover		
+icons-link	动画图标：链接（link）	icon	icons		hover		
+icons-link-2	动画图标：链接（link 2）	icon	icons		hover		
+icons-list	动画图标：列表（list）	icon	icons		hover		
+icons-loader	动画图标：加载中（loader）	icon	icons		hover		
+icons-loader-circle	动画图标：圆形加载（loader circle）	icon	icons		hover		
+icons-loader-pinwheel	动画图标：风车式加载（loader pinwheel）	icon	icons		hover		
+icons-lock	动画图标：锁定（lock）	icon	icons		hover		
+icons-lock-keyhole	动画图标：钥匙孔锁（lock keyhole）	icon	icons		hover		
+icons-lock-keyhole-open	动画图标：钥匙孔开锁（lock keyhole open）	icon	icons		hover		
+icons-lock-open	动画图标：开锁（lock open）	icon	icons		hover		
+icons-log-in	动画图标：登录（log in）	icon	icons		hover		
+icons-log-out	动画图标：退出登录（log out）	icon	icons		hover		
+icons-map-pin	动画图标：地图定位标记（map pin）	icon	icons		hover		
+icons-map-pin-off	动画图标：关闭定位/不显示位置（map pin off）	icon	icons		hover		
+icons-maximize	动画图标：最大化（maximize）	icon	icons		hover		
+icons-menu	动画图标：菜单（menu）	icon	icons		hover		
+icons-message-circle	动画图标：圆形消息/对话（message circle）	icon	icons		hover		
+icons-message-circle-code	动画图标：代码对话（message circle code）	icon	icons		hover		
+icons-message-circle-dashed	动画图标：虚线对话框（message circle dashed）	icon	icons		hover		
+icons-message-circle-heart	动画图标：收藏对话/点赞评论（message circle heart）	icon	icons		hover		
+icons-message-circle-more	动画图标：更多消息（message circle more）	icon	icons		hover		
+icons-message-circle-off	动画图标：关闭消息（message circle off）	icon	icons		hover		
+icons-message-circle-plus	动画图标：新建消息（message circle plus）	icon	icons		hover		
+icons-message-circle-question	动画图标：疑问消息/帮助（message circle question）	icon	icons		hover		
+icons-message-circle-warning	动画图标：警告消息（message circle warning）	icon	icons		hover		
+icons-message-circle-x	动画图标：删除消息（message circle x）	icon	icons		hover		
+icons-message-square	动画图标：消息/对话框（message square）	icon	icons		hover		
+icons-message-square-code	动画图标：代码对话框（message square code）	icon	icons		hover		
+icons-message-square-dashed	动画图标：虚线对话框（message square dashed）	icon	icons		hover		
+icons-message-square-diff	动画图标：差异对比消息（message square diff）	icon	icons		hover		
+icons-message-square-dot	动画图标：新消息提示（message square dot）	icon	icons		hover		
+icons-message-square-heart	动画图标：收藏对话框（message square heart）	icon	icons		hover		
+icons-message-square-more	动画图标：更多消息（message square more）	icon	icons		hover		
+icons-message-square-off	动画图标：关闭消息框（message square off）	icon	icons		hover		
+icons-message-square-plus	动画图标：新建消息（message square plus）	icon	icons		hover		
+icons-message-square-quote	动画图标：引用消息（message square quote）	icon	icons		hover		
+icons-message-square-share	动画图标：分享消息（message square share）	icon	icons		hover		
+icons-message-square-text	动画图标：文字消息（message square text）	icon	icons		hover		
+icons-message-square-warning	动画图标：警告消息（message square warning）	icon	icons		hover		
+icons-message-square-x	动画图标：删除消息（message square x）	icon	icons		hover		
+icons-minimize	动画图标：最小化（minimize）	icon	icons		hover		
+icons-moon	动画图标：月亮/深色模式（moon）	icon	icons		hover		
+icons-moon-star	动画图标：月亮与星星/夜间模式（moon star）	icon	icons		hover		
+icons-move-down	动画图标：向下移动（move down）	icon	icons		hover		
+icons-move-left	动画图标：向左移动（move left）	icon	icons		hover		
+icons-move-right	动画图标：向右移动（move right）	icon	icons		hover		
+icons-move-up	动画图标：向上移动（move up）	icon	icons		hover		
+icons-nfc	动画图标：近场通信/NFC（nfc）	icon	icons		hover		
+icons-orbit	动画图标：轨道（orbit）	icon	icons		hover		
+icons-paintbrush	动画图标：画笔（paintbrush）	icon	icons		hover		
+icons-panel-bottom	动画图标：底部面板（panel bottom）	icon	icons		hover		
+icons-panel-bottom-close	动画图标：收起底部面板（panel bottom close）	icon	icons		hover		
+icons-panel-bottom-open	动画图标：展开底部面板（panel bottom open）	icon	icons		hover		
+icons-panel-left	动画图标：左侧面板/侧边栏（panel left）	icon	icons		hover		
+icons-panel-left-close	动画图标：收起左侧栏（panel left close）	icon	icons		hover		
+icons-panel-left-open	动画图标：展开左侧栏（panel left open）	icon	icons		hover		
+icons-panel-right	动画图标：右侧面板（panel right）	icon	icons		hover		
+icons-panel-right-close	动画图标：收起右侧栏（panel right close）	icon	icons		hover		
+icons-panel-right-open	动画图标：展开右侧栏（panel right open）	icon	icons		hover		
+icons-panel-top	动画图标：顶部面板（panel top）	icon	icons		hover		
+icons-panel-top-close	动画图标：收起顶部面板（panel top close）	icon	icons		hover		
+icons-panel-top-open	动画图标：展开顶部面板（panel top open）	icon	icons		hover		
+icons-paperclip	动画图标：回形针/附件（paperclip）	icon	icons		hover		
+icons-party-popper	动画图标：彩带/庆祝（party popper）	icon	icons		hover		
+icons-pause	动画图标：暂停（pause）	icon	icons		hover		
+icons-phone-call	动画图标：来电/拨打电话（phone call）	icon	icons		hover		
+icons-pickaxe	动画图标：镐子（pickaxe）	icon	icons		hover		
+icons-pin	动画图标：图钉/置顶（pin）	icon	icons		hover		
+icons-pin-off	动画图标：取消置顶（pin off）	icon	icons		hover		
+icons-play	动画图标：播放（play）	icon	icons		hover		
+icons-plug-zap	动画图标：闪电插头/供电（plug zap）	icon	icons		hover		
+icons-plus	动画图标：加号/添加（plus）	icon	icons		hover		
+icons-radio	动画图标：收音机/广播（radio）	icon	icons		hover		
+icons-radio-tower	动画图标：信号塔/广播塔（radio tower）	icon	icons		hover		
+icons-refresh-ccw	动画图标：逆时针刷新（refresh ccw）	icon	icons		hover		
+icons-refresh-ccw-dot	动画图标：逆时针刷新/带提示点（refresh ccw dot）	icon	icons		hover		
+icons-refresh-cw	动画图标：顺时针刷新/同步（refresh cw）	icon	icons		hover		
+icons-refresh-cw-off	动画图标：关闭同步（refresh cw off）	icon	icons		hover		
+icons-rotate-ccw	动画图标：逆时针旋转/撤销（rotate ccw）	icon	icons		hover		
+icons-rotate-ccw-key	动画图标：逆时针旋转钥匙/重置密钥（rotate ccw key）	icon	icons		hover		
+icons-rotate-cw	动画图标：顺时针旋转（rotate cw）	icon	icons		hover		
+icons-route	动画图标：路线/路径规划（route）	icon	icons		hover		
+icons-router	动画图标：路由器（router）	icon	icons		hover		
+icons-scissors	动画图标：剪刀/剪切（scissors）	icon	icons		hover		
+icons-scissors-line-dashed	动画图标：虚线剪切（scissors line dashed）	icon	icons		hover		
+icons-search	动画图标：搜索（search）	icon	icons		hover		
+icons-send	动画图标：发送（send）	icon	icons		hover		
+icons-send-horizontal	动画图标：水平发送（send horizontal）	icon	icons		hover		
+icons-settings	动画图标：设置（settings）	icon	icons		hover		
+icons-shrink	动画图标：缩小/收起（shrink）	icon	icons		hover		
+icons-signal	动画图标：信号（signal）	icon	icons		hover		
+icons-signal-high	动画图标：满格信号（signal high）	icon	icons		hover		
+icons-signal-low	动画图标：低格信号（signal low）	icon	icons		hover		
+icons-signal-medium	动画图标：中格信号（signal medium）	icon	icons		hover		
+icons-signal-zero	动画图标：无信号（signal zero）	icon	icons		hover		
+icons-sliders-horizontal	动画图标：水平滑块/筛选设置（sliders horizontal）	icon	icons		hover		
+icons-sliders-vertical	动画图标：垂直滑块/调节设置（sliders vertical）	icon	icons		hover		
+icons-sparkle	动画图标：单闪光/AI 生成（sparkle）	icon	icons		hover		
+icons-sparkles	动画图标：多闪光/AI 生成（sparkles）	icon	icons		hover		
+icons-square-arrow-out-down-left	动画图标：方框左下跳出箭头（square arrow out down left）	icon	icons		hover		
+icons-square-arrow-out-down-right	动画图标：方框右下跳出箭头（square arrow out down right）	icon	icons		hover		
+icons-square-arrow-out-up-left	动画图标：方框左上跳出箭头（square arrow out up left）	icon	icons		hover		
+icons-square-arrow-out-up-right	动画图标：方框右上跳出箭头/外部打开（square arrow out up right）	icon	icons		hover		
+icons-square-dashed-kanban	动画图标：虚线方框看板（square dashed kanban）	icon	icons		hover		
+icons-square-kanban	动画图标：方框看板（square kanban）	icon	icons		hover		
+icons-square-plus	动画图标：方框加号/添加（square plus）	icon	icons		hover		
+icons-square-x	动画图标：方框叉号/关闭（square x）	icon	icons		hover		
+icons-star	动画图标：星标/收藏（star）	icon	icons		hover		
+icons-sun	动画图标：太阳/浅色模式（sun）	icon	icons		hover		
+icons-sun-dim	动画图标：暗淡太阳/亮度调低（sun dim）	icon	icons		hover		
+icons-sun-medium	动画图标：中等亮度太阳（sun medium）	icon	icons		hover		
+icons-sun-moon	动画图标：太阳与月亮/明暗切换（sun moon）	icon	icons		hover		
+icons-terminal	动画图标：终端/命令行（terminal）	icon	icons		hover		
+icons-thumbs-down	动画图标：点踩（thumbs down）	icon	icons		hover		
+icons-thumbs-up	动画图标：点赞（thumbs up）	icon	icons		hover		
+icons-timer	动画图标：计时器（timer）	icon	icons		hover		
+icons-timer-off	动画图标：关闭计时器（timer off）	icon	icons		hover		
+icons-toggle-left	动画图标：左侧开关/关闭状态（toggle left）	icon	icons		hover		
+icons-toggle-right	动画图标：右侧开关/开启状态（toggle right）	icon	icons		hover		
+icons-trash	动画图标：垃圾桶/删除（trash）	icon	icons		hover		
+icons-trash-2	动画图标：垃圾桶/删除（trash 2）	icon	icons		hover		
+icons-unplug	动画图标：拔掉插头/断开电源（unplug）	icon	icons		hover		
+icons-upload	动画图标：上传（upload）	icon	icons		hover		
+icons-user	动画图标：用户/个人资料（user）	icon	icons		hover		
+icons-user-round	动画图标：圆形头像用户（user round）	icon	icons		hover		
+icons-users	动画图标：多人/用户组（users）	icon	icons		hover		
+icons-users-round	动画图标：圆形多人头像（users round）	icon	icons		hover		
+icons-volume-1	动画图标：低音量（volume 1）	icon	icons		hover		
+icons-volume-2	动画图标：音量/喇叭（volume 2）	icon	icons		hover		
+icons-volume-off	动画图标：静音（volume off）	icon	icons		hover		
+icons-wifi	动画图标：无线网络/Wi-Fi（wifi）	icon	icons		hover		
+icons-wifi-high	动画图标：满格 Wi-Fi 信号（wifi high）	icon	icons		hover		
+icons-wifi-low	动画图标：低格 Wi-Fi 信号（wifi low）	icon	icons		hover		
+icons-wifi-zero	动画图标：无 Wi-Fi 信号（wifi zero）	icon	icons		hover		
+icons-x	动画图标：叉号/关闭（x）	icon	icons		hover		
+primitives-animate-avatar-group	头像组动画原语：悬停时被指向的头像前移（无样式）	avatar-user	foundation		hover		
+primitives-animate-code-block	代码打字原语：代码逐字写出（shiki，无样式）	text-effect	foundation			typewriter	
+primitives-animate-cursor	自定义光标原语：光标和跟随元素的弹簧动画（无样式）	cursor-effect	foundation		cursor		
+primitives-animate-github-stars	GitHub star 数动画原语：数字滑动递增并带粒子	text-effect	foundation				
+primitives-animate-motion-grid	像素网格动画原语：在点阵上播放逐帧图案（loading、logo 动画）	loading,background	specialized	pixel			
+primitives-animate-pinned-list	置顶列表原语：条目置顶时的布局动画	micro-interaction	foundation				
+primitives-animate-scroll-progress	滚动进度原语：跟踪页面或容器的滚动进度	navigation,loading	foundation		scroll		
+primitives-animate-slot	Slot 原语：把 motion 动画属性合并到任意子元素上（asChild）	motion-transition	foundation				
+primitives-animate-spring	弹簧拖拽原语：可拖动元素用一根弹簧线连回原点，松手回弹	fun-3d,micro-interaction	specialized		drag	bounce	
+primitives-animate-tabs	动画标签页原语：选中指示和面板切换动画（无样式）	navigation	foundation				
+primitives-animate-tooltip	动画工具提示原语：悬停或聚焦显示，在相邻元素间滑动不消失（floating-ui）	overlay	foundation		hover,keyboard		
+primitives-base-accordion	手风琴折叠面板动画原语：Base UI 版，无样式	overlay	foundation				
+primitives-base-alert-dialog	确认对话框动画原语：Base UI 版，无样式	overlay	foundation				
+primitives-base-checkbox	复选框（勾选描边动画）动画原语：Base UI 版，无样式	toggle-slider	foundation				
+primitives-base-collapsible	折叠面板动画原语：Base UI 版，无样式	layout-card	foundation				
+primitives-base-dialog	对话框（弹性缩放进出）动画原语：Base UI 版，无样式	overlay	foundation				
+primitives-base-files	文件树（展开收起动画）动画原语：Base UI 版，无样式	navigation	foundation				
+primitives-base-menu	菜单（高亮滑动）动画原语：Base UI 版，无样式	overlay	foundation				
+primitives-base-popover	气泡弹层动画原语：Base UI 版，无样式	overlay	foundation				
+primitives-base-preview-card	悬停预览卡片动画原语：Base UI 版，无样式	overlay	foundation		hover		
+primitives-base-preview-link-card	链接悬停预览卡片（显示网页截图）动画原语：Base UI 版，无样式	overlay	foundation		hover		
+primitives-base-progress	进度条动画原语：Base UI 版，无样式	loading	foundation				
+primitives-base-radio	单选组动画原语：Base UI 版，无样式	toggle-slider	foundation				
+primitives-base-switch	开关（滑块弹簧）动画原语：Base UI 版，无样式	toggle-slider	foundation				
+primitives-base-tabs	标签页（选中指示滑动、内容切换动画）动画原语：Base UI 版，无样式	navigation	foundation				
+primitives-base-toggle	切换按钮动画原语：Base UI 版，无样式	toggle-slider	foundation		press		
+primitives-base-toggle-group	切换按钮组（选中高亮滑动）动画原语：Base UI 版，无样式	toggle-slider	foundation				
+primitives-base-tooltip	工具提示（在相邻元素间滑动）动画原语：Base UI 版，无样式	overlay	foundation		hover		
+primitives-buttons-button	按钮原语：悬停和按下的缩放动画（无样式）	button	foundation		hover,press		
+primitives-buttons-flip	翻转按钮原语：悬停时正反面翻转	button	foundation	3d	hover		
+primitives-buttons-liquid	液体填充按钮原语：悬停时颜色填满	button	foundation		hover		
+primitives-buttons-ripple	波纹按钮原语：点击处扩散波纹	button	foundation		press		
+primitives-effects-auto-height	自动高度原语：内容变化时容器高度平滑过渡	motion-transition	foundation				
+primitives-effects-blur	模糊入场原语：元素首次出现时从模糊到清晰	motion-transition	foundation		scroll		
+primitives-effects-click	点击特效原语：在点击位置生成动画反馈，有减弱动效处理	micro-interaction	foundation		press		
+primitives-effects-effect	通用入场原语：组合淡入、模糊、滑动、缩放，进入视口或加载时播放	motion-transition	foundation		scroll		
+primitives-effects-fade	淡入原语：进入视口或加载时淡入	motion-transition	foundation		scroll		
+primitives-effects-highlight	高亮跟随原语：悬停、点击或受控值切换时，背景高亮块在项目间滑动	micro-interaction,navigation	foundation		hover,press		
+primitives-effects-image-zoom	图片悬停放大原语	media,micro-interaction	foundation		hover		
+primitives-effects-magnetic	磁吸原语：元素被鼠标吸引偏移	micro-interaction,cursor-effect	foundation		cursor		
+primitives-effects-particles	粒子原语：在元素周围生成粒子系统（如点赞迸发）	micro-interaction	foundation		press		
+primitives-effects-shine	光泽扫过原语：一道光横扫元素，可悬停、点击或持续触发	micro-interaction	foundation	gradient	hover		
+primitives-effects-slide	滑入原语：进入视口或加载时滑入	motion-transition	foundation		scroll		
+primitives-effects-theme-toggler	主题渐进切换原语：用 View Transitions 切换深浅色	toggle-slider,motion-transition	foundation				
+primitives-effects-tilt	倾斜原语：鼠标悬停时元素 3D 倾斜	micro-interaction	foundation	3d	hover,cursor		
+primitives-effects-zoom	缩放入场原语：进入视口或加载时缩放出现	motion-transition	foundation		scroll		
+primitives-headless-checkbox	复选框（勾选描边动画）动画原语：Headless UI 版，无样式	toggle-slider	foundation				
+primitives-headless-dialog	对话框（弹性缩放进出）动画原语：Headless UI 版，无样式	overlay	foundation				
+primitives-headless-disclosure	展开收起面板动画原语：Headless UI 版，无样式	layout-card	foundation				
+primitives-headless-popover	气泡弹层动画原语：Headless UI 版，无样式	overlay	foundation				
+primitives-headless-switch	开关（滑块弹簧）动画原语：Headless UI 版，无样式	toggle-slider	foundation				
+primitives-headless-tabs	标签页（选中指示滑动、内容切换动画）动画原语：Headless UI 版，无样式	navigation	foundation				
+primitives-radix-accordion	手风琴折叠面板动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-alert-dialog	确认对话框动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-checkbox	复选框（勾选描边动画）动画原语：Radix 版，无样式	toggle-slider	foundation				
+primitives-radix-collapsible	折叠面板动画原语：Radix 版，无样式	layout-card	foundation				
+primitives-radix-dialog	对话框（弹性缩放进出）动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-dropdown-menu	下拉菜单（高亮滑动）动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-files	文件树（展开收起动画）动画原语：Radix 版，无样式	navigation	foundation				
+primitives-radix-hover-card	悬停卡片动画原语：Radix 版，无样式	overlay	foundation		hover		
+primitives-radix-popover	气泡弹层动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-preview-link-card	链接悬停预览卡片（显示网页截图）动画原语：Radix 版，无样式	overlay	foundation		hover		
+primitives-radix-progress	进度条动画原语：Radix 版，无样式	loading	foundation				
+primitives-radix-radio-group	单选组动画原语：Radix 版，无样式	toggle-slider	foundation				
+primitives-radix-sheet	侧边抽屉 sheet动画原语：Radix 版，无样式	overlay	foundation				
+primitives-radix-switch	开关（滑块弹簧）动画原语：Radix 版，无样式	toggle-slider	foundation				
+primitives-radix-tabs	标签页（选中指示滑动、内容切换动画）动画原语：Radix 版，无样式	navigation	foundation				
+primitives-radix-toggle	切换按钮动画原语：Radix 版，无样式	toggle-slider	foundation		press		
+primitives-radix-toggle-group	切换按钮组（选中高亮滑动）动画原语：Radix 版，无样式	toggle-slider	foundation				
+primitives-radix-tooltip	工具提示（在相邻元素间滑动）动画原语：Radix 版，无样式	overlay	foundation		hover		
+primitives-texts-counting-number	数字递增原语：从起始值数到目标值	text-effect	foundation				
+primitives-texts-gradient	渐变文字动画原语：渐变色在文字里流动	text-effect	foundation	gradient		gradient-text	
+primitives-texts-highlight	文字高亮原语：背景色块从左到右刷过文字	text-effect	foundation				
+primitives-texts-morphing	文字变形原语：字符平滑变形到新字符串	text-effect	foundation				
+primitives-texts-rolling	滚动文字原语：字母逐个上下翻滚切换	text-effect	foundation				
+primitives-texts-rotating	轮换文字原语：几段文字轮流切换	text-effect	foundation				
+primitives-texts-scrolling-number	滚动数字原语：数字纵向滚动到新值	text-effect	foundation				
+primitives-texts-shimmering	文字流光原语：光泽逐字扫过，适合加载中状态	text-effect,loading	foundation	gradient			
+primitives-texts-sliding-number	滑动数字原语：每位数字独立滑动到新值（里程表效果）	text-effect	foundation				
+primitives-texts-splitting	拆分文字原语：按字或词拆开逐个入场	text-effect	foundation				
+primitives-texts-typing	打字文字原语：逐字打出，可带光标	text-effect	foundation			typewriter	

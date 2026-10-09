@@ -27,6 +27,7 @@
 | 同一工具栏多个图标提示 | `shadcn:tooltip`；想要"第一次延迟、后续即时"时考虑 `reactbits:warm-tooltip` | warm-tooltip 未拉源码，依赖 motion，未验证 |
 | 窄屏 dialog、宽屏 sheet 自适应 | `shadcn:drawer-dialog`（示例） | 官方示例，按断点切换两种容器 |
 | 无底座只要弹层过渡 | `jakubantalik:transition:panel-reveal`、`jakubantalik:transition:tooltip-open-close` | 同一套 Transitions.dev 变量，tooltip 版"延迟出现、瞬间消失" |
+| shadcn 底座，想让对话框、popover、dropdown、tooltip 的开合有弹簧动画 | `animateui:components-<radix\|base>-dialog` 等 | 选和项目 shadcn style 一致的底层（Base UI 风格用 `-base-`，Radix 风格用 `-radix-`）；会覆盖同名的 `components/ui` 文件，确认没改过再替换；源码没有减弱动效处理，用 `MotionConfig reducedMotion="user"` |
 
 ## 慎用
 - 用 dialog 承载本可行内完成的操作（改名、加一行、切换一个开关）：impeccable 明确列为反模式。
@@ -75,3 +76,4 @@
 - `jakubantalik:transition:panel-reveal` / `jakubantalik:transition:tooltip-open-close` — 无底座过渡补充
 - `reactbits:warm-tooltip` — tooltip 组共享延迟，未验证
 - `bencho:find:cj-issue-rows` — 仅参考：用行内编辑代替弹窗
+- `animateui:components-radix-dialog`、`animateui:components-base-dialog` 等 — 带弹簧动画的 shadcn 风格弹层（条目待人审）

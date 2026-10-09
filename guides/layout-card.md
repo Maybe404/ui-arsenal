@@ -66,3 +66,5 @@ impeccable 的三条规则在这里最常被违反：
 - `reactbits:spotlight-card` / `reactbits:border-glow` / `reactbits:tilted-card` — 表现型卡片，仅 Persuade / Experience
 - `librariesdev:border-beam-md` — AI 运行中状态的边框光束
 - `shadcn:dashboard-01` — 后台整页 block，指标卡部分需改造
+- `magicui:bento-grid` — bento 布局
+- `magicui:magic-card`、`magicui:border-beam`、`magicui:shine-border` — 卡片光效（主导效果）

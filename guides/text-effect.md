@@ -68,3 +68,5 @@
 - `reactbits:gradient-text` — 流动渐变字，见慎用
 - `reactbits:scroll-velocity` — 滚动跑马灯，见慎用
 - `obsidianui:flip-text` — 不推荐，registry 缺样式
+- `magicui:text-animate`、`magicui:typing-animation`、`magicui:word-rotate`、`magicui:number-ticker`、`magicui:hyper-text`、`magicui:aurora-text` 等 — Magic UI 文字特效（大多没有减弱动效处理）
+- `animateui:primitives-texts-*` — 数字滚动、滑动数字、打字、拆分、高亮等无样式文字原语

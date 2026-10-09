@@ -63,3 +63,6 @@
 - `reactbits:dome-gallery` — 仅 Experience
 - `obsidianui:art-gallery` — 仅 Experience，需换演示图
 - `originkit:flip-gallery` — 需登录，免费替代 `shadcn:carousel`
+- `magicui:safari`、`magicui:iphone`、`magicui:android` — 设备外框
+- `magicui:hero-video-dialog` — 首屏视频封面，点击在对话框里播放
+- `magicui:lens` — 悬停放大镜

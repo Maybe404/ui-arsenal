@@ -18,6 +18,7 @@
 | 主底座 | 推荐 | 理由 |
 |---|---|---|
 | shadcn | `shadcn:message-scroller` + `shadcn:message` + `shadcn:bubble` | 官方聊天件，2026 新增。message-scroller 基于 `@shadcn/react` 的 headless 实现：只在读者停在底部时跟随新内容，滚轮、触摸、键盘一动就释放；列表默认 `role="log"`、`aria-relevant="additions"`，流式时可设 `aria-busy`；用 `content-visibility:auto` 处理长对话。message / bubble 只是带 `data-slot` 的布局件，颜色全走 `--primary`、`--muted`、`--secondary`，零映射成本（源码已看） |
+| shadcn + Vercel AI SDK | `aielements:conversation` + `aielements:message` + `aielements:prompt-input`，过程展示用 `aielements:reasoning`、`aielements:tool`、`aielements:confirmation` | Vercel 官方 AI 界面件（2026-10-08 收录，条目待人审）：tool 按 AI SDK 的 `input-streaming / input-available / output-available / output-error` 渲染状态，confirmation 对应 `approval-requested / approval-responded / output-denied`，reasoning 流式时展开、结束后折叠，所以状态天然来自真实事件，不需要改受控。全部依赖 shadcn 组件（button、collapsible 等），用 shadcn CLI 安装。源码里没有减弱动效处理（loader、shimmer 是循环动画），要自己补；`ai` 包版本要和项目一致 |
 | shadcn | `shadcn:shimmer`（工具类） | 思考中文字。`init` 后自带，基于 currentColor，官方文档写明减弱动效时自动停；只要在"等待首个 token"期间加上 `shimmer` 类，收到内容就移除 |
 | shadcn | 工具调用状态图标：`reactbits:status-mark`（受控 `status` / `progress`，只依赖 motion） | shadcn 没有现成的工具状态图标件；status-mark 不带底座、颜色走参数，容易映射到 shadcn token |
 | shadcn | `shadcn:questionnaire` | 审批、追问、多选确认。底层是真实 `<input type=radio/checkbox>`，焦点环、`min-h-11` 触控目标都在；比 beautifului 的审批卡更好接真实状态（源码已看） |
@@ -32,6 +33,11 @@
 | 带 @ 引用、/ 命令、模型选择的输入框 | `beautifului:prompt-bar` 或 `reactbits:prompt-bar` | 功能全。beautifului 版处理了输入法组合（`isComposing`），但 @ 和 / 菜单项是 `div role="button"`，没有 listbox / combobox 语义，要补；还依赖 `glimm` 做切换模型时的彩虹扫光（第 3 级，Operate 页面去掉）。reactbits 版依赖 hugeicons，要换成项目在用的图标库（项目还没定就用 lucide）。只要普通输入框时用 shadcn `input-group` + `textarea` |
 | agent 正在做什么的小图标（搜索、写作、连接、规划） | `librariesdev:thinking-orbs` | 2D canvas，零依赖，九种状态各对应一种真实活动；作者规则：等待不足 2 秒不显示、长列表里一次只显示一个；减弱动效降为静帧，离屏暂停。`state` 必须跟着后端当前步骤切换，不要固定一个状态循环 |
 | 多个并行任务的状态行 | `beautifului:task-rows` 或 `reactbits:lattice-loader` | task-rows 有运行中 / 失败 / 完成和子项；lattice-loader 有 `status`、`elapsed`、`role="status"`。前者同样是定时器演示，要改受控 |
+| 来源和引用 | `aielements:sources`（折叠的来源列表）、`aielements:inline-citation`（行内引用，悬停看来源卡片） | 来源数据来自 AI SDK 的 source parts；没有来源时不显示，不要编示例链接 |
+| 上下文窗口用量 | `aielements:context` | 显示已用 token 占比，悬停看输入、输出、推理、缓存和费用；数值必须来自服务端返回的 usage |
+| agent 计划、任务、队列 | `aielements:plan`、`aielements:task`、`aielements:queue` | 结构化展示计划和步骤；内容按真实事件追加，不要预先写好步骤再依次点亮 |
+| agent 工作流画布 | `aielements:canvas` + `aielements:node` + `aielements:edge`（@xyflow/react） | 需要可视化 agent 节点和连线时用；只是线性步骤用 task 或 timeline |
+| 生成网页的预览 | `aielements:web-preview` | 带地址栏和控制台的 iframe 预览，适合 v0 类产品；完整示例 `aielements:example-v0-clone` |
 | 回答里的 markdown | `shadcn:typeset` | prose 替代，按 `--font-heading`、`--font-mono` 取值；流式追加内容时不会因为样式重算闪烁 |
 | 附件 | `shadcn:attachment` | `idle / uploading / processing / error / done` 五态，正好对应真实上传流程 |
 | 语音输入 | `librariesdev:voice-glow` | 随麦克风音量变化，带 `useMicrophone`；彩色光晕是第 3 级风险，只在语音模式打开时出现 |
@@ -74,6 +80,15 @@
 - `shadcn:attachment` — 附件与上传五态
 - `shadcn:typeset` — 回答里的 markdown 排版
 - `shadcn:marker` — 对话中的系统提示、分隔行
+- `aielements:conversation` — AI SDK 聊天容器，贴底滚动和回到底部按钮
+- `aielements:message` — AI SDK 消息，streamdown 流式渲染 markdown
+- `aielements:prompt-input` — AI 输入框：附件、模型选择、提交与停止
+- `aielements:reasoning` — 推理过程，流式时展开、结束后折叠
+- `aielements:tool` — 按 AI SDK 工具状态渲染的工具调用卡片
+- `aielements:confirmation` — 工具执行前的批准 / 拒绝
+- `aielements:sources`、`aielements:inline-citation` — 来源列表、行内引用
+- `aielements:context` — 上下文窗口用量
+- `aielements:example-chatbot` — 完整聊天机器人示例（示例数据）
 - `uiarc:chat-thread` — uiarc 底座的聊天线程（IM 取向）
 - `uiarc:text-shimmer` — 受控流光，结束时平滑变实
 - `reactbits:thought-line` — 受控的思考标题行，带耗时。**注意**：不传 `elapsed` 时它会退回内部 `setInterval` 自己计时，必须由真实开始时间计算后传入

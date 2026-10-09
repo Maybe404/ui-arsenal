@@ -64,3 +64,5 @@
 - `bencho:slide-confirm` — 滑动确认，缺键盘路径，见慎用
 - `bencho:confirm` — 行内确认，缺 ARIA，见慎用
 - `reactbits:glare-hover` — 反光扫过，仅 Persuade 展示卡
+- `animateui:primitives-effects-*` — 倾斜、磁吸、光泽、高亮跟随、点击粒子等效果原语
+- `magicui:confetti`、`magicui:cool-mode` — 撒花、点击喷粒子（只在真实成功时触发）

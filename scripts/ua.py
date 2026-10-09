@@ -130,7 +130,7 @@ def load_rows(source=None, include_removed=False):
                     r['_file'], r['_line'] = fn, n
                     if include_removed or r.get('status') != 'removed':
                         rows.append(r)
-    if source and not rows:
+    if source and not rows and source not in sources():  # a new source starts with an empty catalogue
         sys.exit('unknown source: %s (see: ua.py stats)' % source)
     return rows
 
@@ -484,9 +484,10 @@ def compat_verdict(base, source, matrix):
     return 'ok'
 
 
-def flagged(claims, r):
-    """Engineering problems recorded for a row: ledger rows of kind defect/demo, plus the human note."""
-    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in ('defect', 'demo')]
+def flagged(claims, r, kinds=('defect', 'demo')):
+    """Engineering problems recorded for a row: ledger rows of kind defect/demo (these also rank a row after clean
+    ones); find also prints gap rows (missing capability, e.g. no reduced-motion branch) without changing the order."""
+    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in kinds]
 
 
 def claims_by_ref():
@@ -674,7 +675,7 @@ def cmd_find(args):
         print('    %s' % r['desc'][:160])
         ref = '%s:%s' % (r['source'], r['id'])
         flags = ['%s（%s %s）：%s' % (CLAIM_KINDS[c['kind']], CLAIM_DEPTHS[c['depth']], c['checked'], c['claim'])
-                 for c in flagged(claims, r)] + (
+                 for c in flagged(claims, r, ('defect', 'demo', 'gap'))] + (
             ['备注：' + r['notes']] if r['notes'] else []) + (
             ['待审：' + review_text(r)] if r['status'] == 'needs-review' else []) + (
             ['%s（%s 的 source_status）' % (SOURCE_STATUS_ZH[source_status(r['source'])], r['source'])]
@@ -693,8 +694,8 @@ def cmd_find(args):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
     print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
     if any_flag:
-        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
-              '接真实业务前要处理，或换同类候选；同等相关时排在没有备注的候选之后。')
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用、没有减弱动效处理等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
+              '接真实业务前要处理，或换同类候选；演示、缺陷、备注和待审同等相关时排在后面，缺能力只提示。')
     if any(r['risk'] for _, r in scored[:limit]):
         print('⚠ = 场景化审美风险：Persuade/Experience 写清场景可以用，Operate/Read 不用（用户明确要求时作为例外写明），见 guides/_scenes.md「质量三级」')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
@@ -1646,27 +1647,73 @@ def r_shadcn():
                         '访问状态（官方 registry 全部免费）'])
 
 
-def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
+def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None, index_url=None, item_url=None, keep=None,
+               tier=None, pro_fetch=None, pro_url=None):
+    """A shadcn-style registry. index_url / item_url (with %s) default to <base>/r/registry.json and <base>/r/%s.json;
+    keep(item) drops items that are not catalogued (examples, styles, demos); tier(item) -> 'free' / 'pro' for
+    registries that list paid items next to free ones, whose rows then get spec none and pro_fetch / pro_url."""
+    item_url = item_url or base + '/r/%s.json'
     def f():
-        d, body = get_json(base + '/r/registry.json')
+        d, body = get_json(index_url or base + '/r/registry.json')
         remote = {}
         for it in d['items']:
-            if it['name'] in ignore:
+            if it['name'] in ignore or (keep and not keep(it)):
                 continue
             k = re.sub(strip, '', it['name']) if strip else it['name']
             if strip and not it['name'].endswith('-TS-TW'):
                 remote.setdefault(k, {})
                 continue
-            remote[k] = reg_meta(it)
+            remote[k] = dict(reg_meta(it), **({'tier': tier(it)} if tier else {}))
         def new(k, m):
             name = k + ('-TS-TW' if strip else '')
-            return {'spec': 'registry:%s/r/%s.json' % (base, name),
-                    'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s/r/%s.json' % (base, name),
-                    'url': (url_tpl % k) if url_tpl else base, 'framework': 'react', 'category': m.get('type', '')}
-        return index(remote, lambda r: spec_key(r, strip), sha(body), new, detects=('deps',),
-                     blind=['访问状态：registry 只列免费项，Pro 条目不在里面'] +
+            if m.get('tier') == 'pro':
+                return {'spec': 'none', 'fetch': pro_fetch(k, m) if pro_fetch else 'none', 'access': 'pro',
+                        'url': pro_url(k, m) if pro_url else base, 'framework': 'react', 'category': m.get('type', '')}
+            return {'spec': 'registry:' + item_url % name,
+                    'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s' % (item_url % name),
+                    'url': (url_tpl(k) if callable(url_tpl) else url_tpl % k) if url_tpl else base, 'framework': 'react',
+                    'category': m.get('type', ''), 'access': 'free'}
+        # pro rows have spec none, so they are matched by id
+        key_of = (lambda r: r['id'] if r['spec'] == 'none' or r['spec'].startswith('registry:' + base) else None) \
+            if tier else (lambda r: spec_key(r, strip))
+        return index(remote, key_of, sha(body), new, detects=('deps',) + (('access',) if tier else ()),
+                     blind=(['访问状态：registry 只列免费项，Pro 条目不在里面'] if not tier else []) +
                            (['JS / CSS 变体的变化：指纹只看 TS-TW'] if strip else []))
     return f
+
+
+AI_ELEMENTS = ('artifact canvas chain-of-thought checkpoint code-block confirmation connection context controls '
+               'conversation edge image inline-citation loader message model-selector node open-in-chat panel plan '
+               'prompt-input queue reasoning shimmer sources suggestion task tool toolbar web-preview').split()
+
+
+def ai_elements_url(k):
+    """Docs page for an AI Elements item: examples share their component's page, two have pages of their own."""
+    x = k[len('example-'):] if k.startswith('example-') else k
+    if x in ('chatbot', 'workflow', 'demo-workflow'):
+        return 'https://ai-sdk.dev/elements/examples/' + x.replace('demo-', '')
+    c = max((c for c in AI_ELEMENTS if x == c or x.startswith(c + '-')), key=len, default=None)
+    return 'https://ai-sdk.dev/elements/components/' + c if c else 'https://ai-sdk.dev/elements'
+
+
+def animate_ui_url(k):
+    """components-animate-avatar-group -> https://animate-ui.com/docs/components/animate/avatar-group"""
+    kind, rest = k.split('-', 1)
+    if kind == 'icons':
+        return 'https://animate-ui.com/docs/icons'
+    group, _, name = rest.partition('-')
+    return 'https://animate-ui.com/docs/%s/%s/%s' % (kind, group, name)
+
+
+TAILARK_FREE = ('core-', 'motion-primitives-')  # the only blocks/components the registry serves without a paid plan
+
+
+def tailark_preview(k, m):
+    """Where a paid Tailark item can be looked at: blocks have a screenshot in tailark/pro-images, illustrations
+    only the gallery page."""
+    if m.get('type') == 'registry:block':
+        return 'https://raw.githubusercontent.com/tailark/pro-images/main/%s.png' % k
+    return 'https://tailark.com/illustrations'
 
 
 def r_uiarc():
@@ -1796,6 +1843,15 @@ REFRESH = {
     'originkit': r_originkit,
     'bencho': r_bencho,
     'getdesign': r_getdesign,
+    'magicui': r_registry('https://magicui.design', keep=lambda it: it['type'] == 'registry:ui',
+                          url_tpl='https://magicui.design/docs/components/%s'),
+    'aielements': r_registry('https://registry.ai-sdk.dev', index_url='https://registry.ai-sdk.dev/registry.json',
+                             item_url='https://registry.ai-sdk.dev/%s.json', url_tpl=ai_elements_url),
+    'animateui': r_registry('https://animate-ui.com', url_tpl=animate_ui_url,
+                            keep=lambda it: it['name'].split('-')[0] in ('components', 'primitives', 'icons')),
+    'tailark': r_registry('https://tailark.com', keep=lambda it: it['type'] in ('registry:block', 'registry:component'),
+                          tier=lambda it: 'free' if it['name'].startswith(TAILARK_FREE) else 'pro',
+                          pro_fetch=tailark_preview, pro_url=tailark_preview),
 }
 NO_REFRESH = {
     'designspells': '站点有 Vercel 反爬，只能在浏览器里更新（见 designspells.md）',
@@ -2236,7 +2292,8 @@ def cmd_apply(args):
         n['added'] += 1
     # 3. write both files together, then mark the proposal as used
     tsv = '\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n'
-    notes = notes_text if not new_notes else notes_text.rstrip('\n') + '\n' + '\n'.join(new_notes) + '\n'
+    kept = notes_text.rstrip('\n')
+    notes = notes_text if not new_notes else (kept + '\n' if kept else '') + '\n'.join(new_notes) + '\n'
     write_together([(mp, tsv), (np_, notes)])
     d['applied_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
     with open(p, 'w', encoding='utf-8') as f:
