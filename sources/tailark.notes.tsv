@@ -36,7 +36,7 @@ blog-blocks-3	Tailark 付费区块：博客文章列表，第 3 种（只当灵�
 blog-blocks-4	Tailark 付费区块：博客文章列表，第 4 种（只当灵感，获取列是截图）	marketing-section,layout-card	specialized				
 blog-blocks-5	Tailark 付费区块：博客文章列表，第 5 种（只当灵感，获取列是截图）	marketing-section,layout-card	specialized				
 blog-blocks-6	Tailark 付费区块：博客文章列表，第 6 种（只当灵感，获取列是截图）	marketing-section,layout-card	specialized				
-blog-blocks-7	Tailark 付费区块：博客文章列表，第 7 种（只当灵感，获取列是截图）	marketing-section,layout-card	specialized				
+blog-blocks-7	Tailark 付费区块：博客文章列表，第 7 种（只当灵感，获取列是截图）	marketing-section,layout-card	specialized	gradient			
 calendar	Tailark 付费插画组件：日历界面（calendar），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 calendar-10	Tailark 付费插画组件：日历界面，第 10 种（calendar 10），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 calendar-11	Tailark 付费插画组件：日历界面，第 11 种（calendar 11），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
@@ -60,32 +60,32 @@ code-demo-4	Tailark 付费区块：代码演示区（展示 SDK、API 用法）�
 collaboration	Tailark 付费插画组件：协作界面（collaboration），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 collaboration-comment	Tailark 付费插画组件：协作评论界面（collaboration comment），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 comment	Tailark 付费插画组件：评论界面（comment），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-comparator-1	Tailark 付费区块：对比表（和竞品或各套餐对比），第 1 种（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-2	Tailark 付费区块：对比表（和竞品或各套餐对比），第 2 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-3	Tailark 付费区块：对比表（和竞品或各套餐对比），第 3 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-4	Tailark 付费区块：对比表（和竞品或各套餐对比），第 4 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-5	Tailark 付费区块：对比表（和竞品或各套餐对比），第 5 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-6	Tailark 付费区块：对比表（和竞品或各套餐对比），第 6 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-comparator-7	Tailark 付费区块：对比表（和竞品或各套餐对比），第 7 种；用到 tooltip（只当灵感，获取列是截图）	pricing,marketing-section	specialized				
-contact-1	Tailark 付费区块：联系我们表单区，第 1 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-10	Tailark 付费区块：联系我们表单区，第 10 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-2	Tailark 付费区块：联系我们表单区，第 2 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-3	Tailark 付费区块：联系我们表单区，第 3 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-4	Tailark 付费区块：联系我们表单区，第 4 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-5	Tailark 付费区块：联系我们表单区，第 5 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-6	Tailark 付费区块：联系我们表单区，第 6 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-7	Tailark 付费区块：联系我们表单区，第 7 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-8	Tailark 付费区块：联系我们表单区，第 8 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-contact-9	Tailark 付费区块：联系我们表单区，第 9 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
-content-1	Tailark 付费区块：图文内容区，第 1 种（只当灵感，获取列是截图）	marketing-section	specialized				
-content-2	Tailark 付费区块：图文内容区，第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
-content-3	Tailark 付费区块：图文内容区，第 3 种；用到 aspect-ratio（只当灵感，获取列是截图）	marketing-section	specialized				
-content-4	Tailark 付费区块：图文内容区，第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
-content-5	Tailark 付费区块：图文内容区，第 5 种（只当灵感，获取列是截图）	marketing-section	specialized				
-content-6	Tailark 付费区块：图文内容区，第 6 种（只当灵感，获取列是截图）	marketing-section	specialized				
-content-7	Tailark 付费区块：图文内容区，第 7 种；用到 aspect-ratio（只当灵感，获取列是截图）	marketing-section	specialized				
-core-prompt-input	AI 输入框：多行输入、附件和提交按钮（Tailark core，免费）	ai-ux,form-input	specialized				
-core-suggestion	建议提示词：可横向滚动的提示词按钮（Tailark core，免费）	ai-ux	specialized				
+comparator-1	Tailark 付费区块：对比表（和竞品或各套餐对比），第 1 种（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-2	Tailark 付费区块：对比表（和竞品或各套餐对比），第 2 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-3	Tailark 付费区块：对比表（和竞品或各套餐对比），第 3 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-4	Tailark 付费区块：对比表（和竞品或各套餐对比），第 4 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-5	Tailark 付费区块：对比表（和竞品或各套餐对比），第 5 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-6	Tailark 付费区块：对比表（和竞品或各套餐对比），第 6 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+comparator-7	Tailark 付费区块：对比表（和竞品或各套餐对比），第 7 种；用到 tooltip（只当灵感，获取列是截图）	pricing,table	specialized				
+contact-1	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 1 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-10	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 10 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-2	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 2 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-3	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 3 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-4	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 4 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-5	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 5 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-6	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 6 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-7	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 7 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-8	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 8 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+contact-9	Tailark 付费区块：联系我们区（表单或联系方式卡片），第 9 种（只当灵感，获取列是截图）	marketing-section,form-input	specialized				
+content-1	Tailark 付费区块：内容区 content（图文或引用文字），第 1 种（只当灵感，获取列是截图）	marketing-section	specialized				
+content-2	Tailark 付费区块：内容区 content（图文或引用文字），第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
+content-3	Tailark 付费区块：内容区 content（图文或引用文字），第 3 种；用到 aspect-ratio（只当灵感，获取列是截图）	marketing-section	specialized				
+content-4	Tailark 付费区块：内容区 content（图文或引用文字），第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
+content-5	Tailark 付费区块：内容区 content（图文或引用文字），第 5 种（只当灵感，获取列是截图）	marketing-section	specialized				
+content-6	Tailark 付费区块：内容区 content（图文或引用文字），第 6 种（只当灵感，获取列是截图）	marketing-section	specialized				
+content-7	Tailark 付费区块：内容区 content（图文或引用文字），第 7 种；用到 aspect-ratio（只当灵感，获取列是截图）	marketing-section	specialized				
+core-prompt-input	AI 输入框：多行输入（Enter 提交、Shift+Enter 换行）、工具栏、提交/停止按钮和模型下拉选择（Tailark core，免费）	ai-ux,form-input	specialized		keyboard,hover		
+core-suggestion	建议提示词：可横向滚动的提示词按钮（Tailark core，免费）	ai-ux	specialized		hover,press,scroll		
 currency	Tailark 付费插画组件：货币界面（currency），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 description-list-1	Tailark 付费区块：要点描述列表，第 1 种（只当灵感，获取列是截图）	marketing-section	specialized				
 description-list-2	Tailark 付费区块：要点描述列表，第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
@@ -133,11 +133,11 @@ expandable-features-8	Tailark 付费区块：可展开的功能介绍（点开�
 expandable-features-9	Tailark 付费区块：可展开的功能介绍（点开看详情），第 9 种（只当灵感，获取列是截图）	marketing-section	specialized				
 face-scan	Tailark 付费插画组件：人脸扫描验证界面（face scan），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 face-scan-2	Tailark 付费插画组件：人脸扫描验证界面，第 2 种（face scan 2），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-faqs-1	Tailark 付费区块：FAQ 常见问题，第 1 种；用到 accordion（只当灵感，获取列是截图）	marketing-section	specialized				
-faqs-2	Tailark 付费区块：FAQ 常见问题，第 2 种；用到 accordion（只当灵感，获取列是截图）	marketing-section	specialized				
-faqs-3	Tailark 付费区块：FAQ 常见问题，第 3 种；用到 accordion（只当灵感，获取列是截图）	marketing-section	specialized				
-faqs-4	Tailark 付费区块：FAQ 常见问题，第 4 种；用到 accordion（只当灵感，获取列是截图）	marketing-section	specialized				
-faqs-5	Tailark 付费区块：FAQ 常见问题，第 5 种（只当灵感，获取列是截图）	marketing-section	specialized				
+faqs-1	Tailark 付费区块：FAQ 常见问题，第 1 种；用到 accordion（只当灵感，获取列是截图）	marketing-section,navigation	specialized				
+faqs-2	Tailark 付费区块：FAQ 常见问题，第 2 种；用到 accordion（只当灵感，获取列是截图）	marketing-section,navigation	specialized				
+faqs-3	Tailark 付费区块：FAQ 常见问题，第 3 种；用到 accordion（只当灵感，获取列是截图）	marketing-section,navigation	specialized				
+faqs-4	Tailark 付费区块：FAQ 常见问题，第 4 种；用到 accordion（只当灵感，获取列是截图）	marketing-section,navigation	specialized				
+faqs-5	Tailark 付费区块：FAQ 常见问题，第 5 种（只当灵感，获取列是截图）	marketing-section,navigation	specialized				
 features-1	Tailark 付费区块：功能介绍区，第 1 种；用到 chart（只当灵感，获取列是截图）	marketing-section	specialized				
 features-10	Tailark 付费区块：功能介绍区，第 10 种（只当灵感，获取列是截图）	marketing-section	specialized				
 features-11	Tailark 付费区块：功能介绍区，第 11 种（只当灵感，获取列是截图）	marketing-section	specialized				
@@ -162,19 +162,19 @@ features-carousel-5	Tailark 付费区块：功能轮播，第 5 种；用到 car
 file-upload	Tailark 付费插画组件：文件上传界面（file upload），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 fingerprint	Tailark 付费插画组件：指纹界面（fingerprint），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 fingerprint-scan	Tailark 付费插画组件：指纹扫描界面（fingerprint scan），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow	Tailark 付费插画组件：流程界面（flow），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-10	Tailark 付费插画组件：流程界面，第 10 种（flow 10），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-11	Tailark 付费插画组件：流程界面，第 11 种（flow 11），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-12	Tailark 付费插画组件：流程界面，第 12 种（flow 12），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-13	Tailark 付费插画组件：流程界面，第 13 种（flow 13），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-2	Tailark 付费插画组件：流程界面，第 2 种（flow 2），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-3	Tailark 付费插画组件：流程界面，第 3 种（flow 3），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-4	Tailark 付费插画组件：流程界面，第 4 种（flow 4），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-5	Tailark 付费插画组件：流程界面，第 5 种（flow 5），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-6	Tailark 付费插画组件：流程界面，第 6 种（flow 6），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-7	Tailark 付费插画组件：流程界面，第 7 种（flow 7），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-8	Tailark 付费插画组件：流程界面，第 8 种（flow 8），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-flow-9	Tailark 付费插画组件：流程界面，第 9 种（flow 9），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow	Tailark 付费插画组件：流程图界面（flow），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-10	Tailark 付费插画组件：流程图界面，第 10 种（flow 10），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-11	Tailark 付费插画组件：流程图界面，第 11 种（flow 11），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-12	Tailark 付费插画组件：流程图界面，第 12 种（flow 12），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-13	Tailark 付费插画组件：流程图界面，第 13 种（flow 13），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-2	Tailark 付费插画组件：流程图界面，第 2 种（flow 2），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-3	Tailark 付费插画组件：流程图界面，第 3 种（flow 3），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-4	Tailark 付费插画组件：流程图界面，第 4 种（flow 4），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-5	Tailark 付费插画组件：流程图界面，第 5 种（flow 5），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-6	Tailark 付费插画组件：流程图界面，第 6 种（flow 6），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-7	Tailark 付费插画组件：流程图界面，第 7 种（flow 7），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-8	Tailark 付费插画组件：流程图界面，第 8 种（flow 8），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
+flow-9	Tailark 付费插画组件：流程图界面，第 9 种（flow 9），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 food-delivery	Tailark 付费插画组件：外卖配送界面（food delivery），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 footer-1	Tailark 付费区块：页脚，第 1 种（只当灵感，获取列是截图）	navigation,marketing-section	specialized				
 footer-2	Tailark 付费区块：页脚，第 2 种（只当灵感，获取列是截图）	navigation,marketing-section	specialized				
@@ -231,13 +231,13 @@ integrations-5	Tailark 付费区块：集成展示，第 5 种（只当灵感，
 integrations-6	Tailark 付费区块：集成展示，第 6 种；用到 infinite-slider（只当灵感，获取列是截图）	marketing-section	specialized			marquee	
 integrations-7	Tailark 付费区块：集成展示，第 7 种（只当灵感，获取列是截图）	marketing-section	specialized				
 integrations-9	Tailark 付费区块：集成展示，第 9 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-1	Tailark 付费区块：投资方 logo 展示，第 1 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-2	Tailark 付费区块：投资方 logo 展示，第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-3	Tailark 付费区块：投资方 logo 展示，第 3 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-4	Tailark 付费区块：投资方 logo 展示，第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-5	Tailark 付费区块：投资方 logo 展示，第 5 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-6	Tailark 付费区块：投资方 logo 展示，第 6 种（只当灵感，获取列是截图）	marketing-section	specialized				
-investors-7	Tailark 付费区块：投资方 logo 展示，第 7 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-1	Tailark 付费区块：投资方展示（公司或个人投资人），第 1 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-2	Tailark 付费区块：投资方展示（公司或个人投资人），第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-3	Tailark 付费区块：投资方展示（公司或个人投资人），第 3 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-4	Tailark 付费区块：投资方展示（公司或个人投资人），第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-5	Tailark 付费区块：投资方展示（公司或个人投资人），第 5 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-6	Tailark 付费区块：投资方展示（公司或个人投资人），第 6 种（只当灵感，获取列是截图）	marketing-section	specialized				
+investors-7	Tailark 付费区块：投资方展示（公司或个人投资人），第 7 种（只当灵感，获取列是截图）	marketing-section	specialized				
 invoice	Tailark 付费插画组件：发票界面（invoice），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 invoice-signing	Tailark 付费插画组件：发票签署界面（invoice signing），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 kanban	Tailark 付费插画组件：看板界面（kanban），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
@@ -290,12 +290,12 @@ models	Tailark 付费插画组件：模型界面（models），用于功能介�
 models-2	Tailark 付费插画组件：模型界面，第 2 种（models 2），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 models-3	Tailark 付费插画组件：模型界面，第 3 种（models 3），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 models-4	Tailark 付费插画组件：模型界面，第 4 种（models 4），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-motion-primitives-animated-group	成组入场动画：子元素按预设（淡入、模糊、缩放等）错峰出现（Motion Primitives，免费）	motion-transition	specialized		scroll		
+motion-primitives-animated-group	成组入场动画：挂载时子元素按预设（淡入、模糊、缩放、翻转等）错峰出现，非滚动触发（Motion Primitives，免费）	motion-transition	specialized				
 motion-primitives-infinite-slider	无限滚动条：内容横向或纵向循环滚动，悬停可减速，常用于 logo 墙（Motion Primitives，免费）	marketing-section	specialized		hover	marquee	
 motion-primitives-progressive-blur	渐进模糊：边缘按方向分层模糊，用于滚动区或图片边缘（Motion Primitives，免费）	background,layout-card	specialized				
 motion-primitives-text-effect	文字入场效果：按字、词或行做淡入、模糊、滑入（Motion Primitives，免费）	text-effect	specialized				
 motion-primitives-text-scramble	乱码解码文字：字符随机变换后定格（Motion Primitives，免费）	text-effect	specialized				
-motion-primitives-text-shimmer	文字流光：光泽扫过文字，用于加载中状态（Motion Primitives，免费）	text-effect,loading	specialized	gradient			
+motion-primitives-text-shimmer	文字流光：光泽扫过文字，用于加载中状态（Motion Primitives，免费）	text-effect,loading	specialized	gradient		gradient-text	
 notes	Tailark 付费插画组件：笔记界面（notes），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 notes-2	Tailark 付费插画组件：笔记界面，第 2 种（notes 2），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 notes-3	Tailark 付费插画组件：笔记界面，第 3 种（notes 3），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
@@ -318,26 +318,26 @@ reply	Tailark 付费插画组件：回复界面（reply），用于功能介绍�
 ride-sharing	Tailark 付费插画组件：网约车界面（ride sharing），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 running-visualization	Tailark 付费插画组件：跑步数据可视化界面（running visualization），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 schedule	Tailark 付费插画组件：日程安排界面（schedule），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
-secondary-hero-1	Tailark 付费区块：内页首屏，第 1 种；用到 loader、sources（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-10	Tailark 付费区块：内页首屏，第 10 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-11	Tailark 付费区块：内页首屏，第 11 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-12	Tailark 付费区块：内页首屏，第 12 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-13	Tailark 付费区块：内页首屏，第 13 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-14	Tailark 付费区块：内页首屏，第 14 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-15	Tailark 付费区块：内页首屏，第 15 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-16	Tailark 付费区块：内页首屏，第 16 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-17	Tailark 付费区块：内页首屏，第 17 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-18	Tailark 付费区块：内页首屏，第 18 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-19	Tailark 付费区块：内页首屏，第 19 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-2	Tailark 付费区块：内页首屏，第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-20	Tailark 付费区块：内页首屏，第 20 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-3	Tailark 付费区块：内页首屏，第 3 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-4	Tailark 付费区块：内页首屏，第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-5	Tailark 付费区块：内页首屏，第 5 种；用到 accordion、navigation-menu（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-6	Tailark 付费区块：内页首屏，第 6 种；用到 infinite-slider（只当灵感，获取列是截图）	marketing-section	specialized			marquee	
-secondary-hero-7	Tailark 付费区块：内页首屏，第 7 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-8	Tailark 付费区块：内页首屏，第 8 种（只当灵感，获取列是截图）	marketing-section	specialized				
-secondary-hero-9	Tailark 付费区块：内页首屏，第 9 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-1	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 1 种；用到 loader、sources（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-10	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 10 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-11	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 11 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-12	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 12 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-13	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 13 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-14	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 14 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-15	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 15 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-16	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 16 种；用到 select（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-17	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 17 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-18	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 18 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-19	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 19 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-2	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 2 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-20	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 20 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-3	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 3 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-4	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 4 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-5	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 5 种；用到 accordion、navigation-menu（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-6	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 6 种；用到 infinite-slider（只当灵感，获取列是截图）	marketing-section	specialized			marquee	
+secondary-hero-7	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 7 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-8	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 8 种（只当灵感，获取列是截图）	marketing-section	specialized				
+secondary-hero-9	Tailark 付费区块：次级首屏 secondary hero（带表单或产品图的首屏变体），第 9 种（只当灵感，获取列是截图）	marketing-section	specialized				
 shopping-cart	Tailark 付费插画组件：购物车界面（shopping cart），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 sign-up-1	Tailark 付费区块：注册页，第 1 种（只当灵感，获取列是截图）	auth	specialized				
 sign-up-10	Tailark 付费区块：注册页，第 10 种（只当灵感，获取列是截图）	auth	specialized				
@@ -395,145 +395,145 @@ visualization	Tailark 付费插画组件：数据可视化界面（visualization
 workflow	Tailark 付费插画组件：工作流界面（workflow），用于功能介绍区的示意图（只当灵感）	marketing-section	specialized	illustration			
 oss-dusk-call-to-action-1	Tailark 开源 dusk 套：行动号召 CTA，第 1 种；示例文案“Build Software businesses can rely on”	marketing-section	specialized				
 oss-dusk-call-to-action-2	Tailark 开源 dusk 套：行动号召 CTA，第 2 种；示例文案“Start building from here”	marketing-section	specialized				
-oss-dusk-content-1	Tailark 开源 dusk 套：图文内容区，第 1 种；示例文案“A CRM workspace for every customer…”	marketing-section	specialized				
-oss-dusk-content-2	Tailark 开源 dusk 套：图文内容区，第 2 种；示例文案“A CRM workspace for every customer…”	marketing-section	specialized				
-oss-dusk-content-3	Tailark 开源 dusk 套：图文内容区，第 3 种；示例文案“Workspace for every customer…”	marketing-section	specialized				
-oss-dusk-content-4	Tailark 开源 dusk 套：图文内容区，第 4 种；示例文案“Customer context.”	marketing-section	specialized				
-oss-dusk-faqs-1	Tailark 开源 dusk 套：FAQ 常见问题，第 1 种；含 accordion；示例文案“Frequently Asked Questions”	marketing-section	specialized				
-oss-dusk-features-1	Tailark 开源 dusk 套：功能介绍区，第 1 种；示例文案“Every deal, one view.”	marketing-section	specialized				
-oss-dusk-features-2	Tailark 开源 dusk 套：功能介绍区，第 2 种；示例文案“Revenue, aligned.”	marketing-section	specialized				
-oss-dusk-features-3	Tailark 开源 dusk 套：功能介绍区，第 3 种；示例文案“Context before every reply.”	marketing-section	specialized				
-oss-dusk-features-4	Tailark 开源 dusk 套：功能介绍区，第 4 种；示例文案“Handoffs without reset.”	marketing-section	specialized				
-oss-dusk-features-5	Tailark 开源 dusk 套：功能介绍区，第 5 种；示例文案“Built for the full workflow.”	marketing-section	specialized				
-oss-dusk-features-6	Tailark 开源 dusk 套：功能介绍区，第 6 种；示例文案“Your stack, connected.”	marketing-section	specialized				
-oss-dusk-features-7	Tailark 开源 dusk 套：功能介绍区，第 7 种；含 chart，依赖 dotted-map、recharts；示例文案“See the whole pipeline.”	marketing-section	specialized				
-oss-dusk-footer-1	Tailark 开源 dusk 套：页脚，第 1 种；示例文案“Subscribe to our newsletter”	navigation,marketing-section	specialized				
+oss-dusk-content-1	Tailark 开源 dusk 套：内容区 content（图文或引用文字），顶部整宽配图、下方左标题右正文和按钮，第 1 种；示例文案“A CRM workspace for every customer…”	marketing-section	specialized				
+oss-dusk-content-2	Tailark 开源 dusk 套：内容区 content（图文或引用文字），无配图，左标题右两条带图标要点（Fast、Powerful），第 2 种；示例文案“A CRM workspace for every customer…”	marketing-section	specialized				
+oss-dusk-content-3	Tailark 开源 dusk 套：内容区 content（图文或引用文字），左图（产品界面截图）右文，标题在上、右侧带两条图标要点，第 3 种；示例文案“Workspace for every customer…”	marketing-section	specialized				
+oss-dusk-content-4	Tailark 开源 dusk 套：内容区 content（图文或引用文字），无配图，左标题右正文，下方四条带图标要点，第 4 种；示例文案“Customer context.”	marketing-section	specialized				
+oss-dusk-faqs-1	Tailark 开源 dusk 套：FAQ 常见问题，第 1 种；含 accordion；示例文案“Frequently Asked Questions”	marketing-section,navigation	specialized		hover		
+oss-dusk-features-1	Tailark 开源 dusk 套：功能介绍区，卡片网格（带图标）加底部预览面板，第 1 种；示例文案“Every deal, one view.”	marketing-section	specialized	gradient			
+oss-dusk-features-2	Tailark 开源 dusk 套：功能介绍区，卡片网格（带图标）加底部预览面板，第 2 种；示例文案“Revenue, aligned.”	marketing-section	specialized	gradient			
+oss-dusk-features-3	Tailark 开源 dusk 套：功能介绍区，卡片网格含图片，其中一处带 backdrop-blur 毛玻璃覆盖层，卡片内含自动循环视频，第 3 种；示例文案“Context before every reply.”	marketing-section	specialized	glass		glass	卡片视频 src 是 videos.pexels.com 外链，上线前换成自有素材
+oss-dusk-features-4	Tailark 开源 dusk 套：功能介绍区，卡片网格含图片，第 4 种；示例文案“Handoffs without reset.”	marketing-section	specialized				
+oss-dusk-features-5	Tailark 开源 dusk 套：功能介绍区，顶部分段标签（点击跳转、滚动时高亮当前段）加分段卡片，第 5 种；示例文案“Built for the full workflow.”	marketing-section	specialized	gradient,glass	scroll		
+oss-dusk-features-6	Tailark 开源 dusk 套：功能介绍区，四列卡片网格含插画，第 6 种；示例文案“Your stack, connected.”	marketing-section	specialized				
+oss-dusk-features-7	Tailark 开源 dusk 套：功能介绍区，点阵世界地图加图表（悬停显示提示），第 7 种；依赖 dotted-map、recharts；示例文案“See the whole pipeline.”	marketing-section	specialized	glass	hover		
+oss-dusk-footer-1	Tailark 开源 dusk 套：页脚，多列链接加邮件订阅表单，第 1 种；示例文案“Subscribe to our newsletter”	navigation,marketing-section	specialized				
 oss-dusk-footer-2	Tailark 开源 dusk 套：页脚，第 2 种，带 3 个品牌 logo SVG；示例文案“Get an AI summary of this page”	navigation,marketing-section	specialized				
-oss-dusk-hero-section-1	Tailark 开源 dusk 套：首屏 hero，第 1 种；含 header，带 8 个品牌 logo SVG；示例文案“Introducing the living customer graph”	marketing-section	specialized				
+oss-dusk-hero-section-1	Tailark 开源 dusk 套：首屏 hero，第 1 种；含 header，带 8 个品牌 logo SVG，悬停时模糊 logo 并显示网络图层；示例文案“Introducing the living customer graph”	marketing-section	specialized	gradient	hover		
 oss-dusk-hero-section-2	Tailark 开源 dusk 套：首屏 hero，第 2 种；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Build Software business can rely on”	marketing-section	specialized			marquee	
-oss-dusk-hero-section-3	Tailark 开源 dusk 套：首屏 hero，第 3 种；含 header、logo-cloud，带 6 个品牌 logo SVG；示例文案“Train Smarter. Recover faster with”	marketing-section	specialized				
+oss-dusk-hero-section-3	Tailark 开源 dusk 套：首屏 hero，第 3 种；含 header、logo-cloud，带 6 个品牌 logo SVG；示例文案“Train Smarter. Recover faster with”	marketing-section	specialized	glass			
 oss-dusk-hero-section-4	Tailark 开源 dusk 套：首屏 hero，第 4 种；含 kdb、header、logo-cloud、use-media，带 6 个品牌 logo SVG；示例文案“Build Software businesses can rely on”	marketing-section	specialized			marquee	
-oss-dusk-hero-section-5	Tailark 开源 dusk 套：首屏 hero，第 5 种；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Build 10x Faster with Ada”	marketing-section	specialized			marquee	
+oss-dusk-hero-section-5	Tailark 开源 dusk 套：首屏 hero，第 5 种，带背景视频；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Build 10x Faster with Ada”	marketing-section	specialized			marquee	背景视频 src 是 videos.pexels.com 外链，上线前换成自有素材
 oss-dusk-hero-section-6	Tailark 开源 dusk 套：首屏 hero，第 6 种；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Introducing Tailark Dusk 1.0”	marketing-section	specialized			marquee	
 oss-dusk-hero-section-7	Tailark 开源 dusk 套：首屏 hero，第 7 种；含 header、logo-cloud、infinite-slider，带 5 个品牌 logo SVG；示例文案“Introducing Tailark CRM 1.0”	marketing-section	specialized			marquee	
-oss-dusk-hero-section-8	Tailark 开源 dusk 套：首屏 hero，第 8 种；含 header，带 3 个品牌 logo SVG；示例文案“Family money, finally organized.”	marketing-section	specialized				
+oss-dusk-hero-section-8	Tailark 开源 dusk 套：首屏 hero，第 8 种；含 header，带 3 个品牌 logo SVG；示例文案“Family money, finally organized.”	marketing-section	specialized	glass			
 oss-dusk-hero-section-9	Tailark 开源 dusk 套：首屏 hero，第 9 种；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Introducing Tailark Dusk 1.0”	marketing-section	specialized			marquee	
 oss-dusk-hero-section-10	Tailark 开源 dusk 套：首屏 hero，第 10 种；含 header、logo-cloud、use-media、infinite-slider，带 6 个品牌 logo SVG；示例文案“Build Software businesses can rely on”	marketing-section	specialized			marquee	
-oss-dusk-integrations-1	Tailark 开源 dusk 套：集成展示，第 1 种，带 6 个品牌 logo SVG；示例文案“Integrate with your favorite Tools”	marketing-section	specialized				
-oss-dusk-logo-cloud-1	Tailark 开源 dusk 套：客户 logo 墙，第 1 种，带 10 个品牌 logo SVG；示例文案“See the network”	marketing-section	specialized				
-oss-dusk-logo-cloud-2	Tailark 开源 dusk 套：客户 logo 墙，第 2 种；含 use-media、infinite-slider，带 8 个品牌 logo SVG	marketing-section	specialized			marquee	
+oss-dusk-integrations-1	Tailark 开源 dusk 套：集成展示，两列网格，第 1 种，带 6 个品牌 logo SVG；示例文案“Integrate with your favorite Tools”	marketing-section	specialized				
+oss-dusk-logo-cloud-1	Tailark 开源 dusk 套：客户 logo 墙，第 1 种，带 8 个品牌 logo SVG，悬停时模糊 logo 并显示文字层；示例文案“See the network”	marketing-section	specialized		hover		
+oss-dusk-logo-cloud-2	Tailark 开源 dusk 套：客户 logo 墙，第 2 种，带 6 个品牌 logo SVG，窄屏用 infinite-slider 循环滚动、宽屏静态排列；含 use-media	marketing-section	specialized			marquee	
 oss-dusk-logo-cloud-3	Tailark 开源 dusk 套：客户 logo 墙，第 3 种，带 6 个品牌 logo SVG	marketing-section	specialized				
-oss-dusk-logo-cloud-4	Tailark 开源 dusk 套：客户 logo 墙，第 4 种；含 infinite-slider，带 5 个品牌 logo SVG；示例文案“Powering the”	marketing-section	specialized			marquee	
-oss-dusk-pricing-1	Tailark 开源 dusk 套：定价，第 1 种；示例文案“For solo developers”	pricing	specialized				
-oss-dusk-pricing-2	Tailark 开源 dusk 套：定价，第 2 种；示例文案“Upgrade as you scale.”	pricing	specialized				
-oss-dusk-stats-1	Tailark 开源 dusk 套：数据统计展示，第 1 种；示例文案“Close more deals.”	marketing-section	specialized				
-oss-dusk-stats-2	Tailark 开源 dusk 套：数据统计展示，第 2 种；示例文案“Scale with confidence.”	marketing-section	specialized				
-oss-dusk-team-1	Tailark 开源 dusk 套：团队介绍，第 1 种；示例文案“Our dream team”	marketing-section,avatar-user	specialized				
-oss-dusk-team-2	Tailark 开源 dusk 套：团队介绍，第 2 种；示例文案“Built by operators.”	marketing-section,avatar-user	specialized				
-oss-dusk-testimonials-1	Tailark 开源 dusk 套：用户评价，第 1 种，带 2 个品牌 logo SVG；示例文案“By makers, loved by thousand developers”	marketing-section	specialized				
-oss-dusk-testimonials-2	Tailark 开源 dusk 套：用户评价，第 2 种，带 3 个品牌 logo SVG	marketing-section	specialized				
+oss-dusk-logo-cloud-4	Tailark 开源 dusk 套：客户 logo 墙，第 4 种；含 infinite-slider，带 5 个品牌 logo SVG；示例文案“Powering the best teams”	marketing-section	specialized			marquee	
+oss-dusk-pricing-1	Tailark 开源 dusk 套：定价，四列价格卡，第 1 种；示例文案“For solo developers”	pricing	specialized				
+oss-dusk-pricing-2	Tailark 开源 dusk 套：定价，三列价格卡（中间一档带 Popular 标记），第 2 种；示例文案“Upgrade as you scale.”	pricing	specialized				
+oss-dusk-stats-1	Tailark 开源 dusk 套：数据统计展示，标题加正文配数字统计，第 1 种；示例文案“Close more deals.”	marketing-section	specialized				
+oss-dusk-stats-2	Tailark 开源 dusk 套：数据统计展示，三列数字统计，第 2 种；示例文案“Scale with confidence.”	marketing-section	specialized				
+oss-dusk-team-1	Tailark 开源 dusk 套：团队介绍，成员卡片网格（悬停时头像裁切动画），第 1 种；示例文案“Our dream team”	marketing-section,avatar-user	specialized		hover		
+oss-dusk-team-2	Tailark 开源 dusk 套：团队介绍，创始人引言配两位联合创始人照片，第 2 种；示例文案“Built by operators.”	marketing-section,avatar-user	specialized				
+oss-dusk-testimonials-1	Tailark 开源 dusk 套：用户评价，多列评价卡片墙（卡片底部渐变遮罩），第 1 种，带 2 个品牌 logo SVG；示例文案“By makers, loved by thousand developers”	marketing-section	specialized	gradient			
+oss-dusk-testimonials-2	Tailark 开源 dusk 套：用户评价，单条轮播（上一条、下一条按钮切换），第 2 种，带 3 个品牌 logo SVG	marketing-section	specialized				
 oss-mist-call-to-action-1	Tailark 开源 mist 套：行动号召 CTA，第 1 种；示例文案“Build 10x Faster with Mist”	marketing-section	specialized				
 oss-mist-call-to-action-2	Tailark 开源 mist 套：行动号召 CTA，第 2 种；示例文案“Build 10x Faster with Mist”	marketing-section	specialized				
 oss-mist-call-to-action-3	Tailark 开源 mist 套：行动号召 CTA，第 3 种；示例文案“Build Modern Websites.”	marketing-section	specialized				
-oss-mist-comparator-1	Tailark 开源 mist 套：对比表（和竞品或各套餐对比），第 1 种	pricing,marketing-section	specialized				
-oss-mist-content-1	Tailark 开源 mist 套：图文内容区，第 1 种；含 toggle-group；示例文案“Ask Tailark to Edit anything”	marketing-section	specialized				
-oss-mist-content-2	Tailark 开源 mist 套：图文内容区，第 2 种；含 toggle-group；示例文案“Ask Tailark to Edit anything”	marketing-section	specialized				
-oss-mist-content-3	Tailark 开源 mist 套：图文内容区，第 3 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
-oss-mist-content-4	Tailark 开源 mist 套：图文内容区，第 4 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
-oss-mist-faqs-1	Tailark 开源 mist 套：FAQ 常见问题，第 1 种；含 accordion；示例文案“Frequently Asked Questions”	marketing-section	specialized				
-oss-mist-faqs-2	Tailark 开源 mist 套：FAQ 常见问题，第 2 种；含 accordion；示例文案“Your questions answered”	marketing-section	specialized				
-oss-mist-faqs-3	Tailark 开源 mist 套：FAQ 常见问题，第 3 种；含 accordion；示例文案“Your questions answered”	marketing-section	specialized				
-oss-mist-features-2	Tailark 开源 mist 套：功能介绍区，第 2 种；示例文案“Effortless Task Management”	marketing-section	specialized				
-oss-mist-features-3	Tailark 开源 mist 套：功能介绍区，第 3 种；含 toggle-group；示例文案“Personal AI, with you Anywhere”	marketing-section	specialized				
-oss-mist-features-4	Tailark 开源 mist 套：功能介绍区，第 4 种；含 toggle-group；示例文案“Personal AI, with you Anywhere”	marketing-section	specialized				
-oss-mist-features-5	Tailark 开源 mist 套：功能介绍区，第 5 种；示例文案“The AI Coding Assistant that helps you…”	marketing-section	specialized				
-oss-mist-features-6	Tailark 开源 mist 套：功能介绍区，第 6 种；示例文案“Empowering developers with AI-driven…”	marketing-section	specialized				
-oss-mist-features-7	Tailark 开源 mist 套：功能介绍区，第 7 种；示例文案“AI Code Generation”	marketing-section	specialized				
-oss-mist-features-8	Tailark 开源 mist 套：功能介绍区，第 8 种；示例文案“AI Code Generation”	marketing-section	specialized				
-oss-mist-features-9	Tailark 开源 mist 套：功能介绍区，第 9 种；示例文案“Empowering developers with AI-driven…”	marketing-section	specialized				
-oss-mist-features-10	Tailark 开源 mist 套：功能介绍区，第 10 种；示例文案“Empowering Marketing teams with”	marketing-section	specialized				
-oss-mist-features-11	Tailark 开源 mist 套：功能介绍区，第 11 种；示例文案“Empowering Marketing teams with”	marketing-section	specialized				
-oss-mist-footer-1	Tailark 开源 mist 套：页脚，第 1 种	navigation,marketing-section	specialized				
-oss-mist-footer-2	Tailark 开源 mist 套：页脚，第 2 种	navigation,marketing-section	specialized				
-oss-mist-footer-3	Tailark 开源 mist 套：页脚，第 3 种	navigation,marketing-section	specialized				
-oss-mist-footer-4	Tailark 开源 mist 套：页脚，第 4 种	navigation,marketing-section	specialized				
-oss-mist-forgot-password-1	Tailark 开源 mist 套：忘记密码页，第 1 种；示例文案“Forgot Your Password?”	auth	specialized				
-oss-mist-hero-section-5	Tailark 开源 mist 套：首屏 hero，第 5 种；示例文案“The Note App is a simple note app that…”	marketing-section	specialized				
-oss-mist-hero-section-6	Tailark 开源 mist 套：首屏 hero，第 6 种；示例文案“The Note App is a simple note app that…”	marketing-section	specialized				
-oss-mist-integrations-1	Tailark 开源 mist 套：集成展示，第 1 种；示例文案“Integrate with :”	marketing-section	specialized				
-oss-mist-integrations-2	Tailark 开源 mist 套：集成展示，第 2 种；示例文案“Integrate with your favorite tools :”	marketing-section	specialized				
-oss-mist-integrations-3	Tailark 开源 mist 套：集成展示，第 3 种；示例文案“Integrate with your favorite tools”	marketing-section	specialized				
-oss-mist-login-1	Tailark 开源 mist 套：登录页，第 1 种；含 field；示例文案“Welcome back to Tailark!”	auth	specialized				
-oss-mist-logo-cloud-1	Tailark 开源 mist 套：客户 logo 墙，第 1 种；示例文案“Trusted by teams at :”	marketing-section	specialized				
-oss-mist-logo-cloud-2	Tailark 开源 mist 套：客户 logo 墙，第 2 种；示例文案“Trusted by teams at :”	marketing-section	specialized				
-oss-mist-pricing-1	Tailark 开源 mist 套：定价，第 1 种，带 3 个品牌 logo SVG；示例文案“Pricing that scale with your business”	pricing	specialized				
-oss-mist-pricing-2	Tailark 开源 mist 套：定价，第 2 种；示例文案“Pricing that scale with your business”	pricing	specialized				
-oss-mist-sign-up-1	Tailark 开源 mist 套：注册页，第 1 种；示例文案“Welcome to Tailark!”	auth	specialized				
-oss-mist-stats-1	Tailark 开源 mist 套：数据统计展示，第 1 种；示例文案“Stars on GitHub”	marketing-section	specialized				
-oss-mist-stats-2	Tailark 开源 mist 套：数据统计展示，第 2 种；示例文案“Tailark in numbers”	marketing-section	specialized				
-oss-mist-stats-3	Tailark 开源 mist 套：数据统计展示，第 3 种；示例文案“Tailark in numbers”	marketing-section	specialized				
-oss-mist-stats-4	Tailark 开源 mist 套：数据统计展示，第 4 种；示例文案“Tailark in stats”	marketing-section	specialized				
-oss-mist-team-1	Tailark 开源 mist 套：团队介绍，第 1 种；示例文案“Meet Our Team”	marketing-section,avatar-user	specialized				
-oss-mist-team-2	Tailark 开源 mist 套：团队介绍，第 2 种；含 hover-card；示例文案“Meet Our Team”	marketing-section,avatar-user	specialized				
-oss-mist-testimonials-1	Tailark 开源 mist 套：用户评价，第 1 种；示例文案“Product Designer”	marketing-section	specialized				
-oss-mist-testimonials-2	Tailark 开源 mist 套：用户评价，第 2 种；示例文案“What Our Clients Say”	marketing-section	specialized				
-oss-mist-testimonials-3	Tailark 开源 mist 套：用户评价，第 3 种	marketing-section	specialized				
-oss-mist-testimonials-4	Tailark 开源 mist 套：用户评价，第 4 种；示例文案“Product Designer”	marketing-section	specialized				
-oss-mist-testimonials-5	Tailark 开源 mist 套：用户评价，第 5 种	marketing-section	specialized				
+oss-mist-comparator-1	Tailark 开源 mist 套：对比表（Free、Pro、Startup 套餐逐项功能对比），第 1 种	pricing,marketing-section	specialized				
+oss-mist-content-1	Tailark 开源 mist 套：图文内容区，两段功能说明配插画（左右交替，带分隔线），含 toggle-group 编辑器工具栏，第 1 种；示例文案“Ask Tailark to Edit anything”	marketing-section	specialized				
+oss-mist-content-2	Tailark 开源 mist 套：图文内容区，两段功能说明配插画（左图右文，无分隔线），含 toggle-group 编辑器工具栏，第 2 种；示例文案“Ask Tailark to Edit anything”	marketing-section	specialized				
+oss-mist-content-3	Tailark 开源 mist 套：图文内容区，居中标题与正文，下方整宽产品截图（带浮层卡片），第 3 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
+oss-mist-content-4	Tailark 开源 mist 套：内容区，居中标题与正文，下方三列 emoji 图标要点加底部列表，第 4 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
+oss-mist-faqs-1	Tailark 开源 mist 套：FAQ 常见问题，第 1 种；含 accordion；示例文案“Frequently Asked Questions”	marketing-section,navigation	specialized		hover		
+oss-mist-faqs-2	Tailark 开源 mist 套：FAQ 常见问题，标题与手风琴分栏（md 起），第 2 种；含 accordion；示例文案“Your questions answered”	marketing-section,navigation	specialized		hover		
+oss-mist-faqs-3	Tailark 开源 mist 套：FAQ 常见问题，第 3 种；含 accordion；示例文案“Your questions answered”	marketing-section,navigation	specialized		hover		
+oss-mist-features-2	Tailark 开源 mist 套：功能介绍区，三列卡片网格，第 2 种；示例文案“Effortless Task Management”	marketing-section	specialized				
+oss-mist-features-3	Tailark 开源 mist 套：功能介绍区，两列插画卡片，含 toggle-group 切换，第 3 种；示例文案“Personal AI, with you Anywhere”	marketing-section	specialized				
+oss-mist-features-4	Tailark 开源 mist 套：功能介绍区，两列插画卡片配浅灰底色，含 toggle-group 切换，第 4 种；示例文案“Personal AI, with you Anywhere”	marketing-section	specialized				
+oss-mist-features-5	Tailark 开源 mist 套：功能介绍区，左侧大标题、右侧图标要点列表，第 5 种；示例文案“The AI Coding Assistant that helps you…”	marketing-section	specialized				
+oss-mist-features-6	Tailark 开源 mist 套：功能介绍区，三列卡片带截图，悬停时卡片旋转、位移，第 6 种；示例文案“Empowering developers with AI-driven…”	marketing-section	specialized	gradient	hover		
+oss-mist-features-7	Tailark 开源 mist 套：功能介绍区，三列卡片带截图，悬停有旋转、位移动效，第 7 种；示例文案“AI Code Generation”	marketing-section	specialized	gradient	hover		
+oss-mist-features-8	Tailark 开源 mist 套：功能介绍区，三列卡片带截图，第 8 种；示例文案“AI Code Generation”	marketing-section	specialized				
+oss-mist-features-9	Tailark 开源 mist 套：功能介绍区，五列网格带截图，悬停有位移动效，第 9 种；示例文案“Empowering developers with AI-driven…”	marketing-section	specialized	gradient	hover		
+oss-mist-features-10	Tailark 开源 mist 套：功能介绍区，两列卡片带截图，悬停有动效，第 10 种；示例文案“Empowering Marketing teams with”	marketing-section	specialized	gradient	hover		
+oss-mist-features-11	Tailark 开源 mist 套：功能介绍区，三列卡片网格带插画，第 11 种；示例文案“Empowering Marketing teams with”	marketing-section	specialized				
+oss-mist-footer-1	Tailark 开源 mist 套：页脚，品牌首页链接加 6 个社交媒体图标，第 1 种	navigation,marketing-section	specialized				
+oss-mist-footer-2	Tailark 开源 mist 套：页脚，多列链接加 4 个社交媒体图标，第 2 种	navigation,marketing-section	specialized				
+oss-mist-footer-3	Tailark 开源 mist 套：页脚，两列链接加 2 个社交媒体图标，第 3 种	navigation,marketing-section	specialized				
+oss-mist-footer-4	Tailark 开源 mist 套：页脚，单行布局，左侧 logo 与版权、右侧链接列表，第 4 种	navigation,marketing-section	specialized				
+oss-mist-forgot-password-1	Tailark 开源 mist 套：忘记密码页，邮箱输入加发送重置链接按钮，第 1 种；示例文案“Forgot Your Password?”	auth	specialized	gradient			
+oss-mist-hero-section-5	Tailark 开源 mist 套：首屏 hero，居中标题与按钮，下方产品截图，带 4 个品牌 logo SVG（Trusted by teams at），第 5 种；示例文案“The Note App is a simple note app that…”	marketing-section	specialized				
+oss-mist-hero-section-6	Tailark 开源 mist 套：首屏 hero，居中标题与按钮，下方产品截图，带 4 个品牌 logo SVG（Trusted by teams at），第 6 种；示例文案“The Note App is a simple note app that…”	marketing-section	specialized				
+oss-mist-integrations-1	Tailark 开源 mist 套：集成展示，标题后接 6 个品牌 logo SVG，第 1 种；示例文案“Integrate with :”	marketing-section	specialized				
+oss-mist-integrations-2	Tailark 开源 mist 套：集成展示，居中标题加换行排列的工具图标，带 More Integrations 按钮，第 2 种；示例文案“Integrate with your favorite tools :”	marketing-section	specialized				
+oss-mist-integrations-3	Tailark 开源 mist 套：集成展示，工具卡片网格（lg 起三列）列出 Gemini、Replit、Magic UI 等 6 个工具，第 3 种；示例文案“Integrate with your favorite tools”	marketing-section	specialized				
+oss-mist-login-1	Tailark 开源 mist 套：登录页，含 field；带 Google、Facebook、Microsoft 三个第三方登录按钮和邮箱输入，第 1 种；示例文案“Welcome back to Tailark!”	auth	specialized	gradient			
+oss-mist-logo-cloud-1	Tailark 开源 mist 套：客户 logo 墙，标题后横排 4 个品牌 logo SVG，第 1 种；示例文案“Trusted by teams at :”	marketing-section	specialized				
+oss-mist-logo-cloud-2	Tailark 开源 mist 套：客户 logo 墙，标题与 4 个品牌 logo SVG 同排（窄屏换行），第 2 种；示例文案“Trusted by teams at :”	marketing-section	specialized				
+oss-mist-pricing-1	Tailark 开源 mist 套：定价，单张企业套餐卡（左侧价格、右侧包含项），第 1 种，带 3 个品牌 logo SVG；示例文案“Pricing that scale with your business”	pricing	specialized				
+oss-mist-pricing-2	Tailark 开源 mist 套：定价，三列价格卡（Free、Pro、Pro Plus），第 2 种；示例文案“Pricing that scale with your business”	pricing	specialized				
+oss-mist-sign-up-1	Tailark 开源 mist 套：注册页，带 Google、Facebook、Microsoft 三个第三方注册按钮，第 1 种；示例文案“Welcome to Tailark!”	auth	specialized	gradient			
+oss-mist-stats-1	Tailark 开源 mist 套：数据统计展示，三列数字统计（md 起），第 1 种；示例文案“Stars on GitHub”	marketing-section	specialized				
+oss-mist-stats-2	Tailark 开源 mist 套：数据统计展示，标题加正文，下方四列统计（md 起），第 2 种；示例文案“Tailark in numbers”	marketing-section	specialized				
+oss-mist-stats-3	Tailark 开源 mist 套：数据统计展示，标题加正文，下方 map 渲染的统计项列表，第 3 种；示例文案“Tailark in numbers”	marketing-section	specialized				
+oss-mist-stats-4	Tailark 开源 mist 套：数据统计展示，标题后四列统计（md 起），第 4 种；示例文案“Tailark in stats”	marketing-section	specialized				
+oss-mist-team-1	Tailark 开源 mist 套：团队介绍，成员网格（lg 起三列）加招聘入口，第 1 种；示例文案“Meet Our Team”	marketing-section,avatar-user	specialized				
+oss-mist-team-2	Tailark 开源 mist 套：团队介绍，成员悬停显示资料卡片（hover-card），第 2 种；示例文案“Meet Our Team”	marketing-section,avatar-user	specialized		hover		
+oss-mist-testimonials-1	Tailark 开源 mist 套：用户评价，单条大引言（作者 John Doe、Product Designer），第 1 种；示例文案“Using Tailark has been like unlocking a secret design superpower.”	marketing-section	specialized				
+oss-mist-testimonials-2	Tailark 开源 mist 套：用户评价，标题加评价卡片网格（默认三列，lg 起两列）带图片，第 2 种；示例文案“What Our Clients Say”	marketing-section	specialized				
+oss-mist-testimonials-3	Tailark 开源 mist 套：用户评价，无标题的评价卡片网格（默认三列，lg 起两列）带图片，第 3 种	marketing-section	specialized				
+oss-mist-testimonials-4	Tailark 开源 mist 套：用户评价，单条大引言带头像（Théo Balick、Product Designer），第 4 种；示例文案“Using Tailark has been like unlocking a secret design superpower.”	marketing-section	specialized				
+oss-mist-testimonials-5	Tailark 开源 mist 套：用户评价，单条大引言带头像与社交账号（@theo_b），第 5 种；示例文案“Using Tailark has been like unlocking a secret design superpower.”	marketing-section	specialized				
 oss-veil-call-to-action-1	Tailark 开源 veil 套：行动号召 CTA，第 1 种；示例文案“Ready to Get Started?”	marketing-section	specialized				
 oss-veil-call-to-action-2	Tailark 开源 veil 套：行动号召 CTA，第 2 种；示例文案“Limited Time Offer”	marketing-section	specialized				
-oss-veil-call-to-action-3	Tailark 开源 veil 套：行动号召 CTA，第 3 种；示例文案“Stay in the Loop”	marketing-section	specialized				
-oss-veil-call-to-action-4	Tailark 开源 veil 套：行动号召 CTA，第 4 种；示例文案“Transform Your Workflow”	marketing-section	specialized				
-oss-veil-comparator-1	Tailark 开源 veil 套：对比表（和竞品或各套餐对比），第 1 种；示例文案“Compare Plans”	pricing,marketing-section	specialized				
-oss-veil-comparator-2	Tailark 开源 veil 套：对比表（和竞品或各套餐对比），第 2 种；示例文案“See what you get with each plan.”	pricing,marketing-section	specialized				
-oss-veil-comparator-3	Tailark 开源 veil 套：对比表（和竞品或各套餐对比），第 3 种；示例文案“Choose Your Plan”	pricing,marketing-section	specialized				
-oss-veil-contact-1	Tailark 开源 veil 套：联系我们表单区，第 1 种	marketing-section,form-input	specialized				
-oss-veil-contact-2	Tailark 开源 veil 套：联系我们表单区，第 2 种；含 select；示例文案“Contact Sales”	marketing-section,form-input	specialized				
-oss-veil-content-1	Tailark 开源 veil 套：图文内容区，第 1 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
-oss-veil-content-2	Tailark 开源 veil 套：图文内容区，第 2 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
-oss-veil-content-3	Tailark 开源 veil 套：图文内容区，第 3 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
-oss-veil-faqs-1	Tailark 开源 veil 套：FAQ 常见问题，第 1 种；示例文案“Frequently Asked Questions”	marketing-section	specialized				
-oss-veil-faqs-2	Tailark 开源 veil 套：FAQ 常见问题，第 2 种；示例文案“Your questions answered”	marketing-section	specialized				
-oss-veil-faqs-3	Tailark 开源 veil 套：FAQ 常见问题，第 3 种；示例文案“Your Questions Answered”	marketing-section	specialized				
-oss-veil-faqs-4	Tailark 开源 veil 套：FAQ 常见问题，第 4 种；示例文案“Common Questions”	marketing-section	specialized				
-oss-veil-faqs-5	Tailark 开源 veil 套：FAQ 常见问题，第 5 种；示例文案“Browse by category to find the answers…”	marketing-section	specialized				
-oss-veil-features-1	Tailark 开源 veil 套：功能介绍区，第 1 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized				
-oss-veil-features-2	Tailark 开源 veil 套：功能介绍区，第 2 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized				
-oss-veil-features-3	Tailark 开源 veil 套：功能介绍区，第 3 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized				
-oss-veil-footer-1	Tailark 开源 veil 套：页脚，第 1 种；示例文案“Building the future of integrations.…”	navigation,marketing-section	specialized				
-oss-veil-footer-2	Tailark 开源 veil 套：页脚，第 2 种	navigation,marketing-section	specialized				
-oss-veil-footer-3	Tailark 开源 veil 套：页脚，第 3 种；示例文案“Privacy Policy”	navigation,marketing-section	specialized				
-oss-veil-footer-4	Tailark 开源 veil 套：页脚，第 4 种；示例文案“The modern integration platform for…”	navigation,marketing-section	specialized				
-oss-veil-footer-5	Tailark 开源 veil 套：页脚，第 5 种；含 theme-switcher	navigation,marketing-section	specialized				
+oss-veil-call-to-action-3	Tailark 开源 veil 套：行动号召 CTA，邮箱订阅表单，第 3 种；示例文案“Stay in the Loop”	marketing-section	specialized				
+oss-veil-call-to-action-4	Tailark 开源 veil 套：行动号召 CTA，带起始价格和免费套餐说明，第 4 种；示例文案“Transform Your Workflow”	marketing-section	specialized				
+oss-veil-comparator-1	Tailark 开源 veil 套：对比表（套餐逐项功能对比），第 1 种；示例文案“Compare Plans”	pricing,marketing-section	specialized				
+oss-veil-comparator-2	Tailark 开源 veil 套：对比表（Free vs Pro 两档套餐三列卡片对比），第 2 种；示例文案“See what you get with each plan.”	pricing,marketing-section	specialized				
+oss-veil-comparator-3	Tailark 开源 veil 套：套餐对比卡片（map 渲染多档套餐），第 3 种；示例文案“Choose Your Plan”	pricing,marketing-section	specialized				
+oss-veil-contact-1	Tailark 开源 veil 套：联系我们区，联系方式（邮箱、电话、办公地址）与留言表单并排，第 1 种；示例文案“Get in Touch”	marketing-section,form-input	specialized				
+oss-veil-contact-2	Tailark 开源 veil 套：联系销售表单（姓名、公司、公司规模下拉等），第 2 种；示例文案“Contact Sales”	marketing-section,form-input	specialized				
+oss-veil-content-1	Tailark 开源 veil 套：内容区，标题加功能要点网格（无图），第 1 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
+oss-veil-content-2	Tailark 开源 veil 套：内容区，标题加两项功能要点（无图），第 2 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
+oss-veil-content-3	Tailark 开源 veil 套：内容区，标题加正文和三项功能要点网格（无图），第 3 种；示例文案“Create Content with AI Assistance”	marketing-section	specialized				
+oss-veil-faqs-1	Tailark 开源 veil 套：FAQ 常见问题，第 1 种；示例文案“Frequently Asked Questions”	marketing-section,navigation	specialized		hover		
+oss-veil-faqs-2	Tailark 开源 veil 套：FAQ 常见问题，第 2 种；示例文案“Your questions answered”	marketing-section,navigation	specialized		hover		
+oss-veil-faqs-3	Tailark 开源 veil 套：FAQ 常见问题，第 3 种；含 accordion；示例文案“Your Questions Answered”	marketing-section,navigation	specialized		hover		
+oss-veil-faqs-4	Tailark 开源 veil 套：FAQ 常见问题，居中标题加问答卡片网格（全部展开，无手风琴），第 4 种；示例文案“Common Questions”	marketing-section	specialized				
+oss-veil-faqs-5	Tailark 开源 veil 套：FAQ 帮助中心，分类区加手风琴，第 5 种；示例文案“Browse by category to find the answers…”	marketing-section,navigation	specialized		hover		
+oss-veil-features-1	Tailark 开源 veil 套：功能介绍区，两列功能项（按钮为 outline 样式），第 1 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized				
+oss-veil-features-2	Tailark 开源 veil 套：功能介绍区，两列功能项（按钮为 mixed 样式，结构同 features-1），第 2 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized				
+oss-veil-features-3	Tailark 开源 veil 套：功能介绍区，四列功能标签，点击切换展示内容，第 3 种；示例文案“Powerful Features for Modern Teams”	marketing-section	specialized	gradient	hover		
+oss-veil-footer-1	Tailark 开源 veil 套：页脚，品牌简介加三列链接（Product、Company、Resources），第 1 种；示例文案“Building the future of integrations.…”	navigation,marketing-section	specialized				
+oss-veil-footer-2	Tailark 开源 veil 套：页脚，居中排列（logo、链接行、社交图标、版权），第 2 种	navigation,marketing-section	specialized				
+oss-veil-footer-3	Tailark 开源 veil 套：页脚，单行法律链接（Privacy Policy、Terms of Service、Cookies），第 3 种；示例文案“Privacy Policy”	navigation,marketing-section	specialized				
+oss-veil-footer-4	Tailark 开源 veil 套：页脚，logo 与标语、社交图标行加链接导航，第 4 种；示例文案“The modern integration platform for…”	navigation,marketing-section	specialized				
+oss-veil-footer-5	Tailark 开源 veil 套：页脚，含主题切换开关（theme-switcher），第 5 种	navigation,marketing-section	specialized				
 oss-veil-footer-6	Tailark 开源 veil 套：页脚，第 6 种；含 theme-switcher、social-medias	navigation,marketing-section	specialized				
-oss-veil-forgot-password-1	Tailark 开源 veil 套：忘记密码页，第 1 种；示例文案“Forgot password?”	auth	specialized				
-oss-veil-forgot-password-2	Tailark 开源 veil 套：忘记密码页，第 2 种；示例文案“Forgot password?”	auth	specialized				
-oss-veil-forgot-password-3	Tailark 开源 veil 套：忘记密码页，第 3 种；示例文案“Reset password”	auth	specialized				
-oss-veil-hero-section-1	Tailark 开源 veil 套：首屏 hero，第 1 种；含 header；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
-oss-veil-hero-section-2	Tailark 开源 veil 套：首屏 hero，第 2 种；含 header、use-media；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
-oss-veil-hero-section-3	Tailark 开源 veil 套：首屏 hero，第 3 种；含 header；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
-oss-veil-hero-section-4	Tailark 开源 veil 套：首屏 hero，第 4 种；含 header、use-media；示例文案“Add photos and files”	marketing-section	specialized				
-oss-veil-hero-section-5	Tailark 开源 veil 套：首屏 hero，第 5 种；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
-oss-veil-integrations-1	Tailark 开源 veil 套：集成展示，第 1 种；示例文案“Connect Your Favorite Tools”	marketing-section	specialized				
-oss-veil-integrations-2	Tailark 开源 veil 套：集成展示，第 2 种；示例文案“Connect Your Favorite Tools”	marketing-section	specialized				
-oss-veil-login-1	Tailark 开源 veil 套：登录页，第 1 种；示例文案“Sign in to your account to continue”	auth	specialized				
-oss-veil-login-2	Tailark 开源 veil 套：登录页，第 2 种；示例文案“Enter your email to continue”	auth	specialized				
-oss-veil-login-3	Tailark 开源 veil 套：登录页，第 3 种；示例文案“Forgot password?”	auth	specialized				
-oss-veil-logo-cloud-1	Tailark 开源 veil 套：客户 logo 墙，第 1 种，带 8 个品牌 logo SVG	marketing-section	specialized				
-oss-veil-logo-cloud-2	Tailark 开源 veil 套：客户 logo 墙，第 2 种，带 7 个品牌 logo SVG，依赖 motion	marketing-section	specialized				
-oss-veil-pricing-1	Tailark 开源 veil 套：定价，第 1 种；示例文案“Simple, Transparent Pricing”	pricing	specialized				
-oss-veil-pricing-2	Tailark 开源 veil 套：定价，第 2 种；示例文案“Usage-Based Pricing”	pricing	specialized				
-oss-veil-pricing-3	Tailark 开源 veil 套：定价，第 3 种；示例文案“One Plan, Simple Pricing”	pricing	specialized				
-oss-veil-sign-up-1	Tailark 开源 veil 套：注册页，第 1 种；示例文案“Create an account”	auth	specialized				
-oss-veil-sign-up-2	Tailark 开源 veil 套：注册页，第 2 种；示例文案“Create your account in seconds”	auth	specialized				
-oss-veil-sign-up-3	Tailark 开源 veil 套：注册页，第 3 种	auth	specialized				
-oss-veil-stats-1	Tailark 开源 veil 套：数据统计展示，第 1 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
-oss-veil-stats-2	Tailark 开源 veil 套：数据统计展示，第 2 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
-oss-veil-stats-3	Tailark 开源 veil 套：数据统计展示，第 3 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
-oss-veil-stats-4	Tailark 开源 veil 套：数据统计展示，第 4 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
-oss-veil-team-1	Tailark 开源 veil 套：团队介绍，第 1 种；示例文案“Meet Our Founders”	marketing-section,avatar-user	specialized				
-oss-veil-team-2	Tailark 开源 veil 套：团队介绍，第 2 种；示例文案“Meet Our Founders”	marketing-section,avatar-user	specialized				
-oss-veil-testimonials-1	Tailark 开源 veil 套：用户评价，第 1 种；示例文案“What Our Customers Say”	marketing-section	specialized				
-oss-veil-testimonials-2	Tailark 开源 veil 套：用户评价，第 2 种；示例文案“What Our Customers Say”	marketing-section	specialized				
-oss-veil-testimonials-3	Tailark 开源 veil 套：用户评价，第 3 种；示例文案“Founder, CEO - Acme”	marketing-section	specialized				
-oss-veil-testimonials-4	Tailark 开源 veil 套：用户评价，第 4 种；示例文案“Founder, CEO - Acme”	marketing-section	specialized				
+oss-veil-forgot-password-1	Tailark 开源 veil 套：忘记密码页，邮箱输入加发送重置链接按钮，第 1 种；示例文案“Forgot password?”	auth	specialized				
+oss-veil-forgot-password-2	Tailark 开源 veil 套：忘记密码页，带说明文字，邮箱输入加发送重置链接按钮，第 2 种；示例文案“Forgot password?”	auth	specialized				
+oss-veil-forgot-password-3	Tailark 开源 veil 套：忘记密码页，极简，标题加邮箱输入和发送按钮，第 3 种；示例文案“Reset password”	auth	specialized				
+oss-veil-hero-section-1	Tailark 开源 veil 套：首屏 hero，含 header，带背景图和 9 个品牌 logo SVG，第 1 种；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
+oss-veil-hero-section-2	Tailark 开源 veil 套：首屏 hero，含 header（use-media 控制大屏浮动导航），带背景图和 9 个品牌 logo SVG，第 2 种；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized				
+oss-veil-hero-section-3	Tailark 开源 veil 套：首屏 hero，含 header，带 AI 提问输入框（Ask anything...），第 3 种；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized		hover		
+oss-veil-hero-section-4	Tailark 开源 veil 套：首屏 hero，AI 输入界面（附件、生成图片、深度研究等功能按钮），含 header，第 4 种；示例文案“Add photos and files”	marketing-section	specialized		hover		
+oss-veil-hero-section-5	Tailark 开源 veil 套：首屏 hero，含 header，带毛玻璃（backdrop-blur）卡片，第 5 种；示例文案“Ship faster. Integrate smarter.”	marketing-section	specialized	glass			
+oss-veil-integrations-1	Tailark 开源 veil 套：集成展示，标题、说明和 Learn more 链接，配渐变面板，第 1 种；示例文案“Connect Your Favorite Tools”	marketing-section	specialized	gradient			
+oss-veil-integrations-2	Tailark 开源 veil 套：集成展示，标题、说明和 Learn more 链接，配毛玻璃面板，第 2 种；示例文案“Connect Your Favorite Tools”	marketing-section	specialized	glass			
+oss-veil-login-1	Tailark 开源 veil 套：登录页，邮箱与密码表单，带 Google、GitHub 第三方登录，第 1 种；示例文案“Sign in to your account to continue”	auth	specialized				
+oss-veil-login-2	Tailark 开源 veil 套：登录页，邮箱继续登录加 Google、GitHub 第三方登录，第 2 种；示例文案“Enter your email to continue”	auth	specialized				
+oss-veil-login-3	Tailark 开源 veil 套：登录页，邮箱与密码表单加 Google、GitHub 第三方登录，第 3 种；示例文案“Forgot password?”	auth	specialized				
+oss-veil-logo-cloud-1	Tailark 开源 veil 套：客户 logo 墙，网格排列，带 8 个品牌 logo SVG（Beacon、Bolt、Cisco 等），第 1 种	marketing-section	specialized				
+oss-veil-logo-cloud-2	Tailark 开源 veil 套：客户 logo 墙，logo 分组定时轮换并带模糊入场动画，带 7 个品牌 logo SVG，依赖 motion，第 2 种	marketing-section	specialized				
+oss-veil-pricing-1	Tailark 开源 veil 套：定价，两列价格卡，第 1 种；示例文案“Simple, Transparent Pricing”	pricing	specialized				
+oss-veil-pricing-2	Tailark 开源 veil 套：定价，单卡用量计费（超出额度按每次 $0.001 计费），第 2 种；示例文案“Usage-Based Pricing”	pricing	specialized				
+oss-veil-pricing-3	Tailark 开源 veil 套：定价，单套餐两列布局，含计费周期选择，第 3 种；示例文案“One Plan, Simple Pricing”	pricing	specialized				
+oss-veil-sign-up-1	Tailark 开源 veil 套：注册页，带 Google、GitHub 第三方注册按钮，第 1 种；示例文案“Create an account”	auth	specialized				
+oss-veil-sign-up-2	Tailark 开源 veil 套：注册页，邮箱继续注册加 Google、GitHub 第三方按钮，第 2 种；示例文案“Create your account in seconds”	auth	specialized				
+oss-veil-sign-up-3	Tailark 开源 veil 套：注册页，极简（邮箱、密码加 Google、GitHub 第三方按钮），第 3 种	auth	specialized				
+oss-veil-stats-1	Tailark 开源 veil 套：数据统计展示，标题加正文配数字统计（10M+ 等），第 1 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
+oss-veil-stats-2	Tailark 开源 veil 套：数据统计展示，标题加正文配数字统计，数字间竖线分隔，悬停变主题色，第 2 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized		hover		
+oss-veil-stats-3	Tailark 开源 veil 套：数据统计展示，标题加正文，配世界地图图片和三列数字统计，第 3 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
+oss-veil-stats-4	Tailark 开源 veil 套：数据统计展示，标题加正文，配世界地图图片和两列数字统计，第 4 种；示例文案“Trusted by Teams Worldwide”	marketing-section	specialized				
+oss-veil-team-1	Tailark 开源 veil 套：团队介绍，成员列表（带头像），第 1 种；示例文案“Meet Our Founders”	marketing-section,avatar-user	specialized				
+oss-veil-team-2	Tailark 开源 veil 套：团队介绍，成员网格（带头像），第 2 种；示例文案“Meet Our Founders”	marketing-section,avatar-user	specialized				
+oss-veil-testimonials-1	Tailark 开源 veil 套：用户评价，标题加两列评价卡片（带头像），第 1 种；示例文案“What Our Customers Say”	marketing-section	specialized				
+oss-veil-testimonials-2	Tailark 开源 veil 套：用户评价，标题加两列评价卡片（带头像，卡片内布局与第 1 种不同），第 2 种；示例文案“What Our Customers Say”	marketing-section	specialized				
+oss-veil-testimonials-3	Tailark 开源 veil 套：用户评价，单条引言（左侧竖线装饰）带头像，第 3 种；示例文案“Tailark has been a game-changer for our team.”	marketing-section	specialized				
+oss-veil-testimonials-4	Tailark 开源 veil 套：用户评价，单条居中引言带头像，第 4 种；示例文案“Tailark has been a game-changer for our team.”	marketing-section	specialized				
