@@ -98,7 +98,7 @@ spec 由空格分隔的若干项组成，每项是 `<adapter>:<arg>`：
 | task | 统一的 UI 任务分类，最多两个，逗号分隔，第一个是主任务（find 按它推荐指南）。取值见 `scripts/ua.py` 的 `TASKS`。不拿任务当兜底：`fun-3d` 只给 3D 物件、拟物或物理交互、可玩的小游戏、用户主动触发的隐藏彩蛋，庆祝动画、过渡、装饰细节、主题开关归到各自的任务；`cursor-effect` 只给跟随或响应指针的效果，文字光标闪烁不算；参考类条目主任务用 `page-inspiration` 或它真正演示的那类任务 |
 | layer | 判定方法：换一个项目还能原样当积木用吗？`foundation`：主底座的通用基础件和 token，按钮、输入、选择、弹层、表格、tabs、toast、图表这类任何页面都可能用到的控件，主题和 token 文件，被同一来源其他组件依赖的原子件；`specialized`：面向某个场景或效果的成品，区块（block）、整页模板、营销区块、AI 场景件、文字和背景特效、展示性交互；`reference`：只能看的灵感；`icons`；`design-spec`：DESIGN.md、agent skill 这类设计规范 |
 | visual_tags | webgl、canvas、3d、pixel、gradient、glass、dark、illustration 等，要和描述一致（描述写"无 WebGL"就不能标 webgl，audit 会提示） |
-| interaction_tags | hover、press、drag、scroll、cursor（响应指针）、swipe（触摸滑动手势，不是"滑动高亮"）、keyboard、sound 等 |
+| interaction_tags | hover、press、drag、scroll、cursor（响应指针）、swipe（触摸滑动手势，不是"滑动高亮"）、keyboard、sound 等。只记条目自身实现的交互：区块里 group-hover 驱动的动效、HoverCard、手风琴算 hover，里面 shadcn 按钮自带的 hover 态不算；动画图标这类靠调用方传 prop 才触发的，标它支持的触发方式 |
 | risk | 场景化审美风险：gradient-text、marquee、glow、grid-background、typewriter、bounce、glass、pulse-dot。不是禁止，用的时候要写理由。audit 会列出描述里提到但这一列没标的候选，人工确认后再补 |
 | notes | 人工备注：会影响选型的事实，比如和别的条目同构（`与 shadcn:button 同构`）、名字和实际功能不符、依赖没写全。find 把它显示成 ⚑ 备注，同样相关时排在没有备注的条目后面。有版本、证据和复核方式的组件级技术结论（缺陷、演示性质、缺失能力）登记在 `_claims.tsv`，不写在这里；没有要说的就留空 |
 
