@@ -456,4 +456,4 @@ pro-kit-agency-homepage	[Pro] 代理公司首页区块组合配方	template	spec
 pro-kit-product-launch	[Pro] 产品发布页区块组合配方	template	specialized				
 pro-kit-saas-homepage	[Pro] SaaS 首页区块组合配方	template	specialized				
 pro-kit-agent-skill	[Pro] 教 agent 正确安装使用 React Bits Pro 的 skill	other	specialized				
-crystalized-ball	玻璃水晶球，边缘有噼啪电光，球内发光尘埃随光标旋转、点击时摇晃、挂载时点亮，单色可调 (WebGL)；依赖 ogl	fun-3d,cursor-effect	specialized	webgl,glass	cursor,press	glow,glass	
+crystalized-ball	玻璃水晶球，边缘有噼啪电光，球内发光尘埃随光标旋转、点击时摇晃、挂载时点亮，单色可调、内置 8 套预设，支持明暗主题 (WebGL)；依赖 ogl	fun-3d,cursor-effect	specialized	webgl,glass	cursor,press	glow,glass	玻璃感只来自边缘着色和半透明内部，没有折射或高光，要真折射需另找
