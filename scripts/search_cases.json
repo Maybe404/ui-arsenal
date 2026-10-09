@@ -122,6 +122,7 @@
    ],
    "k": 5,
    "topk_any": [
+    "aielements:tool",
     "beautifului:tool-chips",
     "reactbits:status-mark",
     "shadcn:marker"
@@ -351,6 +352,7 @@
    ],
    "k": 3,
    "topk_any": [
+    "aielements:tool",
     "shadcn:helpers-ai-sdk",
     "beautifului:tool-chips",
     "beautifului:approval-card"
