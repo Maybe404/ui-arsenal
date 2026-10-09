@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import tempfile
+import time
 import unittest
 from contextlib import ExitStack, redirect_stdout
 from io import StringIO
@@ -291,12 +292,17 @@ class Proposals(Access):
 
     def test_refresh_again_keeps_human_fields_in_a_new_revision(self):
         self.write_source([row('house')])
-        rc, first = self.refresh('demo', self.new_item_refresher(), [row('house')])
+        real = time.strftime  # fix only the HHMMSS stamp; the date folder must be today's, whatever day the tests run
+
+        def at(stamp):
+            return patch.object(ua.time, 'strftime', side_effect=lambda fmt, *a: stamp if fmt == '%H%M%S' else real(fmt, *a))
+        with at('000001'):
+            rc, first = self.refresh('demo', self.new_item_refresher(), [row('house')])
         p1 = ua.latest_pending('demo')
         self.fill(first, desc_zh='帐篷图标', task='icon', layer='icons')
         with open(p1, 'w', encoding='utf-8') as f:
             json.dump(first, f)
-        with patch.object(ua.time, 'strftime', side_effect=lambda fmt, *a: {'%H%M%S': '235959'}.get(fmt, TODAY)):
+        with at('235959'):
             rc, second = self.refresh('demo', self.new_item_refresher(), [row('house')])
         p2 = ua.latest_pending('demo')
         self.assertNotEqual(p1, p2)
