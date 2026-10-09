@@ -7,7 +7,8 @@ stack: React 19 + Tailwind CSS v4（shadcn 体系）；7 个组件额外依赖 m
 license: MIT（GitHub turbostarter/loading-ui）
 pro: none
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: 全量：官方 registry 的全部条目；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: minimal currentColor spinners and shimmers
 foundation: none

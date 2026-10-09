@@ -1,0 +1,40 @@
+ref	topic	kind	depth	checked	sha	check_with	probe	missing	claim
+uiarc:arc-foundation	focus-outline	ok	browser	2026-10-08	164a06f61891430f		has:--focus-outline && lacks::is(*:focus, *:focus-visible, *:focus-within)	读屏实测；在完整组件页面上逐个组件的键盘实测（浏览器实测用的是真实 foundation.css + 最小页面）	键盘焦点由全局 `:focus-visible` 描边统一处理（`--focus-outline`，带 `!important`）；文本框、菜单项、listbox 选项和 `tabindex="-1"` 有意不画；旧版的全局 `outline: none !important` 已移除，不要再删或覆盖它的焦点规则
+uiarc:button	focus-style	gap	source	2026-10-08	a87bfc7182d4372c		lacks:focus-visible		模块 CSS 没有焦点样式：装了 arc-foundation 时靠它的全局描边；不装 foundation 单独借用时要自己补
+uiarc:switch	focus-style	gap	source	2026-10-08	bc3b514941718cf6		has:.switch:focus-visible { outline: none; }		模块 CSS 写了 `.switch:focus-visible { outline: none; }`：装了 foundation 时被它带 `!important` 的描边盖过；不装时没有任何焦点样式
+uiarc:input	weak-focus	gap	source	2026-10-08	6cf1b1f78bbfb29f		has:.input:focus-visible { border-color: var(--foreground); }		聚焦和 hover 一样只把 1px 边框变成 `--foreground`，焦点可见但不好分辨
+uiarc:textarea	weak-focus	gap	source	2026-10-08	606f8ce2bf88ed45		has:box-shadow: 0 0 0 3px var(--focus-ring)		聚焦和 hover 一样只把 1px 边框变成 `--foreground`；它画的 `--focus-ring` 光圈默认透明
+uiarc:password-field	weak-focus	gap	source	2026-10-08	5990c94b69cc09c4		has:.shell:focus-within { border-color: var(--foreground); }		聚焦和 hover 一样只把外框 1px 边框变成 `--foreground`，焦点可见但不好分辨
+uiarc:search-field	weak-focus	gap	source	2026-10-08	406c01f957792ddd		has:.shell:focus-within { border-color: var(--foreground); }		聚焦和 hover 一样只把外框 1px 边框变成 `--foreground`，焦点可见但不好分辨
+uiarc:combobox	focus-border	ok	source	2026-10-08	a0632ef5ca8cd3a3		has:.control:focus-within { border-color: var(--accent);		聚焦时边框变成 `--accent`；自带的 `--focus-ring` 光圈默认透明
+uiarc:donut-chart	focus-style	gap	source	2026-10-08	711eb5c73940fdbc		lacks:outline && has:tabIndex={legend ? undefined : 0}		组件自身不画焦点（catalog："No focus rings are drawn"）；无图例时环是 `tabIndex=0` 的 `role="group"`，有图例时每行是按钮；装了 foundation 时由它的描边显示焦点
+uiarc:user-menu	menu-focus	ok	source	2026-10-08	ef016a7de2c4cbda		has:role="menuitem" tabIndex={-1}		触发器是原生按钮（foundation 描边）；菜单项是 `role="menuitem"` + `tabIndex=-1`，靠高亮表示键盘位置
+uiarc:command-palette	active-result	ok	source	2026-10-08	4fce306d9a1ffee8		has:aria-activedescendant && has:.highlight		活动结果用共享高亮底色表示，输入框 `aria-activedescendant` 指向它，不是描边
+uiarc:billing-toggle	keyboard	ok	source	2026-10-08	3ff007b6378dafb7		has:role="radiogroup" && has:ArrowRight && has:useReducedMotion	读屏实测	`role="radiogroup"` + `role="radio"`、`aria-checked`，roving tabindex，方向键切换，有 `useReducedMotion` 分支
+obsidianui:split-showcase	reduced-motion	ok	source	2026-10-08	6e30d1d26e7bc5c1		has:useReducedMotion		用 `useReducedMotion` 关掉 hover 的弹簧位移
+npm:tw-animate-css	reduced-motion	gap	source	2026-10-08	6035b41301945cd6	https://unpkg.com/tw-animate-css@latest/dist/tw-animate.css	lacks:prefers-reduced-motion		`animate-in/out`、accordion 等动画不处理 `prefers-reduced-motion`；shadcn 弹层和 accordion 的进出场要自己补 `motion-reduce:`（核对时 1.4.0）
+npm:shadcn	tailwind-css-reduced-motion	gap	source	2026-10-08	4c371f7a1ff5d219	https://unpkg.com/shadcn@latest/dist/tailwind.css			`shadcn/tailwind.css` 只给 shimmer 工具类加了 `prefers-reduced-motion` 守卫，不覆盖弹层和 accordion 动画（核对时 4.21.4）
+beautifului:thinking-state	timer-driven	demo	source	2026-10-08	ac29d8e0227c581b		has:STAGES && has:useSequence		内部用 `STAGES` 定时器自己推进，没有 working/status prop，"Thought for N seconds" 写死；上线要改成由外部状态驱动
+beautifului:tool-chips	timer-driven	demo	source	2026-10-08	67035ec579eb8d4c		has:STEP_MS		内置 `STEP_MS` 演示时间线，要改成按 tool-call / tool-result 事件渲染
+beautifului:stream-text	replay-on-update	defect	source	2026-10-08	99b82b8960aacc75		has:setCount(0)		拿到完整字符串后用定时器逐字放出；`text` 变化时 `setCount(0)`，接真流式时每来一个 token 都从头重播
+uiarc:sign-in	demo-logic	demo	source	2026-10-08	8558de0821f2cd7b		has:demoCode && has:123456		逻辑是模拟的：props 只有 `demoCode`（默认 "123456"）和 `onSignIn`，发码用定时器，没有发送、校验验证码的回调；原样上线任何人都能用 123456 登录
+uiarc:plan-comparison	demo-data	demo	source	2026-10-08	f6e0965dd5d30e25		has:Studio		内置 Team / Studio 的演示功能清单和价格，要换成真实数据
+uiarc:cta-section	demo-action	demo	source	2026-10-08	11dbcee22a612094		has:const simulated = !action.onClick		`action` 既没有 `href` 也没有 `onClick` 时，点击只在原地切换成 `confirmedLabel`，什么也没发生（演示用）
+uiarc:hero-section	demo-action	demo	source	2026-10-08	9c5c3061020b10ba		has:setDone(true) && has:2400 && has:/media/people/		传了 `doneLabel` 时点击立刻显示完成态（不等 `onClick` 的结果），2.4 秒后复原；`centered` 演示的图片 `/media/people/*.jpg` 不随 registry 附带
+bencho:slide-confirm	keyboard	defect	source	2026-10-08	3a3e67af828e6b7b		lacks:onKeyDown && lacks:onConfirm		手柄是 `<button>` 但没有 `onClick` / `onKeyDown`，键盘用户无法完成确认；没有 `onConfirm` 回调，props 只有外观参数
+bencho:confirm	no-confirm-step	defect	source	2026-10-08	9a910d668b4ec5a3		lacks:aria-live && lacks:role="status"		没有确认步骤：点击即删除，之后给几秒撤销；没有 live region 播报
+bencho:picker	keyboard	defect	source	2026-10-08	592a767584200c92		has:role="listbox" && lacks:onKeyDown		列表有 `role="listbox"` / `role="option"`，但没有任何键盘处理（无 `onKeyDown`、方向键、Esc），键盘用户选不了
+bencho:one-time-code	demo-props	demo	source	2026-10-08	116b9587a2176f00		lacks:onComplete		props 只有 `length`、`answer`（Accept/Reject 演示开关）、`corner`，没有 `onComplete` 或 value 回调，接真实校验要改代码
+bencho:upload-dropzone	prop-files	demo	source	2026-10-08	78181435581ee5b4		has:NO REAL FILES && has:Math.random		不是真的上传：三个文件是组件自带的道具，不读本地文件、不发请求，进度用 `Math.random()` 推进
+reactbits:aurora	offscreen	gap	source	2026-10-08	bd48840640c4e50c		lacks:IntersectionObserver && lacks:visibilitychange && has:loseContext		没有 IntersectionObserver / visibilitychange，离屏和标签页隐藏时不停；卸载时有 `loseContext`
+reactbits:grainient	cleanup	gap	source	2026-10-08	80708ab615e4e32e		has:IntersectionObserver && has:visibilitychange && lacks:loseContext && lacks:prefers-reduced-motion && lacks:useReducedMotion		有 IntersectionObserver 和 visibilitychange；卸载时没有 `loseContext`；不处理减弱动效
+reactbits:blur-text	reduced-motion	gap	source	2026-10-08	863b4d448ceb4212		lacks:prefers-reduced-motion && lacks:useReducedMotion		不处理减弱动效；初始 `opacity: 0`，动画不触发时文字一直不可见
+reactbits:splash-cursor	raf-cleanup	defect	source	2026-10-08	bef2dfc562ad15e3		lacks:cancelAnimationFrame		没有 `cancelAnimationFrame`，卸载后 rAF 循环不停
+reactbits:animated-content	hidden-default	defect	source	2026-10-08	c1cbbd2ecbcc58bd		has:snap-main-container		挂载时把元素设成透明，ScrollTrigger 不触发时内容一直不可见；源码残留站点专用的 `snap-main-container`；不处理减弱动效
+reactbits:shiny-text	contrast	defect	source	2026-10-08	3fdc7d6b6b7fe57a		has:#b5b5b5		默认 `color="#b5b5b5"`，放在白底上对比度约 2:1；`useAnimationFrame` 常驻，离屏也不停
+reactbits:text-type	ssr-empty	defect	source	2026-10-08	5b8ad9ec25225900		lacks:prefers-reduced-motion && lacks:useReducedMotion		SSR 输出空字符串，JS 跑起来前文字不可见；循环删除重打会让读屏反复读到半截；不处理减弱动效
+reactbits:magnet	pointer-only	gap	source	2026-10-08	7e15e1bab0490050		lacks:pointer: fine		跟随指针用 React state 更新，没有 `(pointer: fine)` 判断，触屏没有效果
+shadcn:empty	undeclared-dep	gap	source	2026-10-08	e89ffe0fc2969956		has:class-variance-authority		源码 import 了 `class-variance-authority`，自己的 registry 依赖只写了 `cn`；cva 由 `shadcn init` 安装的 style 提供（base-nova 的 style 依赖里有它），没跑过 init 的项目单独装 empty 时要手动装 cva
+loadingui:text-shimmer	motion-create	defect	source	2026-10-08	93522a076003984e		has:motion.create(		在组件体内调用 `motion.create`，每次渲染都新建一个组件类型
+shadcn:helpers-ai-sdk	fake-transport	demo	vendor	2026-10-08	71ef70377fa9bfce		has:predefined conversations && has:without a model		预先写好的对话经本地 transport 回放（官方文档：没有模型、API 路由、网络请求和 API key）；只用于原型和 Storybook，上线前必须换成真实 transport，否则界面状态是假的
+shadcn:helpers-tanstack-ai	fake-transport	demo	vendor	2026-10-08	ba19d8a30b119a42		has:predefined conversations && has:without a model		预先写好的对话经本地 connection 以 AG-UI 事件回放（官方文档：没有模型和网络请求）；只用于原型，上线前换成真实连接

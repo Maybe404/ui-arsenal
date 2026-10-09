@@ -29,11 +29,11 @@
 ## 慎用
 - 用 toast 报错并要求用户处理：toast 会自己消失，错误还没被处理信息就没了。需要操作的错误用 alert 放在出错位置附近。
 - toast 自动消失时间太短：含操作按钮的 toast 至少 6–8 秒，并在悬停、聚焦时暂停（sonner 和 uiarc toast-stack 已处理，`uiarc:toast` 没有）。
-- `reactbits:swipe-toast`：依赖 motion 和 `@hugeicons/*`，要换成 lucide（`_styles.md` 混用规则 8）；源码里有 4 处写死颜色，要改成主底座变量。只在移动端为主、需要滑动关闭时用。
+- `reactbits:swipe-toast`：依赖 motion 和 `@hugeicons/*`，要换成项目在用的图标库（项目还没定就用 lucide）（`_styles.md` 混用规则「图标全站一套」）；源码里有 4 处写死颜色，要改成主底座变量。只在移动端为主、需要滑动关闭时用。
 - `reactbits:bell-toggle`：同样依赖 hugeicons；铃铛摇动是装饰动效，Operate 页面不用。
 - `librariesdev:metal-fx-badge`：WebGL 液态金属徽章，只用于落地页的 "New / Beta" 标记，一页一个；状态徽章不用它。
 - `jakubantalik:transition:notification-badge`：描述为"斜向滑入 + 弹簧 pop"，有回弹；Operate 页面的未读数变化用简单的淡入或缩放即可。未拉源码。
-- 脉冲圆点（⚠ pulse-dot）表示"在线"、"实时"：Operate 页面默认不用；确实需要时遵守减弱动效，并配文字。
+- 脉冲圆点（⚠ pulse-dot）表示"在线"、"实时"：Operate 页面用静态圆点加文字表示状态，不用脉冲动画，除非用户明确要求（在汇报里写明例外，并遵守减弱动效）。
 - `shadcn:toast` 和 `shadcn:sonner` 同时装：一个项目只留一套 toast，否则会出现两个视口、两套播报。
 - `bencho:toasts`：其实是"通知我"按钮（铃铛摆动 + 文案替换），不是 toast 组件，按 button 任务看待。
 
@@ -51,10 +51,7 @@
 - **颜色与对比度**：成功、警告、错误三种色调的文字在各自底色上都要 ≥ 4.5:1；不要只用颜色区分类型，配图标和文字（"错误："）。
 - **位置**：移动端 toast 放底部并避开底部导航和安全区；桌面放右下或右上，全站一致。
 - **层级**：toast 视口的 z-index 高于 dialog，否则弹层里的操作结果被遮住。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，toast 里的"撤销"、alert 的关闭按钮会看不到焦点。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 
 ## 候选清单
 - `shadcn:sonner` — shadcn 底座默认 toast，减弱动效已处理

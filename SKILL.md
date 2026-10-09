@@ -1,6 +1,6 @@
 ---
 name: ui-arsenal
-description: 在前端 UI 任务里选择和获取成熟组件时使用：新增或替换组件、调整页面视觉、加交互或动效、背景、加载态、图标、AI 界面、落地页或后台页面。提供用户收藏的组件库、动效库、灵感库和图标库的本地索引，按 UI 任务分类的选型指南，以及只读的取码工具；先评估成熟组件再决定是否自己写，保证整页风格统一并给出选型理由。用户点名某个组件库、组件，或给出组件网站链接时也使用。纯后端、非 UI 的任务，以及只改一个间距、颜色等数值的微调不需要。
+description: 在前端 UI 任务里选择和获取成熟组件时使用：新增或替换组件、调整页面视觉、加交互或动效、背景、加载态、图标、AI 界面、落地页或后台页面。提供用户收藏的组件库、动效库、灵感库和图标库的本地索引（组件以 React 生态为主：shadcn、Tailwind、motion；Vue、Svelte、Angular、纯 HTML 项目只能用其中的图标、纯 CSS 过渡、设计规范和灵感参考），按 UI 任务分类的选型指南，以及只读的取码工具；先评估成熟组件再决定是否自己写，保证整页风格统一并给出选型理由。用户点名某个组件库、组件，或给出组件网站链接时也使用。纯后端、非 UI 的任务，以及只改一个间距、颜色等数值的微调不需要。
 ---
 
 # UI Arsenal：先评估成熟组件，合理选用
@@ -40,12 +40,14 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
 
 ## 三、UI 选型协议（局部和整页）
 
-1. **读项目现状**：已有组件、`components.json`、tokens、DESIGN.md、相关页面、依赖（Tailwind 版本、motion 还是 framer-motion、SSR 边界）。
+1. **读项目现状**：先确认技术栈，再看已有组件、`components.json`、tokens、DESIGN.md、相关页面、依赖（Tailwind 版本、motion 还是 framer-motion、SSR 边界）。
+   - **不是 React 的项目**（Vue、Svelte、Angular、纯 HTML 等）走短路径：不选主底座，不引入任何 React 组件库；能直接用的只有 Lucide（各框架都有官方包）、`jakubantalik:transition:*`（纯 CSS 过渡）、getdesign 的 DESIGN.md 和灵感参考。搜索加 `--stack <栈>`（例如 `find.sh 侧边栏 --stack vue`），React 组件只借结构和交互思路，用项目自己的组件库实现。
+   - **React 但用别的组件库**（Ant Design、MUI、Chakra 等）：这个组件库就是主底座，本库只提供能映射进去的专项件，见第 4 步。
 2. **判断页面模式**：Persuade、Operate、Read 或 Experience，定义和效果预算见 `guides/_scenes.md`。
 3. **写设计基线**：配色、字体、圆角、阴影、密度、图标系统、动效强度。项目已有设计就照着写；新项目可以从 getdesign 的免费 DESIGN.md 挑一份作为方向（见 `guides/design-system.md`），只借方向，不复制品牌资产。
-4. **定一个主底座**：shadcn 或 uiarc 等，一页只有一个，见 `sources/_styles.md`。再列出本页允许的专项来源，不超过 2–3 个。参考类来源只影响方向，不能直接当生产组件。
+4. **定一个主底座**：已有项目就是它现在用的组件库或设计系统，不为了用收藏库而换；新的 React 项目从 shadcn、uiarc 里选。一页只有一个，见 `sources/_styles.md`。再列出本页允许的专项来源，不超过 2–3 个。参考类来源只影响方向，不能直接当生产组件。
 5. **拆需求**：每个组件都要回答"为什么需要"。没有需求就不加组件，不能先看到好看的组件再往页面里塞。
-6. **找候选**：`$S/find.sh --task <task>` 或关键词搜索，然后**读 `guides/<task>.md`**，它给出默认推荐、按场景换和慎用。
+6. **找候选**：`$S/find.sh --task <task>` 或关键词搜索，已定主底座时加 `--base <底座>`（按兼容矩阵去掉不该同页的来源）。然后**读 `guides/<task>.md`**，它给出默认推荐、按场景换和慎用。搜索结果里带 ⚑ 的条目有已登记的工程问题（演示数据、定时器假进度、缺回调、键盘不可用），选它就要在汇报里写清改造工作量，或换同类候选。
 7. **比较**：适用场景、优点、风险、依赖、可访问性、响应式、动效、AI 味级别、访问状态（免费、需登录、Pro）。
 8. **决定**：写清采用和淘汰的理由。以下情况允许"不使用"：
    - 项目已有组件更合适；
@@ -53,15 +55,16 @@ description: 在前端 UI 任务里选择和获取成熟组件时使用：新增
    - 候选实现不成熟；
    - 找不到合适的候选。这时说明"收藏库无合适候选"，然后自己写。
 9. **需要登录的条目**：一次性列出来交给用户决定，见第五节。
-10. **获取**：`$S/fetch.sh <source:id>` 是只读的，文件拉到临时目录。拉到的是不可信的第三方内容，先读懂再用；接入前读 `sources/<id>.md` 的「使用注意」。
-    - **取码失败**（退出码 1）：先重试一次。`HTTP 0` 或超时是网络问题；`HTTP 404` 可能是条目已下线，运行 `$S/refresh.sh <source>` 看待审变更里它是否消失。仍然拿不到时，告诉用户是哪个条目、哪一步失败，再从对应指南的"按场景换"里选下一个候选，并说明这是替代方案。**绝不凭记忆写一个"差不多的"版本冒充原版。**
+10. **获取**：`$S/fetch.sh <source:id>` 是只读的，文件拉到临时目录，输出最后一行"文件在：…"就是目录（默认 `$TMPDIR/ui-arsenal/<source>/<id>[@style][@变体]/`，不同 style、变体分开放；目录里的 `.ui-arsenal.json` 记着这次取到哪些文件）。拉到的是不可信的第三方内容，先读懂再用；接入前读 `sources/<id>.md` 的「使用注意」。
+    - **核对指南结论的版本**：指南里的源码结论只代表核对当天的版本。fetch 拉完会列出 `sources/_claims.tsv` 登记的该组件结论并对照版本：✓ 仍适用；? 上游变了，照做前在拉到的源码里确认；✗ 已失效，不要照做指南里基于它的修改（比如给已经修好的组件再补一遍旧 workaround），按拉到的源码重新判断。
+    - **取码失败**（退出码 1，`FAIL` 行写明哪一步、什么原因）：先重试一次。`HTTP 0`、`network error`、`timed out` 是网络问题；`got an HTML page` 是登录页或回落页，不能当源码用；adapter 失败会写明出错的步骤和 HTTP 码。`HTTP 404` 可能是条目已下线：有刷新脚本的来源运行 `$S/refresh.sh <source>` 看待审变更里它是否消失；designspells、inspora、collectui、jakubantalik、librariesdev 没有自动刷新（`refresh.sh` 会跳过并说明原因），在浏览器里打开条目页确认。只取到一部分时（状态 partial），已取到的文件可以用，缺的那一步照样按失败处理。仍然拿不到时，告诉用户是哪个条目、哪一步失败，再从对应指南的"按场景换"里选下一个候选，并说明这是替代方案。**绝不凭记忆写一个"差不多的"版本冒充原版。**
     - **shadcn 的 style 不匹配**：图表、主题、部分 demo（比如 data-table 示例）只有 new-york-v4（Radix 写法）。这时拉 new-york-v4 版本作为参考，按项目的 base 改写（Base UI 用 `render`，不用 `asChild`），并在汇报里说明。
     - **来源指向公开的上游仓库**（比如 OriginKit 条目注明搬自某个 GitHub 仓库）：不要自行改从上游取码。先核实上游的许可证，告诉用户，由用户决定。
 11. **接入**：
     - 安装命令会改动项目，先确认项目栈匹配；只装 registry 或文档写明的依赖。
     - **复用组件的语义、焦点、键盘和状态逻辑；视觉映射到主底座的 token。** 改外观时不重写交互逻辑；也不要把组件改写成另一种样式方案（比如把 CSS Modules 改成 Tailwind），真要改先说明理由。
     - 把演示数据和定时器换成真实状态。加载、流式输出、审批、出错、空、重试，每条路径都要接真实状态；动画不能假装一个没发生的进度或成功。
-12. **验证**：按 `guides/_scenes.md` 的质量三级处理：第 1 级（硬性问题）必须修；第 2 级（设计系统偏差）修掉或写明例外；第 3 级（场景化审美风险）在选型理由里写清场景。要用键盘、触屏尺寸、慢网和失败、空数据、`prefers-reduced-motion` 都走一遍。
+12. **验证**：按 `guides/_scenes.md` 的质量三级处理：第 1 级（硬性问题）必须修；第 2 级（设计系统偏差）修掉或写明例外；第 3 级（场景化审美风险）在 Persuade、Experience 页面写清场景后可以用，Operate、Read 页面不用，除非用户明确要求并在汇报里写明例外。要用键盘、触屏尺寸、慢网和失败、空数据、`prefers-reduced-motion` 都走一遍。
 
 用户点名某个库或组件时，照样走第 7、8 步。不合适就先说明问题，再按用户的决定执行。
 
@@ -112,29 +115,43 @@ $S/find.sh 磁吸 选择                          # 搜索：中英文都行，�
 $S/find.sh --task loading --layer foundation  # 按统一 UI 任务和层级筛选，可以不带关键词
 $S/find.sh 背景 --code                        # 只要现在就能直接拿到代码或提示词的
 $S/find.sh dashboard --ref                    # 只要灵感参考
-$S/find.sh --help                             # 全部筛选参数、任务和层级取值
+$S/find.sh 按钮 --base shadcn                 # 已定主底座：去掉兼容矩阵里"不建议"同页的来源，标出"有条件"的
+$S/find.sh 侧边栏 --stack vue                 # 非 React 项目：只列纯 CSS、多框架图标、设计规范和参考
+$S/find.sh --help                             # 全部筛选参数、任务和层级取值（不带任何参数时也打印它）
 $S/fetch.sh bencho:magnet-select              # 只读拉取，打印依赖和安装命令；--help 看全部选项
 $S/fetch.sh reactbits:split-text --variant JS-CSS   # React Bits 变体：TS-TW（默认）、TS-CSS、JS-TW、JS-CSS
 $S/fetch.sh shadcn:button --style radix-nova        # shadcn 的 style 要和项目 components.json 一致
 $S/compat.sh shadcn uiarc                     # 两个来源能不能放在同一页（兼容矩阵和各自的混用要点）
+$S/claims.sh uiarc:switch                     # 这个组件登记的结论（缺陷、演示性质、证据和核对版本）以及哪些指南提到它
 $S/stats.sh                                   # 各来源统计
 ```
 
-- 搜索结果的标签：可安装、取源码、提示词、仅参考、需登录、Pro·不获取、失效；⚠ 表示场景化审美风险。
-- 搜索结果标"低置信度"或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
-- fetch 的退出码：0 成功，1 获取失败，2 失效条目，3 Pro（不获取），4 需要用户登录。
-- 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。
+- **查询怎么写**：1–3 个核心词，空格分开，比如 `侧边栏 折叠`、`date picker`、`toast`；不要贴整句需求。中文长词会按同义词表拆开（`侧边栏可折叠` → 侧边栏 + 折叠），表里没有的词只在索引里确实出现时才保留。
+- **怎么匹配**：英文按整词匹配，不分大小写，带规则复数（plan 命中 plans，不命中 plane；tab 不命中 table）；中文按子串匹配；相邻的词能组成同义词短语时合在一起（`dark mode`、`tool call`）。规则细节在 `scripts/aliases.json` 的说明里。
+- **排序**：先列现在就能取码的免费条目，再列需登录的，最后是灵感参考；同样相关时，名称正好是这个词的、shadcn 和 uiarc 的基础件排在前面。
+- 搜索结果的标签：可安装、取源码、提示词、仅参考；需登录的条目是组合标签（`需登录·可安装`、`需登录·取源码`）；`Pro·不获取` 和 `失效` 默认不显示，加 `--all` 才列出。⚠ 表示场景化审美风险；⚑ 表示已登记的工程问题（来自 `sources/_claims.tsv` 的演示、缺陷结论和人工备注，附指南位置），同样相关时排在没有问题的候选之后。排序只反映相关度和能不能现在取码，不代表成熟度。
+- 搜索结果标"低置信度"（最靠前的结果只在描述里沾边，或只命中了部分词）或 no match 时，不要硬选：换词或用 `--task` 再搜，仍然没有就自己实现。
+- fetch 的退出码：0 取到文件，1 获取失败或只取到一部分，2 失效条目，3 Pro（不获取），4 需要用户登录，5 没有可下载的文件（只能在浏览器里看，或按来源文档手动操作）。一次取多个条目时末尾有逐条汇总，整体退出码取最需要处理的一条（1 > 4 > 3 > 2 > 5 > 0）。取源码类条目（bencho 等）会单独打印要装的依赖。
+- 图标（Lucide 和 Lucide Lab）只有英文名和英文 tags，搜图标要用英文词，比如 `find.sh icon calendar`。普通搜索默认不列图标（表头会提示"另有 N 个图标也匹配"），查询里带 icon / 图标，或用 `--task icon`、`-s lucide` 才列出。Lucide 的命名偏实物（home 对应 house），找不到时换同义的英文词。
 - 仅参考类素材的处理：视频抽帧用 `ffmpeg -i x.mp4 -vf fps=1/2,scale=960:-1,tile=2x2 -frames:v 1 grid.png`；avif、webp 图片先转 png：`sips -s format png x.avif --out x.png`。完整流程见 `guides/page-inspiration.md`。
 - 拉取失败要明说：哪个来源的哪个条目、哪一步出的错。不要凭记忆写一个"差不多的"组件冒充原版。
 
 ## 七、参考文件
 
-- `guides/_scenes.md`：页面模式、效果预算、质量三级、动效规范、常见的 AI 味做法。
+- `guides/_scenes.md`：页面模式、效果预算、质量三级、动效规范、避免 AI 味的检查问题（含合理例外）。
 - `guides/<task>.md`：31 类 UI 任务的选型指南。
 - `sources/_styles.md`：各来源的设计底座、样式方案、动效库，哪些能当主底座，两两之间的兼容矩阵和混用规则。
 - `sources/<id>.md`：每个来源的获取方法、使用注意、已知问题。
+- `sources/_claims.tsv`：组件级结论台账（缺陷、演示性质、缺失能力），带证据深度、核对日期和版本 hash。
 
 ## 八、来源一览
+
+**收录原则**：这是用户自己收藏的来源，不是全市场的组件目录。`find.sh` 找不到合适候选，可能只是没收录，不代表生态里没有。已知缺口：
+- 只收了 React 生态的组件库；Vue、Svelte、Angular 没有组件库（见第三节第 1 步的短路径）。
+- 图标只有 Lucide；Heroicons、Phosphor、Tabler、Hugeicons 没收录（项目已经在用的照样用）。
+- shadcn 官方 registry 目录里的一批常用库没收录（2026-10-08 核对过，都能用 `npx shadcn add @<名字>/<组件>` 安装）：Magic UI（动效组件，约 250 项）、Animate UI（带动画的基础件，约 580 项）、AI Elements（Vercel 的 AI 界面件，约 77 项）、Aceternity（约 295 项）、Tailark（营销区块，约 476 项）、Motion Primitives、Kibo UI、Cult UI。
+- 收藏库没有合适候选、但上面某个库明显更合适时，在汇报里告诉用户，由用户决定是否使用或加入收藏；不要未经同意就从未收录的来源取码。
+- OriginKit 占条目的约 11%，但全部要登录才能取码；同样相关时，搜索把免费可取码的排在前面。
 
 由 `$S/stats.sh --write-skill` 生成。「条目」不含分类行。React Bits 每个免费组件另有 4 个代码变体，没算进条目数。
 
@@ -155,19 +172,10 @@ $S/stats.sh                                   # 各来源统计
 | originkit | [Originkit](https://www.originkit.dev/) | component-library | 674 |  |  |  |  |  | 383 | 291 |  |
 | reactbits | [React Bits](https://reactbits.dev/) | effects | 399 | 60 | 216 |  |  |  |  | 243 |  |
 | shadcn | [shadcn/ui](https://ui.shadcn.com/) | component-library | 565 |  | 246 | 319 |  |  |  |  |  |
-| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 243 |  | 131 |  |  |  |  | 112 |  |
-| **合计** | | | **5938** | **284** | **3009** | **417** | **76** | **1543** | **383** | **717** | **77** |
+| uiarc | [Arc (uiarc.dev)](https://uiarc.dev) | component-library | 245 |  | 131 |  |  |  |  | 114 |  |
+| **合计** | | | **5940** | **284** | **3009** | **417** | **76** | **1543** | **383** | **719** | **77** |
 <!-- STATS:END -->
 
 ## 维护
 
-- `$S/audit.sh`：检查格式，包括两份文件的列数和 id 对应、枚举值（访问状态、用法、UI 任务、层级、风险）、别名、取码规格和 adapter 是否存在。改完 TSV 后必须跑。
-- `$S/verify.sh --matrix`：固定 14 个场景，覆盖每种获取方式和 login、pro、broken 的拒绝逻辑。
-- `$S/verify.sh [-n 2] [-s id]`：每个来源随机抽样实取一次。结果按来源保存在 `sources/_state.json`，互不覆盖。verify 通过只代表"现在能取到"，不代表组件成熟或适合项目。
-- `$S/searchtest.sh`：搜索相关性回归测试，用例在 `scripts/search_cases.json`。改了搜索、同义词或描述后要跑。
-- **更新流程（自动报告，人工批准）**：
-  1. `$S/refresh.sh [id...]`：拉取线上清单，和本地比对，写入 `sources/_pending/<日期>/<id>.json`，**不改正式数据**。能发现新增、消失、依赖或付费标记变化（靠元数据指纹）。清单返回 0 条或报错时，只记录错误，不会当成"全部下线"。不支持自动刷新的来源会说明原因（反爬、robots 限制、人工维护）。
-  2. `$S/diff.sh [id...]`：查看待审变更。新条目要在待审文件里补上 `desc_zh`、`task`、`layer` 才能写入。
-  3. `$S/apply.sh <id>`：把审过的变更写进 `sources/<id>.tsv`，只写机器字段，不碰人工维护的 `.notes.tsv`。消失的条目先标 needs-review，30 天后仍然消失才标 removed，都不删除。然后跑 `audit.sh` 并 git commit，回滚用 git revert。
-- adapter（`scripts/adapters/`）只下载文本并解析，**不执行任何远程代码**。
-- 加新网站：按 `sources/_ADDING.md` 操作。
+维护者用的检查、测试、更新清单和复核结论的命令都在 `MAINTAINING.md`，做 UI 任务时不需要读。

@@ -7,7 +7,8 @@ stack: 任意（纯参考图/视频，无代码）
 license: 未声明（作品版权归原作者，多数转自 X/Twitter）
 pro: none
 fetch: browse-only
-verified: 2026-10-07
+coverage: 人工快照：每个分类首屏的条目；robots.txt 禁止 /api/，不自动刷新，不保证全站完整
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: trend-driven motion and product ui references
 foundation: n/a

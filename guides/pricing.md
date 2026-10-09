@@ -8,7 +8,7 @@
 |---|---|---|
 | shadcn | 组合：`shadcn:card`（每档一张）+ `shadcn:toggle-group` 或 `shadcn:tabs`（月付 / 年付）+ `shadcn:badge`（推荐档）+ `shadcn:table`（功能对比） | 索引里 shadcn 没有定价 block。已拉源码：card、toggle-group、badge、table 都只依赖 `cn`，Base UI 实现；用基础件组合比引入第二个设计语言的定价区块更稳 |
 | uiarc | `uiarc:billing-toggle` + `uiarc:plan-comparison`；产品内选套餐用 `uiarc:radio-cards` | 已拉源码：billing-toggle 是 `role="radiogroup"` + `role="radio"`、`aria-checked`，节省徽章写在选项文字里一起被读出，旧价格用 `<del>`；plan-comparison 用 table / row / columnheader 角色，价格区 `aria-live` + `aria-atomic`，选中结果走 `role="status"`。都有减弱动效分支，没有写死颜色 |
-| 没有底座或其他 | `originkit:pricing-03`（**需登录**）；免费替代是上面任一底座的组合 | 含月付年付切换、多档套餐和 enterprise 档。取码要用户自己 `originkit login` 后执行 `npx originkit add pricing-03`，agent 不登录；**未看到源码，质量未验证**。`originkit:pricing-01`、`originkit:pricing-02` 同理 |
+| 没有底座或其他 | 上面任一底座的组合（shadcn 的 card + toggle-group + badge + table，或 uiarc 的 billing-toggle + plan-comparison） | 现在就能免费取码。登录后可换：`originkit:pricing-03`，含月付年付切换、多档套餐和 enterprise 档；取码要用户自己 `originkit login` 后执行 `npx originkit add pricing-03`，agent 不登录；**未看到源码，质量未验证**。`originkit:pricing-01`、`originkit:pricing-02` 同理 |
 
 ## 按场景换
 | 场景 | 推荐 | 理由 |
@@ -39,10 +39,7 @@
 - **数字**：价格用 `tabular-nums`，切换时宽度不跳。
 - **对比表**：功能对比用真正的 `<table>`，"包含 / 不包含"用图标 + 文字（或 sr-only 文字），不只靠勾和叉的颜色。
 - **移动端**：三档卡片在窄屏纵向排列时把推荐档放第一；功能对比表在窄屏改成按套餐分组的列表，或第一列 sticky 横向滚动。
-- **uiarc 焦点**：arc-foundation 全局去掉焦点框，billing-toggle 和 radio-cards 的键盘位置会看不到。补回：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **按钮文案**：每档按钮写清动作（"开始 14 天试用"、"联系销售"），不要三个都叫"选择"。
 
 ## 候选清单

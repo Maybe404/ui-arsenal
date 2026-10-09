@@ -2,13 +2,14 @@
 """ui-arsenal catalogue tool: find / fetch / verify / refresh / stats / audit.
 
 Data model (per source, no headers, tab-separated):
-  sources/<id>.tsv        machine-managed, written only by an approved refresh/apply (15 columns):
+  sources/<id>.tsv        machine-managed, written only by an approved refresh/apply (16 columns):
     source item_id title category official_url fetch_human spec access usage
-    framework deps item_status alias_of last_seen fingerprint
+    framework deps item_status alias_of last_seen fingerprint review
   sources/<id>.notes.tsv  human-curated, never touched by refresh (8 columns):
     item_id desc_zh task layer visual_tags interaction_tags risk notes
 access: free | login | pro | broken          usage: install | source | prompt | reference
 item_status: active | needs-review | removed layer: foundation | specialized | reference | icons | design-spec
+review: why an item needs review, e.g. "new:2026-10-08,missing:2026-10-09" (see REVIEW_REASONS)
 spec:   space-separated adapter tokens, each "<adapter>:<arg>":
         registry:<url>  url:<url>  doc:<url>  prompt:<page-url>
         script:<adapter> <arg>  browser:<url>  manual  none
@@ -16,17 +17,26 @@ Every fetch is read-only: files go to an output directory and nothing is install
 Remote content is never executed: adapters in scripts/adapters/ (*.py or *.sh) only download
 text and parse it (bencho.py parses the site bundle as a pure literal and refuses anything else).
 """
+import contextlib
 import hashlib
 import html
 import json
 import os
+import posixpath
 import random
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
+
+try:
+    import fcntl  # POSIX file locks for sources/_state.json; without it (Windows) writes are still atomic
+except ImportError:
+    fcntl = None
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'sources')
@@ -39,7 +49,7 @@ USAGE = ('install', 'source', 'prompt', 'reference')
 USAGE_ZH = {'install': '可安装', 'source': '取源码', 'prompt': '提示词', 'reference': '仅参考'}
 ADAPTER_KINDS = ('registry', 'url', 'doc', 'prompt', 'script', 'browser', 'manual', 'none')
 COLS = ('source', 'id', 'name', 'category', 'url', 'fetch', 'spec', 'access', 'usage',
-        'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint')
+        'framework', 'deps', 'status', 'alias_of', 'last_seen', 'fingerprint', 'review')
 NOTE_COLS = ('id', 'desc', 'task', 'layer', 'vtags', 'itags', 'risk', 'notes')
 STATUS = ('active', 'needs-review', 'removed')
 SOURCE_STATUS = ('active', 'degraded', 'parser-broken', 'offline', 'closed')
@@ -52,6 +62,38 @@ TASKS = ('icon', 'design-system', 'template', 'auth', 'pricing', 'chart', 'table
          'empty-onboarding', 'layout-card', 'motion-transition', 'micro-interaction', 'fun-3d', 'page-inspiration',
          'other')
 RISKS = ('gradient-text', 'marquee', 'glow', 'grid-background', 'typewriter', 'bounce', 'glass', 'pulse-dot')
+# required in every sources/<id>.md frontmatter; sources/_SPEC.md documents each one (a test keeps the two in step)
+FRONTMATTER = ('id', 'name', 'url', 'kind', 'stack', 'license', 'pro', 'fetch', 'coverage', 'catalog_checked',
+               'source_status', 'visual_style', 'foundation', 'styling', 'motion_lib', 'dark_mode', 'mixing_notes')
+# Why an item is not plainly active. Online presence (missing) is tracked apart from what still needs a human look
+# (new, changed, access, back): reappearing online clears `missing` and nothing else.
+REVIEW_REASONS = {'new': '上游新增，还没人审过', 'changed': '上游元数据有变化，还没人复核', 'access': '访问状态变了',
+                  'missing': '线上清单里找不到', 'back': '下线后又出现，还没人复核'}
+REVIEW_ITEM = re.compile(r'^(new|changed|missing|back|access)(?:\(([a-z]+>[a-z]+)\))?:(\d{4}-\d{2}-\d{2})$')
+
+
+# ---------- arguments ----------
+
+class UsageError(Exception):
+    """Bad command-line arguments: reported as one line plus a pointer to --help, exit code 2."""
+
+
+def take(it, flag):
+    v = next(it, None)
+    if v is None or (v.startswith('-') and len(v) > 1):
+        raise UsageError('%s needs a value' % flag)
+    return v
+
+
+def take_int(it, flag, low=1):
+    v = take(it, flag)
+    if not v.isdigit() or int(v) < low:
+        raise UsageError('%s needs a whole number >= %d, got %r' % (flag, low, v))
+    return int(v)
+
+
+def unknown_option(a):
+    raise UsageError('unknown argument %s' % a)
 
 
 # ---------- data ----------
@@ -81,6 +123,7 @@ def load_rows(source=None, include_removed=False):
             for n, line in enumerate(f, 1):
                 if line.strip():
                     r = dict(zip(COLS, line.rstrip('\n').split('\t')))
+                    r.setdefault('review', '')
                     r.update({k: v for k, v in notes.get(r['id'], {}).items() if k != 'id'})
                     for k in NOTE_COLS[1:]:
                         r.setdefault(k, '')
@@ -90,6 +133,42 @@ def load_rows(source=None, include_removed=False):
     if source and not rows:
         sys.exit('unknown source: %s (see: ua.py stats)' % source)
     return rows
+
+
+def review_items(r):
+    """[(reason, detail, date)] from the review column."""
+    out = []
+    for x in filter(None, r.get('review', '').split(',')):
+        m = REVIEW_ITEM.match(x)
+        if m:
+            out.append((m.group(1), m.group(2) or '', m.group(3)))
+    return out
+
+
+def review_set(r, reason, date, detail='', keep_first=False):
+    """Record a reason (one entry per reason; keep_first keeps the earliest date, used for `missing`)."""
+    items = review_items(r)
+    old = next((x for x in items if x[0] == reason), None)
+    if old and keep_first:
+        return
+    items = [x for x in items if x[0] != reason] + [(reason, detail, date)]
+    r['review'] = ','.join('%s%s:%s' % (k, '(%s)' % d if d else '', day) for k, d, day in items)
+
+
+def review_drop(r, *reasons):
+    r['review'] = ','.join('%s%s:%s' % (k, '(%s)' % d if d else '', day) for k, d, day in review_items(r)
+                           if k not in reasons)
+
+
+def review_text(r):
+    """'上游新增，还没人审过（2026-10-08）；线上清单里找不到（2026-10-09 起）' for output."""
+    out = []
+    for k, d, day in review_items(r):
+        if k == 'access':
+            out.append('访问状态 %s（%s）' % (d.replace('>', ' → '), day))
+        else:
+            out.append('%s（%s%s）' % (REVIEW_REASONS[k], day, ' 起' if k == 'missing' else ''))
+    return '；'.join(out) or ('待审（原因没记录）' if r.get('status') == 'needs-review' else '')
 
 
 def parse_spec(spec):
@@ -126,14 +205,28 @@ def sources():
 
 # ---------- http ----------
 
-def http(url, data_limit=None, tries=2, timeout=40):
+MAX_TEXT, MAX_MEDIA = 8 << 20, 100 << 20  # bytes; registry JSON and source files are far below the first
+FINAL_URL = {}  # requested URL -> URL after redirects, to report the version an @latest URL resolved to
+
+
+def http(url, max_bytes=None, tries=2, timeout=40):
+    """GET a URL: (status, content type, body). Status 0 = network error (body holds the reason), -1 = the
+    response is larger than the limit (8 MB, or 100 MB for media URLs) and was not read in full."""
+    limit = max_bytes or (MAX_MEDIA if url.split('?')[0].lower().endswith(MEDIA_EXT) else MAX_TEXT)
     last = None
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': '*/*'})
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                body = r.read(data_limit) if data_limit else r.read()
-                return r.status, r.headers.get('content-type', ''), body
+                FINAL_URL[url] = r.geturl()
+                ct = r.headers.get('content-type', '')
+                size = r.headers.get('content-length', '')
+                if size.isdigit() and int(size) > limit:
+                    return -1, ct, ('%s bytes, over the %d MB limit' % (size, limit >> 20)).encode()
+                body = r.read(limit + 1)
+                if len(body) > limit:
+                    return -1, ct, ('more than the %d MB limit' % (limit >> 20)).encode()
+                return r.status, ct, body
         except urllib.error.HTTPError as e:
             return e.code, e.headers.get('content-type', '') if e.headers else '', b''
         except Exception as e:  # network error: retry once
@@ -142,76 +235,205 @@ def http(url, data_limit=None, tries=2, timeout=40):
     return 0, '', str(last).encode()
 
 
+def http_fail(st, body, url):
+    """One-line reason for a failed http() call."""
+    if st == -1:
+        return 'response too large (%s) %s' % (body.decode('utf-8', 'replace'), url)
+    if st == 0:
+        return 'network error (%s) %s' % (body.decode('utf-8', 'replace')[:160] or 'no response', url)
+    return 'HTTP %s %s' % (st, url)
+
+
 def sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
 # ---------- find ----------
+#
+# Matching contract (summarised in scripts/aliases.json and `find.sh --help`; tests in scripts/tests/test_search.py):
+# - ASCII words, typed or coming from an alias group, match whole words in ids, names, categories, descriptions
+#   and tags, ignoring case. Hyphens and punctuation separate words ("table" hits "data-table"). A regular
+#   English plural also matches (plan→plans, bus→buses, gallery→galleries), but a longer word with the same
+#   start does not: "plan" does not hit "plane", "tab" does not hit "table", "ai" does not hit "detail".
+# - Chinese terms match as substrings. A Chinese token that is not itself an alias term is split greedily into
+#   the longest alias terms it contains; leftover runs of two or more characters are kept as their own concepts
+#   when they occur in the catalogue and are not filler words, so 侧边栏可折叠 becomes 侧边栏 + 折叠.
+# - Adjacent words that form an alias phrase ("dark mode" → dark-mode, "tool call") are read as one concept.
+# - A concept matches when its own term or any term of its alias groups matches; concepts from the same group
+#   are merged. Results keep the rows that match the most concepts.
+
+CJK = re.compile(r'[㐀-鿿豈-﫿]')
+# single characters that only glue a Chinese request together, and words too generic to search for
+FUNC_CHARS = set('的地得了着和与及或在把被给让带用个一我你要想做加请帮将')
+FILLER = {'一个', '一些', '一下', '一种', '这个', '那个', '这种', '那种', '可以', '需要', '我要', '我想', '想要', '怎么',
+          '如何', '什么', '页面', '效果', '组件', '样式', '功能', '实现', '使用', '支持', '带有', '具有', '以及', '还有',
+          '类似', '能够', '用于', '适合', '东西', '部分', '区域', '地方', '时候', '界面', '风格', '好看', '漂亮', '简单',
+          '现代', '高级', '合适', '一点', '喜欢', '可能', '应该', '进行', '输出', '显示', '展示', '内容', '模式', '整个',
+          '所有', '各种', '多个'}
+ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
+PRIMARY_BASES = ('shadcn', 'uiarc')
+
 
 def load_groups():
-    p = os.path.join(ROOT, 'scripts', 'aliases.json')
-    groups = json.load(open(p, encoding='utf-8'))['groups']
+    with open(os.path.join(ROOT, 'scripts', 'aliases.json'), encoding='utf-8') as f:
+        groups = json.load(f)['groups']
     return [[t.lower() for t in g] for g in groups]
 
 
-def concepts(token, groups, corpus):
-    """Turn one query token into concepts: [(original_term, {alias terms})]."""
-    t = token.lower()
-    if any(t in c for c in corpus):
+def term_re(term):
+    """Whole-word matcher for ASCII terms (with a regular English plural); substring matcher otherwise."""
+    if not re.match(r'^[a-z0-9 ._+#/-]+$', term):
+        return re.compile(re.escape(term))
+    if re.search(r'(?:s|x|z|ch|sh)$', term):
+        stem, plural = term, '(?:es)?'
+    elif re.search(r'[^aeiou]y$', term):
+        stem, plural = term[:-1], '(?:y|ies)'
+    else:
+        stem, plural = term, 's?'
+    return re.compile(r'(?<![a-z0-9])' + re.escape(stem) + plural + r'(?![a-z0-9])')
+
+
+def singular(term, vocab, corpus_text):
+    """A typed English plural becomes its singular (buttons→button, boxes→box, galleries→gallery) when the singular
+    is an alias term or a word of at least four letters in the catalogue; the singular's matcher covers both forms.
+    Words that only look plural stay as typed (glass, status, canvas)."""
+    if not re.match(r'^[a-z]{4,}$', term) or not term.endswith('s'):
+        return term
+    cands = ([term[:-3] + 'y'] if term.endswith('ies') else []) + (
+        [term[:-2]] if re.search(r'(?:s|x|z|ch|sh)es$', term) else []) + [term[:-1]]
+    for c in cands:
+        if term_re(c).fullmatch(term) and (c in vocab or (len(c) >= 4 and re.search(
+                r'(?<![a-z0-9])%s(?![a-z0-9])' % re.escape(c), corpus_text))):
+            return c
+    return term
+
+
+def split_cjk(token, groups, corpus):
+    """Greedy longest-match split of a Chinese token into alias terms plus meaningful leftover runs."""
+    terms = sorted({m for g in groups for m in g if len(m) >= 2}, key=len, reverse=True)
+    segs, run, i = [], '', 0
+
+    def flush(run):
+        for piece in re.split('[%s]' % ''.join(FUNC_CHARS), run):
+            start = 0
+            while len(piece) - start >= 2:
+                # longest substring starting here that the catalogue actually contains
+                end = next((e for e in range(len(piece), start + 1, -1)
+                            if piece[start:e] not in FILLER and piece[start:e] in corpus_text), None)
+                if end:
+                    segs.append(piece[start:end])
+                    start = end
+                else:
+                    start += 1
+
+    corpus_text = '\n'.join(corpus)
+    while i < len(token):
+        m = next((t for t in terms if token.startswith(t, i)), None)
+        if m:
+            flush(run)
+            run = ''
+            segs.append(m)
+            i += len(m)
+        else:
+            run += token[i]
+            i += 1
+    flush(run)
+    return segs
+
+
+def concepts(tokens, groups, corpus):
+    """Turn query tokens into concepts: [(term, {alias terms})], merging concepts that share an alias group."""
+    vocab = {t for g in groups for t in g}
+    toks = [t.lower().strip('.,;:!?，。；：！？、"\'“”‘’()（）') for t in tokens]
+    toks = [t for t in toks if t]
+    merged, i = [], 0
+    while i < len(toks):  # adjacent words that form an alias phrase: "dark mode" -> dark-mode, "tool call"
+        for j in range(min(len(toks), i + 3), i + 1, -1):
+            phrase = next((p for p in (' '.join(toks[i:j]), '-'.join(toks[i:j])) if p in vocab), None)
+            if phrase:
+                merged.append(phrase)
+                i = j
+                break
+        else:
+            merged.append(toks[i])
+            i += 1
+    terms, corpus_text = [], '\n'.join(corpus)
+    for t in merged:
+        if t in vocab or not CJK.search(t):
+            terms.append(singular(t, vocab, corpus_text))
+        else:
+            terms.extend(split_cjk(t, groups, corpus) or [t])
+    out = []
+    for t in terms:
         alts = set()
         for g in groups:
             if t in g:
                 alts.update(g)
         alts.discard(t)
-        return [(t, alts)]
-    # Compound Chinese like "磁吸选择": split into the group terms it contains.
-    found = []
-    for g in groups:
-        hits = [m for m in g if len(m) >= 2 and m in t]
-        if hits:
-            found.append((max(hits, key=len), set(g) - {max(hits, key=len)}))
-    return found or [(t, set())]
+        for c in out:
+            if t == c[0] or t in c[1] or c[0] in alts:  # same group as an earlier concept: one concept
+                c[1].update(alts | {t})
+                c[1].discard(c[0])
+                break
+        else:
+            out.append((t, alts))
+    return out
 
 
-def term_re(term):
-    # ASCII alias terms match whole words (plus plural), so "plan" does not hit "plane".
-    if re.match(r'^[a-z0-9 -]+$', term):
-        return re.compile(r'(?<![a-z0-9])' + re.escape(term) + r'(?:e?s)?(?![a-z0-9])')
-    return re.compile(re.escape(term))
+def compile_concepts(cons):
+    """[(term, matcher, aliases, alias matchers in sorted(aliases) order)]"""
+    return [(t, term_re(t), alts, [term_re(a) for a in sorted(alts)]) for t, alts in cons]
 
 
-ICON_TERMS = {'图标', 'icon', 'glyph', 'svg'}
+
+def norm(s):
+    return re.sub(r'[\s_-]+', '', s.lower())
+
+
+def specific(term):
+    """Terms precise enough that a match in a description alone is a real hit, not a coincidence."""
+    return len(term) >= 3 if CJK.search(term) else (' ' in term or '-' in term or len(term) >= 6)
 
 
 def relevance(r, cons):
-    """Field-weighted match score; returns (score, concepts hit)."""
+    """Field-weighted match. Returns (score, concepts hit, concepts hit strongly, exact name hits); a concept hits
+    strongly at name or category level, or in the description through a specific term (工具调用, confetti)."""
     primary, _, secondary = r['task'].partition(',')
     fields = ((3, (r['id'] + ' ' + r['name']).lower()), (2, (r['category'] + ' ' + primary).lower()),
               (1, ' '.join((r['desc'], secondary, r['vtags'], r['itags'])).lower()))
-    s, hit = 0.0, 0
-    for orig, alts in cons:
-        scores = []
+    names = {norm(r['id']), norm(r['id'].rsplit(':', 1)[-1]), norm(r['name'])}
+    s, hit, strong, exact = 0.0, 0, 0, 0
+    for term, rx, alts, alt_rxs in cons:
+        scores, sure = [], False
         for w, text in fields:
-            if orig in text:
+            if rx.search(text):
                 scores.append(w + 1.0)
-            elif any(rx.search(text) for rx in alts):
-                scores.append(w * 0.6)
+                sure = sure or w >= 2 or specific(term)
+            else:
+                matched = next((a for a, arx in zip(sorted(alts), alt_rxs) if arx.search(text)), None)
+                if matched is None:
+                    continue
+                scores.append(w * 0.6)  # a typed word in the description outranks an alias in the name
+                sure = sure or w >= 2 or specific(matched)
         if scores:
             hit += 1
+            strong += sure
+            exact += bool(names & {norm(x) for x in alts | {term}})
             # Best field counts fully; corroborating fields (e.g. category "Backgrounds" + desc "背景") add a bonus.
             s += max(scores) + 0.5 * (len(scores) - 1)
-    return s, hit
+    return s, hit, strong, exact
 
 
-def tier(r, icon_query):
-    """Availability tier: directly obtainable code first, inspiration and gated items later."""
-    if r['source'] == 'lucide' and not icon_query:
-        return 0.5
+def klass(r):
+    """What an agent can do with a row now: 3 take code or prompt, 2 needs the user's login, 1 look only, 0 none."""
     if r['access'] == 'free':
-        if r['category'].startswith('example'):  # demo variants of a component rank below the components themselves
-            return 3
-        return {'install': 4, 'source': 4, 'prompt': 3, 'reference': 1}.get(r['usage'], 1)
-    return {'login': 2, 'pro': 0.2, 'broken': 0}.get(r['access'], 0)
+        return 1 if r['usage'] == 'reference' else 3
+    return 2 if r['access'] == 'login' else 0
+
+
+def tier(r):
+    """Within the same class, components before their demo variants and prompts."""
+    return 1 if r['category'].startswith('example') or r['usage'] == 'prompt' else 2
 
 
 def label(r):
@@ -229,114 +451,337 @@ FIND_MODES = {
 }
 
 
-def search(terms, src=None, mode='default', task=None, layer=None):
-    """Rank catalogue rows for a query. Returns ([(score, row)], note)."""
+def compat_matrix():
+    """{(a, b): verdict text} from the compatibility matrix in sources/_styles.md; '*' stands for 任意 / 任意底座."""
+    out, inside = {}, False
+    with open(os.path.join(SRC, '_styles.md'), encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.startswith('## '):
+            inside = line.startswith('## 兼容矩阵')
+            continue
+        cells = [c.strip() for c in line.strip().strip('|').split('|')] if inside and line.startswith('|') else []
+        if len(cells) < 2 or '+' not in cells[0]:
+            continue
+        left, right = (re.sub(r'（[^）]*）', '', s).strip() for s in cells[0].split('+', 1))
+        for a in left.split('/'):
+            for b in right.split('/'):
+                out[('*' if a.strip().startswith('任意') else a.strip(), b.strip())] = cells[1]
+    return out
+
+
+def compat_verdict(base, source, matrix):
+    """same | ok | conditional | no | unknown, for putting `source` on a page whose primary base is `base`."""
+    if source == base:
+        return 'same'
+    v = matrix.get((base, source)) or matrix.get((source, base)) or matrix.get(('*', source))
+    if v is None:
+        return 'unknown'
+    if '不建议' in v:
+        return 'no'
+    if '有条件' in v and ('；' not in v or base in v.split('；', 1)[1]):  # "可以；uiarc 底座有条件"
+        return 'conditional'
+    return 'ok'
+
+
+def flagged(claims, r):
+    """Engineering problems recorded for a row: ledger rows of kind defect/demo, plus the human note."""
+    return [c for c in claims.get('%s:%s' % (r['source'], r['id']), []) if c['kind'] in ('defect', 'demo')]
+
+
+def claims_by_ref():
+    out = {}
+    for c in load_claims():
+        out.setdefault(c['ref'], []).append(c)
+    return out
+
+
+STACKS = ('react', 'vue', 'svelte', 'angular', 'solid', 'html', 'css')
+
+
+def fits_stack(r, stack):
+    """Whether a row can be used in a project on this stack: React code only in React projects; pure CSS, multi-
+    framework packages (Lucide), prompts/specs (framework any) and references everywhere."""
+    return r['framework'] in ('', 'any', 'multi', 'css') or r['framework'] == stack
+
+
+def search(terms, src=None, mode='default', task=None, layer=None, info=None, base=None, stack=None):
+    """Rank catalogue rows for a query. Returns ([(score, row)], note); `info`, if given, receives details
+    (hidden_icons, base_hidden, low_confidence) for callers that need more than the note text. With `base`, rows
+    the compatibility matrix rules out for that primary base are dropped and the rest carry r['_compat']."""
+    info = {} if info is None else info
     terms = [x for t in terms for x in t.split()]  # "多选 筛选" passed as one quoted argument
-    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r)
-            and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)]
+    gone = {s for s in sources() if source_status(s) in ('offline', 'closed')} if mode != 'all' else set()
+    rows = [r for r in load_rows(src) if FIND_MODES[mode][1](r) and r['source'] not in gone
+            and (not task or task in r['task'].split(',')) and (not layer or r['layer'] == layer)
+            and (not stack or fits_stack(r, stack))]
+    info['base_hidden'] = 0
+    if base:
+        matrix = compat_matrix()
+        for r in rows:
+            r['_compat'] = compat_verdict(base, r['source'], matrix)
+    claims = claims_by_ref()
     groups = load_groups()
     corpus = [' '.join((r['id'], r['name'], r['category'], r['task'], r['desc'], r['vtags'], r['itags'])).lower()
               for r in rows]
-    cons = [(o, [term_re(a) for a in alts]) for t in terms for o, alts in concepts(t, groups, corpus)]
-    icon_query = any(o in ICON_TERMS or ICON_TERMS & {a.pattern for a in alts} for o, alts in cons) or any(
-        t.lower() in ICON_TERMS for t in terms)
-    scored = []
+    cons = compile_concepts(concepts(terms, groups, corpus))
+    icon_query = (src == 'lucide' or task == 'icon' or layer == 'icons'
+                  or any(ICON_TERMS & ({t} | alts) for t, _, alts, _ in cons))
+    scored, icons = [], []
     for r in rows:
-        rel, hit = relevance(r, cons) if cons else (0.0, 0)
+        rel, hit, strong, exact = relevance(r, cons) if cons else (0.0, 0, 0, 0)
         if cons and not hit:
             continue
-        # Strong = matched concepts average a name/category-level hit; weak = description-level only.
-        band = 1 if not cons or rel >= 2.5 * hit else 0
-        scored.append((hit, band, tier(r, icon_query), rel, r))
+        if r.get('_compat') == 'no':  # the matrix says not on the same page as this base
+            info['base_hidden'] += 1
+            continue
+        band = 1 if not cons or strong * 2 >= hit else 0  # at least half the matched concepts hit strongly
+        primary = r['source'] in PRIMARY_BASES
+        # known demo-only or defective rows, and rows waiting for review, go after equally relevant clean ones
+        clean = not flagged(claims, r) and not r['notes'] and r['status'] != 'needs-review'
+        row = (hit, klass(r), band, clean, exact, bool(exact) and primary, tier(r), rel, primary,
+               r['layer'] == 'foundation', r)
+        # Icon names and tags match almost any English word, so icons only show when asked for, or when nothing
+        # else matched (a query like "avocado").
+        (icons if r['source'] == 'lucide' and not icon_query else scored).append(row)
+    hidden_icons = len(icons) if scored else 0
+    scored = scored or icons
     note = ''
     if cons and scored:
         top = max(x[0] for x in scored)
         if top < len(cons):
             note = '（没有条目同时命中全部 %d 个词，以下是命中 %d 个的结果）' % (len(cons), top)
         scored = [x for x in scored if x[0] == top]
-    ranked = sorted(scored, key=lambda x: (-x[0], -x[1], -x[2], -x[3]))
-    if cons and ranked and (ranked[0][1] == 0 or ranked[0][0] < len(cons)):
-        note += ('\n低置信度：没有名称或分类级的强相关候选（只有描述沾边或只命中部分词）。'
-                 '先换词或用 --task 再搜；仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
-    return [(x[3], x[4]) for x in ranked], note
+    ranked = sorted(scored, key=lambda x: tuple(-v for v in x[:10]))
+    info['hidden_icons'] = hidden_icons
+    info['low_confidence'] = bool(cons and ranked and (ranked[0][2] == 0 or ranked[0][0] < len(cons)))
+    if info['low_confidence']:
+        note += ('\n低置信度：最靠前的结果只在描述里沾边，或只命中了部分词。先换更具体的词或用 --task 再搜；'
+                 '仍然没有合适的，就说明"收藏库无合适候选"并自己实现。')
+    if ranked and not any(x[1] == 3 for x in ranked):
+        note += '\n没有现在就能取码的免费候选：以下只有需登录、灵感参考或 Pro / 失效条目。'
+    return [(x[7], x[10]) for x in ranked], note
+
+
+def guide_task(scored):
+    """Guess the guide from what an agent would actually use: the main task of the top obtainable rows, or of the
+    top rows when nothing obtainable matched. Hidden icons never take part."""
+    pool = [r for _, r in scored if klass(r) == 3][:10] or [r for _, r in scored][:10]
+    counts = {}
+    for r in pool:
+        t = r['task'].split(',')[0]
+        counts[t] = counts.get(t, 0) + 1
+    return max(counts, key=counts.get) if counts else None
+
+
+def guide_index():
+    """{ref: [(guide file, line, section)]} for every `source:id` written in the guides."""
+    out = {}
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if fn.endswith('.md') and not fn.startswith('_'):
+            section = ''
+            with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+                lines = f.readlines()
+            for n, line in enumerate(lines, 1):
+                if line.startswith('## '):
+                    section = line[3:].strip()
+                for ref in GUIDE_REF.findall(line):
+                    out.setdefault(ref, []).append((fn, n, section))
+    return out
+
+
+COMPAT_ZH = {'conditional': '有条件', 'unknown': '兼容性未登记'}
+
+
+def find_help():
+    print('usage: find.sh [-s source] [--base B] [--stack S] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
+    print('  -s       只搜一个来源：' + ' '.join(sources()))
+    print('  --stack  项目的技术栈：' + ' '.join(STACKS) + '。非 React 时只列纯 CSS、多框架图标、设计规范和参考')
+    print('  --base   项目的主底座（如 shadcn、uiarc）：按 sources/_styles.md 的兼容矩阵去掉"不建议"同页的来源，标出"有条件"的')
+    print('  --task   UI 任务：' + ' '.join(TASKS))
+    print('  --layer  层级：' + ' '.join(LAYERS))
+    for k, (d, _) in FIND_MODES.items():
+        print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
+    print('匹配：英文按整词（不分大小写，带规则复数：plan 命中 plans，不命中 plane）；中文按子串，长词按同义词表拆开；\n'
+          '      相邻词能组成同义词短语时合在一起（dark mode）。同义词表：scripts/aliases.json。\n'
+          '排序：能直接取码的免费条目 → 需登录 → 灵感参考；Lucide 图标只在查询带 icon/图标、--task icon 或 -s lucide 时列出。\n'
+          '标签：可安装、取源码、提示词、仅参考；需登录的写成"需登录·可安装"这类组合；Pro、失效默认不列，--all 才列。')
 
 
 def cmd_find(args):
-    src, limit, mode, terms, task, layer = None, 25, 'default', [], None, None
+    src, limit, mode, terms, task, layer, base, stack = None, 25, 'default', [], None, None, None, None
     it = iter(args)
     for a in it:
         if a == '-s':
-            src = next(it)
+            src = take(it, a)
+        elif a == '--base':
+            base = take(it, a)
+        elif a == '--stack':
+            stack = take(it, a)
         elif a == '--task':
-            task = next(it)
+            task = take(it, a)
         elif a == '--layer':
-            layer = next(it)
+            layer = take(it, a)
         elif a == '--limit':
-            limit = int(next(it))
+            limit = take_int(it, a)
         elif a in ('-h', '--help'):
-            print('usage: find.sh [-s source] [--task T] [--layer L] [--limit N] [--code|--free|--ref|--all] [keyword...]')
-            print('  --task   UI 任务：' + ' '.join(TASKS))
-            print('  --layer  层级：' + ' '.join(LAYERS))
-            for k, (d, _) in FIND_MODES.items():
-                print('  %-9s %s' % ('(默认)' if k == 'default' else '--' + k, d))
+            find_help()
             return 0
         elif a.startswith('--') and a[2:] in FIND_MODES:
             mode = a[2:]
+        elif a.startswith('-') and len(a) > 1:
+            unknown_option(a)
         else:
             terms.append(a)
+    if not (terms or src or task or layer or base or stack):
+        find_help()
+        return 2
     if task and task not in TASKS:
-        sys.exit('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
+        raise UsageError('unknown task %r. choose from: %s' % (task, ' '.join(TASKS)))
     if layer and layer not in LAYERS:
-        sys.exit('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
-    scored, note = search(terms, src, mode, task, layer)
+        raise UsageError('unknown layer %r. choose from: %s' % (layer, ' '.join(LAYERS)))
+    for name, v in (('source', src), ('base', base)):
+        if v and v not in sources():
+            raise UsageError('unknown %s %r. choose from: %s' % (name, v, ' '.join(sources())))
+    if stack and stack not in STACKS:
+        raise UsageError('unknown stack %r. choose from: %s' % (stack, ' '.join(STACKS)))
+    info = {}
+    scored, note = search(terms, src, mode, task, layer, info, base, stack)
+    if stack and stack != 'react':
+        note += ('\n按 %s 项目过滤：只列纯 CSS、多框架图标、设计规范和灵感参考；React 组件库的条目都去掉了，'
+                 '结构和交互可以借鉴，代码要在 %s 里自己实现。' % (stack, stack))
+    icons = ('（另有 %d 个 Lucide 图标也匹配，默认不显示：查询里加 icon / 图标，或用 --task icon）' % info['hidden_icons']
+             if info.get('hidden_icons') else '')
+    if info.get('base_hidden'):
+        icons += ('\n' if icons else '') + '（按 %s 底座去掉了 %d 个兼容矩阵里"不建议"同页的来源的条目，见 compat.sh %s）' % (
+            base, info['base_hidden'], base)
     if not scored:
-        print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。')
+        print('no match：收藏库里没有相关条目。换更短的词、英文词或 --task 再搜；仍然没有，就说明"收藏库无合适候选"并自己实现。'
+              + ('\n' + icons if icons else ''))
         return 1
     by_src = {}
     for _, r in scored:
         by_src[r['source']] = by_src.get(r['source'], 0) + 1
-    print('%d matches (%s)  filter=%s %s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])), mode, note))
+    print('%d matches (%s)  filter=%s %s%s' % (len(scored), ', '.join('%s %d' % kv for kv in sorted(by_src.items(), key=lambda x: -x[1])),
+                                              mode, note, ('\n' + icons) if icons else ''))
+    claims, guides, any_flag = claims_by_ref(), guide_index(), False
     for s, r in scored[:limit]:
         tag = label(r)
-        print('[%s] %s:%s — %s  (%s · %s)%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
-                                               '  ⚠ ' + r['risk'] if r['risk'] else ''))
+        compat = COMPAT_ZH.get(r.get('_compat'))
+        print('[%s] %s:%s — %s  (%s · %s)%s%s' % (tag, r['source'], r['id'], r['name'], r['task'], r['layer'],
+                                                 '  ⚠ ' + r['risk'] if r['risk'] else '',
+                                                 '  · 与 %s：%s' % (base, compat) if compat else ''))
         print('    %s' % r['desc'][:160])
+        ref = '%s:%s' % (r['source'], r['id'])
+        flags = ['%s（%s %s）：%s' % (CLAIM_KINDS[c['kind']], CLAIM_DEPTHS[c['depth']], c['checked'], c['claim'])
+                 for c in flagged(claims, r)] + (
+            ['备注：' + r['notes']] if r['notes'] else []) + (
+            ['待审：' + review_text(r)] if r['status'] == 'needs-review' else []) + (
+            ['%s（%s 的 source_status）' % (SOURCE_STATUS_ZH[source_status(r['source'])], r['source'])]
+            if source_status(r['source']) in SOURCE_STATUS_ZH else [])
+        for f in flags:
+            print('    ⚑ %s' % (f if len(f) <= 120 else f[:118] + '…'))
+        if flags:
+            any_flag = True
+            where = guides.get(ref, [])
+            where = [w for w in where if w[2] == '慎用'] or where
+            print('      详情：claims.sh %s%s' % (ref, '；guides/%s:%d' % where[0][:2] if where else ''))
     if len(scored) > limit:
         print('... %d more (--limit N)' % (len(scored) - limit))
-    shown_task = task
-    if not shown_task:
-        counts = {}
-        for _, r in scored[:10]:
-            t = r['task'].split(',')[0]
-            counts[t] = counts.get(t, 0) + 1
-        shown_task = max(counts, key=counts.get) if counts else None
+    shown_task = task or guide_task(scored)
     if shown_task and os.path.exists(os.path.join(GUIDES, shown_task + '.md')):
         print('\n选型指南：guides/%s.md（先读默认推荐和慎用，再定组件；效果预算见 guides/_scenes.md）' % shown_task)
+    print('排序只反映和查询的相关度、能不能现在取码，不代表组件成熟或适合你的项目。')
+    if any_flag:
+        print('⚑ = 已登记的工程问题（演示数据或定时器、缺回调、键盘不可用等）、人工备注（如"和 shadcn 同构"）、待审状态或来源异常；'
+              '接真实业务前要处理，或换同类候选；同等相关时排在没有备注的候选之后。')
     if any(r['risk'] for _, r in scored[:limit]):
-        print('\n⚠ = 场景化审美风险（不禁止，用的话要在选型理由里说明适用场景，见 SKILL.md「质量分级」）')
+        print('⚠ = 场景化审美风险：Persuade/Experience 写清场景可以用，Operate/Read 不用（用户明确要求时作为例外写明），见 guides/_scenes.md「质量三级」')
     print('下一步: fetch.sh <source:id>   （仅参考类条目会给出打开方式）')
     return 0
 
 
 # ---------- fetch ----------
 
+MAX_ALIAS_HOPS = 5
+
+
+def resolve_alias(rows, iid):
+    """Follow alias_of from an item id within one source. Returns (row, [ids followed]) or raises LookupError
+    with the reason: unknown id, a cycle, too many hops, or a chain that ends at a removed item."""
+    by_id = {r['id']: r for r in rows}
+    path = [iid]
+    r = by_id.get(iid)
+    if r is None:
+        raise LookupError('not found')
+    while r['alias_of']:
+        nxt = r['alias_of']
+        if nxt in path:
+            raise LookupError('alias cycle: %s' % ' → '.join(path + [nxt]))
+        if len(path) > MAX_ALIAS_HOPS:
+            raise LookupError('alias chain longer than %d: %s' % (MAX_ALIAS_HOPS, ' → '.join(path)))
+        r = by_id.get(nxt)
+        path.append(nxt)
+        if r is None:
+            raise LookupError('renamed to %s, which is not in the catalogue' % nxt)
+    if r['status'] == 'removed':
+        raise LookupError(('renamed to %s, which has been removed' % r['id']) if len(path) > 1 else 'removed')
+    return r, path
+
+
 def find_row(ref):
     if ':' not in ref:
         sys.exit('use <source>:<item_id>, e.g. bencho:magnet-select')
     source, iid = ref.split(':', 1)
-    for r in load_rows(source):
-        if r['id'] == iid:
-            return r
-    cands = [r['id'] for r in load_rows(source) if iid.lower() in r['id'].lower()][:10]
-    sys.exit('not found: %s%s' % (ref, ('  close: ' + ', '.join(cands)) if cands else ''))
+    rows = load_rows(source, include_removed=True)
+    try:
+        r, path = resolve_alias(rows, iid)
+    except LookupError as e:
+        if str(e) != 'not found':
+            sys.exit('%s: %s' % (ref, e))
+        cands = [x['id'] for x in rows if iid.lower() in x['id'].lower() and x['status'] != 'removed'][:10]
+        sys.exit('not found: %s%s' % (ref, ('  close: ' + ', '.join(cands)) if cands else ''))
+    if len(path) > 1:
+        sys.stderr.write('%s 已改名，按 %s:%s 处理（%s）\n' % (ref, source, r['id'], ' → '.join(path)))
+    return r
+
+
+class UnsafePath(ValueError):
+    pass
+
+
+def safe_rel(path):
+    """A remote file path as a relative path that stays inside the output directory, or UnsafePath."""
+    rel = posixpath.normpath(urllib.request.unquote(path).replace('\\', '/')).lstrip('/')
+    if rel in ('', '.') or rel == '..' or rel.startswith('../') or '\0' in rel:
+        raise UnsafePath('unsafe file path %r' % path)
+    return rel
 
 
 def save(out, name, body):
-    os.makedirs(out, exist_ok=True)
-    p = os.path.join(out, name)
+    """Write a file under `out`; `name` may contain sub-directories but must not leave `out`."""
+    root = os.path.realpath(out)
+    p = os.path.realpath(os.path.join(root, name))
+    if not p.startswith(root + os.sep):
+        raise UnsafePath('refusing to write outside %s: %r' % (out, name))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
     with open(p, 'wb') as f:
         f.write(body)
     return p
+
+
+def registry_paths(files):
+    """Relative output paths for registry files: the directory part all of them share is dropped, the rest is kept,
+    so a/index.tsx and b/index.tsx stay apart while a single-folder item lands flat as before."""
+    rels = [safe_rel(f.get('path') or 'file') for f in files]
+    dirs = [r.split('/')[:-1] for r in rels]
+    common = 0
+    while dirs and all(len(d) > common for d in dirs) and len({d[common] for d in dirs}) == 1:
+        common += 1
+    out = ['/'.join(r.split('/')[common:]) for r in rels]
+    if len(set(out)) != len(out):
+        raise UnsafePath('registry lists the same file path twice: %s' % ', '.join(rels))
+    return out
 
 
 def do_registry(url, out, opts):
@@ -347,7 +792,7 @@ def do_registry(url, out, opts):
     opts['_final_url'] = url
     st, ct, body = http(url)
     if st != 200:
-        return False, 'HTTP %s %s' % (st, url)
+        return False, http_fail(st, body, url)
     try:
         d = json.loads(body)
     except ValueError:
@@ -355,45 +800,88 @@ def do_registry(url, out, opts):
     files = d.get('files') or []
     if not files and d.get('type') not in ('registry:style', 'registry:theme', 'registry:font', 'registry:base'):
         return False, 'registry item has no files %s' % url
+    missing = [f.get('path') for f in files if f.get('content') is None]
+    if missing:  # validate everything before writing anything
+        return False, 'file without content: %s (%s)' % (', '.join(map(str, missing)), url)
+    try:
+        rels = registry_paths(files)
+    except UnsafePath as e:
+        return False, '%s (%s)' % (e, url)
     save(out, 'registry-item.json', body)
     lines = []
-    for f in files:
-        content = f.get('content')
-        if content is None:
-            return False, 'file without content: %s (%s)' % (f.get('path'), url)
-        p = save(out, os.path.basename(f.get('path') or 'file'), content.encode())
-        lines.append('    %s (%d lines) <- %s' % (p, content.count('\n') + 1, f.get('path')))
+    for f, rel in zip(files, rels):
+        save(out, rel, f['content'].encode())
+        lines.append('    %s (%d lines) <- %s' % (rel, f['content'].count('\n') + 1, f.get('path')))
     info = ['registry  %s' % url, '  sha256 %s' % sha(body)[:16]]
     for k in ('dependencies', 'devDependencies', 'registryDependencies'):
         if d.get(k):
             info.append('  %s: %s' % (k, ' '.join(d[k])))
+    if d.get('registryDependencies'):
+        info.append('  （只取了这一项本身；registryDependencies 没有一起下载，需要时用 fetch.sh 分别取，'
+                    '或用安装命令让 shadcn CLI 解析）')
     if d.get('cssVars') or d.get('css'):
         info.append('  注意: 含 cssVars/css，需要合并进全局样式（见 registry-item.json）')
     return True, '\n'.join(info + ['  files:'] + lines)
 
 
-def do_url(url, out, label='url'):
+MEDIA_EXT = ('.mp4', '.webm', '.mov', '.gif', '.png', '.jpg', '.jpeg', '.webp', '.avif')
+
+
+def wrong_type(url, ct, body):
+    """Why a downloaded body is not what the URL promised (an HTML login or fallback page, a page instead of
+    media, an SVG URL without SVG), or '' when it looks right."""
+    path = url.split('?')[0].split('#')[0].lower()
+    head = body[:512].lstrip().lower()
+    if not path.endswith(('.html', '.htm')) and ('text/html' in ct or head.startswith((b'<!doctype html', b'<html'))):
+        return 'got an HTML page (login wall or fallback page?)'
+    if path.endswith(MEDIA_EXT) and ct and not ct.startswith(('image/', 'video/', 'application/octet-stream', 'binary/')):
+        return 'expected media, got %s' % ct.split(';')[0]
+    if path.endswith('.svg') and b'<svg' not in body[:4096].lower():
+        return 'expected SVG markup'
+    return ''
+
+
+def resolved_version(url):
+    """'lucide-static@1.52.0' when an @latest URL was redirected to a concrete version, else ''."""
+    m = re.search(r'/((?:@[^/@]+/)?[^/@]+)@latest/', url)
+    v = re.search(r'@(\d+\.\d+\.\d+[\w.-]*)/', FINAL_URL.get(url, '')) if m else None
+    return '%s@%s' % (m.group(1), v.group(1)) if v else ''
+
+
+def do_url(url, out, label='url', opts=None):
     st, ct, body = http(url)
     if st != 200 or not body:
-        return False, 'HTTP %s %s' % (st, url)
-    if label == 'doc' and 'text/html' in ct and not url.endswith('.html'):
-        return False, 'got HTML instead of a document %s' % url
-    name = os.path.basename(url.split('?')[0]) or 'index'
-    name = urllib.request.unquote(name)
+        return False, http_fail(st, body, url) if st != 200 else 'empty response %s' % url
+    bad = wrong_type(url, ct, body)
+    if bad:
+        return False, '%s instead of the expected file: %s' % (bad, url)
+    try:  # decode %2F and friends before taking the last segment, then refuse anything that is not a plain name
+        name = posixpath.basename(safe_rel(url.split('?')[0].split('#')[0].split('://', 1)[-1]))
+    except UnsafePath:
+        name = ''
+    if not name or name in ('.', '..'):
+        name = 'index'
     if label == 'doc' and '.' not in name:
         name += '.md'
-    p = save(out, ('doc-' if label == 'doc' else '') + name, body)
-    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)' % (label, url, p, len(body), sha(body)[:16])
+    save(out, ('doc-' if label == 'doc' else '') + name, body)
+    version = resolved_version(url)
+    if version and opts is not None:
+        opts['_resolved'] = version
+    return True, '%-9s %s\n  -> %s (%d bytes, sha256 %s)%s' % (
+        label, url, ('doc-' if label == 'doc' else '') + name, len(body), sha(body)[:16],
+        '\n  version %s（@latest 这次解析到的版本，换个时间再取可能不同）' % version if version else '')
 
 
 def do_prompt(url, out):
     st, ct, body = http(url)
-    m = re.search(r'<pre id="agent-prompt"[^>]*>(.*?)</pre>', body.decode('utf-8', 'replace'), re.S) if st == 200 else None
+    if st != 200:
+        return False, http_fail(st, body, url)
+    m = re.search(r'<pre id="agent-prompt"[^>]*>(.*?)</pre>', body.decode('utf-8', 'replace'), re.S)
     if not m:
-        return False, 'prompt block not found (HTTP %s) %s' % (st, url)
+        return False, 'prompt block not found on the page (HTTP 200) %s' % url
     txt = html.unescape(m.group(1)).strip()
-    p = save(out, 'prompt.md', txt.encode())
-    return True, 'prompt    %s\n  -> %s (%d chars)' % (url, p, len(txt))
+    save(out, 'prompt.md', txt.encode())
+    return True, 'prompt    %s\n  -> prompt.md (%d chars)' % (url, len(txt))
 
 
 def adapter_path(name):
@@ -404,17 +892,27 @@ def adapter_path(name):
     return None, None
 
 
+ADAPTER_TIMEOUT = 180
+
+
 def do_script(arg, out, opts):
     name, _, a = arg.partition(' ')
     path, runner = adapter_path(name)
     if not path:
         return False, 'missing adapter %s' % name
     cmd = [runner, path, a] + ([str(opts['limit'])] if opts.get('limit') else [])
-    r = subprocess.run(cmd, capture_output=True, timeout=180)
+    try:
+        r = subprocess.run(cmd, capture_output=True, timeout=ADAPTER_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return False, ('adapter %s timed out after %ds (site or network slow): retry once, then use the browser '
+                       'route in sources/<source>.md' % (name, ADAPTER_TIMEOUT))
     if r.returncode != 0 or not r.stdout.strip():
-        return False, 'adapter %s failed: %s' % (name, r.stderr.decode()[-300:])
-    p = save(out, '%s-%s.txt' % (name, re.sub(r'[^A-Za-z0-9_-]', '_', a)), r.stdout)
-    return True, 'script    %s %s\n  -> %s (%d bytes, sha256 %s)' % (name, a, p, len(r.stdout), sha(r.stdout)[:16])
+        # adapters print one line naming the failed step and the HTTP status when there is one
+        lines = [l for l in r.stderr.decode('utf-8', 'replace').splitlines() if l.strip()]
+        return False, 'adapter %s failed (exit %d): %s' % (name, r.returncode, (lines[-1] if lines else 'no output')[:300])
+    fn = '%s-%s.txt' % (name, re.sub(r'[^A-Za-z0-9_-]', '_', a))
+    save(out, fn, r.stdout)
+    return True, 'script    %s %s\n  -> %s (%d bytes, sha256 %s)' % (name, a, fn, len(r.stdout), sha(r.stdout)[:16])
 
 
 def cmd_fetch(args):
@@ -422,35 +920,64 @@ def cmd_fetch(args):
     it = iter(args)
     for a in it:
         if a == '--out':
-            opts['out'] = next(it)
+            opts['out'] = take(it, a)
         elif a == '--variant':
-            opts['variant'] = next(it)
+            opts['variant'] = take(it, a)
         elif a == '--style':
-            opts['style'] = next(it)
+            opts['style'] = take(it, a)
         elif a == '--limit':
-            opts['limit'] = int(next(it))
+            opts['limit'] = take_int(it, a)
         elif a in ('-h', '--help'):
             print(FETCH_HELP)
             return 0
+        elif a.startswith('-') and len(a) > 1:
+            unknown_option(a)
         else:
             refs.append(a)
     if not refs:
         print(FETCH_HELP)
         return 2
-    rc = 0
+    results = []
     for ref in refs:
-        rc |= fetch_one(find_row(ref), opts)
-    return rc
+        r = find_row(ref)
+        o = dict(opts)  # each ref gets its own options: no URL or output dir leaks from the previous one
+        if len(refs) > 1 and opts.get('out'):
+            o['out'] = default_out(r, o, root=opts['out'])
+        rc = fetch_one(r, o)
+        results.append((ref, rc, o.get('_result', {})))
+        if len(refs) > 1:
+            print()
+    if len(refs) > 1:
+        print('## 汇总（逐条状态；整体退出码取最需要处理的一条：%s）' % ' > '.join(map(str, EXIT_PRIORITY)))
+        for ref, rc, res in results:
+            print('  %-44s %-8s exit %d  %s' % (ref, res.get('status', '?'), rc,
+                                               '%d 个文件 → %s' % (res['files'], res['out']) if res.get('files') else ''))
+    return batch_exit([rc for _, rc, _ in results])
+
+
+# Exit codes of one fetch: 0 files fetched, 1 fetch failed (or only partly), 2 broken entry, 3 Pro, 4 needs the
+# user's login, 5 nothing to download (open in a browser / follow the manual steps). A batch returns the code that
+# most needs attention, in this order; the per-ref summary has the details.
+EXIT_PRIORITY = (1, 4, 3, 2, 5, 0)
+
+
+def batch_exit(codes):
+    return next((c for c in EXIT_PRIORITY if c in codes), 0)
 
 
 FETCH_HELP = """usage: fetch.sh <source:item_id> [...] [options]     （只读：下载到临时目录，不安装、不执行）
 
 options:
-  --out DIR          输出目录（默认 $TMPDIR/ui-arsenal/<source>/<id>/）
+  --out DIR          输出目录。默认 $TMPDIR/ui-arsenal/<source>/<id>[@style][@变体]/，不同 style、变体分开放；
+                     一次取多个条目时，每条放在 DIR/<source>/<id>…/ 下
   --variant V        React Bits 变体：TS-TW（默认）| TS-CSS | JS-TW | JS-CSS
   --style S          shadcn style，要和项目 components.json 一致：
                      {base,radix,aria}-{vega,nova,maia,lyra,mira,luma,rhea,sera}，图表/主题只有 new-york-v4
   --limit N          列表类 adapter 的条数（collectui）
+
+输出目录：先下载到临时暂存目录，全部校验通过才放进输出目录；目录里的 .ui-arsenal.json 记录这次取到的文件、
+  来源和 hash。再次获取同一条目时只替换上一次写入的文件，上游删掉的文件不会残留；获取失败时上一次的结果也会移除，
+  不会被当成新结果。registry 文件保留相对目录（去掉公共前缀），同名文件不会互相覆盖。
 
 不同条目的输出：
   可安装 / 取源码   源码文件 + 依赖 + 安装命令（安装会改动项目，先确认项目栈）
@@ -458,6 +985,10 @@ options:
   仅参考            下载图片或视频；只能浏览器看的给出 URL
   需登录            不获取，输出登录方式和页面地址，由用户决定（退出码 4）
   Pro / 失效        不获取（退出码 3 / 2）
+
+退出码：0 取到文件；1 获取失败或只取到一部分（看 FAIL 行：HTTP 码、超时、HTML 回落页、adapter 的出错步骤）；
+  2 失效条目；3 Pro；4 需要用户登录；5 没有可下载的文件（只能在浏览器里看，或按来源文档手动操作）。
+  一次取多个条目时末尾有逐条汇总，整体退出码取最需要处理的一条：1 > 4 > 3 > 2 > 5 > 0。
 
 例子:
   fetch.sh shadcn:button --style radix-nova
@@ -471,7 +1002,9 @@ def install_hint(r, opts=None):
     if r['source'] == 'lucide' and r['id'].startswith('lab:'):
         return r['fetch']
     if r['source'] == 'lucide':
-        return "npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）" % r['name']
+        return ("npm i lucide-react  →  import { %s } from 'lucide-react'（其他框架见 sources/lucide.md）%s" % (
+            r['name'], '\n  （这次取到的 SVG 来自 %s；项目里已装的 lucide-react 较旧时可能还没有这个图标，先核对版本）'
+            % opts['_resolved'] if opts.get('_resolved') else ''))
     if r['source'] == 'shadcn' and r['category'].startswith(('util', 'headless', 'helper')):
         return r['fetch'] + '\n  （项目已装 shadcn 时，先确认版本里是否已包含这个工具类或包，再决定是否升级）'
     if (opts.get('style') or opts.get('variant')) and opts.get('_final_url'):
@@ -480,13 +1013,73 @@ def install_hint(r, opts=None):
     return re.split(r'\s*(?:；|; |#|\s文档|\s或\s)', r['fetch'])[0].strip()
 
 
+MANIFEST = '.ui-arsenal.json'
+DOWNLOAD_KINDS = ('registry', 'url', 'doc', 'prompt', 'script')
+
+
+def default_out(r, opts, root=None):
+    """<root>/<source>/<id>[@style][@variant]: different styles and variants never share a directory."""
+    root = root or os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal')
+    name = re.sub(r'[^A-Za-z0-9_.-]', '_', r['id']) + ''.join(
+        '@' + re.sub(r'[^A-Za-z0-9_.-]', '_', opts[k]) for k in ('style', 'variant') if opts.get(k))
+    return os.path.join(root, r['source'], name)
+
+
+def list_files(d):
+    out = []
+    for dp, _, fns in os.walk(d):
+        out += [os.path.relpath(os.path.join(dp, f), d).replace(os.sep, '/') for f in fns]
+    return sorted(x for x in out if posixpath.basename(x) != MANIFEST)
+
+
+def read_manifest(out):
+    try:
+        with open(os.path.join(out, MANIFEST), encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def publish(staging, out, record):
+    """Swap the previous result in `out` for the staged files and write the manifest. Only paths listed in the
+    previous manifest are removed, so a user-chosen --out keeps whatever else it contains. A directory under the
+    default root without a manifest was written by an older version of this tool and is cleared as a whole."""
+    root = os.path.realpath(out)
+    previous = (read_manifest(out) or {}).get('files', [])
+    default_root = os.path.realpath(os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal'))
+    if not previous and root.startswith(default_root + os.sep) and os.path.isdir(root):
+        previous = [{'path': rel} for rel in list_files(root)]
+    for f in previous:
+        try:
+            p = os.path.realpath(os.path.join(root, safe_rel(f.get('path', ''))))
+        except UnsafePath:
+            continue
+        if p.startswith(root + os.sep) and os.path.isfile(p):
+            os.remove(p)
+            d = os.path.dirname(p)
+            while d != root and d.startswith(root + os.sep) and not os.listdir(d):
+                os.rmdir(d)
+                d = os.path.dirname(d)
+    files = []
+    for rel in list_files(staging):
+        with open(os.path.join(staging, rel), 'rb') as f:
+            body = f.read()
+        save(out, rel, body)
+        files.append({'path': rel, 'bytes': len(body), 'sha256': sha(body)[:16]})
+    record['files'] = files
+    os.makedirs(out, exist_ok=True)
+    with open(os.path.join(out, MANIFEST), 'w', encoding='utf-8') as f:
+        json.dump(record, f, ensure_ascii=False, indent=1)
+    return files
+
+
 def fetch_one(r, opts, quiet=False):
-    base = os.environ.get('TMPDIR', '/tmp')
-    out = opts.get('out') or os.path.join(base, 'ui-arsenal', r['source'], re.sub(r'[^A-Za-z0-9_.-]', '_', r['id']))
+    out = opts.get('out') or default_out(r, opts)
     log = (lambda *a: None) if quiet else print
     log('# %s:%s — %s  [%s · %s]' % (r['source'], r['id'], r['name'], USAGE_ZH.get(r['usage']), r['access']))
     if r['access'] == 'pro':
         log('Pro/付费条目：不获取。可作为灵感，用免费组件实现近似效果，并告诉用户这一条是 Pro。')
+        opts['_result'] = {'status': 'pro'}
         return 3
     if r['access'] == 'login':
         page = (re.findall(r'https?://[^\s；;，）)]+', r['fetch']) or [''])[0]
@@ -497,50 +1090,374 @@ def fetch_one(r, opts, quiet=False):
         log('  用户可以：① 在终端自己登录后告诉 agent，agent 再执行上面的命令；'
             '② 在页面上复制代码或提示词贴回来；③ 不登录，改用免费替代。')
         log('  用户登录后只补取这一条，沿用已有的选型结论，不重新选型。')
+        opts['_result'] = {'status': 'login'}
         return 4
     if r['access'] == 'broken':
         log('此条目已失效或为空：%s' % r['fetch'])
+        opts['_result'] = {'status': 'broken'}
         return 2
-    ok_all = True
-    for kind, arg in parse_spec(r['spec']):
-        if kind == 'registry':
-            ok, msg = do_registry(arg, out, opts)
-        elif kind in ('url', 'doc'):
-            ok, msg = do_url(arg, out, kind)
-        elif kind == 'prompt':
-            ok, msg = do_prompt(arg, out)
-        elif kind == 'script':
-            ok, msg = do_script(arg, out, opts)
-        elif kind == 'browser':
-            ok, msg = True, 'browser   需在浏览器里打开（内置浏览器 get_page_text / read_page）：%s' % arg
-        elif kind == 'manual':
-            ok, msg = True, 'manual    按 sources/%s.md「按需获取方法」操作：\n  %s' % (r['source'], r['fetch'])
-        else:
-            ok, msg = False, 'unknown adapter %s' % kind
-        log(('' if ok else 'FAIL ') + msg)
-        ok_all &= ok
+    sst = source_status(r['source'])
+    if sst in ('offline', 'closed'):
+        log('%s：sources/%s.md 的 source_status 是 %s，不再获取；从对应指南的"按场景换"里选别的候选。' % (
+            SOURCE_STATUS_ZH[sst], r['source'], sst))
+        opts['_result'] = {'status': 'broken'}
+        return 2
+    if sst in SOURCE_STATUS_ZH:
+        log('注意：%s（source_status %s），取码可能失败或不完整，见 sources/%s.md。' % (SOURCE_STATUS_ZH[sst], sst, r['source']))
+    if r['status'] == 'needs-review':
+        log('注意：这一条在待审：%s。索引里的描述和指南结论可能已经过时，接入前对照拉到的源码核对。' % review_text(r))
+    ok_all, fetched, kinds = True, False, []
+    staging = tempfile.mkdtemp(prefix='ui-arsenal-')  # nothing reaches `out` until every step has been checked
+    try:
+        for kind, arg in parse_spec(r['spec']):
+            try:
+                if kind == 'registry':
+                    ok, msg = do_registry(arg, staging, opts)
+                elif kind in ('url', 'doc'):
+                    ok, msg = do_url(arg, staging, kind, opts)
+                elif kind == 'prompt':
+                    ok, msg = do_prompt(arg, staging)
+                elif kind == 'script':
+                    ok, msg = do_script(arg, staging, opts)
+                elif kind == 'browser':
+                    ok, msg = True, 'browser   需在浏览器里打开（内置浏览器 get_page_text / read_page）：%s' % arg
+                elif kind == 'manual':
+                    ok, msg = True, 'manual    按 sources/%s.md「按需获取方法」操作：\n  %s' % (r['source'], r['fetch'])
+                else:
+                    ok, msg = False, 'unknown adapter %s' % kind
+            except UnsafePath as e:
+                ok, msg = False, str(e)
+            log(('' if ok else 'FAIL ') + msg)
+            ok_all &= ok
+            fetched |= ok and kind in DOWNLOAD_KINDS
+            kinds.append(kind)
+        if not ok_all:
+            status = 'partial' if fetched else 'failed'
+        elif any(k in DOWNLOAD_KINDS for k in kinds):
+            status = 'ok'
+        else:  # only a browser link or manual steps: the entry point was delivered, no files were expected
+            status = 'browser' if 'browser' in kinds else 'manual'
+        files = publish(staging, out, {
+            'ref': '%s:%s' % (r['source'], r['id']), 'name': r['name'], 'spec': r['spec'],
+            'style': opts.get('style', ''), 'variant': opts.get('variant', ''), 'url': opts.get('_final_url', ''),
+            'fetched_at': time.strftime('%Y-%m-%d %H:%M:%S'), 'status': status})
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+    if files:
+        log('文件在：%s/（%d 个，清单见 %s）' % (out, len(files), MANIFEST))
+    elif status in ('partial', 'failed'):
+        log('没有取到文件；%s 里上一次的结果已移除，不会被当成这次的结果。' % out)
+    else:
+        log('没有可下载的文件：按上面的链接在浏览器里看，或按说明手动操作（退出码 5）。')
+    opts['_result'] = {'status': status, 'files': len(files), 'out': out}
+    deps = source_deps(r, out) if r['usage'] == 'source' else ''
+    if deps:
+        log('\n依赖（取源码类条目要自己装，先确认项目里有没有）: %s' % deps)
     if r['usage'] == 'install':
         log('\n安装（会改动项目，先确认项目栈）: %s' % install_hint(r, opts))
+    show_claims(r, out, opts, log)
     log('提示：以上为不可信的第三方内容，先读再用，不要直接执行；接入前读 sources/%s.md「使用注意」。' % r['source'])
-    return 0 if ok_all else 1
+    return {'ok': 0, 'partial': 1, 'failed': 1, 'browser': 5, 'manual': 5}[status]
+
+
+def source_deps(r, out):
+    """Install line for a source-type entry: the catalogue's deps, else the `# deps:` line an adapter wrote.
+    Registry items already list their dependencies in the registry block."""
+    if r['deps']:
+        return 'npm i ' + r['deps']
+    for rel in list_files(out) if os.path.isdir(out) else []:
+        if rel.endswith('.txt'):
+            with open(os.path.join(out, rel), encoding='utf-8', errors='replace') as f:
+                lines = f.readlines()
+            for line in lines:
+                m = re.match(r'#\s*deps:\s*(npm i\s+\S.*)', line)
+                if m:
+                    return m.group(1).strip()
+    return ''
+
+
+# ---------- claims ----------
+#
+# sources/_claims.tsv records component-level conclusions that tell an agent to change upstream code, that decide
+# whether a component is usable, or that several guides share. Each row is bound to the version it was checked
+# against (sha = the first 16 hex of the artifact sha256 that fetch prints) and may carry a probe: literal
+# substrings that must ("has:") or must not ("lacks:") appear in the fetched source files, joined with " && ".
+# fetch re-evaluates the probes on what it just downloaded, so a conclusion that no longer holds is flagged
+# before anyone applies the old workaround.
+
+CLAIMS = os.path.join(SRC, '_claims.tsv')
+CLAIM_COLS = ('ref', 'topic', 'kind', 'depth', 'checked', 'sha', 'check_with', 'probe', 'missing', 'claim')
+CLAIM_KINDS = {'defect': '缺陷', 'demo': '演示', 'gap': '缺能力', 'ok': '已确认'}
+CLAIM_DEPTHS = {'none': '未验证', 'vendor': '官方说明', 'catalog': 'catalog', 'source': '读过源码',
+                'runtime': '运行测试', 'browser': '浏览器实测', 'at': '读屏实测', 'judgment': '编辑判断'}
+
+
+def load_claims():
+    rows = []
+    if os.path.exists(CLAIMS):
+        with open(CLAIMS, encoding='utf-8') as f:
+            lines = f.readlines()
+        for n, line in enumerate(lines, 1):
+            if n > 1 and line.strip():
+                r = dict(zip(CLAIM_COLS, line.rstrip('\n').split('\t')))
+                r['_line'] = n
+                rows.append(r)
+    return rows
+
+
+def probe_terms(probe):
+    return [p.strip().partition(':')[::2] for p in probe.split(' && ') if p.strip()]
+
+
+def probe_texts(out):
+    """Fetched source files as text; the registry wrapper, documentation pages and the manifest are left out."""
+    texts = []
+    for rel in (list_files(out) if os.path.isdir(out) else []):
+        if rel == 'registry-item.json' or posixpath.basename(rel).startswith('doc-'):
+            continue
+        try:
+            with open(os.path.join(out, rel), encoding='utf-8') as f:
+                texts.append(f.read())
+        except UnicodeDecodeError:
+            pass
+    return texts
+
+
+def probe_eval(probe, texts):
+    """Returns the probe terms that do not hold (empty list = the probe holds)."""
+    return ['%s:%s' % (k, t) for k, t in probe_terms(probe) if (k == 'has') != any(t in x for x in texts)]
+
+
+def artifact_sha(out):
+    """sha of the main artifact in a fetch directory, matching the sha256 prefix fetch prints."""
+    names = list_files(out) if os.path.isdir(out) else []
+    pick = 'registry-item.json' if 'registry-item.json' in names else next(
+        (n for n in names if not posixpath.basename(n).startswith('doc-')), None)
+    if not pick:
+        return ''
+    with open(os.path.join(out, pick), 'rb') as f:
+        return sha(f.read())[:16]
+
+
+def claim_status(c, texts, now_sha):
+    """(symbol, text) comparing a ledger row with freshly fetched files."""
+    failed = probe_eval(c['probe'], texts) if c['probe'] else []
+    if failed:
+        return '✗', '版本%s，probe 不成立（%s）：这条结论已失效，不要照做基于它的修改，按拉到的源码重新判断' % (
+            '已变' if c['sha'] and c['sha'] != now_sha else '未记录', '；'.join(failed))
+    if c['sha'] and c['sha'] == now_sha:
+        return '✓', '版本与核对时一致'
+    if c['probe']:
+        return '?', '版本%s（核对时 %s，现在 %s），probe 仍成立；结论里 probe 没覆盖的部分，照做前在源码里确认' % (
+            '已变' if c['sha'] else '未记录', c['sha'] or '-', now_sha or '-')
+    return '?', '版本%s（核对时 %s，现在 %s），没有 probe：照做前先在拉到的源码里确认' % (
+        '已变' if c['sha'] else '未记录', c['sha'] or '-', now_sha or '-')
+
+
+def claim_line(c):
+    return '[%s·%s %s] %s：%s%s' % (CLAIM_KINDS.get(c['kind'], c['kind']), CLAIM_DEPTHS.get(c['depth'], c['depth']),
+                                   c['checked'] or '-', c['topic'], c['claim'],
+                                   '（未验证：%s）' % c['missing'] if c['missing'] else '')
+
+
+def check_opts(c):
+    o, it = {}, iter(c['check_with'].split())
+    for a in it:
+        if a in ('--style', '--variant'):
+            o[a[2:]] = next(it, '')
+    return o
+
+
+def show_claims(r, out, opts, log):
+    rows = [c for c in load_claims() if c['ref'] == '%s:%s' % (r['source'], r['id'])]
+    if not rows:
+        return
+    texts, now = probe_texts(out), artifact_sha(out)
+    log('\n已登记的结论（sources/_claims.tsv；✓ 仍适用  ? 需要确认  ✗ 已失效）：')
+    for c in rows:
+        mark, status = claim_status(c, texts, now)
+        same_opts = check_opts(c) == {k: opts[k] for k in ('style', 'variant') if opts.get(k)}
+        log('  %s %s\n    → %s%s' % (mark, claim_line(c), status,
+                                     '' if same_opts else '（核对时用的是 %s）' % (c['check_with'] or '默认 style/变体')))
+
+
+def guide_mentions(ref):
+    hits = []
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if fn.endswith('.md'):
+            with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+                lines = f.readlines()
+            for n, line in enumerate(lines, 1):
+                if '`%s`' % ref in line:
+                    hits.append('guides/%s:%d' % (fn, n))
+    return hits
+
+
+def fetch_for_check(c, base):
+    """Fetch what a ledger row was checked against into a fresh directory; returns (ok, out, error)."""
+    out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', c['ref'] + ' ' + c['check_with']))
+    shutil.rmtree(out, ignore_errors=True)  # our own scratch directory under $TMPDIR
+    if c['check_with'].startswith('https://'):
+        ok, msg = do_url(c['check_with'], out)
+        return ok, out, '' if ok else msg
+    if c['ref'].startswith('npm:'):
+        return False, out, 'npm ref needs a https:// check_with URL'
+    try:
+        row = find_row(c['ref'])
+    except SystemExit as e:
+        return False, out, str(e)
+    rc = fetch_one(row, dict(check_opts(c), out=out), quiet=True)
+    if rc == 1 and artifact_sha(out):  # e.g. a dead doc: link next to a registry item that did download
+        return True, out, '部分获取失败（fetch exit 1），用已取到的文件复核'
+    return rc == 0, out, '' if rc == 0 else 'fetch exit %d' % rc
+
+
+GUIDE_REF = re.compile(r'`([a-z0-9]+:[A-Za-z0-9:._-]+)`')
+EVIDENCE = (('pos', re.compile(r'已拉源码|已读源码|源码确认|已核对|已拉文档')), ('neg', re.compile(r'未拉源码|未读源码')),
+            ('unverified', re.compile(r'未验证|未实测|未核对')), ('catalog', re.compile(r'catalog')))
+SECTION_RANK = {'默认推荐': 0, '按场景换': 1, '接入要点': 2, '慎用': 3, '页面模式约束': 4, '候选清单': 5}
+
+
+def narrow(subject, clause):
+    """Pick the subject components a clause talks about: by bare id ("sidebar 731 行"), then by source name
+    ("uiarc 版本…"). Returns (refs, ambiguous)."""
+    named = [r for r in subject if re.search(r'(?<![\w-])%s(?![\w-])' % re.escape(r.split(':', 1)[1]), clause)]
+    if named:
+        return named, False
+    by_src = [r for r in subject if r.split(':', 1)[0] in clause]
+    pick = by_src or subject
+    return pick, len(pick) > 1
+
+
+def guide_evidence():
+    """Heuristic scan of the evidence notes written in guides: each marker is attributed to the nearest component
+    named before it in the same clause, else to the row's subject (the recommended column of a table row, or the
+    components before the first '：' / ' — ' of a bullet), narrowed by the names the clause mentions.
+    Returns [(guide, line, section, ref, kind, clause, ambiguous)]."""
+    found = []
+    for fn in (sorted(os.listdir(GUIDES)) if os.path.isdir(GUIDES) else []):
+        if not fn.endswith('.md') or fn.startswith('_'):
+            continue
+        section = ''
+        with open(os.path.join(GUIDES, fn), encoding='utf-8') as f:
+            lines = f.readlines()
+        for n, line in enumerate(lines, 1):
+            if line.startswith('## '):
+                section = line[3:].strip()
+                continue
+            if line.startswith('|'):
+                cells = line.strip().strip('|').split('|')
+                subject = GUIDE_REF.findall(cells[1]) if len(cells) > 2 else []
+            else:
+                cells = [line]
+                head = re.split(r'：| — ', line, maxsplit=1)[0]
+                subject = GUIDE_REF.findall(head)
+            for cell in cells:
+                for clause in re.split(r'[；。]', cell):
+                    for kind, rx in EVIDENCE:
+                        for m in rx.finditer(clause):
+                            before = GUIDE_REF.findall(clause[:m.start()])
+                            refs, amb = ([before[-1]], False) if before else narrow(subject, clause)
+                            for ref in refs:
+                                found.append((fn, n, section, ref, kind, clause.strip(), amb))
+    return found
+
+
+def cmd_claims(args):
+    if not args or args[0] in ('-h', '--help'):
+        print('usage: claims.sh <source:id>...      该组件登记的结论，以及哪些指南提到它\n'
+              '       claims.sh --check [ref...]    重新拉取，用 probe 复核结论是否仍成立（只读，不改台账）\n'
+              '       claims.sh --pending           待复核报告：台账里证据不足的结论 + 指南里标了未验证/catalog 的条目\n'
+              '台账：sources/_claims.tsv，格式见 sources/_SPEC.md「结论台账」。')
+        return 0
+    claims = load_claims()
+    if args[0] == '--check':
+        refs = set(args[1:])
+        rows = [c for c in claims if not refs or c['ref'] in refs]
+        base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-claims')
+        bad, cache = 0, {}
+        for c in rows:
+            key = (c['ref'], c['check_with'])
+            if key not in cache:
+                cache[key] = fetch_for_check(c, base)
+            ok, out, err = cache[key]
+            if not ok:
+                bad += 1
+                print('FAIL  %-34s %-24s 取不到：%s' % (c['ref'], c['topic'], err[:120]))
+                continue
+            now = artifact_sha(out)
+            mark, status = claim_status(c, probe_texts(out), now)
+            bad += mark == '✗'
+            print('%-5s %-34s %-24s sha %s  %s%s' % ({'✓': 'same', '?': 'drift', '✗': 'STALE'}[mark], c['ref'], c['topic'],
+                                                  now, '' if mark == '✓' else status[:90], ('  ' + err) if err else ''))
+        print('\n%d rows checked, %d stale or unreachable. 台账不会被自动改写：确认后手动更新 sha、checked，失效的结论连同引用它的指南一起改。'
+              % (len(rows), bad))
+        return 1 if bad else 0
+    if args[0] == '--pending':
+        return claims_pending(claims)
+    for ref in args:
+        rows = [c for c in claims if c['ref'] == ref]
+        print('## %s' % ref)
+        if not ref.startswith('npm:'):
+            r = find_row(ref)
+            print('  官方页面：%s   取码规格：%s' % (r['url'] or '-', r['spec']))
+        for c in rows:
+            print('  ' + claim_line(c) + ('  [核对取法 %s]' % c['check_with'] if c['check_with'] else '') +
+                  ('  sha %s' % c['sha'] if c['sha'] else ''))
+        if not rows:
+            print('  （台账里没有登记）')
+        mentions = guide_mentions(ref)
+        if mentions:
+            print('  指南提到：' + ', '.join(mentions))
+    return 0
+
+
+def claims_pending(claims):
+    weak = [c for c in claims if c['depth'] in ('none', 'vendor', 'catalog', 'judgment') or c['missing']]
+    print('# 台账里证据不足或缺验证项的结论（%d）' % len(weak))
+    for c in sorted(weak, key=lambda c: (c['kind'] != 'defect', c['kind'] != 'demo', c['checked'])):
+        print('- %s %s' % (c['ref'], claim_line(c)))
+    ev = guide_evidence()
+    by_ref = {}
+    for g, n, sec, ref, kind, clause, amb in ev:
+        by_ref.setdefault(ref, []).append((SECTION_RANK.get(sec, 9), g, n, sec, kind, clause, amb))
+    pending = {ref: [x for x in xs if x[4] in ('neg', 'unverified', 'catalog')] for ref, xs in by_ref.items()}
+    pending = {ref: xs for ref, xs in pending.items() if xs}
+    print('\n# 指南里只有 catalog / 未拉源码 / 未验证 依据的条目（%d 个组件，按最靠前的章节排序：默认推荐优先）' % len(pending))
+    print('# 启发式：按"同一分句里前面最近的组件"归属，表格行和多组件句子要回原文确认。')
+    for ref, xs in sorted(pending.items(), key=lambda kv: (min(x[0] for x in kv[1]), kv[0])):
+        xs.sort()
+        print('- %s  [%s]' % (ref, '、'.join(sorted({x[3] for x in xs}, key=lambda s: SECTION_RANK.get(s, 9)))))
+        for _, g, n, sec, kind, clause, amb in xs[:4]:
+            print('    guides/%s:%d %s%s：%s' % (g, n, kind, '（归属不确定）' if amb else '', clause[:90]))
+    clear = {ref: [x for x in xs if not x[6]] for ref, xs in by_ref.items()}
+    conflicts = {ref: xs for ref, xs in clear.items()
+                 if {x[4] for x in xs} >= {'pos', 'neg'} and len({x[1] for x in xs}) > 1}
+    print('\n# 不同指南对"是否读过源码"说法不一致（%d；只统计归属明确的标注）' % len(conflicts))
+    for ref, xs in sorted(conflicts.items()):
+        print('- %s' % ref)
+        for _, g, n, sec, kind, clause, amb in sorted(xs):
+            if kind in ('pos', 'neg'):
+                print('    guides/%s:%d %s：%s' % (g, n, kind, clause[:90]))
+    return 0
 
 
 # ---------- verify ----------
 
 # Fixed scenarios covering every adapter kind and every access rule. Expected exit code per fetch_one:
-# 0 ok, 2 broken, 3 pro, 4 login (blocked on the user). `files` = whether files must land in the out dir.
+# 0 ok, 2 broken, 3 pro, 4 login (blocked on the user), 5 browser/manual only. `files` = whether files must land.
 MATRIX = [
     ('registry', 'shadcn:button', {}, 0, True),
     ('registry+style', 'shadcn:button', {'style': 'radix-nova'}, 0, True),
     ('registry+variant', 'reactbits:split-text', {'variant': 'JS-CSS'}, 0, True),
     ('registry+doc', 'uiarc:in-view-title', {}, 0, True),
-    ('adapter(py, no remote exec)', 'bencho:magnet-select', {}, 0, True),
-    ('adapter(sh)', 'collectui:category:dashboard', {'limit': 3}, 0, True),
+    ('adapter(bencho, literal parse)', 'bencho:magnet-select', {}, 0, True),
+    ('adapter(collectui, anon API)', 'collectui:category:dashboard', {'limit': 3}, 0, True),
     ('prompt+doc', 'librariesdev:thinking-orbs', {}, 0, True),
     ('url(svg)', 'lucide:house', {}, 0, True),
     ('url(DESIGN.md)', 'getdesign:stripe', {}, 0, True),
     ('url(video)+browser', 'bencho:find:vanjek-pixel-select', {}, 0, True),
-    ('browser-only', 'inspora:fluid-illumination', {}, 0, False),
+    ('browser-only', 'inspora:fluid-illumination', {}, 5, False),
     ('login refused', 'originkit:compare-slider', {}, 4, False),
     ('pro refused', 'uiarc:voice-orb', {}, 3, False),
     ('broken refused', 'collectui:category:agency', {}, 2, False),
@@ -549,13 +1466,9 @@ MATRIX = [
 
 def run_case(ref, opts, base):
     out = os.path.join(base, re.sub(r'[^A-Za-z0-9_.-]', '_', ref))
-    if os.path.isdir(out):
-        for f in os.listdir(out):
-            os.remove(os.path.join(out, f))
-    o = dict(opts, out=out)
-    rc = fetch_one(find_row(ref), o, quiet=True)
-    files = os.listdir(out) if os.path.isdir(out) else []
-    return rc, files
+    shutil.rmtree(out, ignore_errors=True)  # our own scratch directory under $TMPDIR
+    rc = fetch_one(find_row(ref), dict(opts, out=out), quiet=True)
+    return rc, [f['path'] for f in (read_manifest(out) or {}).get('files', [])]
 
 
 def cmd_verify(args):
@@ -563,11 +1476,11 @@ def cmd_verify(args):
     it = iter(args)
     for a in it:
         if a == '-n':
-            n = int(next(it))
+            n = take_int(it, a)
         elif a == '-s':
-            src = next(it)
+            src = take(it, a)
         elif a == '--seed':
-            seed = int(next(it))
+            seed = take_int(it, a, low=0)
         elif a == '--matrix':
             matrix = True
         elif a in ('-h', '--help'):
@@ -576,9 +1489,10 @@ def cmd_verify(args):
                   '  默认      每个来源随机抽 n 条免费、可机器获取的条目实取一次\n'
                   '说明：verify 通过只代表"现在能取到"（验证层级③），不代表组件成熟或适合项目。')
             return 0
+        else:
+            unknown_option(a)
     base = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'ui-arsenal-verify')
-    state, now, fails = load_state(), time.strftime('%Y-%m-%d %H:%M'), 0
-    vs = state.setdefault('verify', {})
+    now, fails, vs = time.strftime('%Y-%m-%d %H:%M'), 0, {}  # merged into _state.json at the end, under the lock
     if matrix:
         rows = []
         for name, ref, opts, want_rc, want_files in MATRIX:
@@ -609,7 +1523,7 @@ def cmd_verify(args):
                 res.append([r['id'], ok, 'rc=%s files=%d' % (rc, len(files))])
                 print('%-4s %-13s %-40s %s' % ('ok' if ok else 'FAIL', s, r['id'][:40], res[-1][2]))
             vs[s] = {'at': now, 'fails': sum(not x[1] for x in res), 'results': res}
-    save_state(state)
+    update_state(lambda st: st.setdefault('verify', {}).update(vs))
     print('\n%d failed. 结果按来源保存在 sources/_state.json 的 verify 下（不覆盖其他来源的记录）。' % fails)
     return 1 if fails else 0
 
@@ -624,16 +1538,44 @@ def cmd_verify(args):
 #          is the rollback.
 
 PENDING = os.path.join(SRC, '_pending')
-REMOVE_AFTER_DAYS = 30  # an item missing in two refreshes at least this far apart is proposed as removed
+PROPOSAL_FORMAT = 2  # 2: deps null = not listed by the index, '' = known empty; changed entries carry spec/fetch
+REMOVE_AFTER_DAYS = 30  # an item still missing this many days after a refresh first confirmed it gone is proposed as removed
 
 
 def load_state():
-    return json.load(open(STATE, encoding='utf-8')) if os.path.exists(STATE) else {}
+    if not os.path.exists(STATE):
+        return {}
+    with open(STATE, encoding='utf-8') as f:
+        return json.load(f)
 
 
 def save_state(s):
-    with open(STATE, 'w', encoding='utf-8') as f:
+    """Atomic write: a reader never sees half a file."""
+    tmp = '%s.tmp-%d' % (STATE, os.getpid())
+    with open(tmp, 'w', encoding='utf-8') as f:
         json.dump(s, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, STATE)
+
+
+@contextlib.contextmanager
+def state_lock():
+    with open(STATE + '.lock', 'w') as f:
+        if fcntl:
+            fcntl.flock(f, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl:
+                fcntl.flock(f, fcntl.LOCK_UN)
+
+
+def update_state(change):
+    """Read, change and write sources/_state.json under a lock, so verify and refresh running at the same time
+    keep each other's results."""
+    with state_lock():
+        s = load_state()
+        change(s)
+        save_state(s)
 
 
 def fp(meta):
@@ -644,7 +1586,7 @@ def fp(meta):
 def get_json(url):
     st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s %s' % (st, url))
+        raise RuntimeError(http_fail(st, body, url))
     return json.loads(body), body
 
 
@@ -667,7 +1609,24 @@ def kebab(name):
     return re.sub(r'(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', '-', name).lower()
 
 
-# Each refresher returns (remote: {key: meta}, key_of(row) -> key|None, index_sha, new_row(key, meta) -> dict).
+def index(remote, key_of, h, new_row, covered=None, degraded=(), detects=(), blind=()):
+    """What a refresher found:
+    remote    {key: meta} for every item the public index lists
+    key_of    row -> key, or None for rows this index does not cover (templates, parked blocks...)
+    sha       hash of the raw index, to tell whether anything changed at all
+    new_row   (key, meta) -> machine fields for an item that is new locally
+    covered   key -> False when the part of the index that would list it failed to load, so its absence proves
+              nothing; True by default
+    degraded  reasons some part of the index could not be read
+    detects   which changes this index can see besides presence: 'access' (free/pro), 'deps' (dependency lists)
+    blind     changes this index cannot see, said in words for the report"""
+    return {'remote': remote, 'key_of': key_of, 'sha': h, 'new_row': new_row, 'covered': covered or (lambda k: True),
+            'degraded': list(degraded), 'detects': tuple(detects), 'blind': list(blind)}
+
+
+ACCESS_OF_TIER = {'free': 'free', 'pro': 'pro'}  # an index tier we do not know never becomes a free/pro claim
+
+
 def r_shadcn():
     remote, h = {}, []
     for st in ('base-nova', 'radix-nova', 'aria-nova', 'new-york-v4'):
@@ -682,7 +1641,9 @@ def r_shadcn():
         'base-nova' if 'base-nova' in m['styles'] else m['styles'][0], k),
         'fetch': 'npx shadcn@latest add %s' % k, 'url': 'https://ui.shadcn.com/docs/components/' + k,
         'framework': 'react', 'category': m['type']}
-    return remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new
+    return index(remote, lambda r: spec_key(r, must='/styles/'), sha(''.join(h).encode()), new, detects=('deps',),
+                 blind=['依赖和文件只跟默认 style（base-nova，没有时用第一个有的 style）；其他 style 以 fetch --style 时 registry 给的为准',
+                        '访问状态（官方 registry 全部免费）'])
 
 
 def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
@@ -702,7 +1663,9 @@ def r_registry(base, add_cmd=None, strip=None, ignore=(), url_tpl=None):
             return {'spec': 'registry:%s/r/%s.json' % (base, name),
                     'fetch': (add_cmd % name) if add_cmd else 'npx shadcn@latest add %s/r/%s.json' % (base, name),
                     'url': (url_tpl % k) if url_tpl else base, 'framework': 'react', 'category': m.get('type', '')}
-        return remote, lambda r: spec_key(r, strip), sha(body), new
+        return index(remote, lambda r: spec_key(r, strip), sha(body), new, detects=('deps',),
+                     blind=['访问状态：registry 只列免费项，Pro 条目不在里面'] +
+                           (['JS / CSS 变体的变化：指纹只看 TS-TW'] if strip else []))
     return f
 
 
@@ -719,22 +1682,33 @@ def r_uiarc():
                 'access': 'pro' if pro else 'free'}
     # foundation, agent skill and templates are not part of the component catalog
     key = lambda r: None if r['category'] in ('Templates', 'Skill', 'Foundation') else r['id']
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new, detects=('access', 'deps'),
+                 blind=['源码内容的变化：catalog 只有元数据（层级、依赖、tier）'])
 
 
 def r_lucide():
-    st, ct, body = http('https://unpkg.com/lucide-static@latest/tags.json', tries=3)
+    url = 'https://unpkg.com/lucide-static@latest/tags.json'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     remote = {k: {'tags': sorted(v)} for k, v in json.loads(body).items()}
-    st2, _, meta = http('https://unpkg.com/@lucide/lab@latest/?meta', tries=3)
-    if st2 == 200:
+    lab_url = 'https://unpkg.com/@lucide/lab@latest/?meta'
+    st2, _, meta = http(lab_url, tries=3)
+    lab, degraded = [], []
+    try:
+        if st2 != 200:
+            raise ValueError(http_fail(st2, meta, lab_url))
         def walk(n):
             for f in n.get('files', []):
                 yield from (walk(f) if f.get('type') == 'directory' else [f['path']])
-        for f in walk(json.loads(meta)):
-            if f.startswith('/dist/esm/icons/') and f.endswith('.js'):
-                remote['lab:' + os.path.basename(f)[:-3]] = {}
+        lab = [f for f in walk(json.loads(meta)) if f.startswith('/dist/esm/icons/') and f.endswith('.js')]
+        if not lab:
+            raise ValueError('no icons listed in %s' % lab_url)
+    except ValueError as e:  # bad JSON lands here too
+        degraded.append('Lucide Lab list unavailable (%s): lab:* items are left as they are' % str(e)[:160])
+        meta = b''
+    for f in lab:
+        remote['lab:' + os.path.basename(f)[:-3]] = {}
     def new(k, m):
         lab = k.startswith('lab:')
         n = k[4:] if lab else k
@@ -743,7 +1717,9 @@ def r_lucide():
                 'fetch': 'npm i @lucide/lab' if lab else 'https://unpkg.com/lucide-static@latest/icons/%s.svg' % n,
                 'url': 'https://lucide.dev/icons/' + (('lab/' + n) if lab else n), 'framework': 'multi',
                 'category': 'lab' if lab else 'icon'}
-    return remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new
+    return index(remote, lambda r: r['id'] if r['access'] == 'free' else None, sha(body + meta), new,
+                 covered=(lambda k: not k.startswith('lab:')) if degraded else None, degraded=degraded,
+                 blind=['图标形状的变化：tags.json 只有名称和标签'])
 
 
 def r_originkit():
@@ -754,17 +1730,23 @@ def r_originkit():
     new = lambda k, m: {'spec': 'manual', 'fetch': 'npx originkit add %s（需 originkit login）；页面 https://www.originkit.dev/components/%s' % (k, k),
                         'url': 'https://www.originkit.dev/components/' + k, 'framework': 'react',
                         'category': m['category'], 'access': 'login'}
-    return remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new
+    return index(remote, lambda r: r['id'] if r['category'] != 'template' else None, sha(body), new, detects=('deps',),
+                 blind=['付费和登录的变化：registry 没有 tier，新条目一律按需登录处理'])
 
 
 def r_bencho():
-    st, ct, body = http('https://bencho.dev/llms.txt', tries=3)
+    url = 'https://bencho.dev/llms.txt'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     remote = {k: {} for k in re.findall(r'bencho\.dev/blocks/([a-z0-9-]+)', body.decode())}
-    st2, _, sm = http('https://bencho.dev/sitemap.xml', tries=3)
-    if st2 == 200:
-        remote.update({'find:' + x: {} for x in re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode())})
+    sm_url = 'https://bencho.dev/sitemap.xml'
+    st2, _, sm = http(sm_url, tries=3)
+    finds = re.findall(r'bencho\.dev/finds/([A-Za-z0-9_-]+)<', sm.decode('utf-8', 'replace')) if st2 == 200 else []
+    degraded = [] if finds else ['Finds sitemap unavailable (%s): find:* items are left as they are' % (
+        http_fail(st2, sm, sm_url) if st2 != 200 else 'no finds listed in %s' % sm_url)]
+    if finds:
+        remote.update({'find:' + x: {} for x in finds})
         body += sm
     parked = {r['id'] for r in load_rows('bencho') if '未在站点上架' in r['desc'] or 'parked' in r['desc']}
     def new(k, m):
@@ -774,13 +1756,15 @@ def r_bencho():
         return {'spec': 'script:bencho ' + k, 'fetch': 'scripts/fetch.sh bencho:' + k,
                 'url': 'https://bencho.dev/blocks/' + k, 'framework': 'react', 'usage': 'source'}
     key = lambda r: None if r['id'] in parked or r['id'].startswith('category:') else r['id']
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new, covered=(lambda k: not k.startswith('find:')) if degraded else None,
+                 degraded=degraded, blind=['block 内容和依赖的变化：llms.txt 和 sitemap 只列地址'])
 
 
 def r_getdesign():
-    st, ct, body = http('https://getdesign.md/sitemap.xml', tries=3)
+    url = 'https://getdesign.md/sitemap.xml'
+    st, ct, body = http(url, tries=3)
     if st != 200:
-        raise RuntimeError('HTTP %s' % st)
+        raise RuntimeError(http_fail(st, body, url))
     txt = body.decode()
     remote = {x: {} for x in re.findall(r'https://getdesign\.md/([^/<]+)/design-md<', txt)}
     remote.update({'site:' + x: {} for x in re.findall(r'https://getdesign\.md/design-md/([^/<]+)<', txt)})
@@ -793,8 +1777,12 @@ def r_getdesign():
                 'fetch': 'curl -s https://getdesign.md/design-md/%s/DESIGN.md -o DESIGN.md' % k,
                 'url': 'https://getdesign.md/%s/design-md' % k, 'usage': 'prompt', 'category': 'design-md'}
     key = lambda r: r['id'] if r['usage'] == 'prompt' or r['id'].startswith('site:') else None
-    return remote, key, sha(body), new
+    return index(remote, key, sha(body), new, blind=['DESIGN.md 内容的变化：sitemap 只列地址'])
 
+
+# A non-empty index that lacks more than this share of the known items is treated as incomplete: the missing items
+# are listed for a human to check instead of being proposed as gone. A heuristic alarm, not proof of completeness.
+SHRINK_ALARM = 0.2
 
 REFRESH = {
     'shadcn': r_shadcn,
@@ -812,22 +1800,24 @@ REFRESH = {
 NO_REFRESH = {
     'designspells': '站点有 Vercel 反爬，只能在浏览器里更新（见 designspells.md）',
     'inspora': 'robots.txt 禁止 /api/，不自动刷新；人工快照',
-    'collectui': '按分类实时查询（script:collectui），清单只到分类级，无需刷新条目',
+    'collectui': '条目按分类实时查询（script:collectui），不用刷新；但分类名单会增删，要定期对照 https://collectui.com/categories 人工核对',
     'jakubantalik': '个人站 + GitHub，条目少，人工维护',
     'librariesdev': '固定 7 个库，人工维护',
 }
 
 
-def days_between(a, b):
+def days_since(a, b):
+    """Whole days from date a to date b (negative when a is later); None when either date is unreadable."""
     try:
-        return abs((time.mktime(time.strptime(a, '%Y-%m-%d')) - time.mktime(time.strptime(b, '%Y-%m-%d'))) / 86400)
-    except ValueError:
-        return 0
+        return round((time.mktime(time.strptime(b, '%Y-%m-%d')) - time.mktime(time.strptime(a, '%Y-%m-%d'))) / 86400)
+    except (TypeError, ValueError):
+        return None
 
 
 def cmd_refresh(args):
     if '-h' in args or '--help' in args:
-        print('usage: refresh.sh [source...]   拉取线上清单，生成 sources/_pending/<日期>/<source>.json 待审变更，不改正式数据')
+        print('usage: refresh.sh [source...]   拉取线上清单，生成 sources/_pending/<日期>/<source>-<时分秒>.json 待审变更，不改正式数据\n'
+              '  每次运行写一份新文件；上一份还没 apply 的待审稿里补好的新条目字段（desc_zh/task/layer 等）会沿用过来。')
         return 0
     targets = [a for a in args if not a.startswith('-')] or sources()
     today = time.strftime('%Y-%m-%d')
@@ -838,14 +1828,22 @@ def cmd_refresh(args):
         if s not in REFRESH:
             print('%-13s skip   %s' % (s, NO_REFRESH.get(s, 'no refresh adapter')))
             continue
-        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'status': 'ok'}
+        stamp = time.strftime('%H%M%S')
+        while os.path.exists(os.path.join(outdir, '%s-%s.json' % (s, stamp))):  # two runs in one second
+            time.sleep(1)
+            stamp = time.strftime('%H%M%S')
+        path = os.path.join(outdir, '%s-%s.json' % (s, stamp))
+        prop = {'source': s, 'generated_at': time.strftime('%Y-%m-%d %H:%M'), 'revision': '%s %s' % (today, stamp),
+                'status': 'ok', 'format': PROPOSAL_FORMAT, 'base_sha': source_sha(s)}
         try:
-            remote, key_of, h, new_row = REFRESH[s]()
+            ix = REFRESH[s]()
+            remote, key_of, h, new_row = ix['remote'], ix['key_of'], ix['sha'], ix['new_row']
             if not remote:
                 raise RuntimeError('index returned 0 items (parser broken or site changed)')
         except Exception as e:
             prop.update(status='error', error=str(e)[:300])
-            json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            with open(path, 'w', encoding='utf-8') as f:
+                json.dump(prop, f, ensure_ascii=False, indent=1)
             print('%-13s ERROR  %s  → 不产生任何条目变更（不会当作全部下线）' % (s, prop['error']))
             rc = 1
             continue
@@ -854,47 +1852,109 @@ def cmd_refresh(args):
             k = key_of(r)
             if k:
                 local[k] = r
-        seen, init, changed, missing, added = [], [], [], [], []
+        seen, init, changed, missing, added, unverified, revived = [], [], [], [], [], [], []
         for k, r in local.items():
+            if k in remote and r['status'] == 'removed':
+                revived.append({'id': r['id'], 'review': r['review']})  # back online: a human decides, not seen
+                continue
             if k in remote:
                 seen.append(r['id'])
                 newfp, m = fp(remote[k]), remote[k]
-                deps = ' '.join(m.get('deps', []))
-                acc = {'pro': 'pro', 'free': 'free'}.get(m.get('tier', ''), None)
-                if not r['fingerprint']:
+                deps = ' '.join(m['deps']) if 'deps' in m else None  # None: this index does not list dependencies
+                acc = ACCESS_OF_TIER.get(m.get('tier')) if 'access' in ix['detects'] else None
+                moved = acc is not None and acc != r['access']  # checked whether or not a fingerprint exists yet
+                if moved or (r['fingerprint'] and r['fingerprint'] != newfp):
+                    c = {'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
+                         'access': [r['access'], acc or r['access']]}
+                    if moved and acc == 'free':  # became free: the index's own fetch route replaces spec "none"
+                        fresh = new_row(k, m)
+                        c.update(spec=fresh.get('spec', ''), fetch=fresh.get('fetch', ''))
+                    changed.append(c)
+                elif not r['fingerprint']:
                     init.append({'id': r['id'], 'fingerprint': newfp, 'deps': deps})
-                elif r['fingerprint'] != newfp or (acc and acc != r['access']):
-                    changed.append({'id': r['id'], 'fingerprint': [r['fingerprint'], newfp], 'deps': [r['deps'], deps],
-                                    'access': [r['access'], acc or r['access']]})
             elif r['status'] != 'removed':
-                stale = r['status'] == 'needs-review' and days_between(r['last_seen'], today) >= REMOVE_AFTER_DAYS
+                if not ix['covered'](k):  # the part of the index that lists it failed to load: no conclusion
+                    unverified.append(r['id'])
+                    continue
+                # the removal clock starts at the first refresh that confirmed the item missing, not at last_seen
+                since = next((day for reason, _, day in review_items(r) if reason == 'missing'), None)
+                gone = days_since(since, today) if since else None
                 missing.append({'id': r['id'], 'status': r['status'], 'last_seen': r['last_seen'],
-                                'proposal': 'removed' if stale else 'needs-review'})
+                                'missing_since': since or today,
+                                'proposal': 'removed' if gone is not None and gone >= REMOVE_AFTER_DAYS else 'needs-review'})
         for k in sorted(set(remote) - set(local)):
             row = new_row(k, remote[k])
             added.append(dict(row, key=k, id=kebab(k) if s == 'reactbits' else k, title=k,
-                              fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps', [])),
+                              fingerprint=fp(remote[k]), deps=' '.join(remote[k].get('deps') or []),
                               desc_zh='', task='', layer=''))
+        degraded, suspect = list(ix['degraded']), []
+        known = sum(1 for k, r in local.items() if r['status'] != 'removed' and ix['covered'](k))
+        if missing and len(missing) > max(10, SHRINK_ALARM * known):
+            degraded.append('%d of %d known items are absent from a non-empty index (%.0f%%): treated as an incomplete '
+                            'index; they are listed under suspect_missing for a human to check, none is proposed as '
+                            'gone' % (len(missing), known, 100.0 * len(missing) / max(known, 1)))
+            suspect, missing = missing, []
+        carried = carry_over(s, added)
         prev = load_state().get('refresh', {}).get(s, {})
-        prop.update(index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
+        prop.update(status='degraded' if degraded else 'ok', degraded=degraded, detects=list(ix['detects']),
+                    blind=ix['blind'],
+                    index_sha=h, index_changed=bool(prev.get('index_sha')) and prev.get('index_sha') != h,
                     remote=len(remote), local=len(local), seen=seen, init=init, changed=changed,
-                    missing=missing, added=added)
-        json.dump(prop, open(os.path.join(outdir, s + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        st = load_state()
-        st.setdefault('refresh', {})[s] = {'at': prop['generated_at'], 'index_sha': h}
-        save_state(st)
-        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d' % (
-            s, len(remote), len(local), len(init), len(changed), len(missing), len(added)))
-    print('\n待审变更已写入 %s/（不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。' % outdir)
+                    missing=missing, suspect_missing=suspect, unverified=unverified, revived=revived, added=added)
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(prop, f, ensure_ascii=False, indent=1)
+        update_state(lambda st: st.setdefault('refresh', {}).__setitem__(s, {'at': prop['generated_at'], 'index_sha': h}))
+        print('%-13s remote %4d  local %4d  init %4d  changed %3d  missing %3d  new %3d%s%s%s' % (
+            s, len(remote), len(local), len(init), len(changed), len(missing), len(added),
+            '  back %d' % len(revived) if revived else '',
+            '  （沿用上一份待审稿里补好的 %d 个新条目）' % carried if carried else '',
+            ''.join('\n              DEGRADED %s' % d for d in degraded)))
+    print('\n待审变更已写入 %s/（每次一份新文件，不改正式数据）。看详情：diff.sh；批准后：apply.sh <source>，再 audit.sh 并 git commit。'
+          % outdir)
     return rc
 
 
-def latest_pending(s):
-    if not os.path.isdir(PENDING):
-        return None
-    for d in sorted(os.listdir(PENDING), reverse=True):
-        p = os.path.join(PENDING, d, s + '.json')
-        if os.path.exists(p):
+def pending_files(s):
+    """Every proposal written for a source, oldest first: _pending/<date>/<source>-<HHMMSS>.json (and the older
+    one-per-day <source>.json)."""
+    out = []
+    for d in (sorted(os.listdir(PENDING)) if os.path.isdir(PENDING) else []):
+        folder = os.path.join(PENDING, d)
+        for fn in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+            if fn == s + '.json' or re.fullmatch(re.escape(s) + r'-\d{6}\.json', fn):
+                out.append(os.path.join(folder, fn))
+    return sorted(out, key=lambda p: (os.path.basename(os.path.dirname(p)), os.path.basename(p) != s + '.json', p))
+
+
+HUMAN_FIELDS = ('desc_zh', 'task', 'layer', 'visual_tags', 'interaction_tags', 'risk', 'notes')
+
+
+def carry_over(s, added):
+    """Copy what a human already filled in for new items in the previous unapplied proposal, so refreshing again
+    never throws that work away. Returns how many items got something."""
+    p = latest_pending(s)
+    if not p:
+        return 0
+    with open(p, encoding='utf-8') as f:
+        before = {a['id']: a for a in json.load(f).get('added', [])}
+    n = 0
+    for a in added:
+        old = before.get(a['id'], {})
+        filled = {k: old[k] for k in HUMAN_FIELDS if old.get(k) and not a.get(k)}
+        a.update(filled)
+        n += bool(filled)
+    return n
+
+
+def latest_pending(s, applied=False):
+    """The newest proposal for a source that has not been applied yet (or the newest of all with applied=True)."""
+    for p in reversed(pending_files(s)):
+        try:
+            with open(p, encoding='utf-8') as f:
+                done = json.load(f).get('applied_at')
+        except ValueError:
+            continue
+        if applied or not done:
             return p
     return None
 
@@ -902,101 +1962,458 @@ def latest_pending(s):
 def cmd_diff(args):
     targets = [a for a in args if not a.startswith('-')] or sources()
     for s in targets:
-        p = latest_pending(s)
+        p = latest_pending(s) or latest_pending(s, applied=True)
         if not p:
             continue
-        d = json.load(open(p, encoding='utf-8'))
-        if d['status'] != 'ok':
+        with open(p, encoding='utf-8') as f:
+            d = json.load(f)
+        if d.get('applied_at'):
+            print('## %s  最近的待审稿已在 %s apply（%s）' % (s, d['applied_at'], os.path.relpath(p, ROOT)))
+            continue
+        if d.get('status') == 'error':
             print('## %s  ERROR %s' % (s, d.get('error')))
             continue
         print('## %s  (%s)  init %d  changed %d  missing %d  new %d' % (
             s, d['generated_at'], len(d['init']), len(d['changed']), len(d['missing']), len(d['added'])))
+        for reason in d.get('degraded', []):
+            print('  DEGRADED %s' % reason)
+        print('  能看到：新增、消失、元数据指纹%s%s' % (''.join({'access': '、免费/Pro 变化', 'deps': '、依赖列表'}.get(x, '')
+                                                         for x in d.get('detects', [])),
+                                                 '；看不到：' + '；'.join(d['blind']) if d.get('blind') else ''))
+        if d.get('unverified'):
+            print('  未核对 %d 条（所在的子清单没取到，不判断是否消失）' % len(d['unverified']))
+        if d.get('suspect_missing'):
+            print('  疑似消失 %d 条（清单异常缩水，没有生成下线提案；人工确认后可 apply.sh %s --accept-suspect）' % (
+                len(d['suspect_missing']), s))
         for c in d['changed'][:20]:
-            print('  changed  %-36s deps %r → %r  access %s → %s' % (c['id'], c['deps'][0], c['deps'][1], *c['access']))
+            print('  changed  %-36s deps %r → %s  access %s → %s%s' % (
+                c['id'], c['deps'][0], '（未提供，保留）' if c['deps'][1] is None else repr(c['deps'][1]), *c['access'],
+                '  spec → %s' % c['spec'] if c.get('spec') else ''))
         for m in d['missing'][:20]:
-            print('  missing  %-36s %s → %s (last seen %s)' % (m['id'], m['status'], m['proposal'], m['last_seen']))
+            print('  missing  %-36s %s → %s（%s 起找不到，最后看到 %s）' % (
+                m['id'], m['status'], m['proposal'], m.get('missing_since', '?'), m['last_seen']))
+        for b in d.get('revived', [])[:20]:
+            print('  back     %-36s removed → needs-review（又出现在线上清单里）' % b['id'])
         for a in d['added'][:20]:
             print('  new      %-36s %s%s' % (a['id'], a.get('category', ''), '' if a['desc_zh'] else '  （待补 desc_zh/task/layer 才能写入）'))
-        more = sum(max(0, len(d[k]) - 20) for k in ('changed', 'missing', 'added'))
+        more = sum(max(0, len(d.get(k, [])) - 20) for k in ('changed', 'missing', 'added', 'revived'))
         if more:
             print('  ... %d more, see %s' % (more, p))
     return 0
 
 
+def source_sha(s):
+    """Hash of the machine file a proposal was computed against; apply refuses when it has changed since."""
+    p = os.path.join(SRC, s + '.tsv')
+    if not os.path.exists(p):
+        return ''
+    with open(p, 'rb') as f:
+        return sha(f.read())[:16]
+
+
+def write_together(pairs):
+    """Write several files so that either all of them change or none does: each is written to a temp file first,
+    then the originals are swapped out one by one and put back if a later swap fails."""
+    staged, swapped = [], []
+    try:
+        for path, text in pairs:
+            with open(path + '.apply-tmp', 'w', encoding='utf-8') as f:
+                f.write(text)
+            staged.append(path)
+        try:
+            for path in staged:
+                if os.path.exists(path):
+                    shutil.copy2(path, path + '.apply-bak')
+                os.replace(path + '.apply-tmp', path)
+                swapped.append(path)
+        except BaseException:
+            for path in swapped:
+                if os.path.exists(path + '.apply-bak'):
+                    os.replace(path + '.apply-bak', path)
+            raise
+    finally:
+        for path in staged:
+            for tail in ('.apply-tmp', '.apply-bak'):
+                if os.path.exists(path + tail):
+                    os.remove(path + tail)
+
+
+CLEAN = re.compile(r'^[^\t\r\n]*$')
+
+
+def check_added(a, s, taken):
+    """Everything audit would reject in a new item, found before anything is written."""
+    errs, where = [], 'new %s' % a.get('id', '?')
+    if not re.match(r'^[A-Za-z0-9][A-Za-z0-9:._@-]*$', a.get('id', '')):
+        errs.append('%s: id must be letters, digits and : . _ @ -' % where)
+    elif a['id'] in taken:
+        errs.append('%s: id already exists in %s.tsv or %s.notes.tsv' % (where, s, s))
+    for k, v in a.items():
+        if isinstance(v, str) and not CLEAN.match(v):
+            errs.append('%s: field %s contains a tab or line break' % (where, k))
+    tasks = [x for x in a.get('task', '').split(',') if x]
+    if not 1 <= len(tasks) <= 2 or any(x not in TASKS for x in tasks):
+        errs.append('%s: task %r (one or two of: %s)' % (where, a.get('task'), ' '.join(TASKS)))
+    if a.get('layer') not in LAYERS:
+        errs.append('%s: layer %r (one of: %s)' % (where, a.get('layer'), ' '.join(LAYERS)))
+    bad_risk = [x for x in a.get('risk', '').split(',') if x and x not in RISKS]
+    if bad_risk:
+        errs.append('%s: risk %s (allowed: %s)' % (where, ','.join(bad_risk), ' '.join(RISKS)))
+    if a.get('access', 'free') not in ACCESS or a.get('usage', 'install') not in USAGE:
+        errs.append('%s: access %r / usage %r' % (where, a.get('access'), a.get('usage')))
+    errs += check_spec(a.get('spec', 'manual'), where)
+    if a.get('access') == 'pro' and a.get('spec') != 'none':
+        errs.append('%s: a pro item must have spec none' % where)
+    return errs
+
+
+def check_spec(spec, where):
+    return ['%s: spec %s:%s' % (where, k, arg) for k, arg in parse_spec(spec)
+            if k not in ADAPTER_KINDS or (k in ('registry', 'url', 'doc', 'prompt', 'browser') and not arg.startswith('https://'))]
+
+
+FINGERPRINT = re.compile(r'^([0-9a-f]{10})?$')  # what fp() returns: 10 hex digits, or '' for an item without metadata
+
+
+def check_changed(c, by_id, kind='changed'):
+    """What a changed or init entry would write into an existing row, checked as strictly as a new item."""
+    if not isinstance(c, dict):
+        return ['%s entry %r is not an object' % (kind, c)]
+    where = '%s %s' % (kind, c.get('id', '?'))
+    text = lambda v: isinstance(v, str)
+    pair = lambda v: isinstance(v, list) and len(v) == 2
+    anything = lambda v: True
+    shape = {'changed': (('id', text), ('fingerprint', pair), ('deps', pair), ('access', pair)),
+             'init': (('id', text), ('fingerprint', text), ('deps', anything))}[kind]
+    missing = [k for k, _ in shape if k not in c]
+    bad = [k for k, ok in shape if k in c and not ok(c[k])]
+    if missing or bad:
+        return ['%s: %s' % (where, '; '.join((['missing field ' + ', '.join(missing)] if missing else []) +
+                                            (['malformed field ' + ', '.join(bad)] if bad else [])))]
+    if c['id'] not in by_id:
+        return ['%s: no such item in the machine file' % where]
+    errs = []
+    for k, v in c.items():
+        for x in (v if isinstance(v, list) else [v]):
+            if isinstance(x, str) and not CLEAN.match(x):
+                errs.append('%s: field %s contains a tab or line break' % (where, k))
+    fps = c.get('fingerprint')
+    new_fp = fps[1] if kind == 'changed' and isinstance(fps, list) and len(fps) == 2 else fps
+    if not isinstance(new_fp, str) or not FINGERPRINT.match(new_fp):  # the value that will be written
+        errs.append('%s: fingerprint %r' % (where, fps))
+    deps = c['deps'][1] if kind == 'changed' else c.get('deps')
+    if deps is not None and not isinstance(deps, str):
+        errs.append('%s: deps %r' % (where, deps))
+    if kind == 'changed':
+        if c['access'][1] not in ACCESS:
+            errs.append('%s: access %r' % (where, c['access'][1]))
+        if c['access'][0] == 'pro' and c['access'][1] != 'pro':
+            if not (c.get('spec') and c['spec'] != 'none'):
+                errs.append('%s: leaves Pro but the proposal has no official fetch route; check by hand' % where)
+            else:
+                errs += check_spec(c['spec'], where)
+    return errs
+
+
 def cmd_apply(args):
     if not args or args[0] in ('-h', '--help'):
-        print('usage: apply.sh <source> [--file pending.json]   把已审的待审变更写入 sources/<source>.tsv（只写机器字段）')
+        print('usage: apply.sh <source> [--file pending.json] [--accept-suspect]\n'
+              '  把审过的待审变更写进 sources/<source>.tsv（机器字段），新条目同时追加 sources/<source>.notes.tsv 的一行\n'
+              '  （来自待审文件里补好的 desc_zh/task/layer 等）；已有的 notes 行不会改。全部校验通过才写，两份文件一起写入。')
         return 0
     s = args[0]
+    if '--file' in args and args.index('--file') + 1 >= len(args):
+        raise UsageError('--file needs a value')
     p = args[args.index('--file') + 1] if '--file' in args else latest_pending(s)
     if not p:
         sys.exit('no pending proposal for %s; run refresh.sh %s first' % (s, s))
-    d = json.load(open(p, encoding='utf-8'))
-    if d['status'] != 'ok':
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    if d.get('source') != s:
+        sys.exit('refusing to apply: %s is a proposal for %r, not %r' % (p, d.get('source'), s))
+    if d['status'] == 'error':
         sys.exit('proposal is an error report, nothing to apply: %s' % d.get('error'))
-    today = d['generated_at'][:10]
+    if d.get('format') != PROPOSAL_FORMAT:
+        sys.exit('proposal %s was written by an older refresh (format %s); run refresh.sh %s again' % (
+            p, d.get('format', 1), s))
+    if d.get('applied_at'):
+        sys.exit('proposal %s was already applied at %s' % (p, d['applied_at']))
+    if d.get('base_sha') != source_sha(s):
+        sys.exit('refusing to apply: sources/%s.tsv changed after this proposal was generated (another proposal '
+                 'applied, or a hand edit); run refresh.sh %s again so nothing newer is overwritten' % (s, s))
+    if '--accept-suspect' in args:  # a human checked the items an alarming shrink held back
+        d['missing'] = d.get('missing', []) + d.get('suspect_missing', [])
     mp, np_ = os.path.join(SRC, s + '.tsv'), os.path.join(SRC, s + '.notes.tsv')
-    rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in open(mp, encoding='utf-8') if l.strip()]
+    with open(mp, encoding='utf-8') as f:
+        rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+    with open(np_, encoding='utf-8') as f:
+        notes_text = f.read()
+    note_ids = {l.split('\t', 1)[0] for l in notes_text.splitlines() if l.strip()}
     by_id = {r['id']: r for r in rows}
-    n = {'seen': 0, 'init': 0, 'changed': 0, 'missing': 0, 'added': 0, 'skipped_new': 0}
+    # 1. validate everything first
+    errs = ['proposal field %s must be a list' % k for k in ('seen', 'init', 'changed', 'missing', 'added')
+            if not isinstance(d.get(k), list)]
+    errs += ['missing entry %r has no id' % m for m in d.get('missing') or [] if not isinstance(m, dict) or 'id' not in m]
+    if errs:
+        print('refusing to apply %s, nothing was written:' % os.path.relpath(p, ROOT))
+        for e in errs:
+            print('  ' + e)
+        return 1
+    for c in d['changed']:
+        errs += check_changed(c, by_id)
+    for c in d['init']:
+        errs += check_changed(c, by_id, 'init')
+    for m in d['missing']:
+        if m.get('proposal') not in ('needs-review', 'removed'):
+            errs.append('missing %s: proposal %r' % (m['id'], m.get('proposal')))
+    ready = [a for a in d['added'] if a.get('desc_zh') and a.get('task') and a.get('layer')]
+    taken = set(by_id) | note_ids
+    for a in ready:
+        errs += check_added(a, s, taken)
+        taken.add(a.get('id'))
+    if errs:
+        print('refusing to apply %s, nothing was written:' % os.path.relpath(p, ROOT))
+        for e in errs:
+            print('  ' + e)
+        return 1
+    # 2. compute the new state in memory
+    today = d['generated_at'][:10]
+    n = {'seen': 0, 'init': 0, 'changed': 0, 'missing': 0, 'added': 0, 'skipped_new': len(d['added']) - len(ready)}
     for i in d['seen']:
         r = by_id.get(i)
         if r:
             r['last_seen'] = today
-            if r['status'] == 'needs-review' and not any(c['id'] == i for c in d['changed']):
+            review_drop(r, 'missing')  # back online clears only the missing reason, never a pending human review
+            if r['status'] == 'needs-review' and not r['review'] and not any(c['id'] == i for c in d['changed']):
                 r['status'] = 'active'
             n['seen'] += 1
     for c in d['init']:
         if c['id'] in by_id:
             by_id[c['id']]['fingerprint'] = c['fingerprint']
-            if c['deps']:
+            if c['deps'] is not None:  # '' is a known empty list; None means this index does not list deps
                 by_id[c['id']]['deps'] = c['deps']
             n['init'] += 1
     for c in d['changed']:
         r = by_id.get(c['id'])
         if r:
-            r['fingerprint'], r['deps'], r['access'] = c['fingerprint'][1], c['deps'][1] or r['deps'], c['access'][1]
+            old_access, r['access'] = c['access']
+            r['fingerprint'] = c['fingerprint'][1]
+            if c['deps'][1] is not None:
+                r['deps'] = c['deps'][1]
             if r['access'] == 'pro':
                 r['spec'] = 'none'
+            elif r['spec'] == 'none':  # left Pro: use the official route the index gave, never guess one
+                r['spec'], r['fetch'] = c['spec'], c.get('fetch') or r['fetch']
+            if c['fingerprint'][0] and c['fingerprint'][0] != c['fingerprint'][1]:
+                review_set(r, 'changed', today)
+            if old_access != r['access']:
+                review_set(r, 'access', today, '%s>%s' % (old_access, r['access']))
             r['status'] = 'needs-review'
             n['changed'] += 1
     for m in d['missing']:
         r = by_id.get(m['id'])
         if r:
+            review_set(r, 'missing', m.get('missing_since') or today, keep_first=True)
             r['status'] = m['proposal']
             n['missing'] += 1
+    for b in d.get('revived', []):
+        r = by_id.get(b['id'])
+        if r and r['status'] == 'removed':
+            review_drop(r, 'missing')
+            review_set(r, 'back', today)
+            r['status'], r['last_seen'] = 'needs-review', today
+            n['revived'] = n.get('revived', 0) + 1
     new_notes = []
-    for a in d['added']:
-        if not (a.get('desc_zh') and a.get('task') and a.get('layer')):
-            n['skipped_new'] += 1
-            continue
-        if a['id'] in by_id:
-            continue
+    for a in ready:
         row = {k: '' for k in COLS}
         row.update(source=s, id=a['id'], name=a['title'], category=a.get('category', ''), url=a.get('url', ''),
                    fetch=a.get('fetch', ''), spec=a.get('spec', 'manual'), access=a.get('access', 'free'),
                    usage=a.get('usage', 'install'), framework=a.get('framework', ''), deps=a.get('deps', ''),
-                   status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''))
+                   status='needs-review', last_seen=today, fingerprint=a.get('fingerprint', ''), review='new:' + today)
         rows.append(row)
-        by_id[row['id']] = row
         new_notes.append('\t'.join([a['id'], a['desc_zh'], a['task'], a['layer'], a.get('visual_tags', ''),
-                                    a.get('interaction_tags', ''), a.get('risk', ''), '']))
+                                    a.get('interaction_tags', ''), a.get('risk', ''), a.get('notes', '')]))
         n['added'] += 1
-    with open(mp, 'w', encoding='utf-8') as f:
-        f.write('\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n')
-    if new_notes:
-        with open(np_, 'a', encoding='utf-8') as f:
-            f.write('\n'.join(new_notes) + '\n')
+    # 3. write both files together, then mark the proposal as used
+    tsv = '\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n'
+    notes = notes_text if not new_notes else notes_text.rstrip('\n') + '\n' + '\n'.join(new_notes) + '\n'
+    write_together([(mp, tsv), (np_, notes)])
+    d['applied_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
+    with open(p, 'w', encoding='utf-8') as f:
+        json.dump(d, f, ensure_ascii=False, indent=1)
     print('applied %s: %s' % (os.path.relpath(p, ROOT), ', '.join('%s %d' % kv for kv in n.items())))
     if n['skipped_new']:
-        print('有 %d 个新条目缺 desc_zh/task/layer，没有写入：在 %s 里补全后再 apply。' % (n['skipped_new'], p))
+        print('有 %d 个新条目缺 desc_zh/task/layer，没有写入：在 %s 里补全后重新 refresh.sh %s（补好的字段会沿用到新的待审稿），'
+              '再 apply。' % (n['skipped_new'], p, s))
     print('下一步：audit.sh，确认无误后 git commit（回滚用 git revert）。')
     return 0
 
 
+def cmd_review(args):
+    """List items waiting for a human look, or mark them reviewed."""
+    if args and args[0] in ('-h', '--help'):
+        print('usage: review.sh [source...]          列出待审条目和原因（新增、上游变化、访问状态变化、线上消失、重新出现）\n'
+              '       review.sh --done <source:id>...  审过了：清掉除"线上找不到"以外的原因；没有剩余原因就改回 active\n'
+              '"线上找不到"只由 refresh 清除（条目重新出现在清单里），不能手动标记为审过。')
+        return 0
+    if args and args[0] == '--done':
+        refs = args[1:]
+        if not refs:
+            raise UsageError('--done needs at least one source:id')
+        by_source = {}
+        for ref in refs:
+            if ':' not in ref:
+                raise UsageError('use <source>:<item_id>, got %r' % ref)
+            src, iid = ref.split(':', 1)
+            if src not in sources():
+                raise UsageError('unknown source %r' % src)
+            by_source.setdefault(src, []).append(iid)
+        for src, ids in by_source.items():
+            mp = os.path.join(SRC, src + '.tsv')
+            with open(mp, encoding='utf-8') as f:
+                rows = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+            by_id = {r['id']: r for r in rows}
+            unknown = [i for i in ids if i not in by_id]
+            if unknown:
+                sys.exit('not in sources/%s.tsv: %s' % (src, ', '.join(unknown)))
+            for i in ids:
+                r = by_id[i]
+                review_drop(r, 'new', 'changed', 'access', 'back')
+                if r['status'] == 'needs-review' and not r['review']:
+                    r['status'] = 'active'
+                print('%s:%s → %s%s' % (src, i, r['status'], '（%s）' % review_text(r) if r['review'] else ''))
+            write_together([(mp, '\n'.join('\t'.join(r.get(k, '') for k in COLS) for r in rows) + '\n')])
+        print('下一步：audit.sh，确认无误后 git commit。')
+        return 0
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s' % ', '.join(unknown))
+    rows = [r for r in load_rows(include_removed=True) if (not args or r['source'] in args)
+            and (r['status'] == 'needs-review' or r['review'])]
+    if not rows:
+        print('没有待审条目。')
+        return 0
+    for r in sorted(rows, key=lambda r: (r['source'], r['review'], r['id'])):
+        print('%-12s %-40s %-13s %s' % (r['source'], r['id'][:40], r['status'], review_text(r)))
+    print('\n%d 条。审过的用 review.sh --done <source:id>...；"线上找不到"等 refresh 处理。' % len(rows))
+    return 0
+
+
+def cmd_coverage(args):
+    """One line per source: what the catalogue covers and when each kind of check last happened. Catalogue checks,
+    fetch spot checks and claim reviews are reported separately on purpose: one passing does not vouch for the
+    others."""
+    if args and args[0] in ('-h', '--help'):
+        print('usage: coverage.sh [source...]   每个来源的覆盖范围、更新方式和各类核对的日期\n'
+              '  清单：frontmatter 的 coverage / catalog_checked，refresh 的最近一次运行（本机 _state.json）\n'
+              '  取码：verify 最近一次抽查（本机 _state.json）；结论：sources/_claims.tsv 的条数和最早核对日期；待审：review.sh')
+        return 0
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s' % ', '.join(unknown))
+    state, claims, rows = load_state(), load_claims(), load_rows(include_removed=True)
+    for s in args or sources():
+        fm = frontmatter(s)
+        rs = [r for r in rows if r['source'] == s]
+        refresh = state.get('refresh', {}).get(s, {}).get('at', '没跑过')
+        v = state.get('verify', {}).get(s, {})
+        verify = ('%s（%s）' % (v['at'], '跳过' if v.get('skipped') else '%d 失败' % v.get('fails', 0))) if v else '没跑过'
+        cl = [c for c in claims if c['ref'].split(':', 1)[0] == s]
+        print('## %s  [%s]' % (s, fm.get('source_status', '?')))
+        print('  覆盖：%s' % fm.get('coverage', '（没写）'))
+        print('  更新：%s' % ('refresh 自动比对，人工 apply' if s in REFRESH else '不自动刷新：' + NO_REFRESH.get(s, '没有刷新器')))
+        print('  清单核对：%s；本机最近 refresh：%s；本机最近 verify 抽查：%s' % (fm.get('catalog_checked', '?'), refresh, verify))
+        print('  条目 %d（待审 %d，已下线 %d）；登记结论 %d 条%s' % (
+            sum(1 for r in rs if r['status'] != 'removed'), sum(1 for r in rs if r['status'] == 'needs-review'),
+            sum(1 for r in rs if r['status'] == 'removed'), len(cl),
+            '，最早核对 %s' % min(c['checked'] for c in cl if c['checked']) if any(c['checked'] for c in cl) else ''))
+    print('\n这些命令都要手动运行：仓库没有自带定时任务，要定期跑 refresh、verify、claims --check，需要自己配 cron 或 CI。')
+    return 0
+
+
+SOURCE_STATUS_ZH = {'degraded': '来源部分可用', 'parser-broken': '来源的解析器坏了', 'offline': '来源下线',
+                    'closed': '来源已关闭'}
+
+
+def source_status(s):
+    return frontmatter(s).get('source_status', 'active')
+
+
 # ---------- stats / audit ----------
 
+DESC_ALARM = {'median': 15, 'template': 0.3, 'english': 0.3}  # warning thresholds, not errors
+EN_KEYWORDS = '英文关键词'  # optional last segment of desc_zh: English search words for a translated description
+
+
+def desc_quality(rows):
+    """{source: (rows, median desc length, share of the most common template, share of mostly-English descs)}.
+    The template of a description is what is left after removing the item's own id and name, so "X 用法示例代码"
+    for every X shows up as one template. A trailing "英文关键词 ..." segment holds English search words on purpose
+    and does not count towards mostly-English."""
+    by = {}
+    for r in rows:
+        by.setdefault(r['source'], []).append(r)
+    out = {}
+    for s, rs in by.items():
+        lens = sorted(len(r['desc']) for r in rs)
+        counts = {}
+        for r in rs:
+            d = r['desc'].lower()
+            for w in sorted({r['id'].lower(), r['name'].lower()} | set(re.split(r'[\s:_/.-]+', (r['id'] + ' ' + r['name']).lower())),
+                            key=len, reverse=True):
+                if len(w) >= 2:
+                    d = d.replace(w, '')
+            t = re.sub(r'[\d\s\W_]+', '', d)
+            counts[t] = counts.get(t, 0) + 1
+        def english(d):
+            d = d.split(EN_KEYWORDS)[0]
+            letters = re.sub(r'[\s\d\W_]+', '', d)
+            return bool(letters) and len(CJK.findall(d)) < 0.25 * len(letters)
+        worded = [r for r in rs if r['layer'] != 'icons']  # icon names and tags are English by design
+        out[s] = (len(rs), lens[len(lens) // 2], max(counts.values()) / len(rs),
+                  sum(english(r['desc']) for r in worded) / len(worded) if worded else 0.0)
+    return out
+
+
+RISK_HINTS = {'marquee': r'marquee|跑马灯', 'typewriter': r'typewriter|打字机', 'glow': r'\bglow\b|光晕',
+              'glass': r'glassmorphism|毛玻璃|玻璃拟态', 'gradient-text': r'渐变文字|gradient text'}
+
+
+def label_warnings(rows):
+    """Candidates for a human to check, never written automatically: a risk the name or description suggests but
+    the risk column lacks, and visual tags that contradict the description."""
+    warns = []
+    for r in rows:
+        if r['layer'] == 'icons':
+            continue
+        text = (r['name'] + ' ' + r['desc']).lower()
+        missing = [k for k, rx in RISK_HINTS.items() if re.search(rx, text) and k not in r['risk'].split(',')]
+        if missing:
+            warns.append('%s:%s: 描述提到 %s，risk 列没有（确认后补，或者确认是误报）' % (r['source'], r['id'], ','.join(missing)))
+        if 'webgl' in r['vtags'].split(',') and re.search(r'(?:无|不用|没有|不需要|no) ?webgl', text):
+            warns.append('%s:%s: 描述说没有 WebGL，visual_tags 却有 webgl' % (r['source'], r['id']))
+    return warns
+
+
+def desc_warnings(rows):
+    warns = []
+    for s, (n, med, tpl, eng) in sorted(desc_quality(rows).items()):
+        why = [x for x, bad in (('描述中位长度 %d 字' % med, med < DESC_ALARM['median']),
+                                ('%.0f%% 的描述是同一句模板' % (100 * tpl), n > 10 and tpl > DESC_ALARM['template']),
+                                ('%.0f%% 的描述以英文为主' % (100 * eng), eng > DESC_ALARM['english'])) if bad]
+        if why:
+            warns.append('desc_zh %s: %s（中文搜索会搜不到，见 _SPEC.md 的 desc_zh 要求）' % (s, '；'.join(why)))
+    return warns
+
+
 def cmd_stats(args):
+    if '--desc' in args:
+        print('%-13s %6s %8s %9s %9s' % ('source', 'rows', 'median', 'template', 'english'))
+        for s, (n, med, tpl, eng) in sorted(desc_quality(load_rows()).items()):
+            print('%-13s %6d %8d %8.0f%% %8.0f%%' % (s, n, med, 100 * tpl, 100 * eng))
+        print('提示阈值：中位长度 < %d、同一模板 > %.0f%%、英文为主 > %.0f%%（audit 会给出 warning，不算格式错误）' % (
+            DESC_ALARM['median'], 100 * DESC_ALARM['template'], 100 * DESC_ALARM['english']))
+        return 0
     md = '--md' in args or '--write-skill' in args
     buf = []
     out = buf.append if '--write-skill' in args else print
@@ -1044,10 +2461,11 @@ def cmd_audit(args):
     errs = []
     for s in sources():
         fm = frontmatter(s)
-        for k in ('id', 'name', 'url', 'kind', 'pro', 'fetch', 'verified', 'source_status', 'visual_style',
-                  'foundation', 'styling', 'motion_lib', 'dark_mode', 'mixing_notes'):
+        for k in FRONTMATTER:
             if k not in fm:
                 errs.append('%s.md: missing frontmatter %s' % (s, k))
+        if 'catalog_checked' in fm and not re.match(r'^\d{4}-\d{2}-\d{2}$', fm['catalog_checked']):
+            errs.append('%s.md: catalog_checked %r must be YYYY-MM-DD' % (s, fm['catalog_checked']))
         for k, allowed in (('source_status', SOURCE_STATUS), ('foundation', FOUNDATIONS), ('dark_mode', DARK_MODES)):
             if k in fm and fm[k] not in allowed:
                 errs.append('%s.md: %s %r (allowed: %s)' % (s, k, fm[k], ' '.join(allowed)))
@@ -1092,10 +2510,25 @@ def cmd_audit(args):
                     errs.append('%s: missing adapter %s' % (where, a))
             if r['access'] == 'pro' and r['spec'] != 'none':
                 errs.append('%s: pro row must have spec none' % where)
-        for n, line in enumerate(open(mp, encoding='utf-8'), 1):
-            c = line.rstrip('\n').split('\t')
-            if len(c) == len(COLS) and c[12] and c[12] not in ids:
-                errs.append('%s.tsv:%d: alias_of %r does not exist' % (s, n, c[12]))
+        with open(mp, encoding='utf-8') as f:
+            machine = [dict(zip(COLS, l.rstrip('\n').split('\t'))) for l in f if l.strip()]
+        machine = [r for r in machine if len(r) == len(COLS)]
+        for r in machine:
+            where = '%s.tsv %s' % (s, r['id'])
+            for x in filter(None, r['review'].split(',')):
+                if not REVIEW_ITEM.match(x):
+                    errs.append('%s: review item %r (reason:YYYY-MM-DD, reasons: %s)' % (where, x, ' '.join(REVIEW_REASONS)))
+            if r['status'] == 'active' and r['review']:
+                errs.append('%s: active but review says %r; use review.sh --done or set needs-review' % (where, r['review']))
+            if r['status'] == 'needs-review' and not r['review']:
+                errs.append('%s: needs-review without a reason in the review column' % where)
+            if r['alias_of']:
+                if r['status'] != 'removed':
+                    errs.append('%s: an alias row (alias_of %s) must have status removed' % (where, r['alias_of']))
+                try:
+                    resolve_alias(machine, r['id'])
+                except LookupError as e:
+                    errs.append('%s: alias_of %s' % (where, e))
         seen_notes = set()
         for n, line in enumerate(open(np_, encoding='utf-8'), 1):
             if not line.strip():
@@ -1139,6 +2572,8 @@ def cmd_audit(args):
         missing = [t for t in TASKS if t != 'other' and not os.path.exists(os.path.join(GUIDES, t + '.md'))]
         if missing:
             warns.append('no guide yet for: ' + ' '.join(missing))
+    warns += desc_warnings(load_rows()) + label_warnings(load_rows())
+    errs += audit_claims(known)
     for e in errs[:200]:
         print(e)
     for w in warns:
@@ -1147,34 +2582,107 @@ def cmd_audit(args):
     return 1 if errs else 0
 
 
+def audit_claims(known):
+    """Format checks for sources/_claims.tsv. Unverified conclusions are allowed; they are reported by
+    `claims --pending`, not treated as format errors."""
+    errs, seen = [], set()
+    if not os.path.exists(CLAIMS):
+        return errs
+    lines = open(CLAIMS, encoding='utf-8').read().split('\n')
+    if lines[0].split('\t') != list(CLAIM_COLS):
+        errs.append('_claims.tsv:1: header must be: ' + ' '.join(CLAIM_COLS))
+    for n, line in enumerate(lines[1:], 2):
+        if not line.strip():
+            continue
+        c = line.split('\t')
+        where = '_claims.tsv:%d' % n
+        if len(c) != len(CLAIM_COLS):
+            errs.append('%s: %d columns (need %d)' % (where, len(c), len(CLAIM_COLS)))
+            continue
+        r = dict(zip(CLAIM_COLS, c))
+        src, _, iid = r['ref'].partition(':')
+        if src == 'npm':
+            if not iid:
+                errs.append('%s: empty npm package' % where)
+            if (r['probe'] or r['sha']) and not r['check_with'].startswith('https://'):
+                errs.append('%s: npm ref with probe/sha needs a https:// check_with' % where)
+        elif (src, iid) not in known:
+            errs.append('%s: unknown ref %s' % (where, r['ref']))
+        if (r['ref'], r['topic']) in seen:
+            errs.append('%s: duplicate topic %s for %s' % (where, r['topic'], r['ref']))
+        seen.add((r['ref'], r['topic']))
+        if not re.match(r'^[a-z0-9-]+$', r['topic']):
+            errs.append('%s: topic %r (lowercase kebab-case)' % (where, r['topic']))
+        if r['kind'] not in CLAIM_KINDS:
+            errs.append('%s: kind %r (allowed: %s)' % (where, r['kind'], ' '.join(CLAIM_KINDS)))
+        if r['depth'] not in CLAIM_DEPTHS:
+            errs.append('%s: depth %r (allowed: %s)' % (where, r['depth'], ' '.join(CLAIM_DEPTHS)))
+        if r['depth'] != 'none' and not re.match(r'^\d{4}-\d{2}-\d{2}$', r['checked']):
+            errs.append('%s: checked %r must be YYYY-MM-DD' % (where, r['checked']))
+        if r['sha'] and not re.match(r'^[0-9a-f]{16}$', r['sha']):
+            errs.append('%s: sha %r must be the 16 hex chars fetch prints' % (where, r['sha']))
+        for k, text in probe_terms(r['probe']):
+            if k not in ('has', 'lacks') or not text:
+                errs.append('%s: probe term %r (use has:<text> or lacks:<text>, joined with " && ")' % (where, k + ':' + text))
+        if r['check_with'] and not (r['check_with'].startswith('https://') or
+                                    re.match(r'^(--(style|variant) \S+ ?)+$', r['check_with'])):
+            errs.append('%s: check_with %r (an https URL, or --style/--variant options)' % (where, r['check_with']))
+        if not r['claim']:
+            errs.append('%s: empty claim' % where)
+    return errs
+
+
 def cmd_searchtest(args):
     """Run search relevance regression cases from scripts/search_cases.json."""
     cases = json.load(open(os.path.join(ROOT, 'scripts', 'search_cases.json'), encoding='utf-8'))['cases']
     fails = 0
     for c in cases:
-        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'))
+        info = {}
+        res, _ = search(c['q'], c.get('src'), c.get('mode', 'default'), c.get('task'), info=info, base=c.get('base'),
+                        stack=c.get('stack'))
         ids = ['%s:%s' % (r['source'], r['id']) for _, r in res]
         k = c.get('k', 1)
         top = [r for _, r in res[:k]]
+        checks = []  # every assertion present in the case must hold
         if c.get('empty'):
-            ok = not res
-        elif 'top1' in c:
-            ok = bool(ids) and ids[0] == c['top1']
-        elif 'topk_any' in c:
-            ok = any(i in ids[:k] for i in c['topk_any'])
-        elif 'topk_all_category' in c:
-            ok = bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top)
-        elif 'topk_all_id' in c:
-            ok = bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top)
-        elif 'topk_all_task_primary' in c:
-            ok = bool(top) and all(r['task'].split(',')[0] == c['topk_all_task_primary'] for r in top)
-        elif 'topk_no_usage' in c:
-            ok = bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top)
-        else:
-            ok = False
+            checks.append(not res)
+        if 'top1' in c:
+            checks.append(bool(ids) and ids[0] == c['top1'])
+        if 'topk_any' in c:
+            checks.append(any(i in ids[:k] for i in c['topk_any']))
+        if 'topk_any_id' in c:
+            checks.append(any(re.search(c['topk_any_id'], r['id']) for r in top))
+        if 'topk_all_category' in c:
+            checks.append(bool(top) and all(re.search(c['topk_all_category'], r['category']) for r in top))
+        if 'topk_all_id' in c:
+            checks.append(bool(top) and all(re.search(c['topk_all_id'], r['id'] + ' ' + r['name'], re.I) for r in top))
+        if 'topk_all_task_primary' in c:
+            checks.append(bool(top) and all(r['task'].split(',')[0] == c['topk_all_task_primary'] for r in top))
+        if 'topk_no_usage' in c:
+            checks.append(bool(top) and all(r['usage'] != c['topk_no_usage'] for r in top))
+        if 'topk_any_obtainable' in c:
+            checks.append(any(klass(r) == 3 for r in top))
+        if 'topk_all_access' in c:
+            checks.append(bool(top) and all(r['access'] == c['topk_all_access'] for r in top))
+        if 'none_id' in c:
+            checks.append(not any(re.search(c['none_id'], r['id']) for _, r in res))
+        if 'topk_none_id' in c:
+            checks.append(not any(re.search(c['topk_none_id'], r['id']) for r in top))
+        if 'none_framework' in c:
+            checks.append(bool(res) and not any(r['framework'] == c['none_framework'] for _, r in res))
+        if 'none_source' in c:
+            checks.append(bool(res) and not any(r['source'] == c['none_source'] for _, r in res))
+        if 'confident' in c:
+            checks.append(bool(res) and info['low_confidence'] != c['confident'])
+        if 'guide' in c:
+            checks.append(guide_task(res) == c['guide'])
+        if 'top1_clean' in c:
+            checks.append(bool(res) and (not flagged(claims_by_ref(), res[0][1]) and not res[0][1]['notes']) == c['top1_clean'])
+        ok = bool(checks) and all(checks)
         fails += not ok
-        print('%-4s %-28s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + (' --' + c['mode'] if c.get('mode') else ''),
-                                 ', '.join(ids[:k]) or '(empty)'))
+        print('%-4s %-34s %s' % ('ok' if ok else 'FAIL', ' '.join(c['q']) + ''.join(
+            {'mode': ' --%s', 'src': ' -s %s', 'task': ' --task %s', 'base': ' --base %s', 'stack': ' --stack %s'}[x] % c[x]
+            for x in ('mode', 'src', 'task', 'base', 'stack') if c.get(x)), ', '.join(ids[:k]) or '(empty)'))
     print('\n%d/%d passed' % (len(cases) - fails, len(cases)))
     return 1 if fails else 0
 
@@ -1184,15 +2692,31 @@ def cmd_compat(args):
     if not args or args[0] in ('-h', '--help'):
         print('usage: compat.sh <source> [source...]   例：compat.sh shadcn uiarc；只给一个来源时列出它的全部组合')
         return 0
-    p = os.path.join(SRC, '_styles.md')
-    lines = open(p, encoding='utf-8').read().splitlines()
-    names = [a.lower() for a in args]
-    hits = [l for l in lines if l.startswith('|') and all(n in l.lower() for n in names) and ('+' in l or len(names) == 1)]
+    unknown = [a for a in args if a not in sources()]
+    if unknown:
+        raise UsageError('unknown source %s. choose from: %s' % (', '.join(unknown), ' '.join(sources())))
+    with open(os.path.join(SRC, '_styles.md'), encoding='utf-8') as f:
+        lines = f.read().splitlines()
+    names, hits, wild = set(args), [], []
+    for l in lines:
+        if not l.startswith('|'):
+            continue
+        first = l.strip('|').split('|', 1)[0]
+        # only the first column decides: "shadcn" (summary table) or "shadcn + uiarc" (matrix), never the notes
+        cell = {re.sub(r'（[^）]*）', '', x).strip() for x in re.split(r'[+/]', first)}
+        if names <= cell and ('+' in first or len(names) == 1):
+            hits.append(l)
+        elif len(names) == 1 and '+' in first and any(x.startswith('任意') for x in cell):
+            wild.append(l)
     if not hits:
-        print('兼容矩阵里没有同时提到 %s 的行；看 sources/_styles.md 的「混用规则」。' % ' + '.join(args))
+        print('兼容矩阵里没有 %s 这一组；看 sources/_styles.md 的「混用规则」。' % ' + '.join(args))
         return 1
     for l in hits:
         print(l)
+    if wild:
+        print('\n任意底座都适用的组合：')
+        for l in wild:
+            print(l)
     for a in args:
         fm = frontmatter(a)
         if fm:
@@ -1203,11 +2727,16 @@ def cmd_compat(args):
 
 CMDS = {'find': cmd_find, 'fetch': cmd_fetch, 'verify': cmd_verify, 'refresh': cmd_refresh,
         'stats': cmd_stats, 'audit': cmd_audit, 'searchtest': cmd_searchtest,
-        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat}
+        'diff': cmd_diff, 'apply': cmd_apply, 'compat': cmd_compat, 'claims': cmd_claims, 'review': cmd_review,
+        'coverage': cmd_coverage}
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] not in CMDS:
         print(__doc__)
         print('commands: ' + ' '.join(CMDS))
         sys.exit(2)
-    sys.exit(CMDS[sys.argv[1]](sys.argv[2:]))
+    try:
+        sys.exit(CMDS[sys.argv[1]](sys.argv[2:]))
+    except UsageError as e:
+        sys.stderr.write('usage error: %s（看 %s.sh --help）\n' % (e, sys.argv[1]))
+        sys.exit(2)

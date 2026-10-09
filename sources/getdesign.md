@@ -7,7 +7,8 @@ stack: 任意（DESIGN.md 是给 AI 编码 agent 读的 Markdown 设计规范；
 license: 76 个免费 DESIGN.md 来自 GitHub VoltAgent/awesome-design-md（MIT，内容声明为对公开设计的独立分析）；付费产品为自定义授权
 pro: partial（76 个品牌 DESIGN.md 免费；566 条网站目录的截图、标签、简介免费可看，但对应的 DESIGN.md 原文要付费；Animated Backgrounds 36 个效果、Catalog Pass、Private DESIGN.md、Starter Kit、落地页模板、视频模板都要付费）
 fetch: github-raw
-verified: 2026-10-07
+coverage: 全量：sitemap 里的品牌 DESIGN.md 和网站目录；refresh 自动比对（只看地址，看不到内容变化）
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: brand-replica design specs, varies per brand
 foundation: n/a

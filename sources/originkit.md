@@ -7,7 +7,8 @@ stack: React / Next.js / Vite（TSX，"use client"；依赖视组件而定：fra
 license: 自定义（Originkit Licensing & Usage：可用于自有/客户项目，禁止把组件本身再分发/做成模板或组件市场出售）
 pro: partial（236/593 个 component、39/58 个 section、16/23 个 template 需 Pro/Ultimate 订阅；免费账号每天 10 个 component / 10 个 section / 1 个 template）
 fetch: npm
-verified: 2026-10-07
+coverage: 全量：公开 registry（只有元数据，没有付费标记）；refresh 自动比对，看不到付费变化
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: flashy webgl/3d showcase effects
 foundation: none

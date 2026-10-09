@@ -27,7 +27,7 @@
 ## 慎用
 - `bencho:label-input`：浮动标签（placeholder 上浮成 label）。浮动标签在空输入时把 label 当 placeholder，可读性和对比度常出问题，还要映射 token。Operate 表单默认用常驻 label；Persuade 页的单个邮箱框可以用，先确认上浮后的 label 对比度 ≥ 4.5:1。
 - `bencho:one-time-code`：实现思路好（一个隐藏 input 覆盖六格，`autoComplete="one-time-code"`），但 props 只有 `length`、`answer`（Accept/Reject 演示开关）、`corner`，**没有 `onComplete` 或 value 回调**，接真实校验要改代码；还用了 blur+threshold 的 goo 滤镜。要接真实验证用 `shadcn:input-otp` 或 `reactbits:code-slots`。
-- `reactbits:code-slots`：有 `onComplete`、`status`、`aria-invalid`、`aria-live` 计数，比 bencho 版好接，但依赖 motion + hugeicons（换成 lucide），颜色走 hex props。只在验证码是页面主角（如独立的验证页）时考虑。
+- `reactbits:code-slots`：有 `onComplete`、`status`、`aria-invalid`、`aria-live` 计数，比 bencho 版好接，但依赖 motion + hugeicons（换成项目在用的图标库（项目还没定就用 lucide）），颜色走 hex props。只在验证码是页面主角（如独立的验证页）时考虑。
 - `reactbits:scrub-field`：拖拽调数值，适合设计工具类面板；普通表单用 number-field，未拉源码。
 - `reactbits:stepper`：分步表单的进度指示，未拉源码；Operate 页面优先用主底座组件自己拼步骤条。
 - `librariesdev:border-beam`、`librariesdev:border-beam-pulse-outside`、`librariesdev:voice-glow`：⚠ glow，只在 AI 输入框表达"正在处理/在听"时用，等待不足 2 秒不加（作者规则）；普通表单不用。
@@ -46,12 +46,8 @@
 - **结构**：每个输入都要有可见 label（`FieldLabel` / uiarc 的 `label` prop）；placeholder 不是 label。说明文字和错误都挂到 `aria-describedby`；错误设 `aria-invalid="true"`，错误文案说清楚怎么改。
 - **autocomplete 和输入法**：邮箱 `type="email" autoComplete="email"`，密码 `current-password` / `new-password`，验证码 `one-time-code`，手机号 `type="tel" autoComplete="tel"`，数字用 `inputMode="numeric"`/`"decimal"` 而不是一律 `type="number"`。shadcn 的 login/signup block 里没写 autoComplete，要自己补。
 - **校验时机**：失焦后再提示，用户修改时实时消除；提交时把焦点移到第一个错误字段。不要用自动消失的错误提示。
-- **uiarc 焦点（必须做）**：`arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }` 要删掉，`--focus-ring` 在亮暗两套主题里都是 `transparent` 也要改；uiarc 输入框的聚焦只靠 1px 边框变色，和 hover 一样，键盘用户很难分辨。补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(input, textarea, select, button, [role="combobox"], [role="spinbutton"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
-  删不掉那一行时 `outline` 加 `!important`。password-field、number-field 的焦点在外层 shell 上（`:focus-within`），可以给 shell 补 `box-shadow: 0 0 0 3px var(--focus-ring)`。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  uiarc 的 `input`、`textarea`、`password-field`、`search-field` 聚焦和 hover 一样，只把 1px 边框变成 `--foreground`，键盘用户不好分辨（焦点可见，但偏弱）。要更明显：在 `:root` 把 `--focus-ring` 设成可见色（`textarea`、`combobox` 已经用它画 3px 光圈），再在复制进项目的模块 CSS 里给 input 和 password-field、search-field 的外框补 `box-shadow: 0 0 0 3px var(--focus-ring)`。`number-field` 聚焦和 hover 的边框颜色不同，不用改。
 - **token**：shadcn 输入框用 `--input`（边框）、`--ring`（焦点）、`--destructive`（错误）；改品牌色时 `--ring` 跟着改，不要只改 `--primary`。
 - **减弱动效**：shadcn 输入框只有颜色过渡，不需要处理；uiarc 的错误文案"逐词改写"有减弱分支。自己加的抖动、上浮动画都要写 `prefers-reduced-motion` 分支。
 - **移动端**：输入框字号不低于 16px（shadcn 已处理，uiarc 用 `--text-sm`，在 iOS 上会触发聚焦放大，需在移动端断点把字号改成 16px，未实测）。
@@ -62,7 +58,7 @@
 - `shadcn:textarea` — 多行输入
 - `shadcn:input-group` — 前后缀、图标、内嵌按钮
 - `shadcn:input-otp` — 验证码
-- `uiarc:input` — uiarc 单行输入（补焦点后用）
+- `uiarc:input` — uiarc 单行输入（焦点偏弱，见接入要点）
 - `uiarc:textarea` — uiarc 多行输入，带字数滚动
 - `uiarc:password-field` — 密码显示/隐藏
 - `uiarc:password-strength` — 注册时的强度和规则

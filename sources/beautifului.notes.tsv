@@ -1,6 +1,6 @@
-foundation	设计 token（:root/.dark）、@theme 映射、primitive-* 间距工具类、共享 keyframes；所有组件的必备前置样式 design tokens theme	design-system	specialized	dark			
-button	共享按钮原子组件（cva 变体），被审批卡/推荐卡/差异表等引用 button	button	specialized				
-glide-menu	共享下拉/滑动高亮菜单原子组件，被审批卡、表格、搜索、侧栏等引用 menu dropdown	table,navigation	specialized		swipe		
+foundation	设计 token（:root/.dark）、@theme 映射、primitive-* 间距工具类、共享 keyframes；所有组件的必备前置样式 design tokens theme	design-system	foundation	dark			
+button	共享按钮原子组件（cva 变体），被审批卡/推荐卡/差异表等引用 button	button	foundation				
+glide-menu	共享下拉/滑动高亮菜单原子组件，被审批卡、表格、搜索、侧栏等引用 menu dropdown	table,navigation	specialized				
 entity-chip	共享实体标签 chip 原子组件（推荐卡使用）entity tag chip	select	specialized				
 value-pill	共享数值药丸标签原子组件（推荐卡使用）value pill badge	feedback	specialized				
 shimmer	共享文字闪光扫过效果原子组件 shimmer text loading	loading,text-effect	specialized				

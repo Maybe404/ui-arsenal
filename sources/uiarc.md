@@ -5,25 +5,26 @@ url: https://uiarc.dev
 kind: component-library
 stack: React + CSS Modules + CSS 变量 + Motion（motion/react），部分用 Radix 与 lucide-react；不依赖 Tailwind
 license: 自定义（免费项标注 "Free, open source"，可用于商业/客户项目；Pro 为商业许可，见 https://uiarc.dev/pricing）
-pro: partial（238 项中 129 项免费：107 个组件 + 22 个 block 免费；43 个 Pro 组件、66 个 Pro block、3 个模板 Arc SaaS/AI/Startup 付费，Pro $129/年）
+pro: partial（2026-10-08 catalog：240 项中 129 项免费（107 个组件 + 22 个 block），111 项 Pro（45 个组件、66 个 block）；另有 3 个模板 Arc SaaS/AI/Startup 付费，不在 catalog 里；Pro $129/年）
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: catalog 全量（含 Pro 的元数据）；Foundation、Skill、Templates 不参与比对；refresh 自动比对
+catalog_checked: 2026-10-08
 source_status: active
 visual_style: restrained neutral with spring motion
 foundation: own-tokens
 styling: css-modules
 motion_lib: motion
 dark_mode: data-theme
-mixing_notes: arc-foundation.css 在 :root 定义 --background/--foreground/--border/--accent/--surface（与 shadcn 同名不同义）并全局 outline: none !important，和 shadcn 同页会互相覆盖；暗色靠 data-theme 而不是 .dark
+mixing_notes: arc-foundation（registry 文件 registry/foundation.css）在 :root 定义 --background/--foreground/--border/--accent/--surface（与 shadcn 同名不同义），和 shadcn 同页会互相覆盖；它的全局 :focus-visible 描边带 !important，会作用到整页；暗色靠 data-theme 而不是 .dark
 ---
 ## 是什么 / 什么时候用
 Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克制、动效讲究（spring、morph、共享高亮），每个条目都附带机器可读的 when to use / when not / a11y / motion / responsive 说明。适合：需要质感好的基础控件（按钮、输入、菜单、toast、tabs 等）、数据可视化（折线、treemap、heatmap 等）、以及完整页面区块（登录、command palette、hero、FAQ、定价）的 React 项目。因为是 CSS Modules + 自带 token，和 Tailwind 项目并存不冲突，但风格自成体系，混用 shadcn/ui 时注意视觉一致性。Pro 项（大量炫技交互和 SaaS 页面区块）不能获取源码。
 
 ## 按需获取方法
 机器可读入口（全部实测 200）：
-- 索引：`https://uiarc.dev/llms.txt`（全部 238 项按分类列出，Pro 标 `(Pro)`）；`https://uiarc.dev/llms-small.txt`；`https://uiarc.dev/llms-full.txt`（约 1.5MB，内联每个组件 markdown）
+- 索引：`https://uiarc.dev/llms.txt`（全部条目按分类列出，Pro 标 `(Pro)`；2026-10-08 是 240 项）；`https://uiarc.dev/llms-small.txt`；`https://uiarc.dev/llms-full.txt`（约 1.5MB，内联每个组件 markdown）
 - 元数据目录（含 Pro）：`https://uiarc.dev/r/catalog.json` → `items[]`，字段 `name/kind(component|block)/tier(free|pro)/category/description/keywords/whenToUse/whenNotToUse/dependencies/usage/registry`
-- shadcn registry（仅免费 131 项，含 arc-foundation、arc-skill）：`https://uiarc.dev/r/registry.json`
+- shadcn registry（仅免费项，2026-10-08 是 132 项，含 arc-foundation、arc-motion-tokens、arc-skill）：`https://uiarc.dev/r/registry.json`
 - 单项源码（含文件内容）：`https://uiarc.dev/r/{name}.json`
 - 单项文档 markdown：组件 `https://uiarc.dev/components/{name}/markdown`，区块 `https://uiarc.dev/components/blocks/{name}/markdown`（Pro 项也能读文档，但不含源码）
 - MCP：`https://uiarc.dev/api/mcp`（Streamable HTTP，需 OAuth 登录 Arc 账号，免费账号即可；本次未连接）
@@ -39,14 +40,19 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 6. 不用 shadcn CLI 时：`curl -s https://uiarc.dev/r/{name}.json | jq -r '.files[] | .target, .content'` 手动落盘（target 中 `@components` 即 components 别名目录），并同样取 `arc-foundation.json` 和 `registryDependencies` 中的项。
 
 实测（in-view-title）：
-- `curl -s https://uiarc.dev/r/in-view-title.json` → 200，`type: registry:ui`，`dependencies: ["motion"]`，`registryDependencies: ["https://uiarc.dev/r/arc-foundation.json"]`，files 含 `in-view-title.tsx`（变体 `word|line|blur|tracking|wipe`，props `text/variant/as/lines/once`）与 `.module.css`
+- `curl -s https://uiarc.dev/r/in-view-title.json` → 200，`type: registry:ui`，`dependencies: ["motion"]`，`registryDependencies: ["https://uiarc.dev/r/arc-motion-tokens.json"]`（2026-10-08；之前依赖 arc-foundation。现在组件只带动效预设，`arc-foundation` 的 token 要在根布局单独装一次，否则没有颜色和焦点描边），files 含 `in-view-title.tsx`（变体 `word|line|blur|tracking|wipe`，props `text/variant/as/lines/once`）与 `.module.css`
 - `curl -s https://uiarc.dev/components/in-view-title/markdown` → "Access: Free, open source"，安装命令 `npx shadcn@latest add @uiarc/in-view-title`
 - Pro 实测：`curl https://uiarc.dev/r/pro/dock.json` → 401（需 `Authorization: Bearer $ARC_PRO_TOKEN`）
 
 依赖：`motion`（125 项）、`lucide-react`（81 项）、少量 `@radix-ui/react-*`（dropdown-menu、dialog、popover、tooltip、tabs、select、checkbox、switch、accordion），shadcn CLI 会自动装。
 
 ## 使用注意
-- **可访问性硬伤（必须处理）**：`arc-foundation.css` 第 179 行对全站写了 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`（注释写着"产品决策"），会让键盘用户看不到焦点。用 uiarc 时要删掉这条，或在项目样式里用更高优先级补回 `:focus-visible` 样式。2026-10-07 核实。
+- **焦点**（各任务指南都引用这里。2026-10-08 核对 `uiarc:arc-foundation`，registry 文件 `registry/foundation.css`，fetch 输出的 sha256 前缀 `164a06f61891430f`；结论登记在 `sources/_claims.tsv`，fetch 时会对照版本提示是否仍成立）：
+  - 键盘焦点由 foundation 统一处理：`:focus-visible` 画描边，颜色 `--focus-outline`（默认 `--accent-strong` 的 72%），宽度和偏移是 `--focus-outline-width`、`--focus-outline-offset`，在 `:root` 或任意元素上覆盖即可，不需要 `!important`。鼠标点击产生的焦点不画。
+  - 有意不画描边的：文本框（input、textarea、contenteditable）靠边框变色（`uiarc:input`、`uiarc:password-field`、`uiarc:search-field`、`uiarc:number-field` 变 `--foreground`，`uiarc:combobox` 变 `--accent`）；菜单项、listbox 选项靠高亮底色（`uiarc:user-menu`、`uiarc:command-palette` 的结果行）；`tabindex="-1"` 的弹层面板只由脚本聚焦。
+  - **旧版本曾对全站写 `outline: none !important`，现在已经没有了**。不要再删 foundation 的焦点规则，也不要补 `html body :focus-visible { … !important }` 这类全局覆盖，否则会和自带描边叠加或打架。`--focus-ring` 仍是 `transparent`，已不是焦点机制（combobox、textarea 的那圈 `--focus-ring` 光圈因此不显示，焦点靠边框表示）。
+  - 只借单个组件、不装 arc-foundation 时（比如 shadcn 底座按 `_styles.md` 做作用域映射），组件模块 CSS 多数没有焦点样式（`uiarc:button` 没有；`uiarc:switch` 还写了 `.switch:focus-visible { outline: none; }`），要在作用域里自己补，例如 `.arc-scope :focus-visible { outline: 2px solid var(--ring) !important; outline-offset: 2px; }`，`!important` 用来盖过组件里的 `outline: none`。
+  - 接入后用键盘把 Tab、方向键走一遍，确认每个可交互元素都看得见焦点；描边被裁切的密集区域（日历格子、表格单元格）在容器上设 `--focus-outline-offset: -2px`。
 - 用 CSS Modules + CSS 变量，不是 Tailwind 类；Tailwind v3/v4 都不冲突。语义 token：`--background --surface --foreground --text-secondary --border --accent --success --warning --danger`。
 - 暗色：`<html data-theme="dark">`；强调色：`data-accent` = neutral/violet/blue/green/amber/orange/coral/rose。不是 `class="dark"`，与 shadcn/next-themes 默认的 class 策略不同，需要同步设置。
 - 动效库是 `motion`（import from `motion/react`），不是 `framer-motion`；项目里已有 framer-motion 也能共存，但别重复装两份。
@@ -94,6 +100,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | date-picker | Date picker | Inputs | 日期选择器 | `npx shadcn@latest add https://uiarc.dev/r/date-picker.json` |  |
 | time-picker | Time picker | Inputs | 时间选择器 | `npx shadcn@latest add https://uiarc.dev/r/time-picker.json` |  |
 | accordion | Accordion | Disclosure | 手风琴 折叠展开 | `npx shadcn@latest add https://uiarc.dev/r/accordion.json` |  |
+| share-access | Share access | Disclosure | 分享与权限面板 邮箱邀请 chip 改角色 链接权限 复制链接 | https://uiarc.dev/components/share-access/markdown | pro；2026-10-08 新增 |
 | dialog | Dialog | Disclosure | 对话框 modal | `npx shadcn@latest add https://uiarc.dev/r/dialog.json` |  |
 | popover | Popover | Disclosure | 气泡弹层 popover | `npx shadcn@latest add https://uiarc.dev/r/popover.json` |  |
 | tooltip | Tooltip | Disclosure | 工具提示 tooltip | `npx shadcn@latest add https://uiarc.dev/r/tooltip.json` |  |
@@ -137,6 +144,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | card-stack | Card stack | Data | 卡片堆 逐张滑走 tinder 式 撤销 | `npx shadcn@latest add https://uiarc.dev/r/card-stack.json` |  |
 | morph-nav | Morph nav | Special | 导航栏 morph 成富菜单/搜索/紧凑态 一体化 | https://uiarc.dev/components/morph-nav/markdown | pro |
 | dock | Dock | Special | 浮动 dock 工具栏 标签滑动 托盘展开 macOS dock | https://uiarc.dev/components/dock/markdown | pro |
+| glass-menu | Glass menu | Special | 毛玻璃操作菜单 触发器形变成面板 行间滑动高亮 子菜单 键盘可用 | https://uiarc.dev/components/glass-menu/markdown | pro；2026-10-08 新增 |
 | wallet-stack | Wallet stack | Special | 钱包卡片扇形展开 抽出单张看交易 | https://uiarc.dev/components/wallet-stack/markdown | pro |
 | liquid-tab-bar | Liquid tab bar | Special | 液态选中效果的 tab bar 图标填充 | https://uiarc.dev/components/liquid-tab-bar/markdown | pro |
 | now-playing | Now playing | Special | 迷你播放器连续 morph 成全屏播放器 | https://uiarc.dev/components/now-playing/markdown | pro |
@@ -144,14 +152,14 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | control-center | Control center | Special | 控制中心 快捷设置磁贴 morph 详情 iOS 风格 | https://uiarc.dev/components/control-center/markdown | pro |
 | cover-flow | Cover flow | Special | Cover Flow 3D 图片轨道 倒影 | https://uiarc.dev/components/cover-flow/markdown | pro |
 | activity-rings | Activity rings | Special | 活动圆环 Apple Watch 风格 目标进度 | https://uiarc.dev/components/activity-rings/markdown | pro |
-| bar-chart | Bar chart | Data | 柱状图 可擦洗查看数值 | `npx shadcn@latest add https://uiarc.dev/r/bar-chart.json` |  |
+| bar-chart | Bar chart | Data | 柱状图 拖动游标读数 | `npx shadcn@latest add https://uiarc.dev/r/bar-chart.json` |  |
 | activity-heatmap | Activity heatmap | Data | 年度活动热力图 GitHub 贡献图 | `npx shadcn@latest add https://uiarc.dev/r/activity-heatmap.json` |  |
 | timeline | Timeline | Data | 时间线 按天分组 | `npx shadcn@latest add https://uiarc.dev/r/timeline.json` |  |
 | stretch-refresh | Stretch refresh | Special | 下拉刷新 拉伸线提示松手 | https://uiarc.dev/components/stretch-refresh/markdown | pro |
 | orbit-menu | Orbit menu | Special | 长按按钮 操作项环绕弹出 径向菜单 | https://uiarc.dev/components/orbit-menu/markdown | pro |
 | time-dial | Time dial | Special | 旋转表盘选时间 显示团队城市时区 | https://uiarc.dev/components/time-dial/markdown | pro |
 | booking-pill | Booking pill | Special | 预订胶囊 一个 pill 连续变形 人数/日期/时间/票 | https://uiarc.dev/components/booking-pill/markdown | pro |
-| voice-recorder | Voice recorder | Special | 录音 实时波形 回放擦洗 发送 | https://uiarc.dev/components/voice-recorder/markdown | pro |
+| voice-recorder | Voice recorder | Special | 录音 实时波形 拖动游标回看 发送 | https://uiarc.dev/components/voice-recorder/markdown | pro |
 | user-menu | User menu | Actions | 用户头像菜单 账号/设置/主题/登出 手机端 bottom sheet | `npx shadcn@latest add https://uiarc.dev/r/user-menu.json` |  |
 | data-grid | Data grid | Data | 电子表格网格 区域选择 原地编辑 填充柄 | https://uiarc.dev/components/data-grid/markdown | pro |
 | lightbox-gallery | Lightbox gallery | Special | 瀑布流+灯箱 从格子缩放进入查看器 手势 | https://uiarc.dev/components/lightbox-gallery/markdown | pro |
@@ -258,7 +266,7 @@ Arc 是面向 AI 辅助开发的 React 组件与区块（block）库，风格克
 | mrr-waterfall | MRR waterfall | Blocks | MRR 瀑布图 收入桥 | https://uiarc.dev/components/blocks/mrr-waterfall/markdown | pro |
 | webhooks | Webhooks | Blocks | Webhook 控制台 投递历史 payload 检查 重试 | https://uiarc.dev/components/blocks/webhooks/markdown | pro |
 | roles-permissions | Roles and permissions | Blocks | 角色权限矩阵 | https://uiarc.dev/components/blocks/roles-permissions/markdown | pro |
-| metric-explorer | Metric explorer | Blocks | KPI 卡片展开成可擦洗图表 | https://uiarc.dev/components/blocks/metric-explorer/markdown | pro |
+| metric-explorer | Metric explorer | Blocks | KPI 卡片展开成可拖动游标读数的图表 | https://uiarc.dev/components/blocks/metric-explorer/markdown | pro |
 | activity-terrain | Activity terrain | Blocks | 3D 活动地形图 可旋转 转热力图 | https://uiarc.dev/components/blocks/activity-terrain/markdown | pro |
 | revenue-globe | Revenue globe | Blocks | 点阵地球 支付弧线 3D globe | https://uiarc.dev/components/blocks/revenue-globe/markdown | pro |
 | customer-galaxy | Customer galaxy | Blocks | 2400 客户星系 粒子聚类 | https://uiarc.dev/components/blocks/customer-galaxy/markdown | pro |

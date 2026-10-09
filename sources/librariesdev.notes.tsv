@@ -6,7 +6,7 @@ border-beam-pulse-inner	边框内侧呼吸脉冲光，CTA 按钮高亮 pulse	but
 border-beam-pulse-outside	边框向外扩散的脉冲光晕，prompt 输入框高亮 pulse bloom	form-input	specialized			glow	
 border-beam-palettes	边框光束配色：彩虹/灰阶/海洋/日落 palette	other	specialized			glow	
 border-beam-pro-palettes	Pro 配色与时长、光晕、色相等细调，仅 Studio/Pro skill	other	specialized			glow	
-thinking-orbs	AI 思考中点阵 3D 小球 loading 指示器 thinking orb spinner 替代，9 种动画状态，2D canvas 无 WebGL	ai-ux,loading	specialized	webgl,canvas,3d			
+thinking-orbs	AI 思考中点阵 3D 小球 loading 指示器 thinking orb spinner 替代，9 种动画状态，2D canvas 无 WebGL	ai-ux,loading	specialized	canvas			
 thinking-orbs-working	粒子沿倾斜轨道运动，通用 agent 工作中/工具调用中 loading	ai-ux,loading	specialized				
 thinking-orbs-searching	扫描子午线扫过点阵地球，联网搜索/检索/RAG 中	ai-ux,loading	specialized				
 thinking-orbs-solving	条带四分之一转打乱再复位，代码执行/数学/调试中	ai-ux,loading	specialized				
@@ -29,7 +29,7 @@ voice-glow-mobile	手机屏幕底部语音光晕预设，范围更宽更高	medi
 voice-glow-processing	光晕聚成一束来回扫动，语音转写/回复思考中	ai-ux,media	specialized			glow	
 voice-glow-usemicrophone	麦克风权限与 MediaStream 管理 hook（start/stop/state）	media,micro-interaction	specialized				
 voice-glow-pro	Voice 的 Pro 细调，仅 Studio/Pro skill	form-input,media	specialized			glow	
-bot-avatars	AI agent 动画头像：毛绒/塑料质感 3D 形状带表情，会四处看、跳、工作时蹦跳；canvas 无 WebGL	ai-ux,avatar-user	specialized	webgl,canvas,3d			
+bot-avatars	AI agent 动画头像：毛绒/塑料质感 3D 形状带表情，会四处看、跳、工作时蹦跳；canvas 无 WebGL	ai-ux,avatar-user	specialized	canvas			
 bot-avatars-free-types	8 种免费身体形状 bot 头像，state default/working，size 96/64/32，shading fabric/plastic	avatar-user	specialized				
 bot-avatars-pro-types	另外 10 种身体形状（包内类型已存在，页面/免费 skill 未开放）	avatar-user	specialized				
 bot-avatars-pro-extras	sleeping 睡眠态、配饰、毛发/光照细调、自定义 SVG 轮廓	avatar-user	specialized				

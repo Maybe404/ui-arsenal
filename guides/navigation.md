@@ -31,7 +31,7 @@
 - `bencho:dock`、`reactbits:dock`：macOS 式放大 Dock，悬停时目标尺寸变化，点击位置会漂。只适合作品集类 Experience 页面。
 - `bencho:icon-bar`（⚠ bounce）：选中胶囊回弹，Operate 页面不用。
 - `bencho:browser-tabs`：parked block，bencho.md 写明未发布、质量无保证。
-- `uiarc:user-menu`：catalog 明写"No focus rings are drawn"，加上 arc-foundation 全局去焦点框，键盘用户看不到位置，必须补焦点样式（见接入要点）。
+- `uiarc:user-menu`（只在不装 arc-foundation、单独借用时）：触发器要自己补焦点样式；装了 foundation 时触发器有描边、菜单项靠高亮，见 `avatar-user.md`。
 - `shadcn:menubar`：桌面应用式菜单栏，网页产品里很少需要；aria base 没有。
 - `jakubantalik:transition:tabs-sliding`：滑块同时过渡 `transform` 和 `width`（绝对定位，不推动兄弟元素，影响小）；没有方向键处理。
 
@@ -46,11 +46,7 @@
 - **快捷键冲突**：shadcn sidebar 默认 Cmd/Ctrl+B 切换侧栏（源码 `SIDEBAR_KEYBOARD_SHORTCUT = "b"`），和富文本编辑器的"加粗"冲突；有编辑器的页面改掉这个常量。
 - **移动端文案**：移动端 Sheet 里的 `SheetTitle` 是英文 "Sidebar"（sr-only），中文站改成中文。
 - **减弱动效**：shadcn sidebar 用 `transition-[width]`、`transition-[left,right,width]` 200 ms linear，动的是宽度，且 tw-animate-css 1.4.0 本身不处理 `prefers-reduced-motion`；给这些元素加 `motion-reduce:transition-none`。
-- **uiarc 焦点**：arc-foundation.css 第 179 行全局 `outline: none !important`。用 uiarc 时删掉这条，或在项目样式里补回（选择器要比 `:is(*:focus-visible)` 更具体）：
-  ```css
-  html body :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px !important; }
-  ```
-  `--accent` 对背景对比度不到 3:1 时改用 `--foreground`。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **触控目标**：图标栏折叠态的按钮至少 24×24 px，最好 44×44；折叠后靠 tooltip 显示名称，同时保留 `aria-label`。
 - **Tabs 键盘**：Base UI / Radix 的 tabs 已带方向键；自己用 Transitions.dev 拼的 tabs 要补 ←/→、Home/End 和 roving tabindex。
 

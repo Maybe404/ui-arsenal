@@ -40,12 +40,8 @@
 - **结果语义**：命令面板的输入框是 combobox，结果是 listbox/option，焦点一直留在输入框（cmdk 和 uiarc 都这么做）；结果数量变化用 `aria-live="polite"` 播报；空状态给出下一步（"没有结果，试试 …"）。
 - **异步搜索**：防抖 150–300ms；加载中在列表顶部显示 spinner，不清空旧结果；请求竞态要丢弃过期响应。
 - **shadcn CommandDialog 的标题**：源码把 `DialogHeader`（含 `DialogTitle`）放在 `DialogContent` 外面、Dialog 根里面；Base UI 下读屏是否能读到对话框名称未验证，接入后用读屏实测一遍，读不到就把标题移进 `DialogContent`。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，把 `--focus-ring` 从 `transparent` 改成可见色，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, input, [role="combobox"], [role="option"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
-  command-palette 自己的 CSS 已经给活动结果写了 `outline: 2px solid var(--focus-ring)`，改了 `--focus-ring` 并删掉全局那一行后就会显示。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  command-palette 的活动结果用共享高亮底色表示（输入框的 `aria-activedescendant` 指向它），不是描边。
 - **token**：shadcn 命令面板高亮用 `--accent`（浅色 hover 底），输入框底色 `--input` 的 30% 透明度。
 - **减弱动效**：shadcn Dialog 的进出动画见 `select.md` 的说明；uiarc command-palette 有 14 处减弱动效判断（源码计数）。
 
@@ -54,7 +50,7 @@
 - `shadcn:command-dialog` — 弹窗形态示例
 - `shadcn:input-group` — 页内搜索框（图标 + 清除按钮）
 - `shadcn:kbd` — 快捷键提示
-- `uiarc:command-palette` — uiarc 命令面板，行内渲染，自带 ⌘K（补焦点、自套 dialog）
+- `uiarc:command-palette` — uiarc 命令面板，行内渲染，自带 ⌘K（自套 dialog）
 - `uiarc:search-field` — uiarc 页内过滤框
 - `uiarc:expanding-search` — 顶栏可展开搜索 + 结果
 - `uiarc:faq-section` — 可搜索 FAQ，未验证

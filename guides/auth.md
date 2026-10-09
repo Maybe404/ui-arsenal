@@ -19,7 +19,7 @@
 | passkey 优先 | `uiarc:login-centered` | catalog 写明 passkey 为主、邮箱验证码兜底、busy 按钮用 `aria-busy`；同样是"simulated requests"，未拉源码，接入时按 sign-in 的方式改成真实接口 |
 | 验证码那一步 | `shadcn:input-otp` 或 `uiarc:otp-input` | 见 `form-input.md` |
 | 注册时的密码强度 | `uiarc:password-strength` | 见 `form-input.md` |
-| 产品发布前的 waitlist 首屏 | `originkit:hero-07`（**需登录**） | 用户自己登录取码；免费替代：`shadcn:input-group` + `shadcn:button` 拼一行邮箱表单，或 uiarc 的 `uiarc:newsletter-signup`（catalog 写明它的可访问性很完整：可见性隐藏的 label、`autocomplete="email"`、失焦后才校验、提交中 `aria-busy`） |
+| 产品发布前的 waitlist 首屏 | `uiarc:newsletter-signup`，或 `shadcn:input-group` + `shadcn:button` 拼一行邮箱表单 | uiarc 版 catalog 写明它的可访问性很完整：可见性隐藏的 label、`autocomplete="email"`、失焦后才校验、提交中 `aria-busy`。登录后可换：`originkit:hero-07`（waitlist 首屏，用户自己登录取码） |
 
 ## 慎用
 - 直接上线 shadcn login/signup block：骨架里 `href="#"`、没有 `onSubmit`、没有错误展示，原样上线就是坏链和无反馈（第 1 级）。
@@ -39,11 +39,8 @@
 - **提交与错误**：提交中按钮显示加载并防重复提交（`aria-busy` + `aria-disabled`，见 `button.md`）；服务端错误显示在按钮上方并 `role="alert"`；错误文案不要泄露"邮箱不存在"这类信息（写"邮箱或密码不正确"）。字段错误按 `form-input.md` 的方式关联。
 - **第三方登录**：按钮必须有文字（"使用 Google 继续"），不能只放图标；品牌图标用官方 SVG（uiarc 里有 Google 四色标），不要用 lucide 里近似的图标冒充品牌。
 - **焦点流**：进入页面时焦点在第一个输入框；多步流程每一步切换后把焦点移到新步骤的第一个控件（uiarc sign-in 已处理）；"返回修改邮箱"要能键盘操作。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，把 `--focus-ring` 从 `transparent` 改成可见色，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(a, button, input, [role="checkbox"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  输入框聚焦和 hover 一样只是 1px 边框变色，偏弱，处理办法见 `form-input.md`「接入要点」。
 - **token**：shadcn block 全部用底座变量，只需换 logo 和封面图；login-03 的背景是 `--muted`。uiarc 的 primary 按钮是 `--foreground` 底。
 - **移动端**：卡片 `max-w-sm`，左右留白；两栏布局小屏只留表单；输入框字号 ≥ 16px（shadcn 已处理）。
 - **减弱动效**：uiarc sign-in / signup-form 的步骤切换有 reduce 分支；自己加的步骤动画也要有。
@@ -56,7 +53,7 @@
 - `shadcn:login-05` — 仅邮箱 / magic link
 - `shadcn:signup-05` — 带第三方登录的注册
 - `shadcn:signup-02` — 两栏注册页
-- `uiarc:signup-form` — 有真实接口的注册表单（补焦点后用）
+- `uiarc:signup-form` — 有真实接口的注册表单
 - `uiarc:sign-in` — 邮箱验证码登录界面，逻辑需替换
 - `uiarc:login-centered` — passkey 优先登录页，逻辑需替换，未拉源码
 - `uiarc:password-field` — 登录密码框

@@ -24,7 +24,7 @@
 
 ## 慎用
 - `bencho:magnet-select`：磁吸手感好，但选项来自被清空的图片数组 `MARKS`，不填自己的图片就一个选项都没有（`sources/bencho.md`）；要映射 token；用 framer-motion。只适合 Persuade/Experience 页里"选头像、选样式"这类视觉选择，不进表单。
-- `reactbits:glide-select`：ARIA 写得不错（`role="combobox"`、`aria-activedescendant`、`role="listbox"`，Tailwind `motion-reduce:` 分支都有），但依赖 hugeicons（换 lucide），颜色全走 hex props（`accentColor`、`surfaceColor` 等），要从主底座变量取值。主底座的 select 能满足时不用它。
+- `reactbits:glide-select`：ARIA 写得不错（`role="combobox"`、`aria-activedescendant`、`role="listbox"`，Tailwind `motion-reduce:` 分支都有），但依赖 hugeicons（换成项目在用的图标库，项目还没定就用 lucide），颜色全走 hex props（`accentColor`、`surfaceColor` 等），要从主底座变量取值。主底座的 select 能满足时不用它。
 - `bencho:picker`、`bencho:roster`、`bencho:aspect`、`bencho:asset-swap`：场景很具体的选择交互（指派人、多选列表、画幅），未拉源码；要用时先 fetch 看键盘和 ARIA，再映射 token。
 - `reactbits:option-wheel`、`reactbits:infinite-menu`：滚轮/3D 球面选择，属于展示效果，不进 Operate 表单；infinite-menu 依赖 gl-matrix 和 WebGL。
 - `beautifului:entity-chip`、`beautifului:tool-chips`、`beautifului:prompt-bar`：AI 场景件，只在 AI 输入区里用。
@@ -43,14 +43,10 @@
 - **选哪个**：≤ 7 个选项、不需要搜索 → select；> 7 个或用户知道名字 → combobox；要多选 → combobox chips / multi-select；需要一直可见 → chip-group / toggle-group / radio。
 - **标签**：触发器必须有可见 label 并关联（shadcn 用 `Field` + `FieldLabel`，uiarc 用 `label` prop）；placeholder 不是 label。
 - **表单提交**：Base UI Select 和 Radix Select 都会渲染隐藏的原生 input，给 `name` 就能随表单提交；combobox 要确认 `name` 是否生效（未验证），不生效就受控后自己写隐藏 input。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，并把 `--focus-ring` 从 `transparent` 改成可见色：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, [role="combobox"], [role="option"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
-  改完 `--focus-ring` 后，uiarc:combobox 自带的 `box-shadow: 0 0 0 3px var(--focus-ring)` 就会显示出来。
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
+  `uiarc:combobox` 聚焦时边框变成 `--accent`；它自带的 `--focus-ring` 光圈默认透明（foundation 有意如此），想更明显时在 `:root` 把 `--focus-ring` 设成可见色。
 - **token**：shadcn 选项高亮用 `--accent`（浅色 hover 底）和 `--accent-foreground`，这是它本来的含义，不要把 `--accent` 改成品牌色，否则选项高亮会变成大色块。
-- **减弱动效**：shadcn 弹层用 tw-animate-css 的 `animate-in fade-in zoom-in-95`，是否自动遵守 `prefers-reduced-motion` 未验证；需要时在 `SelectContent` 上加 `motion-reduce:animate-none`。uiarc 有 `useReducedMotion` 分支。
+- **减弱动效**：shadcn 弹层用 tw-animate-css 的 `animate-in fade-in zoom-in-95`，tw-animate-css 1.4.0 不处理 `prefers-reduced-motion`（2026-10-08 核对，见 `sources/_claims.tsv`）；在 `SelectContent` 上加 `motion-reduce:animate-none`，或按 `overlay.md` 在全局补一条。uiarc 有 `useReducedMotion` 分支。
 - **常见坑**：select 放在 dialog 里时注意 z-index（shadcn 用 `isolate z-50` + Portal）；长列表要设最大高度并能滚动（shadcn 用 `max-h-(--available-height)`）；Base UI 和 Radix 的 API 不同，别照抄旧版 Radix 示例里的 `asChild`。
 
 ## 候选清单
@@ -58,7 +54,7 @@
 - `shadcn:combobox` — 可搜索、多选、分组
 - `shadcn:native-select` — 原生 select，移动端优先
 - `shadcn:combobox-responsive` — 桌面 popover / 移动 drawer 示例
-- `uiarc:select` — uiarc 短列表（补焦点后用）
+- `uiarc:select` — uiarc 短列表
 - `uiarc:combobox` — uiarc 长列表
 - `uiarc:multi-select` — uiarc 多选 +N
 - `uiarc:chip-group` — 常驻可见的筛选 chip

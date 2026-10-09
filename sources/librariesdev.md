@@ -7,7 +7,8 @@ stack: React 18+（零运行时依赖；img-fx 需 three），部分库有 React
 license: MIT（npm 包与 GitHub 仓库）；Studio 导出、Pro 预设/配方为商业授权
 pro: partial（7 个库本身全部免费；Studio、Pro 预设/配色/额外形状与状态、Pro skill 付费：Pro 月付 / Lifetime $149 / Business $59/mo）
 fetch: npm
-verified: 2026-10-07
+coverage: 人工维护：固定 7 个库和它们的变体、状态
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: ai-state glow and canvas/webgl effects
 foundation: none

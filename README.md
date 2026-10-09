@@ -8,7 +8,7 @@
 
 shadcn/ui、React Bits、OriginKit、Bencho、uiarc、ObsidianUI、Beautiful UI、loading-ui、Libraries.dev、Lucide（含 Lucide Lab）、getdesign.md、Design Spells、Inspora、Collect UI、Jakub Antalik。
 
-每个来源的条目数和访问状态见 [SKILL.md](SKILL.md) 的「来源一览」，获取方法和注意事项见 `sources/<id>.md`。
+每个来源的条目数和访问状态见 [SKILL.md](SKILL.md) 的「来源一览」，获取方法和注意事项见 `sources/<id>.md`。这是个人收藏，不是完整的组件目录；没收录的常用库和其他已知缺口写在 SKILL.md「来源一览」开头。
 
 ## 安装
 
@@ -30,15 +30,22 @@ scripts/stats.sh                           # 各来源统计
 scripts/audit.sh                           # 格式检查
 scripts/verify.sh --matrix                 # 获取链路固定场景测试
 scripts/searchtest.sh                      # 搜索相关性回归测试
+scripts/test.sh                            # 离线单元测试（不联网）
 scripts/refresh.sh                         # 和线上清单比对，只报告差异
+scripts/claims.sh --check                  # 重新拉取，复核组件级结论是否对新版本仍成立
+# evals/tasks.md：真实任务评测，用 agent 跑，结果记在 evals/results/
 ```
+
+## 维护
+
+命令和流程见 [MAINTAINING.md](MAINTAINING.md)。更新清单、抽查取码、复核组件结论都是手动运行的命令（`refresh.sh` → `diff.sh` → `apply.sh`、`verify.sh`、`claims.sh --check`），仓库没有自带定时任务；要定期跑，需要自己配 cron 或 CI。`coverage.sh` 按来源列出覆盖范围和各类核对的日期，`review.sh` 列出待审条目。
 
 ## 边界
 
 - **不获取付费内容**：标为 Pro 的条目只记录名称，`fetch` 拒绝获取。
 - **不代替用户登录**：需要账号的条目只给出官方获取方式，由用户决定是否登录。
 - **不执行远程代码**：所有 adapter 只下载文本并解析。
-- **选型有依据**：`guides/` 下每类 UI 任务都有指南，推荐和慎用都基于实际读过的源码。
+- **选型有依据，证据分级**：`guides/` 下每类 UI 任务都有指南，每条推荐和慎用注明证据来源：读过源码、只看了 catalog 或文档、未验证。读过源码的结论也只代表核对当天的版本；需要接入方改上游代码、或会影响能不能用的组件级结论登记在 `sources/_claims.tsv`（带核对日期和版本 hash），`fetch` 时会提示它们对拉到的新版本是否仍成立。没有做过浏览器或读屏实测的，不当作无障碍已达标。
 - **遵守站点规则**：比如 inspora 的 robots.txt 禁止 `/api/`，这里就不调用该接口。
 - **内容归属**：组件、截图、视频、品牌和商标都归各自网站和作者所有，使用前请遵守原站的许可证和条款。本仓库的中文描述是对原站内容的概括，用于检索。
 
@@ -46,14 +53,17 @@ scripts/refresh.sh                         # 和线上清单比对，只报告�
 
 ```
 SKILL.md              agent 读的入口：原则、工作流、来源一览
+MAINTAINING.md        维护者用：检查、测试、更新清单和复核结论的命令
 guides/_scenes.md     页面模式、效果预算、质量三级、动效规范（所有指南共用）
 guides/<task>.md      按 UI 任务分的选型指南：默认推荐、按场景换、慎用、接入要点
 scripts/ua.py         所有命令的实现（find / fetch / verify / refresh / stats / audit / searchtest）
 scripts/adapters/     需要专门处理的站点的取码脚本（只解析，不执行）
 scripts/aliases.json  中英文同义词组
 sources/<id>.md       每个来源的说明：获取方法、使用注意、未解决问题
-sources/<id>.tsv      每个来源的条目清单，机器维护的字段（15 列，无表头）
+sources/<id>.tsv      每个来源的条目清单，机器维护的字段（16 列，无表头，含待审原因）
 sources/<id>.notes.tsv  人工维护的字段：中文描述、UI 任务、层级、标签、风险（刷新不会覆盖）
+sources/_claims.tsv   组件级结论台账：缺陷、演示性质、缺失能力，带证据深度、核对日期和版本 hash
+evals/                真实任务评测：固定的项目和请求、该看到的行为、判为失败的情况
 sources/_SPEC.md      来源文件格式规范
 sources/_ADDING.md    新增来源的流程
 ```

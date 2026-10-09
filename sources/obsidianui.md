@@ -7,7 +7,8 @@ stack: React + Next.js（App Router）+ Tailwind CSS v4 + Motion / GSAP / Three.
 license: MIT（GitHub Atharvsinh-codez/ObsidianUI；模板 Project-1 也是 MIT）
 pro: none
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: 全量：官方 registry 的全部条目；refresh 自动比对
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: showcase motion blocks over shadcn-style primitives
 foundation: shadcn-compatible

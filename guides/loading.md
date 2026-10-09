@@ -14,7 +14,7 @@
 ## 按场景换
 | 场景 | 推荐 | 理由 |
 |---|---|---|
-| 按钮内联（提交、保存） | `shadcn:spinner-button` 的写法：`<Button disabled><Spinner />Saving…</Button>` | 保留文字标签，宽度基本不跳；disabled 防重复提交。uiarc 项目直接用 `uiarc:button` 的 `loading`，它会把标签变形并用弹簧过渡宽度 |
+| 按钮内联（提交、保存） | `shadcn:spinner-button` 的写法：`<Button disabled><Spinner />Saving…</Button>` | 保留文字标签，宽度基本不跳；disabled 让按钮不能再点，但表单层的防重和焦点处理还要另做，见 `button.md`「加载态」。uiarc 项目直接用 `uiarc:button` 的 `loading`，它会把标签变形并用弹簧过渡宽度 |
 | Operate 页面的列表、表格、卡片首次加载 | `shadcn:skeleton` / `uiarc:skeleton` | 骨架屏占住真实布局的位置，加载完不跳版。Operate 页面优先骨架屏，不用居中大转圈 |
 | 骨架屏到真实内容的切换 | `uiarc:skeleton`（传 children + `loading`）或 `jakubantalik:transition:skeleton-loader-and-reveal` | 两者都做了交叉淡入。Transitions.dev 版默认只脉冲 1 次（`--pulse-count: 1`）、揭示 400ms、2px 交叉模糊 |
 | 能拿到真实百分比（上传、导出、批量任务） | `shadcn:progress`（uiarc 项目用 `uiarc:progress`） | 确定进度比转圈诚实；值必须来自真实进度，不能用定时器假装 |
@@ -38,14 +38,14 @@
 - Operate：0 个主导效果。只用骨架屏、按钮内联 spinner、进度条、状态行 shimmer；不用光束、光球大尺寸、全屏遮罩。同一屏同时转圈的地方不超过一处，多个区块并行加载时各自用骨架屏。
 - Persuade：加载态本身不当卖点；表单提交、演示按钮按 Operate 处理。
 - Read：文章区用骨架屏或直接等首屏渲染，不加 shimmer 装饰。
-- Experience：允许一个整页 preloader，但要有真实进度或在 1–2 秒内结束，并且减弱动效时直接显示内容。
+- Experience：允许一个整页 preloader。显示百分比就必须是真实加载进度；没有真实进度时只做不带数字的短暂入场（1–2 秒），时间到了资源还没好，就把剩下的等待交给页面里的骨架屏，不能假装已经加载完。减弱动效时直接显示内容。
 - AI 界面（属于 Operate）：状态行 shimmer + 小尺寸 thinking orb 可以并存（位置不同、含义不同）；同一元素或相邻元素不叠两个效果。
 
 ## 接入要点
 - **减弱动效**：shadcn 的 skeleton、spinner 加 `motion-reduce:animate-none`；spinner 停转后靠文字标签说明状态（按钮里本来就有 "Saving…"）。loadingui 组件在全局 CSS 加 `@media (prefers-reduced-motion: reduce) { [class*="loading-ui"], [data-slot="skeleton"] { animation: none } }` 一类规则，或在组件上加 `motion-reduce:[animation:none]`（它们的 animation 写在 inline style 里，需用 `!important` 或改源码）。
 - **可访问性**：加载区域的容器设 `aria-busy="true"`，完成后去掉；骨架块本身 `aria-hidden`，另放一个 `role="status"` 的 sr-only 文字（uiarc:skeleton 已经这样做）。完成时如需播报结果，用自己的 live region，shimmer 和 orb 都不是 live region。
 - **不要假进度**：进度条的值、"Step 2 of 4"、"Reading 4 files" 都必须来自真实状态。动画不能暗示一个其实还没成功的操作已经完成。
-- **延迟显示**：请求通常在 300ms 内返回时，延迟 200–300ms 再显示加载态；一旦显示，至少保持约 500ms，避免闪烁。
+- **延迟显示**：请求通常在 300ms 内返回时，延迟 200–300ms 再显示加载态；一旦显示，加载指示本身至少停留约 500ms 再淡出，避免一闪而过。这只是视觉上的最短驻留：结果一到就可以展示、可以操作，不为了凑满时间推迟结果，也不推迟按钮恢复可点。
 - **布局稳定**：骨架屏尺寸贴近真实内容；按钮 loading 时保持宽度（uiarc:button 用弹簧过渡宽度，shadcn 写法靠保留文字）。
 - **shadcn:progress**：Indicator 带 `transition-all`。值高频更新（每帧）时去掉过渡，避免一直追不上；`shadcn:shimmer` 依赖相对颜色语法和 `color-mix()`，要支持旧浏览器时按文档用 `supports-*` 条件启用，否则文字可能透明。
 - **thinking-orbs**：只调过 64 和 20 两档，用 CSS 放大会糊；Copy prompt 里的 `dark: boolean` 不存在，用 `theme`。站点手动切明暗时显式传 `theme`。

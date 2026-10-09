@@ -37,11 +37,7 @@
 - **校验**：前端用 `accept` 和大小限制先拦一遍，拒绝原因写清楚（"超过 10 MB""只支持 PNG、JPG"）并用 `role="alert"`；后端必须再校验一次。
 - **键盘和读屏**：拖放只是增强，必须能用按钮选文件；每个文件的删除、重试按钮带文件名；进度条有 `aria-valuenow` 或用文字播报百分比。
 - **移动端**：没有拖放，按钮文案写"选择文件"而不是"拖到这里"；`accept="image/*"` 会打开相册/相机。
-- **uiarc 焦点（必须做）**：删掉 `arc-foundation.css` 末尾的 `:is(*:focus, *:focus-visible, *:focus-within) { outline: none !important; }`，把 `--focus-ring` 从 `transparent` 改成可见色，再补：
-  ```css
-  :root, :root[data-theme="dark"] { --focus-ring: color-mix(in oklch, var(--foreground) 35%, transparent); }
-  :where(button, [role="button"], [tabindex]):focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
-  ```
+- **uiarc 焦点**：装了 `uiarc:arc-foundation` 时，键盘焦点由它统一画描边（文本框靠边框变色，菜单项和选项靠高亮），不用再补，也不要删它的焦点规则或加全局 `!important` 覆盖；旧版的全局 `outline: none !important` 已经移除。接入后用键盘走一遍；只借单个组件、不装 foundation 时要自己补。细节和核对版本见 `sources/uiarc.md`「焦点」。
 - **token**：shadcn attachment 用 `--card`、`--muted`、`--destructive`；上传中的 shimmer 来自 shadcn 的工具类，确认项目里有 `shadcn/tailwind.css`（未验证具体定义位置）。
 - **减弱动效**：uiarc 两个组件都有 `useReducedMotion` 分支（进度直接跳到目标值、行进出不位移）；shimmer 在减弱动效下是否停止未验证，必要时加 `motion-reduce:` 关掉。
 - **常见坑**：图片预览用 `URL.createObjectURL` 后要 `revokeObjectURL`（uiarc file-dropzone 已处理）；同名文件重复添加要去重或提示；大文件不要读进内存做预览。
@@ -50,7 +46,7 @@
 - `shadcn:input-file` — 原生文件选择，单文件够用
 - `shadcn:attachment` — 文件条目卡片，多状态
 - `shadcn:progress` — 进度条
-- `uiarc:file-dropzone` — 完整拖放区 + 列表 + 真实进度（补焦点后用）
+- `uiarc:file-dropzone` — 完整拖放区 + 列表 + 真实进度
 - `uiarc:file-upload` — 轻量拖放上传，进度靠状态播报
 - `obsidianui:file-input` — 仅 Next.js、暗色写死，需改造
 - `bencho:upload-dropzone` — 只借吸入动效，组件是演示道具

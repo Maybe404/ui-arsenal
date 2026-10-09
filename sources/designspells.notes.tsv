@@ -14,10 +14,10 @@
 327-animated-transitions-in-find-my	Find My：查找 App 中设备 3D 模型与页面过渡动画	motion-transition,fun-3d	reference	3d			
 326-skeuomorphic-timer-in-opal	Opal：拟物实体旋钮计时器	motion-transition	reference				
 325-3d-transition-when-navigating-to-a-story-from-a-different-user-on-instagram	Instagram：切换不同用户快拍时的 3D 立方体翻转过渡	navigation,motion-transition	reference	3d			
-324-fireworks-appear-if-a-perfect-lighthouse-score-is-achieved-on-chrome	Chrome：Lighthouse 满分时放烟花庆祝彩蛋	fun-3d	reference				
+324-fireworks-appear-if-a-perfect-lighthouse-score-is-achieved-on-chrome	Chrome：Lighthouse 满分时放烟花庆祝彩蛋	feedback,micro-interaction	reference				
 323-transition-animation-when-completing-an-activity-on-strava	Strava：完成运动记录时按钮到结果页的庆祝过渡	button,motion-transition	reference				
 322-effort-selection-animations-in-claude-code	Claude：Claude Code 推理强度选择的动画	ai-ux,select	reference				
-321-hidden-jumping-minigame-in-github-copilot-s-desktop-app	GitHub Copilot：桌面端隐藏的跳跃小游戏彩蛋	ai-ux,fun-3d	reference				
+321-hidden-jumping-minigame-in-github-copilot-s-desktop-app	GitHub Copilot：桌面端隐藏的跳跃小游戏彩蛋	fun-3d,ai-ux	reference				
 320-unlock-animation-in-monzo	Monzo：银行 App 解锁进入时的动画	motion-transition	reference				
 319-profile-menu-open-animation-in-transit	Transit：头像菜单展开的变形过渡动画	navigation,avatar-user	reference				
 318-file-upload-animation-in-dropbox	Dropbox：文件上传进度动画	loading,upload	reference				
@@ -35,7 +35,7 @@
 306-tap-to-cycle-through-available-icon-styles-in-ghostty	Ghostty：点击 About 中图标循环切换图标风格	fun-3d	reference		press		
 305-swipe-up-to-enter-in-wabi-s-onboarding	Wabi：引导页上滑进入的拟物手势交互	empty-onboarding,motion-transition	reference		swipe		
 304-permissions-flow-in-codex	Codex：权限授权流程的分步过渡动画	motion-transition	reference				
-303-godzilla-appears-if-you-tap-home-enough-times-in-discord	Discord：连续点击 Home 多次出现哥斯拉的彩蛋	motion-transition,fun-3d	reference		press		
+303-godzilla-appears-if-you-tap-home-enough-times-in-discord	Discord：连续点击 Home 多次出现哥斯拉的彩蛋	fun-3d,motion-transition	reference		press		
 302-progress-indicator-animation-in-linear	Linear：进度指示器（环形进度）动画	loading,motion-transition	reference				
 301-message-invaders-minigame-in-customer-io	Customer.io：太空侵略者风格小游戏	fun-3d	reference				
 300-tear-off-your-boarding-pass-stub-in-focusflight	FocusFlight：拟物撕下登机牌存根的手势交互	motion-transition,micro-interaction	reference				
@@ -86,9 +86,9 @@
 255-gradient-animation-that-gently-reveals-a-new-model-version-on-elevenlabs	ElevenLabs：渐变扫光揭示新模型版本标签	motion-transition	reference	gradient			
 254-bottle-get-emptier-each-time-you-add-a-hydration-log-on-go-club	GO Club：记录喝水时水瓶液面下降的拟物动画	motion-transition	reference				
 253-burning-negative-stories-in-how-we-feel	How We Feel：把负面记录"烧掉"的火焰动画	motion-transition	reference				
-252-halloween-easter-egg-when-hovering-on-vercels-logo-2	Vercel：万圣节悬停 logo 彩蛋	motion-transition,micro-interaction	reference		hover		
+252-halloween-easter-egg-when-hovering-on-vercels-logo-2	Vercel：万圣节悬停 logo 彩蛋（站内 #252；和 #141 同名，差别未核对）	motion-transition,micro-interaction	reference		hover		
 251-contribution-graph-turns-orange-on-halloween-in-github	GitHub：万圣节贡献图变橙色	chart	reference				
-250-halloween-mode-toggle-in-deel	Deel：万圣节主题模式开关	toggle-slider,fun-3d	reference				
+250-halloween-mode-toggle-in-deel	Deel：万圣节主题模式开关	toggle-slider,micro-interaction	reference				
 249-halloween-themed-loading-indicator-in-discord	Discord：万圣节主题加载动画（loading）	loading,motion-transition	reference				
 248-rotate-an-iphone-air-to-see-whats-new-in-denim	Denim：拖动旋转 3D 手机模型查看更新内容	motion-transition,fun-3d	reference	3d	drag		
 247-lens-flare-animation-in-chatgpt-atlas-onboarding	ChatGPT Atlas：引导页镜头光晕动画	ai-ux,empty-onboarding	reference			glow	
@@ -138,7 +138,7 @@
 203-icon-morphing-animations-in-telegram	Telegram：图标变形（morph）动画	button,motion-transition	reference				
 202-seal-of-quality-wax-stamp-animation-in-airbnb	Airbnb：火漆印章盖章拟物动画	motion-transition	reference				
 201-animation-when-deleting-a-voice-message-on-instagram	Instagram：删除语音消息的丢进垃圾桶动画	media,motion-transition	reference				
-200-logo-reacts-to-the-position-of-the-mouse-when-close-by-in-claude	Claude：logo 对靠近的鼠标做出反应	cursor-effect,fun-3d	reference		cursor		
+200-logo-reacts-to-the-position-of-the-mouse-when-close-by-in-claude	Claude：logo 对靠近的鼠标做出反应	cursor-effect,micro-interaction	reference		cursor		
 199-see-your-reflection-on-the-shiny-cds-in-untitled	[untitled]：CD 光盘镜面反光随手机/前置摄像头变化	motion-transition	reference				
 198-icon-micro-animations-when-selecting-filters-in-alltrails	AllTrails：筛选标签图标微动画	select,motion-transition	reference				
 197-icon-micro-animations-on-hover-in-mobbins-navbar	Mobbin：导航栏图标悬停微动画	navigation,motion-transition	reference		hover		
@@ -182,22 +182,22 @@
 159-snow-appears-when-hovering-on-mobbins-logo-during-christmas	Mobbin：圣诞节悬停 logo 下雪	motion-transition,micro-interaction	reference		hover		
 158-swipe-to-reveal-if-you-are-safe-from-duo-in-duolingos-year-in-review	Duolingo：年度回顾中滑动揭晓结果	motion-transition,micro-interaction	reference		swipe		
 157-mesmerizing-animations-in-spotify-wrapped	Spotify：年度回顾 Wrapped 炫目动画	motion-transition	reference				
-156-chess-themed-confetti-appears-when-searching-for-world-chess-championship	Google：搜索国际象棋锦标赛出现棋子彩带	search-command,motion-transition	reference	webgl			
+156-chess-themed-confetti-appears-when-searching-for-world-chess-championship	Google：搜索国际象棋锦标赛出现棋子彩带	search-command,motion-transition	reference				
 155-animated-launch-screen-when-opening-the-chess-com-app	Chess.com：启动页棋子动画	motion-transition	reference				
 154-animated-timer-in-confirmation-dialog-when-changing-disk-size-on-supabase	Supabase：确认弹窗中的倒计时动画	overlay,motion-transition	reference				
 153-sneak-peek-of-the-pro-plan-benefits-when-hovering-on-the-upgrade-cta-button	Dub.co：悬停升级按钮预览付费权益	button,marketing-section	reference		hover		
 152-drag-to-adjust-the-split-view-of-calendar-and-todos-on-amie	Amie：拖动调整日历与待办分屏比例	date-time,micro-interaction	reference		drag		
 151-an-interactive-spaceship-displaying-real-time-bfcm-data-on-shopify	Shopify：黑五实时数据的可交互飞船驾驶舱	motion-transition,micro-interaction	reference				
-150-live-stream-of-a-real-machine-displaying-real-time-bfcm-data-on-stripe	Stripe：实体机器直播展示黑五实时数据	motion-transition,fun-3d	reference				
+150-live-stream-of-a-real-machine-displaying-real-time-bfcm-data-on-stripe	Stripe：实体机器直播展示黑五实时数据	chart,media	reference				
 149-real-time-dashboard-of-vercels-requests-over-the-bfcm-weekend	Vercel：黑五请求量实时可视化仪表盘	chart,motion-transition	reference				
 148-channel-header-expands-into-a-menu-when-tapped-in-slack	Slack：点击频道标题展开为菜单	navigation,motion-transition	reference		press		
 147-bouncy-and-expandable-new-menu-in-craft	Craft：弹性展开的新建菜单	navigation	reference				
 146-ripple-animation-when-toggling-between-light-and-dark-modes-in-hackerrank	HackerRank：明暗主题切换时圆形扩散过渡	motion-transition	reference	dark			
 145-channels-can-be-converted-to-flip-books-in-are-na	Are.na：频道内容变成手翻书	motion-transition,fun-3d	reference				
 144-amps-and-stompboxes-with-interactive-knobs-and-switches-in-garage-band	GarageBand：拟物音箱和效果器旋钮开关	toggle-slider,motion-transition	reference				
-143-customizable-wallet-address-qr-code-on-family	Family：可自定义样式的钱包地址二维码	motion-transition,fun-3d	reference				
+143-customizable-wallet-address-qr-code-on-family	Family：可自定义样式的钱包地址二维码	micro-interaction,media	reference				
 142-flashlight-controls-in-the-dynamic-island-on-ios	iOS：灵动岛中的手电筒光束调节	motion-transition	reference				
-141-halloween-easter-egg-when-hovering-on-vercels-logo	Vercel：万圣节悬停 logo 彩蛋	motion-transition,micro-interaction	reference		hover		
+141-halloween-easter-egg-when-hovering-on-vercels-logo	Vercel：万圣节悬停 logo 彩蛋（站内 #141；#252 是同名的另一条，差别未核对，看视频再选）	motion-transition,micro-interaction	reference		hover		
 140-keys-get-pressed-and-light-up-when-using-the-keyboard-shortcut-in-rainbow	Rainbow：使用快捷键时拟物按键按下发光	motion-transition,micro-interaction	reference		press,keyboard	glow	
 139-animation-when-toggling-between-travelling-and-hosting-mode-in-airbnb	Airbnb：切换旅客/房东模式的 3D 翻转过渡	motion-transition,fun-3d	reference	3d			
 138-cards-have-inertia-when-dragging-them-around-in-bento	Bento：拖拽卡片带惯性和倾斜	layout-card,micro-interaction	reference		drag		
@@ -206,7 +206,7 @@
 135-profile-selection-animation-on-netflix	Netflix：选择用户头像的过渡动画	select,avatar-user	reference				
 134-stacked-trail-serves-as-an-indication-of-the-date-youre-browsing-relative-to	Notion Calendar：堆叠轨迹提示当前浏览日期相对今天的位置	date-time	reference				
 133-raycast-has-a-command-that-makes-it-bounce-around-like-the-dvd-logo	Raycast：窗口像 DVD logo 一样满屏弹跳	search-command,button	reference			bounce	
-132-dividers-are-randomized-squiggles-in-superlist	Superlist：分隔线是随机手绘波浪线	fun-3d	reference				
+132-dividers-are-randomized-squiggles-in-superlist	Superlist：分隔线是随机手绘波浪线	layout-card	reference				
 131-verify-button-when-clicked-gets-folded-into-a-paper-plane-and-flies-away-in	Column：点击按钮折成纸飞机飞走	button,motion-transition	reference	3d	press		
 130-watchtower-score-calculation-animation-in-1password	1Password：安全评分计算的仪表动画	motion-transition	reference				
 129-tap-to-crack-open-unlocked-gems-on-opal	Opal：点击敲开宝石解锁奖励	motion-transition	reference		press		
@@ -228,7 +228,7 @@
 113-animated-shapes-and-patterns-when-logging-how-youre-feeling-on-apple-health	Apple Health：记录心情时的变形图案动画	motion-transition	reference				
 112-randomized-animation-when-hovering-on-documents-in-craft	Craft：悬停文档卡片的随机动画	layout-card,motion-transition	reference		hover		
 111-host-passport-flips-open-when-clicked-on-airbnb	Airbnb：房东护照点击翻开的 3D 动画	motion-transition,fun-3d	reference	3d	press		
-110-a-ball-bounces-towards-the-scoring-team-when-points-are-scored-in-googles	Google：实时比分中篮球弹向得分方	motion-transition,fun-3d	reference	webgl		bounce	
+110-a-ball-bounces-towards-the-scoring-team-when-points-are-scored-in-googles	Google：实时比分中篮球弹向得分方	motion-transition,micro-interaction	reference	webgl		bounce	
 109-arrow-icon-does-a-little-spin-if-you-swipe-to-reply-3-times-without-letting	Discord：连续三次滑动回复不松手时箭头旋转彩蛋	micro-interaction,fun-3d	reference		swipe		
 108-random-messages-pop-out-from-the-dynamic-island-when-pulling-down-the-home	Slack：下拉首页时灵动岛冒出随机文案	fun-3d	reference				
 107-upon-entering-your-date-of-birth-tinder-celebrates-your-birthday-if-it-was	Tinder：输入生日若临近则彩带庆祝	date-time,form-input	reference				
@@ -243,46 +243,46 @@
 098-special-animation-when-liking-posts-with-the-cherry-blossom-tag-on-threads	Threads：特定标签帖子点赞出现樱花动画	button,motion-transition	reference				
 097-special-animation-when-liking-posts-with-the-eid-mubarak-tag-on-threads	Threads：特定节日标签点赞专属动画	button,motion-transition	reference				
 096-customizable-old-school-cursors-in-figma-for-their-annual-april-fun-day	Figma：愚人节可选复古鼠标光标	cursor-effect,fun-3d	reference		cursor		
-095-hidden-calendar-crusher-minigame-in-amie	Amie：隐藏的日历消除小游戏	date-time,fun-3d	reference				
+095-hidden-calendar-crusher-minigame-in-amie	Amie：隐藏的日历消除小游戏	fun-3d,date-time	reference				
 094-confetti-appears-in-your-slack-profile-on-your-work-anniversary	Slack：入职周年资料页彩带	avatar-user,motion-transition	reference				
 093-animated-card-announcing-linears-new-ui	Linear：新版 UI 公告动画卡片	layout-card,motion-transition	reference				
 092-editable-margins-on-webflows-404-page	Webflow：404 页可拖拽编辑边距	empty-onboarding,micro-interaction	reference		drag		
 091-popping-all-the-clouds-in-not-boring-weather-triggers-a-hidden-minigame	(Not Boring) Weather：戳破所有云朵触发隐藏小游戏	fun-3d	reference				
-090-aperture-animation-when-opening-your-camera-within-raycast	Raycast：打开相机时光圈叶片张开动画	motion-transition,fun-3d	reference				
+090-aperture-animation-when-opening-your-camera-within-raycast	Raycast：打开相机时光圈叶片张开动画	motion-transition,micro-interaction	reference				
 089-view-calendar-in-3d-when-dragging-with-two-fingers-on-amie	Amie：双指拖动日历变 3D 视角	date-time,micro-interaction	reference	3d	drag		
 088-id-by-amo-automatically-closes-itself-after-youve-caught-up-with-all	ID by amo：看完所有通知后 App 自动关闭	feedback	reference				
-087-post-gets-stamped-when-selecting-an-issue-to-report-it-for-on-phanpy	Phanpy：举报时帖子被盖章	select,fun-3d	reference				
+087-post-gets-stamped-when-selecting-an-issue-to-report-it-for-on-phanpy	Phanpy：举报时帖子被盖章	micro-interaction,feedback	reference				
 086-tapping-on-an-emoji-in-an-instagram-chat-toggles-a-game-of-pong-against-the	Instagram：点表情与灵动岛对打乒乓球	ai-ux,toggle-slider	reference				
 085-digital-badge-and-lanyard-for-virtual-attendees-of-vercels-conference	Vercel：可拖拽物理摆动的 3D 胸牌挂绳	feedback,motion-transition	reference	3d	drag		
-084-scrolling-past-the-threshold-in-citymapper-brings-you-underground	Citymapper：滚动超过阈值进入"地下"	motion-transition,fun-3d	reference		scroll		
+084-scrolling-past-the-threshold-in-citymapper-brings-you-underground	Citymapper：滚动超过阈值进入"地下"	motion-transition	reference		scroll		
 083-bin-animation-when-moving-a-collectible-to-the-trash-in-family	Family：移到垃圾桶的拟物动画	motion-transition,fun-3d	reference				
 082-the-tab-counter-turns-into-a-smiley-after-exceeding-99-tabs-in-chrome	Chrome：标签数超过 99 显示笑脸	text-effect,navigation	reference				
-081-cute-animation-when-changing-amies-app-icon	Amie：切换 App 图标的可爱动画	motion-transition,fun-3d	reference				
+081-cute-animation-when-changing-amies-app-icon	Amie：切换 App 图标的可爱动画	motion-transition,micro-interaction	reference				
 080-length-of-stay-duration-slider-in-airbnb	Airbnb：入住时长滑块	toggle-slider	reference				
-079-duos-mood-changes-throughout-the-day-in-duolingos-widget	Duolingo：小组件吉祥物情绪随时间变化	date-time,fun-3d	reference				
-078-tinder-style-cards-to-catch-up-with-unreads-in-slack	Slack：左右滑卡片处理未读	layout-card,fun-3d	reference				
+079-duos-mood-changes-throughout-the-day-in-duolingos-widget	Duolingo：小组件吉祥物情绪随时间变化	micro-interaction	reference				
+078-tinder-style-cards-to-catch-up-with-unreads-in-slack	Slack：左右滑卡片处理未读	layout-card,micro-interaction	reference				
 077-animated-interactions-when-translating-in-the-dynamic-island-on-ios	iOS：灵动岛中翻译交互动画	motion-transition,micro-interaction	reference				
-076-hopping-commas-when-editing-currency-values-in-family	Family：编辑金额时千分位逗号跳动	motion-transition,fun-3d	reference				
+076-hopping-commas-when-editing-currency-values-in-family	Family：编辑金额时千分位逗号跳动	text-effect,micro-interaction	reference				
 075-iridescent-fidget-spinner-in-arc-search	Arc：彩虹色指尖陀螺	loading,search-command	reference				
 074-rubber-banding-effect-when-dragging-within-ios-control-center	iOS：控制中心拖拽橡皮筋回弹	micro-interaction	reference		drag	bounce	
 073-interactive-clock-for-scheduling-emails-in-apple-mail	Apple Mail：定时发送邮件的可拖动时钟	page-inspiration	reference		drag		
-072-playful-interaction-when-opening-amies-community-event-invitation	Amie：打开活动邀请函的趣味交互	micro-interaction,fun-3d	reference				
-071-interactive-todos-on-amies-log-in-page	Amie：登录页可勾选的待办	auth,fun-3d	reference				
+072-playful-interaction-when-opening-amies-community-event-invitation	Amie：打开活动邀请函的趣味交互	micro-interaction,motion-transition	reference				
+071-interactive-todos-on-amies-log-in-page	Amie：登录页可勾选的待办	auth,micro-interaction	reference				
 070-slots-easter-egg-when-swiping-down-on-the-view-count-in-id-by-amo	ID by amo：下滑浏览数触发老虎机	fun-3d	reference				
 069-burgertime-minigame-on-wendy's-404-page	Wendy's：404 页汉堡小游戏	empty-onboarding,fun-3d	reference				
 068-messages-get-vaporized-when-deleted-in-telegram	Telegram：删除消息粒子消散（灭霸效果）	background,motion-transition	reference				
 067-like-button-glows-when-the-youtuber-says-like-this-video-in-youtube	YouTube：博主说点赞时点赞按钮发光	button,motion-transition	reference			glow	
-066-confetti-appears-when-liking-a-post-with-happy-new-year-in-threads	Threads：新年帖子点赞彩带	button,fun-3d	reference				
+066-confetti-appears-when-liking-a-post-with-happy-new-year-in-threads	Threads：新年帖子点赞彩带	button,micro-interaction	reference				
 065-mail-gets-tossed-into-a-folder-when-moving-them-in-apple-mail	Apple Mail：移动邮件时抛入文件夹动画	motion-transition,fun-3d	reference				
 064-special-emotes-in-figjams-cursor-chat	Figma：光标聊天中的特殊表情	ai-ux,cursor-effect	reference		cursor		
 063-flip-the-postcard-to-write-a-message-on-the-back-in-retro	Retro：翻转明信片到背面写字	page-inspiration	reference				
 062-let-it-snow-easter-egg-in-the-apple-store	Apple Store：输入 let it snow 下雪彩蛋	form-input,motion-transition	reference				
-061-onboarding-screen-freezes-over-gradually-in-riveo	Riveo：引导页逐渐结冰	empty-onboarding,fun-3d	reference				
+061-onboarding-screen-freezes-over-gradually-in-riveo	Riveo：引导页逐渐结冰	empty-onboarding,motion-transition	reference				
 060-page-controls-in-raycast-wrapped-2023	Raycast：年度回顾分页控件	navigation	reference				
 059-fluid-sliders-that-track-the-position-of-your-finger-in-play	Play：跟随手指位置的流体滑块	cursor-effect,toggle-slider	reference				
 058-hourly-weather-changes-visualized-via-a-time-slider-in-(not-boring)-weather	(Not Boring) Weather：拖动时间滑块实时变化逐时天气场景	date-time,toggle-slider	reference		drag		
 057-select-a-unique-stone-when-creating-a-cosmos-invite	Cosmos：创建邀请时挑选独特 3D 石头	select,motion-transition	reference	3d			
-056-faceless-camera-when-setting-a-profile-picture-on-id-by-amo	ID by amo：设置头像时的无脸相机	avatar-user,fun-3d	reference				
+056-faceless-camera-when-setting-a-profile-picture-on-id-by-amo	ID by amo：设置头像时的无脸相机	avatar-user,micro-interaction	reference				
 055-guess-the-app-minigame-on-mobbin's-404-page	Mobbin：404 页猜 App 小游戏	empty-onboarding,fun-3d	reference				
 054-real-time-visualization-of-shopify's-bfcm-sales	Shopify：黑五销售实时 3D 地球可视化	chart,motion-transition	reference	3d			
 053-special-black-friday-launch-screen-when-opening-the-amazon-app	Amazon：黑五特别版启动页	motion-transition	reference				
@@ -300,7 +300,7 @@
 041-customize-your-conference-ticket-with-stickers-on-vercel	Vercel：给会议门票贴贴纸	fun-3d	reference				
 040-tiny-music-notes-appear-on-the-tab-is-playing-music-in-arc	Arc：播放音乐的标签冒出音符	navigation,motion-transition	reference				
 039-instant-camera-widget-for-taking-selfies-in-figjam	Figma：拍立得相机组件自拍吐照片	motion-transition,fun-3d	reference				
-038-display-picture-fuses-with-the-dynamic-island-in-telegram	Telegram：上滑时头像融入灵动岛（metaball）	avatar-user,fun-3d	reference				
+038-display-picture-fuses-with-the-dynamic-island-in-telegram	Telegram：上滑时头像融入灵动岛（metaball）	avatar-user,motion-transition	reference				
 037-pull-to-search-icon-animation-in-things	Things：下拉搜索图标动画	search-command,motion-transition	reference				
 036-unpacking-experience-when-getting-started-in-orion	Orion：开箱式拟物上手引导	table,empty-onboarding	reference				
 035-badge-slides-out-of-view-when-clearing-notifications-on-vercel	Vercel：清空通知时角标滑出	feedback	reference				
@@ -309,7 +309,7 @@
 032-special-heart-animation-when-liking-posts-with-the-appleevent-hashtag-on-x	Twitter：特定话题点赞专属爱心动画（另一年）	button,motion-transition	reference				
 031-app-follows-the-trajectory-of-the-swipe-when-closing-on-ios	iOS：关闭 App 时窗口跟随手势轨迹飞出	cursor-effect,micro-interaction	reference		swipe		
 030-10-years-easter-egg-in-the-apple-store	Apple Store："10 years"纪念彩蛋	motion-transition,fun-3d	reference				
-029-apps-and-widgets-jiggle-when-editing-the-home-screen-on-ios	iOS：编辑主屏时图标抖动（jiggle）	motion-transition,fun-3d	reference				
+029-apps-and-widgets-jiggle-when-editing-the-home-screen-on-ios	iOS：编辑主屏时图标抖动（jiggle）	micro-interaction,motion-transition	reference				
 028-heart-animation-when-liking-tiktoks	TikTok：点赞爱心动画	button,motion-transition	reference				
 027-animation-when-liking-videos-on-youtube	YouTube：点赞按钮动画	button,motion-transition	reference				
 026-heart-animation-when-liking-posts-on-x	Twitter：点赞爱心爆开粒子动画	background,button	reference				

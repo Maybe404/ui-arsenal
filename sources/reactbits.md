@@ -5,9 +5,10 @@ url: https://reactbits.dev/
 kind: effects
 stack: React（JS/TS）+ 纯 CSS 或 Tailwind（仓库用 Tailwind v4）；按组件依赖 GSAP / motion / three.js / @react-three/fiber / ogl / matter-js 等
 license: MIT + Commons Clause（可商用于自己的应用/网站；禁止转售或再分发组件本身）
-pro: partial（免费站 213 个组件全部开源；另有付费 React Bits Pro：150 组件 + 280 页面区块 + 300 应用 UI + 15 模板 + 20 Agent Kit，Starter $129 / Pro $249 / Ultimate $349 一次性，或年付）
+pro: partial（免费站 214 个组件全部开源（2026-10-08 registry）；另有付费 React Bits Pro，pro-manifest.json（2026-10-07 生成）写 230 组件 · 300 区块 · 300 应用 UI · 15 模板 · 20 agent skill，索引只登记了其中 150 个组件、14 个模板、19 个 kit 和 60 个分类行，只当灵感不获取；Starter $129 / Pro $249 / Ultimate $349 一次性，或年付）
 fetch: shadcn-registry
-verified: 2026-10-07
+coverage: 免费组件全量（registry，变体只比对 TS-TW）；Pro 只登记了部分组件、模板和分类行；refresh 自动比对免费部分
+catalog_checked: 2026-10-07
 source_status: active
 visual_style: expressive webgl and text effects
 foundation: none
@@ -17,18 +18,18 @@ dark_mode: none
 mixing_notes: 颜色全靠 props 和组件内变量，要手动传入主底座的颜色；TW 变体需 Tailwind v4，CSS 变体是全局类名；只用于 hero、背景、标题等点缀，不要拿来替代基础控件
 ---
 ## 是什么 / 什么时候用
-React Bits 是 David Haz 维护的开源动效组件库（GitHub DavidHDev/react-bits），共 213 个组件，分 5 类：Text Animations（文字动效 33）、Animations（光标/悬停/入场等交互动效 40）、Components（卡片/画廊/导航/轮播等带动效的 UI 47）、Micro（开关/按钮/输入/AI 状态等微交互 34）、Backgrounds（WebGL/着色器背景 59）。每个组件有 4 个变体：JS+CSS、JS+Tailwind、TS+CSS、TS+Tailwind。
+React Bits 是 David Haz 维护的开源动效组件库（GitHub DavidHDev/react-bits），共 214 个组件（2026-10-08；下面的分类计数是 2026-10-07 的 213 个），分 5 类：Text Animations（文字动效 33）、Animations（光标/悬停/入场等交互动效 40）、Components（卡片/画廊/导航/轮播等带动效的 UI 47）、Micro（开关/按钮/输入/AI 状态等微交互 34）、Backgrounds（WebGL/着色器背景 59）。每个组件有 4 个变体：JS+CSS、JS+Tailwind、TS+CSS、TS+Tailwind。
 适合：落地页 hero 背景、标题文字动效、光标特效、炫酷卡片与画廊、AI 产品里的微交互（PromptBar、ThoughtLine、StatusMark、CallChip 等）。
 不适合：表单/表格/弹窗这类基础 UI 原语（用 shadcn/ui）、整页区块和后台界面（免费库没有，需要付费 Pro）。
 
 ## 按需获取方法
 **机器可读清单（都已实测，curl 直接可取，不需要渲染）**
 - 免费组件全量清单（带描述、分类、demo 链接、CLI 名）：`curl -sL https://reactbits.dev/llms.txt`，组件行格式 `- [名称](https://www.reactbits.dev/<category>/<slug>): 描述 CLI: \`<PascalName>\`.`，按 `## Text Animations / ## Animations / ## Components / ## Micro / ## Backgrounds` 分节。
-- shadcn registry 索引：`curl -sL https://reactbits.dev/r/registry.json`，852 项 = 213 组件 × 4 变体，每项含 name、description、dependencies、files（不含源码）。
+- shadcn registry 索引：`curl -sL https://reactbits.dev/r/registry.json`，856 项 = 214 组件 × 4 变体（2026-10-08），每项含 name、description、dependencies、files（不含源码）。
   列出全部组件名：`curl -sL https://reactbits.dev/r/registry.json | jq -r '.items[].name' | sed -E 's/-(JS|TS)-(CSS|TW)$//' | sort -u`
 - 单个组件 JSON（含完整源码 content 和依赖）：`https://reactbits.dev/r/{Name}-{LANG}-{STYLE}.json`（不带 .json 也行），LANG = JS|TS，STYLE = CSS|TW。
   `curl -sL https://reactbits.dev/r/SplitText-TS-TW.json | jq -r '.files[0].content'`
-- Pro 目录（只有元数据，没有源码）：`curl -sL https://www.reactbits.dev/pro-manifest.json`，含 components(150)、blocks(22 类，每类 variants[] 里有每个区块的 name/description/registryName)、appUi(38 类)、templates(15)、agentKit(19) + agentSkill。商业条款：`https://pro.reactbits.dev/llms.txt`。
+- Pro 目录（只有元数据，没有源码）：`curl -sL https://www.reactbits.dev/pro-manifest.json`，含 components（2026-10-07 生成的版本是 230 个）、blocks(22 类，每类 variants[] 里有每个区块的 name/description/registryName)、appUi(38 类)、templates(15)、agentKit(19) + agentSkill。商业条款：`https://pro.reactbits.dev/llms.txt`。
 - sitemap：`https://reactbits.dev/sitemap.xml`（227 个 URL，含 213 个组件 demo 页）。
 
 **安装（选一种）**
@@ -67,7 +68,7 @@ React Bits 是 David Haz 维护的开源动效组件库（GitHub DavidHDev/react
 - Pro 是独立的、需要 license key 的 registry，用免费 registry 装不了。买了之后在 components.json 加 Pro registry 和 key，再执行 `npx shadcn@latest add @reactbits-pro/{registryName}`（pro.reactbits.dev/llms.txt 的写法）。reactbits.dev/llms.txt 里写的是 `@reactbits-starter/<slug>-tw|-css`，两处命名空间不一致，以购买后的官方文档为准。Pro 里免费的只有 Portfolio 模板和 Terminal Dark skill。
 
 ## 组件清单
-共 458 行：免费 213（Text Animations 33、Animations 40、Components 47、Micro 34、Backgrounds 59），每个都有 4 个变体，表里只写 TS-TW 的命令，换变体时把后缀改成 `-JS-CSS`、`-JS-TW` 或 `-TS-CSS`。Pro 部分：组件 150 个逐个列出；Blocks 280 个和 App UI 300 个超过 500 条上限，只列到分类（22 + 38 行），具体变体在运行时用 `curl -sL https://www.reactbits.dev/pro-manifest.json | jq '.blocks[]|{slug,variants:[.variants[]|{registryName,description}]}'` 列出（appUi 同理）；Templates 15 个、Agent Kit 20 个逐个列出。
+共 459 行（2026-10-08）：免费 214，分类计数是 2026-10-07 的 213 个（Text Animations 33、Animations 40、Components 47、Micro 34、Backgrounds 59），每个都有 4 个变体，表里只写 TS-TW 的命令，换变体时把后缀改成 `-JS-CSS`、`-JS-TW` 或 `-TS-CSS`。Pro 部分：组件 150 个逐个列出；Blocks 280 个和 App UI 300 个超过 500 条上限，只列到分类（22 + 38 行），具体变体在运行时用 `curl -sL https://www.reactbits.dev/pro-manifest.json | jq '.blocks[]|{slug,variants:[.variants[]|{registryName,description}]}'` 列出（appUi 同理）；Templates 15 个、Agent Kit 20 个逐个列出。
 
 | id | 名称 | 分类 | 一句话用途 | 获取（具体命令或URL） | 备注 |
 |---|---|---|---|---|---|

@@ -7,7 +7,7 @@
 ## 默认推荐
 | 主底座 | 推荐 | 理由 |
 |---|---|---|
-| shadcn | 默认不加；Persuade 首屏需要主导背景时用 `reactbits:grainient` | grainient 是这次看过的 reactbits 背景里工程最完整的：只依赖 ogl；IntersectionObserver 离屏暂停、`visibilitychange` 标签页隐藏暂停；像素比上限 2；ResizeObserver 跟随容器；WebGL 只建一次，改 props 只更新 uniform；有 `lightMode` 和 `color1/2/3` props，能接 shadcn 的主题色。缺点：不处理减弱动效、卸载时没有 `loseContext`，接入时补 |
+| shadcn | 默认不加；Persuade 首屏有明确论点、需要主导背景时（条件见 `marketing-section.md`）用 `reactbits:grainient` | grainient 是这次看过的 reactbits 背景里工程最完整的：只依赖 ogl；IntersectionObserver 离屏暂停、`visibilitychange` 标签页隐藏暂停；像素比上限 2；ResizeObserver 跟随容器；WebGL 只建一次，改 props 只更新 uniform；有 `lightMode` 和 `color1/2/3` props，能接 shadcn 的主题色。缺点：不处理减弱动效、卸载时没有 `loseContext`，接入时补 |
 | uiarc | 默认不加 | uiarc 的风格规范明确不要装饰性渐变和光晕。确实需要时按 `_styles.md`：用 `reactbits:grainient`，低饱和、取 uiarc 的 `--accent` / `--foreground` 色值，只放在 hero、不和 uiarc 控件相邻 |
 | 没有底座或其他 | `reactbits:grainient`；想要光束感用 `reactbits:light-rays` | light-rays 同样只依赖 ogl，进入视口才初始化 WebGL、像素比上限 2、卸载时 `loseContext`；单色 `raysColor`，好映射到品牌色 |
 

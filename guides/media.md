@@ -23,7 +23,7 @@
 
 ## 慎用
 - `reactbits:circular-gallery`：ogl WebGL 画廊，像素比上限 2、有键盘处理，但把 `wheel`、`mousedown`、`mousemove`、`touchstart/touchmove` 全部挂在 **window** 上——页面任何位置滚动或拖动都会转动画廊（滚轮事件不 `preventDefault`，页面同时也在滚）。只在它独占一屏的 Experience 页面用，或改成只监听容器。不处理减弱动效。
-- `reactbits:carousel`：依赖 `react-icons`（要换成 lucide），源码没有键盘处理。用 `shadcn:carousel` 替代。
+- `reactbits:carousel`：依赖 `react-icons`（要换成项目在用的图标库（项目还没定就用 lucide）），源码没有键盘处理。用 `shadcn:carousel` 替代。
 - `reactbits:dome-gallery`、`reactbits:infinite-spiral`、`reactbits:flex-carousel`（第 3 级风险：毛玻璃）、`reactbits:morph-slider`（gsap + ogl）：展示型画廊，仅 Experience；都要补减弱动效。
 - `obsidianui:art-gallery`：WebGL 桶形畸变无限照片墙，演示图走 obsidianui 的 CDN，上线前换成自己的资源。
 - `obsidianui:skeumorphic-music-card`：用了 `next/image`，非 Next 项目要替换。

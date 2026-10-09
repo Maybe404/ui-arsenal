@@ -54,9 +54,9 @@ Transitions.dev 已核对的默认参数（都用 `cubic-bezier(0.22, 1, 0.36, 1
 
 ## 接入要点
 - **时长与曲线**：按 `_scenes.md`：100–150ms 即时反馈，150–300ms 常规状态，300–500ms 布局和弹层，500–800ms 整页唯一的主导入场；退出比进入快；默认 `cubic-bezier(0.16, 1, 0.3, 1)` 或 Transitions.dev 的 `cubic-bezier(0.22, 1, 0.36, 1)`。
-- **减弱动效**：Transitions.dev 的每段 CSS 结尾都有 `@media (prefers-reduced-motion: reduce)` 守卫，复制时必须保留；reduce 时保留透明度变化，去掉位移、缩放和模糊。shadcn 用的 `tw-animate-css` 是否自动遵守减弱动效本次未验证，建议在全局补 `motion-reduce:` 或媒体查询。
+- **减弱动效**：Transitions.dev 的每段 CSS 结尾都有 `@media (prefers-reduced-motion: reduce)` 守卫，复制时必须保留；reduce 时保留透明度变化，去掉位移、缩放和模糊。shadcn 用的 `tw-animate-css`（1.4.0）不处理减弱动效，shadcn 自己的 `tailwind.css` 也只给 shimmer 加了守卫（2026-10-08 核对，见 `sources/_claims.tsv`），要在全局补 `motion-reduce:` 或媒体查询，写法见 `overlay.md`。
 - **内容默认可见**：滚动入场的初始隐藏状态必须有兜底（超时显示、或 CSS 兜底），JS 失败时内容照样能看到。
-- **只动 transform、opacity**：高度变化用 grid-rows 或主底座组件的实现，不要逐帧改 height/width/margin；模糊只用 2–3px 的小值。
+- **优先只动 transform、opacity**：高度展开用 grid-rows 或主底座组件的实现，比用 JS 逐帧写 height 好，但它和宽高动画一样会触发布局：一次展开一个面板没问题，列表里很多行同时展开要在目标设备上看帧率（规则见 `_scenes.md`「动效规范」）。模糊只用 2–3px 的小值。
 - **一套参数**：同一项目只保留一套时长/缓动 token（shadcn 项目可以把 Transitions.dev 的变量收进全局，uiarc 项目用它自己的 motion-tokens），不要几家混用。
 - **动效库统一**：motion 和 framer-motion 只留一个；gsap 只在确实需要 ScrollTrigger、SplitText 的组件里引入。
 

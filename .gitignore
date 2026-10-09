@@ -3,6 +3,9 @@
 .claude/settings.local.json
 # local runtime state (machine-specific, may reveal private project names)
 sources/_state.json
+sources/_state.json.*
 sources/_usage.log
 sources/_pending/
 __pycache__/
+# working directories of other review tools
+.workbuddy/

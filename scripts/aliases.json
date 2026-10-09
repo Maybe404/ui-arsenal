@@ -1,5 +1,5 @@
 {
- "_comment": "Synonym groups. Any term in a group expands to every term in that group. Matching is case-insensitive substring.",
+ "_comment": "Synonym groups. A query term that appears in a group expands to every term in that group; a term can sit in several groups. How terms match (implemented in scripts/ua.py search, tested in scripts/tests/test_search.py): ASCII terms match whole words, case-insensitive, with hyphens and punctuation as word breaks and a regular English plural (plan->plans, bus->buses, gallery->galleries); a longer word with the same start does not match (plan does not hit plane, tab does not hit table). This applies both to the words the user typed and to the alias terms. Chinese terms match as substrings. A Chinese token that is not an alias term is split greedily into the longest alias terms it contains, and leftover runs of two or more characters are kept when the catalogue contains them and they are not filler words (侧边栏可折叠 -> 侧边栏 + 折叠). Adjacent words that form a group term are read together (dark mode -> dark-mode). Multi-word terms here (tool call) therefore work both as typed phrases and as expansions.",
  "groups": [
   [
    "加载",
@@ -7,6 +7,13 @@
    "loading",
    "loader",
    "spinner",
+   "progress",
+   "进度"
+  ],
+  [
+   "进度条",
+   "progress bar",
+   "progressbar",
    "progress",
    "进度"
   ],
@@ -21,9 +28,7 @@
    "思考",
    "推理",
    "thinking",
-   "reasoning",
-   "orb",
-   "光球"
+   "reasoning"
   ],
   [
    "按钮",
@@ -120,7 +125,9 @@
    "table",
    "data-table",
    "datagrid",
-   "数据表"
+   "数据表",
+   "对比表",
+   "价格表"
   ],
   [
    "网格",
@@ -228,7 +235,9 @@
    "landing",
    "hero",
    "首屏",
-   "营销页"
+   "营销页",
+   "英雄区",
+   "主视觉"
   ],
   [
    "页脚",
@@ -260,7 +269,8 @@
    "alert",
    "snackbar",
    "badge",
-   "徽标"
+   "徽标",
+   "sonner"
   ],
   [
    "头像",
@@ -319,7 +329,7 @@
   ],
   [
    "步骤",
-   "进度条",
+   "步骤条",
    "stepper",
    "steps",
    "wizard",
@@ -444,7 +454,9 @@
    "dark-mode",
    "配色",
    "palette",
-   "color"
+   "color",
+   "暗黑",
+   "夜间"
   ],
   [
    "设计规范",
@@ -470,7 +482,11 @@
    "文件树",
    "tree",
    "explorer",
-   "目录"
+   "目录",
+   "file tree",
+   "file-tree",
+   "treeview",
+   "tree view"
   ],
   [
    "时间线",
@@ -546,6 +562,53 @@
    "function call",
    "tool use",
    "tool status"
+  ],
+  [
+   "侧边栏",
+   "侧栏",
+   "sidebar",
+   "sidenav",
+   "侧边导航"
+  ],
+  [
+   "玻璃",
+   "毛玻璃",
+   "玻璃拟态",
+   "glass",
+   "glassmorphism",
+   "frosted"
+  ],
+  [
+   "home",
+   "house",
+   "房子"
+  ],
+  [
+   "月付",
+   "年付",
+   "计费周期",
+   "monthly",
+   "yearly",
+   "annual",
+   "billing"
+  ],
+  [
+   "多选",
+   "多项选择",
+   "multi-select",
+   "multiselect"
+  ],
+  [
+   "饼图",
+   "环形图",
+   "圆环图",
+   "pie",
+   "donut"
+  ],
+  [
+   "光球",
+   "orb",
+   "orbs"
   ]
  ]
 }

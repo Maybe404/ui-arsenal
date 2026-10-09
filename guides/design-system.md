@@ -6,15 +6,15 @@
 不需要的情况：项目已经有稳定的主题和组件库，只是加一个页面，那就沿用现有的；只做一个一次性原型，用 shadcn 默认主题即可。
 
 两条前提：
-- **一个项目只有一个底座。** 主底座只能是 shadcn 或 uiarc 之一（见 `_styles.md`）。设计基线的工作是"给这个底座的变量填值"，不是再引入一套 token。
+- **一个项目只有一个底座。** 已有项目的底座就是它现在用的组件库或设计系统（shadcn、uiarc，也可能是 Ant Design、MUI、Chakra 或自研的），设计基线是给它的变量填值，不是再引入一套 token，也不为了用收藏库而迁移。收藏库里能撑起整页基础件的只有 shadcn 和 uiarc，所以新的 React 项目从这两家里选（见 `_styles.md`）；非 React 项目、或者已经用别的组件库的项目，只从这里借规范和参考。
 - **参考品牌只借方向。** getdesign 的 DESIGN.md 是对知名品牌公开设计的分析，可以借它的配色关系、字号节奏、密度和组件规则；不复制品牌的 Logo、品牌图形、专有字体、品牌名、产品截图和标志性配色组合到让人误认的程度。
 
 ## 默认推荐
 | 主底座 | 推荐 | 理由 |
 |---|---|---|
 | shadcn | `shadcn:presets`（`npx shadcn@latest init --preset base-nova`）+ `shadcn:base-color-*` + `shadcn:font-*` | 官方预设一次定好 base（Base UI / Radix / React Aria）、style、底色、图标库和字体。`r/config.json` 实际列出 24 个预设：vega、nova、luma、rhea 用 lucide，maia、mira 用 hugeicons，lyra 用 tabler，sera 是 Noto Sans + Playfair Display 加 taupe 底色。底色 9 种（neutral、stone、zinc、mauve、olive、mist、taupe、gray、slate），都是 Tailwind v4 的 oklch 变量；字体 26 种正文 + 26 种标题，每种是一个 `registry:font` 条目，写入 `--font-sans` 或 `--font-heading`（已看 config.json、mauve.json、font-geist.json） |
-| uiarc | `uiarc:arc-foundation` | 完整 token：11 级中性色、语义色、三档阴影、间距、字号、控件高度、圆角（18 / 26 / 34px 和胶囊）、时长缓动和 `motionTokens`（snappy / smooth / morph）；8 种强调色用 `data-accent` 切换，明暗用 `data-theme`。有一条硬伤必须修：全局 `outline: none !important` 加 `--focus-ring: transparent`（注释写着"产品决策：任何地方都没有焦点环"），键盘用户看不到焦点 |
-| 没有底座或其他 | `getdesign:<slug>` 选一份 DESIGN.md 作参考方向，落到 shadcn 变量上 | 76 份免费，格式就是 impeccable 用的 DESIGN.md（Google design.md 规范：YAML front-matter 里 `colors`、`typography`、`rounded`、`spacing`、`components`，正文按 Overview → Colors → Typography → Layout → Elevation & Depth → Shapes → Components → Do's and Don'ts 排）。可以直接放到项目根目录当 impeccable 的 DESIGN.md，再按下面的"接入要点"改写成自己的 |
+| uiarc | `uiarc:arc-foundation` | 完整 token：11 级中性色、语义色、三档阴影、间距、字号、控件高度、圆角（18 / 26 / 34px 和胶囊）、时长缓动和 `motionTokens`（snappy / smooth / morph）；8 种强调色用 `data-accent` 切换，明暗用 `data-theme`。键盘焦点由 foundation 的全局 `:focus-visible` 描边统一处理（2026-10-08 核对；旧版本的全局 `outline: none !important` 已移除），见 `sources/uiarc.md`「焦点」 |
+| 还没定底座，或项目用的是别的组件库 | `getdesign:<slug>` 选一份 DESIGN.md 作参考方向，值落到项目实际用的底座变量上（新的 React 项目默认 shadcn） | 76 份免费，格式就是 impeccable 用的 DESIGN.md（Google design.md 规范：YAML front-matter 里 `colors`、`typography`、`rounded`、`spacing`、`components`，正文按 Overview → Colors → Typography → Layout → Elevation & Depth → Shapes → Components → Do's and Don'ts 排）。可以直接放到项目根目录当 impeccable 的 DESIGN.md，再按下面的"接入要点"改写成自己的 |
 
 ## 按场景换
 | 场景 | 推荐 | 理由 |
@@ -33,8 +33,8 @@
 - DESIGN.md 的覆盖面：多数只分析了品牌的**营销站**，`Known Gaps` 里常写"没有浅色模式""表单错误态没提取""产品界面不在范围内"（linear、claude 两份都这样）。拿来做 Operate 页面时，缺的状态（错误、禁用、空、加载）要自己按主底座补，暗色或浅色缺的一套要自己推出来并测对比度。
 - DESIGN.md 里的颜色对不一定达标：例如 claude 那份主按钮 `#cc785c` 上放白字，算出来对比度约 3.3:1，不到正文 4.5:1。落到 token 之前每一对前景 / 背景都要量一遍，不达标就加深主色或改用深色文字。
 - `beautifului:foundation` 整份导入：开头 `@import "tailwindcss"` 和 shadcn 重复，body 改成斜纹背景和 14px 字号，在 `@theme` 里重定义 `--color-accent` 和 `--font-sans`，还依赖没列在依赖里的 `shadow-plugin`。另外 `--ink-3`（oklch 0.695）在 `--canvas`（0.961）上对比度约 2.4:1，只能用于装饰和占位，不能当正文颜色。
-- `uiarc:arc-foundation` 的取值注意：除了上面的焦点问题，`--text-muted`（`oklch(59% 0 0)`）在白底上约 4.1:1，不够正文；amber、green 强调色当文字色在白底上不达标（它给了 `--accent-foreground` 处理按钮上的字，文字链接要自己加深）。uiarc 规范说不用装饰渐变，但 foundation 里仍定义了 `--arc-gradient*`，不用就别引用。
-- `shadcn:presets` 里的 maia、mira（hugeicons）、lyra（tabler）：图标库不是 lucide。项目图标统一 lucide 时，选 nova / vega / luma / rhea / sera，或 init 后 `npx shadcn@latest migrate icons`。
+- `uiarc:arc-foundation` 的取值注意：`--text-muted`（`oklch(59% 0 0)`）在白底上约 4.1:1，不够正文；amber、green 强调色当文字色在白底上不达标（它给了 `--accent-foreground` 处理按钮上的字，文字链接要自己加深）。uiarc 规范说不用装饰渐变，但 foundation 里仍定义了 `--arc-gradient*`，不用就别引用。
+- `shadcn:presets` 里的 maia、mira（hugeicons）、lyra（tabler）：图标库不是 lucide。按项目已经在用的图标库选预设；项目还没定图标库时，选 lucide 的 nova / vega / luma / rhea / sera，或 init 后 `npx shadcn@latest migrate icons`。
 - 用 Inter、Geist 当展示字体：`_scenes.md` 第 3 级风险。它们作正文没问题；落地页大标题想要个性时，换 `font-heading-*` 里的衬线或有特点的无衬线。
 - `getdesign:product-*`、`getdesign:template-*`（Private DESIGN.md、Brand Kit、Starter Kit 等）、`reactbits:pro-kit-*`（Apple Minimal、Editorial、Swiss Grid 等风格 skill）：Pro，不推荐。唯一免费的 `reactbits:pro-kit-terminal-dark` 获取方式是文档页，内容未验证。
 
@@ -49,7 +49,7 @@
 - **取值格式**：shadcn v4 用 oklch；DESIGN.md 多数是 hex，转换后写入，不要同一个 token 两种写法并存。
 - **和 impeccable 配合**：getdesign 的文件可以直接作为 impeccable 的 DESIGN.md，但要先改 `name`、`description`，删掉品牌专属的描述和 Logo 相关条目；它多出来的 Responsive Behavior、Iteration Guide、Known Gaps 章节按规范会被保留，不影响读取。改完后跑 `npx @google/design.md lint DESIGN.md`（getdesign 文件的 Iteration Guide 里写了这条，未实测）。
 - **一个开关**：shadcn 用 `.dark`，uiarc 用 `data-theme="dark"`；全站只认一个。
-- **焦点**：无论选哪套，焦点环必须可见。uiarc 底座要删掉全局 `outline: none !important`，并给 `--focus-ring` 一个真实颜色。
+- **焦点**：无论选哪套，焦点环必须可见。uiarc 底座当前由 arc-foundation 统一画键盘焦点描边，不要再删它的焦点规则（旧版的全局 `outline: none !important` 已移除），细节见 `sources/uiarc.md`「焦点」；shadcn 用 `--ring`，改品牌色时一起改。
 - **字体加载**：shadcn 的 `font-*` 条目走 `@fontsource-variable/*` 或 next/font；中文项目要额外定中文字体回退，DESIGN.md 里基本没有中文排版规则。
 - **最常见的坑**：只改了颜色没改圆角和阴影，结果组件还是默认 shadcn 的样子配上别人的品牌色，两边都不像；或者 DESIGN.md 放了，但 agent 读的是 CLI 写到子目录的那份（已有 DESIGN.md 时 `getdesign add` 不覆盖，会写到 `{slug}/DESIGN.md`）。
 
@@ -57,7 +57,7 @@
 - `shadcn:presets` — 一次定 base、style、底色、图标、字体，默认首选
 - `shadcn:base-color-neutral` / `zinc` / `stone` / `mauve` / `olive` / `mist` / `taupe` / `gray` / `slate` — v4 oklch 底色
 - `shadcn:font-*`、`shadcn:font-heading-*` — 正文和标题字体，各 26 种
-- `uiarc:arc-foundation` — uiarc 底座的完整 token（必须修焦点）
+- `uiarc:arc-foundation` — uiarc 底座的完整 token
 - `uiarc:arc-skill` — uiarc 的设计规则，可借鉴写 Don'ts
 - `getdesign:linear.app` — 深色、密集、单一强调色的产品营销方向
 - `getdesign:vercel` — 黑白极简开发者方向
